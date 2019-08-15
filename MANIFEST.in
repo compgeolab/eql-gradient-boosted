@@ -1,0 +1,2 @@
+include versioneer.py
+include eql_source_layouts/_version.py
