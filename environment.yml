@@ -7,5 +7,6 @@ dependencies:
     - numpy
     - scipy
     - matplotlib
+    - verde
     - pip:
         - git+git://github.com/santisoler/harmonica@eql
