@@ -2,36 +2,71 @@
 Create different layouts of point sources
 """
 import numpy as np
-import verde as vd
+from verde import BlockReduce, median_distance
 
 
-def point_per_block(coordinates, upward, **kwargs):
+def block_reduced_points(
+    coordinates, depth_factor=3, static_shift=0, k_nearest=1, **kwargs
+):
     """
-    Create a set of point sources beneath the center of data blocks
+    Block reduce data points to create one source point per populated block
 
-    Split the data points region into blocks and put one point source beneath the center
-    of each block. All source points will be located at the same depth given by
-    ``upward``.
+    Place one source point beneath the block reduced data points. The depth of each
+    point source is determined throught the :func:`_adaptive_points_depth`: it will be
+    placed at the reduced upward coordinate minus a relative depth proportional to the
+    median distance of the nearest point sources. This upward component can also be
+    static shifted by a constant value.
+    """
+    if "reduction" not in kwargs:
+        kwargs["reduction"] = np.median
+    reducer = BlockReduce(**kwargs)
+    (easting, northing), upward = reducer.filter(coordinates[:2], coordinates[2])
+    points = (easting, northing, upward)
+    points = _adaptive_points_depth(
+        points,
+        depth_factor=depth_factor,
+        static_shift=static_shift,
+        k_nearest=k_nearest,
+    )
+    return points
+
+
+def _adaptive_points_depth(points, depth_factor=3, static_shift=0, k_nearest=1):
+    """
+    Set upward component of source points proportional to distance of nearest neighbours
+
+    Modify the upward component of the source points setting it a relative depth
+    proportional to the median distance to the nearest k source points.
+    This proportionality is given by the ``depth_factor`` argument.
+    Also, a static shift can be added throght the ``static_shift`` argument.
 
     Parameters
     ----------
-    coordinates : tuple of arrays
-        Arrays with the coordinates of each data point. Should be in the following
-        order: (easting, northing, upward, ...). Only easting and northing will be used,
-        all subsequent coordinates will be ignored.
-    upward : float
-        Vertical coordinate of the point masses.
-    kwargs
-        Keyword arguments passed to :class:`verde.block_split` like ``spacing``,
-        ``region``, ``adjust``, etc.
+    points : tuple of arrays
+        Tuple containing the coordinates of the point sources in the following order:
+        (``easting``, ``northing``, ``upward``).
+    depth_factor : float
+        Adimensional factor to set the depth of each point source. The upward component
+        of the source points will be lowered to a relative depth given by the product of
+        the ``depth_factor`` and the mean distance to the nearest ``k_nearest`` source
+        points plus a ``static_shift``. A greater ``depth_factor`` will increase the
+        depth of the point source. This parameter is ignored if ``points`` is not None.
+        Default 3 (following [Cooper2000]_).
+    static_shift : float
+        Constant shift for the upward component of the source points. A negative value
+        will make the ``upward`` component deeper, while a positive one will make it
+        shallower.
+    k_nearest : int
+        Number of source points used to compute the median distance to its nearest
+        neighbours. This argument is passed to :func:`verde.mean_distance`. Default 1.
 
     Returns
     -------
-    points : list of arrays
-        List containing the coordinates of the point sources in the following order:
-        (``easting``, ``northing``, ``upward``).
+    points : tuple of arrays
+        Tuple containing the coordinates of the modified point sources in the following
+        order: (``easting``, ``northing``, ``upward``).
     """
-    (easting, northing), _ = vd.block_split(coordinates, **kwargs)
-    upward = upward * np.ones_like(easting)
-    points = (easting, northing, upward)
-    return points
+    easting, northing, upward = tuple(i.copy() for i in points)
+    upward -= depth_factor * median_distance(points, k_nearest=k_nearest)
+    upward += static_shift
+    return (easting, northing, upward)
