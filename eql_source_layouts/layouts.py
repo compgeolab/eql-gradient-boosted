@@ -63,7 +63,7 @@ def block_reduced_points(
     return points
 
 
-def _adaptive_points_depth(points, depth_factor=3, static_shift=0, k_nearest=1):
+def _adaptive_points_depth(points, depth_factor, static_shift, k_nearest):
     """
     Set upward component of source points proportional to distance of nearest neighbours
 
@@ -83,14 +83,13 @@ def _adaptive_points_depth(points, depth_factor=3, static_shift=0, k_nearest=1):
         the ``depth_factor`` and the mean distance to the nearest ``k_nearest`` source
         points plus a ``static_shift``. A greater ``depth_factor`` will increase the
         depth of the point source. This parameter is ignored if ``points`` is not None.
-        Default 3 (following [Cooper2000]_).
     static_shift : float
         Constant shift for the upward component of the source points. A negative value
         will make the ``upward`` component deeper, while a positive one will make it
-        shallower. Default 0.
+        shallower.
     k_nearest : int
         Number of source points used to compute the median distance to its nearest
-        neighbours. This argument is passed to :func:`verde.mean_distance`. Default 1.
+        neighbours. This argument is passed to :func:`verde.mean_distance`.
 
     Returns
     -------
