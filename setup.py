@@ -36,7 +36,9 @@ CLASSIFIERS = [
 PLATFORMS = "Any"
 PACKAGES = find_packages(exclude=["doc"])
 SCRIPTS = []
-PACKAGE_DATA = {}
+PACKAGE_DATA = {
+    "eql_source_layouts": ["registry.txt"],
+}
 INSTALL_REQUIRES = [
     "numpy",
     "scipy",
