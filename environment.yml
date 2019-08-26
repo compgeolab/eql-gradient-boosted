@@ -6,6 +6,7 @@ dependencies:
     - pip
     - numpy
     - verde
+    - pooch
     # Other dependencies
     - matplotlib
     - ipython

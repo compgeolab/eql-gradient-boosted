@@ -41,6 +41,7 @@ INSTALL_REQUIRES = [
     "numpy",
     "scipy",
     "xarray",
+    "pooch",
     "matplotlib",
 ]
 PYTHON_REQUIRES = ">=3.6"
