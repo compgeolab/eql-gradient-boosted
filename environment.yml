@@ -1,4 +1,4 @@
-name: eql_source_layout
+name: eql_source_layouts
 channels:
     - conda-forge
 dependencies:
