@@ -12,6 +12,7 @@ dependencies:
     - ipython
     - jupyter
     - pyproj
+    - cartopy
     # Development dependencies
     - pytest
     - pytest-cov
