@@ -28,7 +28,7 @@ def fetch_airborne_gravity():
     ----------
     - GRAV-D Team (2018). "Gravity for the Redefinition of the American Vertical Datum
     (GRAV-D) Project, Airborne Gravity Data; Block PN02". Available August 2019. Online
-    at: http://www.ngs.noaa.gov/GRAV-D/data_PN02.shtml
+    at: https://www.ngs.noaa.gov/GRAV-D/data_pn02.shtml
     """
     # Extract the file that contains the airborne gravity data
     unpack = pooch.Unzip(members=["NGS_GRAVD_Block_PN02_Gravity_Data_BETA1.txt"])
