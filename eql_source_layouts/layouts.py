@@ -97,7 +97,7 @@ def _adaptive_points_depth(points, depth_factor, static_shift, k_nearest):
         Tuple containing the coordinates of the modified point sources in the following
         order: (``easting``, ``northing``, ``upward``).
     """
-    easting, northing, upward = tuple(i.copy() for i in points)
+    easting, northing, upward = tuple(np.atleast_1d(i).ravel() for i in points)
     upward -= depth_factor * median_distance(points, k_nearest=k_nearest)
     upward += static_shift
     return (easting, northing, upward)
