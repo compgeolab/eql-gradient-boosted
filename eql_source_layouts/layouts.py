@@ -27,9 +27,8 @@ def block_reduced_points(
         of the source points will be lowered to a relative depth given by the product of
         the ``depth_factor`` and the mean distance to the nearest ``k_nearest`` source
         points plus a ``static_shift``. A greater ``depth_factor`` will increase the
-        depth of the point source. This parameter is ignored if ``points`` is not None.
-        This argument is passed to :func:`_adaptive_points_depth`.
-        Default 3 (following [Cooper2000]_).
+        depth of the point source. This argument is passed to
+        :func:`_adaptive_points_depth`. Default 3 (following [Cooper2000]_).
     static_shift : float
         Constant shift for the upward component of the source points. A negative value
         will make the ``upward`` component deeper, while a positive one will make it
