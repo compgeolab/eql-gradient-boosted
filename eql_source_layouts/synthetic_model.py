@@ -65,19 +65,22 @@ def synthetic_model():
     return {"prisms": prisms, "densities": densities}
 
 
-def airborne_survey(region, center=(-42.25, -32.27)):
+def airborne_survey(region, center=(-42.25, -22.27)):
     """
     Create a synthetic airborne survey based on Rio de Janeiro magnetic measurements
 
     Parameters
     ----------
     region : tuple or list
-        Boundaries of the synthetic region where the flight lines are going to be drawn.
-        Should be in Cartesian coordinates and in meters.
+        Boundaries of the synthetic region where the flight lines are going to be drawn
+        in the following order: (``east``, ``west``, ``south``, ``north``, ...). All
+        subsequent boundaries will be ignored. All boundaries should be in Cartesian
+        coordinates and in meters.
     center : tuple (optional)
         Coordiantes of the center of the region in the original coordinates of the Rio
         de Janeiro magnetic survey. The fligh lines are chosen around this center point.
-        The coordinates must be in degrees, defined on a geodetic coordinate system.
+        The coordinates must be in degrees, defined on a geodetic coordinate system and
+        passed in the following order: (``longitude``, ``latitude``).
 
     Returns
     -------
@@ -100,13 +103,24 @@ def airborne_survey(region, center=(-42.25, -32.27)):
     center = projection(*center)
 
     # Cut the data into a region that has the same dimensions as the region argument
-    w, e, s, n = region[:]
+    w, e, s, n = region[:4]
     cut_region = (
         center[0] - (e - w) / 2,
         center[0] + (e - w) / 2,
         center[1] - (n - s) / 2,
         center[1] + (n - s) / 2,
     )
-    inside = vd.inside((data.longitude, data.latitude), cut_region)
+    inside = vd.inside((data.easting, data.northing), cut_region)
     data = data[inside]
+
+    # Move projected coordinates to the boundaries of the region argument
+    data["easting"] = (e - w) / (data.easting.max() - data.easting.min()) * (
+        data.easting - data.easting.min()
+    ) + w
+    data["northing"] = (n - s) / (data.northing.max() - data.northing.min()) * (
+        data.northing - data.northing.min()
+    ) + s
+
+    # Drop longitude and latitude from dataframe
+    data = data.filter(["easting", "northing", "altitude_m"])
     return data
