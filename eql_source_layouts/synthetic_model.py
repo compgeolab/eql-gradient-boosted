@@ -7,9 +7,16 @@ import verde as vd
 import harmonica as hm
 
 
-def synthetic_model():
+def synthetic_model(region):
     """
     Create a set of prisms in order to compute a gravity synthetic model
+
+    Parameters
+    ----------
+    region : tuple or list
+        Boundaries of the synthetic region where the synthetic model will be build.
+        Should be in Cartesian coordinates, in meters and passed in the following order:
+        (``east``, ``west``, ``south``, ``north``, ``bottom``, ``top``).
 
     Returns
     -------
@@ -18,32 +25,32 @@ def synthetic_model():
     """
     # Create two big prisms that resemble a fault
     prisms, densities = [], []
-    prisms.append([-40e3, 0, -40e3, 40e3, -13e3, -10e3])
+    prisms.append([0.1, 0.5, 0.1, 0.9, 0.05, 0.25])
     densities.append(200)
-    prisms.append([-40e3, 0, -40e3, 40e3, -13.5e3, -10.5e3])
+    prisms.append([0.5, 0.9, 0.1, 0.9, 0, 0.2])
     densities.append(200)
 
     # Add shallower prisms
-    prisms.append([-35e3, -15e3, 20e3, 30e3, -6e3, -5e3])
+    prisms.append([0.1, 0.4, 0.7, 0.9, 0.4, 0.5])
     densities.append(-300)
-    prisms.append([-45e3, -20e3, -5e3, 15e3, -4e3, -2.5e3])
+    prisms.append([0, 0.25, 0.4, 0.6, 0.6, 0.75])
     densities.append(-150)
-    prisms.append([26e3, 38e3, -30e3, -10e3, -7e3, -2e3])
+    prisms.append([0.7, 0.8, 0.1, 0.4, 0.3, 0.8])
     densities.append(150)
 
     # Add dikes
-    prisms.append([-32e3, -30e3, -28e3, -26e3, -9e3, -1e3])
+    prisms.append([0.30, 0.32, 0.26, 0.28, 0.1, 1])
     densities.append(500)
-    prisms.append([-2e3, 2e3, -2e3, 2e3, -9e3, -1e3])
-    densities.append(300)
+    prisms.append([0.49, 0.51, 0.49, 0.51, 0.1, 1])
+    densities.append(500)
 
     # Add diagonal dike
     n_blocks = 301
     dike_density = 500
-    horizontal_size = 2e3
-    easting_1, easting_2 = 14e3, 25e3
-    northing_1, northing_2 = 12e3, 22e3
-    upward_1, upward_2 = -7e3, 0
+    horizontal_size = 0.05
+    easting_1, easting_2 = 0.6, 0.75
+    northing_1, northing_2 = 0.52, 0.65
+    upward_1, upward_2 = 0.3, 1
 
     t = np.linspace(0, 1, n_blocks)
     easting_center = (easting_2 - easting_1) * t + easting_1
@@ -62,6 +69,16 @@ def synthetic_model():
             ]
         )
         densities.append(dike_density)
+
+    # Scale prisms to the passed region
+    w, e, s, n, bottom, top = region[:]
+    prisms = np.atleast_2d(prisms)
+    prisms[:, :2] *= e - w
+    prisms[:, :2] += w
+    prisms[:, 2:4] *= n - s
+    prisms[:, 2:4] += s
+    prisms[:, 4:6] *= top - bottom
+    prisms[:, 4:6] += bottom
     return {"prisms": prisms, "densities": densities}
 
 
