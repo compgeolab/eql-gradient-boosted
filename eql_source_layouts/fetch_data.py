@@ -7,7 +7,7 @@ import pandas as pd
 
 POOCH = pooch.create(
     path=pooch.os_cache("eql_source_layouts"),
-    base_url="https://github.com/pinga-lab/eql_source_layouts/raw/master/data/",
+    base_url="https://github.com/compgeolab/eql_source_layouts/raw/master/data/",
     registry=None,
 )
 POOCH.load_registry(os.path.join(os.path.dirname(__file__), "registry.txt"))
