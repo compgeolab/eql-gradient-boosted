@@ -113,7 +113,7 @@ def airborne_survey(region, center=(-42.25, -22.27)):
     data = data.filter(["longitude", "latitude", "altitude_m"])
 
     # Project coordinates
-    projection = pyproj.Proj(proj="merc", lat_ts=data.latitude.mean())
+    projection = pyproj.Proj(proj="merc", lat_ts=center[1])
     data["easting"], data["northing"] = projection(
         data.longitude.values, data.latitude.values
     )
