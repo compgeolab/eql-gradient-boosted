@@ -94,16 +94,16 @@ def airborne_survey(region, center=(-42.25, -22.27)):
         subsequent boundaries will be ignored. All boundaries should be in Cartesian
         coordinates and in meters.
     center : tuple (optional)
-        Coordiantes of the center of the region in the original coordinates of the Rio
-        de Janeiro magnetic survey. The fligh lines are chosen around this center point.
-        The coordinates must be in degrees, defined on a geodetic coordinate system and
-        passed in the following order: (``longitude``, ``latitude``).
+        Coordinates of the center of the region in the original coordinates of the Rio
+        de Janeiro magnetic survey. The flight lines are chosen around this center
+        point. The coordinates must be in degrees, defined on a geodetic coordinate
+        system and passed in the following order: (``longitude``, ``latitude``).
 
     Returns
     -------
     data : :class:`pandas.DataFrame`
         Dataframe containing the coordinates of the flight line and its altitude on the
-        Cartesian coordinats for the synthetic model. All coordinates and altitude are
+        Cartesian coordinates for the synthetic model. All coordinates and altitude are
         in meters.
     """
     # Fetch data
