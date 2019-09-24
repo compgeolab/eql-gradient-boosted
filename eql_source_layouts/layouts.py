@@ -37,7 +37,7 @@ def block_reduce_points(coordinates, **kwargs):
     return points
 
 
-def adaptive_depth(points, depth_factor, depth_shift, k_nearest):
+def variable_relative_depth(points, depth_factor, depth_shift, k_nearest):
     """
     Change depth of points based on the distance to nearest neighbours
 
