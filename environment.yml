@@ -19,4 +19,4 @@ dependencies:
     - pylint
     - flake8
     - pip:
-        - git+git://github.com/santisoler/harmonica@eql
+        - git+git://github.com/fatiando/harmonica
