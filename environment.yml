@@ -19,4 +19,4 @@ dependencies:
     - pylint
     - flake8
     - pip:
-        - git+git://github.com/fatiando/harmonica
+        - git+git://github.com/fatiando/harmonica@prism_gravity
