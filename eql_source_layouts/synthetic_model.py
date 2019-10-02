@@ -130,7 +130,7 @@ def airborne_survey(region, cut_region=(-42.35, -42.10, -22.35, -22.15)):
     return data
 
 
-def ground_survey(region, cut_region=(25.9, 29.9, -28.5, -24.5)):
+def ground_survey(region, cut_region=(13.60, 20.30, -24.20, -17.5)):
     """
     Create a synthetic ground survey based on South Africa gravity measurements
 
