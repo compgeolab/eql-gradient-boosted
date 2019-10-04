@@ -62,14 +62,14 @@ def synthetic_model(region):
         bottom_size=0.05,
         top_size=0.2,
         density=-100,
-        n_prisms=50,
+        n_prisms=5,
     )
     prisms += basin["prisms"]
     densities += basin["densities"]
 
     # # Add diagonal dike
     dike = _dipping_dike(
-        n_blocks=101,
+        n_prisms=20,
         dike_density=300,
         deep_point=(0.60, 0.35, 0.3),
         shallow_point=(0.78, 0.48, 1),
@@ -102,17 +102,17 @@ def _scale_model(prisms, region):
     return prisms
 
 
-def _dipping_dike(n_blocks, dike_density, deep_point, shallow_point, size):
+def _dipping_dike(n_prisms, dike_density, deep_point, shallow_point, size):
     """
     Add a dipping dike made out of prisms
     """
     prisms = []
     densities = []
-    t = np.linspace(0, 1, n_blocks)
+    t = np.linspace(0, 1, n_prisms)
     easting_center = (shallow_point[0] - deep_point[0]) * t + deep_point[0]
     northing_center = (shallow_point[1] - deep_point[1]) * t + deep_point[1]
     upward_center = (shallow_point[2] - deep_point[2]) * t + deep_point[2]
-    thicknes = (shallow_point[2] - deep_point[2]) / n_blocks
+    thicknes = (shallow_point[2] - deep_point[2]) / n_prisms
     for easting, northing, upward in zip(
         easting_center, northing_center, upward_center
     ):
