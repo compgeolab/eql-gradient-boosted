@@ -151,8 +151,8 @@ def _basin(center, bottom, top, bottom_size, top_size, density, n_prisms):
     prisms = []
     densities = []
     thickness = (top - bottom) / n_prisms
-    upward_centers = np.arange(
-        bottom - thickness / 2, 1.1 * (top + thickness / 2), thickness
+    upward_centers = np.linspace(
+        bottom + thickness / 2, top - thickness / 2, n_prisms
     )
     for upward in upward_centers:
         size = (top_size - bottom_size) / (top - bottom) * (upward - top) + top_size
