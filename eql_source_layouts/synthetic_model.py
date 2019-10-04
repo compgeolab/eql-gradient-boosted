@@ -61,7 +61,7 @@ def synthetic_model(region):
         top=1,
         bottom_size=0.05,
         top_size=0.2,
-        density=-100,
+        density=-200,
         n_prisms=5,
     )
     prisms += basin["prisms"]
