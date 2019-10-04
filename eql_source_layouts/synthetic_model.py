@@ -5,6 +5,7 @@ import pyproj
 import numpy as np
 import verde as vd
 import harmonica as hm
+from matplotlib.patches import Rectangle
 
 
 def synthetic_model(region):
@@ -80,7 +81,20 @@ def synthetic_model(region):
 
     # Scale prisms to the passed region
     prisms = _scale_model(prisms, region)
-    return {"prisms": prisms, "densities": densities}
+    # Create a collection of Rectangle from the prisms
+    rectangles = _create_rectangles(prisms)
+    return {"prisms": prisms, "densities": densities, "rectangles": rectangles}
+
+
+def _create_rectangles(prisms, fill=False):
+    """
+    Create a set of matplotlib.patches.Rectangle from prisms
+    """
+    rectangles = []
+    for prism in prisms:
+        w, e, s, n = prism[:4]
+        rectangles.append(Rectangle((w, s), width=(e - w), height=(n - s), fill=fill))
+    return rectangles
 
 
 def _scale_model(prisms, region):
