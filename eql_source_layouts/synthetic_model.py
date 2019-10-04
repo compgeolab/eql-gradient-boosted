@@ -190,7 +190,7 @@ def _horseshoe(
         Dictionary containing the prisms and the density for each prism.
     """
     prisms, densities = [], []
-    d_angle = 2 * np.arcsin(prism_size / radius)
+    d_angle = 2 * np.arcsin(np.sqrt(2) / 2 * prism_size / radius)
     for angle in np.arange(np.radians(min_angle), 1.1 * np.radians(max_angle), d_angle):
         easting_center = radius * np.cos(angle)
         northing_center = radius * np.sin(angle)
