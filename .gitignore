@@ -12,3 +12,4 @@ dist/
 *.egg-info
 MANIFEST
 .coverage.*
+.doit.db.*
