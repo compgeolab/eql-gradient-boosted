@@ -37,12 +37,7 @@ PLATFORMS = "Any"
 PACKAGES = find_packages(exclude=["doc"])
 SCRIPTS = []
 PACKAGE_DATA = {}
-INSTALL_REQUIRES = [
-    "numpy",
-    "scipy",
-    "xarray",
-    "matplotlib",
-]
+INSTALL_REQUIRES = ["numpy", "scipy", "xarray", "matplotlib"]
 PYTHON_REQUIRES = ">=3.6"
 
 if __name__ == "__main__":
