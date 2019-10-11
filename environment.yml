@@ -12,6 +12,7 @@ dependencies:
     - jupyter
     - pyproj
     # Development dependencies
+    - doit
     - pytest
     - pytest-cov
     - coverage
