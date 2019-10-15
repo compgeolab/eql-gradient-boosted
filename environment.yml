@@ -1,9 +1,11 @@
 name: eql_source_layouts
 channels:
     - conda-forge
+    - bioconda
 dependencies:
     - python=3.7
     - pip
+    - snakemake
     - numpy
     - verde
     # Other dependencies
