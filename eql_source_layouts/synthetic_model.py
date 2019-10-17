@@ -31,6 +31,10 @@ def synthetic_model(region):
     prisms.append([0.5, 1, 0, 1, 0, 0.2])
     densities.append(150)
 
+    # Create one big deep prism to simulate a long wavelength
+    prisms.append([0.2, 0.8, 0.2, 0.8, 0.3, 0.5])
+    densities.append(100)
+
     # Add a horseshoe
     horseshoe = _horseshoe(
         radius=0.15,
