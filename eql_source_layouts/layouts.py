@@ -2,7 +2,7 @@
 Create different layouts of point sources
 """
 import numpy as np
-from verde import median_distance, BlockReduce, block_split
+from verde import median_distance, BlockReduce, get_region, grid_coordinates
 
 
 def source_bellow_data(
@@ -151,7 +151,7 @@ def block_reduced_sources(
     return points
 
 
-def grid_sources(coordinates, spacing=None, relative_depth=None, **kwargs):
+def grid_sources(coordinates, spacing=None, relative_depth=None, pad=None, **kwargs):
     """
     Create a regular grid of point sources
 
@@ -168,6 +168,11 @@ def grid_sources(coordinates, spacing=None, relative_depth=None, **kwargs):
         A single value means that the size is equal in both directions.
     relative_depth : float
         Constant relative depth.
+    pad : float or None
+        Ratio of region padding. Controls the ammount of padding that will be added to
+        the coordinates region. It's useful to remove boundary artifacts. The pad will
+        be computed as the product of the ``pad`` and the dimension of the region along
+        each direction.
     kwargs
         Additional keyword arguments that won't be taken into account on the generation
         of point sources. These keyword arguments are taken in case the arguments for
@@ -180,7 +185,13 @@ def grid_sources(coordinates, spacing=None, relative_depth=None, **kwargs):
         Tuple containing the coordinates of the points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
-    (easting, northing), _ = block_split(coordinates, spacing=spacing)
+    region = get_region(coordinates)
+    if pad:
+        w, e, s, n = region[:]
+        w_padded, e_padded = w - pad * (e - w), e + pad * (e - w)
+        s_padded, n_padded = s - pad * (n - s), n + pad * (n - s)
+        region = (w_padded, e_padded, s_padded, n_padded)
+    easting, northing = grid_coordinates(region=region, spacing=spacing)
     upward = np.full_like(easting, np.mean(coordinates[2])) - relative_depth
     points = (easting, northing, upward)
     return points
