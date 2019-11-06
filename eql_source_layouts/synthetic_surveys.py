@@ -6,7 +6,7 @@ import verde as vd
 import harmonica as hm
 
 
-def airborne_survey(region, cut_region=(-5.0, -3.5, 55.5, 56.5)):
+def airborne_survey(region, cut_region=(-5.0, -4.0, 56.0, 56.5)):
     """
     Create a synthetic airborne survey based on Great Britain magnetic measurements
 
