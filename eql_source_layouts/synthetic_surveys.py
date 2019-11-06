@@ -32,8 +32,6 @@ def airborne_survey(region, cut_region=(-5.0, -3.5, 55.5, 56.5)):
     survey = hm.datasets.fetch_britain_magnetic()
     # Rename the "altitude_m" column to "elevation"
     survey["elevation"] = survey["altitude_m"]
-    # Keep only the latitudinal, longitudinal coordinates and elevation of measurement
-    survey = survey.filter(["longitude", "latitude", "elevation"])
     # Cut the region into the cut_region, project it with a mercator projection to
     # convert the coordinates into Cartesian and move this Cartesian region into the
     # passed region
@@ -65,8 +63,6 @@ def ground_survey(region, cut_region=(13.60, 20.30, -24.20, -17.5)):
     """
     # Fetch ground gravity survey from South Africa
     survey = hm.datasets.fetch_south_africa_gravity()
-    # Keep only the latitudinal, longitudinal coordinates and elevation of measurement
-    survey = survey.filter(["longitude", "latitude", "elevation"])
     # Cut the region into the cut_region, project it with a mercator projection to
     # convert the coordinates into Cartesian and move this Cartesian region into the
     # passed region
@@ -116,6 +112,6 @@ def _synthetic_survey(survey, region, cut_region):
     survey["northing"] = (n - s) / (survey.northing.max() - survey.northing.min()) * (
         survey.northing - survey.northing.min()
     ) + s
-    # Drop longitude and latitude from dataframe
+    # Keep only the easting, northing and elevation on the DataFrame
     survey = survey.filter(["easting", "northing", "elevation"])
     return survey
