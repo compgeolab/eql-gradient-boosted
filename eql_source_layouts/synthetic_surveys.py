@@ -106,11 +106,14 @@ def _synthetic_survey(survey, region, cut_region):
     )
     # Move projected coordinates to the boundaries of the region argument
     w, e, s, n = region[:4]
-    survey["easting"] = (e - w) / (survey.easting.max() - survey.easting.min()) * (
-        survey.easting - survey.easting.min()
+    easting_min, easting_max, northing_min, northing_max = vd.get_region(
+        (survey.easting, survey.northing)
+    )
+    survey["easting"] = (e - w) / (easting_max - easting_min) * (
+        survey.easting - easting_min
     ) + w
-    survey["northing"] = (n - s) / (survey.northing.max() - survey.northing.min()) * (
-        survey.northing - survey.northing.min()
+    survey["northing"] = (n - s) / (northing_max - northing_min) * (
+        survey.northing - northing_min
     ) + s
     # Keep only the easting, northing and elevation on the DataFrame
     survey = survey.filter(["easting", "northing", "elevation"])
