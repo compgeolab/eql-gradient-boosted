@@ -98,7 +98,7 @@ def _synthetic_survey(survey, region, cut_region):
     """
     # Cut the data into the cut_region
     inside = vd.inside((survey.longitude, survey.latitude), cut_region)
-    survey = survey[inside]
+    survey = survey[inside].copy()
     # Project coordinates
     projection = pyproj.Proj(proj="merc", lat_ts=(cut_region[2] + cut_region[3]) / 2)
     survey["easting"], survey["northing"] = projection(
