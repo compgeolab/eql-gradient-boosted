@@ -96,7 +96,6 @@ def block_reduced_sources(
     coordinates,
     spacing,
     depth_type,
-    center_coordinates=False,
     constant_depth=None,
     relative_depth=None,
     depth_factor=None,
@@ -125,10 +124,6 @@ def block_reduced_sources(
         Type of depth distribution for source points.
         Availables types: ``"constant_depth"``, ``"relative_depth"``,
         ``"variable_relative_depth"``.
-    center_coordinates : bool
-        If True, then the point sources will be put bellow the center of the populated
-        blocks. Otherwise, they will be located beneath the reduced observation points.
-        Default False.
     constant_depth : float
         Depth at which the sources will be located, relative to the mean height of the
         data points. This parameter is ignored if ``depth_type`` is not
@@ -168,9 +163,7 @@ def block_reduced_sources(
     """
     if depth_type not in DEPTH_TYPES:
         raise ValueError("Invalid depth type '{}'.")
-    points = block_reduce_points(
-        coordinates, spacing=spacing, center_coordinates=center_coordinates
-    )
+    points = block_reduce_points(coordinates, spacing=spacing)
     if depth_type == "constant_depth":
         easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
         upward = np.full_like(upward, np.mean(upward) - constant_depth)
@@ -235,9 +228,7 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
     return points
 
 
-def block_reduce_points(
-    coordinates, spacing=None, center_coordinates=False, reduction=np.median
-):
+def block_reduce_points(coordinates, spacing=None, reduction=np.median):
     """
     Block reduce points to create one point per populated block
 
@@ -252,10 +243,6 @@ def block_reduce_points(
     spacing : float, tuple = (s_north, s_east)
         The block size in the South-North and West-East directions, respectively.
         A single value means that the size is equal in both directions.
-    center_coordinates : bool
-        If True, then the returned coordinates correspond to the center of each block.
-        Otherwise, the coordinates are calculated by applying the same reduction
-        operation to the input coordinates. Default False.
     reduction : function
         A reduction function that takes an array and returns a single value (e.g.,
         :func:`numpy.median`, :func:`numpy.mean`, etc). Default to :func:`numpy.median`.
@@ -266,9 +253,7 @@ def block_reduce_points(
         Tuple containing the coordinates of the points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
-    reducer = BlockReduce(
-        spacing=spacing, center_coordinates=center_coordinates, reduction=reduction
-    )
+    reducer = BlockReduce(spacing=spacing, reduction=reduction)
     (easting, northing), upward = reducer.filter(coordinates[:2], coordinates[2])
     points = (easting, northing, upward)
     return points
