@@ -219,9 +219,8 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
     region = get_region(coordinates)
     if pad:
         w, e, s, n = region[:]
-        w_padded, e_padded = w - pad * (e - w), e + pad * (e - w)
-        s_padded, n_padded = s - pad * (n - s), n + pad * (n - s)
-        region = (w_padded, e_padded, s_padded, n_padded)
+        padding = (pad * (n - s), pad * (e - w))
+        region = vd.pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
     upward = np.full_like(easting, np.mean(coordinates[2])) - constant_depth
     points = (easting, northing, upward)
