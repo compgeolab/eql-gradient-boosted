@@ -2,7 +2,7 @@
 Create different layouts of point sources
 """
 import numpy as np
-from verde import median_distance, BlockReduce, get_region, grid_coordinates
+from verde import median_distance, BlockReduce, get_region, pad_region, grid_coordinates
 
 
 DEPTH_TYPES = ["constant_depth", "relative_depth", "variable_relative_depth"]
@@ -220,7 +220,7 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
     if pad:
         w, e, s, n = region[:]
         padding = (pad * (n - s), pad * (e - w))
-        region = vd.pad_region(region, padding)
+        region = pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
     upward = np.full_like(easting, np.mean(coordinates[2])) - constant_depth
     points = (easting, northing, upward)
