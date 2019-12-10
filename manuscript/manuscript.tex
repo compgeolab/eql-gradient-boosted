@@ -1,0 +1,161 @@
+\documentclass[twocolumn]{article}
+\usepackage[left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}
+\setlength{\columnsep}{2\columnsep}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[round]{natbib}
+\usepackage{url}
+\usepackage[pdftex,colorlinks=true]{hyperref}
+\usepackage{fancyhdr}
+
+
+% Define title, authors, affiliations and DOI
+% ===========================================
+\newcommand{\Title}{A better strategy for interpolating gravity and magnetic data}
+\newcommand{\Author}{
+    S.R. Soler,
+    L. Uieda
+}
+\newcommand{\AuthorAffil}{
+    {\large
+        S.R. Soler$^{1,2}$,
+        L. Uieda$^{3}$
+    }
+    \\[0.4cm]
+    {\small $^{1}$CONICET, Argentina (santiago.r.soler@gmail.com)} \\
+    {\small $^{2}$Instituto Geofísico Sismológico Volponi, UNSJ, Argentina} \\
+    {\small $^{3}$University of Liverpool} \\
+
+}
+\newcommand{\DOI}{doi:\href{https://doi.org/xxx.xxx/xxxxxx}{10.1093/xxx.xxx/xxxxxx}}
+\newcommand{\DOILink}{\href{https://doi.org/xxx.xxx/xxxxxx}{doi.org/xxx.xxx/xxxxxx}}
+
+
+% Configure header and hypersetup
+% ===============================
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{
+    \fontsize{9pt}{12pt}\selectfont
+    \Author{}, 2019. \DOI{}
+}
+\rhead{\fontsize{9pt}{12pt}\selectfont \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\hypersetup{
+    allcolors=blue,
+    pdftitle={\Title},
+    pdfauthor={\Author},
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{\Title}
+\author{\AuthorAffil}
+\date{
+    \normalsize
+    \today
+}
+\maketitle
+
+\begin{abstract}
+    My abstract
+    \\[0.5cm]
+    \textbf{Keywords:}
+    My keywords
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+Potential field data, like gravity and magnetics, are useful for geophysics exploration.
+The potential field data can be obtained from ground, airborne or satellite
+measurements.
+On ground surveys the data is often gathered on scattered points or following irregular
+paths.
+On airborne surveys the data is gathered on flight paths, producing a large number of
+data points concentrated along almost straight lines.
+To improve visualization of the data for interpretation and to prepare the data for
+processing through different methods (RTP, upward continuation, Euler deconvolution,
+etc), the data needs to be interpolated on a regular grid of data points.
+
+There are several methods for interpolating 2D data like minimum curvature, biharmonic
+Splines or Kriging.
+These all-purpose methods show a few problems when applied to potential field data.
+(i) They don't take into account the height of the observation points. Potential field
+data has a strong dependency on measurement height.
+(ii) The predicted grid data is not necessary an Harmonic function.
+(iii) They don't usually take into account the anisotropy of the observation points in
+ground and airborne surveys.
+
+One of the most widely used methods for interpolating gravity and magnetic data is the
+equivalent sources technique (also known as equivalent layer, radial basis functions or
+Green's functions interpolation).
+It consists in estimating a source distribution that produces the same field as the one
+measured and using this estimate to predict new values.
+\citet{dampney1969} was the first to introduce the equivalent source technique.
+
+The EQL can be used for interpolation of potential field data \citep{cordell1992,
+cooper2000}.
+It has been also used for applying a reduction to the pole to magnetic data
+\citep{guspi2009, silva1986, emilia1973, nakatsuka2006} or an upward continuation
+(cite).
+
+The most widely used source distribution is a set of point sources.
+The potential field of point sources is easy to compute.
+How to locate these point masses?
+Existing approaches:
+(i) one point source beneath each observation point at a constant depth (cite),
+(ii) one point source beneath each observation point at a depth proportional to the
+distance to its nearest data points (cite),
+(iii) a regular grid of point sources (missing citations).
+
+We want to find out which distribution of sources produces the best interpolations.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The equivalent sources technique}
+
+Mathematical background of the EQL\@.
+How it can be understood in terms of Green's functions problem.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Source layouts}
+
+Describe the proposed source layouts.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Comparison of source layouts}
+
+Describe forward model made out of prisms, ground and airborne survey (plus noise), the
+target grid, how do we score each interpolation.
+Describe the Harmonica implementation of the EQL.
+
+Show results.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Acknowledgements}
+
+We are indebted to the developers and maintainers of the open-source software without
+which this work would not have been possible.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
