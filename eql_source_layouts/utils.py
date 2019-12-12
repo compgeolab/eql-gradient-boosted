@@ -4,6 +4,8 @@ import xarray as xr
 import harmonica as hm
 from sklearn.metrics import r2_score
 
+from . import layouts
+
 
 def parameters_scores_to_df(parameters_set, scores):
     """
@@ -36,7 +38,7 @@ def grid_to_dataarray(prediction, grid, **kwargs):
     return da
 
 
-def grid_data(coordinates, data, grid, source_builder, depth_type, parameters):
+def grid_data(coordinates, data, grid, layout, depth_type, parameters):
     """
     Interpolate data on a regular grid using EQL
 
@@ -45,10 +47,12 @@ def grid_data(coordinates, data, grid, source_builder, depth_type, parameters):
     coordinates
     data
     grid
-    source_builder
+    layout
     depth_type
     parameters
     """
+    # Get function to build point sources
+    source_builder = getattr(layouts, layout)
     # Create the source points
     points = source_builder(coordinates, depth_type=depth_type, **parameters)
     # Initialize the gridder passing the points and the damping
@@ -61,7 +65,7 @@ def grid_data(coordinates, data, grid, source_builder, depth_type, parameters):
 
 
 def get_best_prediction(
-    coordinates, data, grid, target, source_builder, depth_type, parameters_set
+    coordinates, data, grid, target, layout, depth_type, parameters_set
 ):
     """
     Score interpolations with different parameters and get the best prediction
@@ -72,7 +76,7 @@ def get_best_prediction(
     scores = []
     for parameters in parameters_set:
         prediction = grid_data(
-            coordinates, data, grid, source_builder, depth_type, parameters
+            coordinates, data, grid, layout, depth_type, parameters
         )
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
@@ -81,15 +85,37 @@ def get_best_prediction(
     best_parameters = parameters_set[best]
     best_score = scores[best]
     best_prediction = grid_data(
-        coordinates, data, grid, source_builder, depth_type, best_parameters
+        coordinates, data, grid, layout, depth_type, best_parameters
     )
     # Convert parameters and scores to a pandas.DataFrame
     params_and_scores = parameters_scores_to_df(parameters_set, scores)
     # Convert prediction to a xarray.DataArray
     da = target.copy()
     da.values = best_prediction
+    da.attrs["layout"] = layout
+    da.attrs["depth_type"] = depth_type
     da.attrs["score"] = best_score
     for key, value in best_parameters.items():
         da.attrs[key] = value
     best_prediction = da
     return best_prediction, params_and_scores
+
+
+def predictions_to_datasets(predictions):
+    """
+    Group all predictions in xarray.Datasets by source layout
+
+    Create one xarray.Dataset for each source layout, containing the best predictions
+    for each depth type.
+    """
+    datasets = []
+    layouts = list(set([prediction.layout for prediction in predictions]))
+    for layout in layouts:
+        predictions_same_layout = [p for p in predictions if p.layout == layout]
+        for p in predictions_same_layout:
+            p.name = p.depth_type
+        ds = xr.merge(predictions_same_layout)
+        ds.attrs["layout"] = layout
+        datasets.append(ds)
+    return datasets
+

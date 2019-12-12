@@ -9,6 +9,7 @@ from .utils import (
     grid_data,
     parameters_scores_to_df,
     grid_to_dataarray,
+    predictions_to_datasets,
 )
 
 # Get the version number through versioneer

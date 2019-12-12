@@ -47,6 +47,7 @@ from eql_source_layouts import (
     grid_to_dataarray,
     plot_prediction,
     get_best_prediction,
+    predictions_to_datasets,
 )
 
 # -
@@ -90,6 +91,8 @@ grid_height = 2000
 
 # Define set of interpolation parameters
 # ======================================
+# Define a list of source layouts
+layouts = ["source_bellow_data", "block_reduced_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
 dampings = [None, 1e-4, 1e-3, 1e-2]
 # Define values of constant depth
@@ -225,48 +228,24 @@ plt.show()
 # ### Define set of parameters for each source layout
 
 # +
-parameters = {"constant_depth": {}, "relative_depth": {}, "variable_relative_depth": {}}
+parameters = {layout: {} for layout in layouts}
 
-# Constant depth
-depth_type = "constant_depth"
+# Source bellow data
 layout = "source_bellow_data"
-parameters[depth_type][layout] = [
+depth_type = "constant_depth"
+parameters[layout][depth_type] = [
     dict(damping=combo[0], constant_depth=combo[1])
     for combo in itertools.product(dampings, constant_depths)
 ]
 
-layout = "block_reduced_sources"
-parameters[depth_type][layout] = [
-    dict(damping=combo[0], constant_depth=combo[1], spacing=block_spacing)
-    for combo in itertools.product(dampings, constant_depths)
-]
-
-layout = "grid_sources"
-parameters[depth_type][layout] = [
-    dict(damping=combo[0], constant_depth=combo[1], pad=combo[2], spacing=combo[3])
-    for combo in itertools.product(
-        dampings, source_grid_depths, source_grid_paddings, source_grid_spacings
-    )
-]
-
-# Relative depth
 depth_type = "relative_depth"
-layout = "source_bellow_data"
-parameters[depth_type][layout] = [
+parameters[layout][depth_type] = [
     dict(damping=combo[0], relative_depth=combo[1])
     for combo in itertools.product(dampings, relative_depths)
 ]
 
-layout = "block_reduced_sources"
-parameters[depth_type][layout] = [
-    dict(damping=combo[0], relative_depth=combo[1], spacing=block_spacing)
-    for combo in itertools.product(dampings, relative_depths)
-]
-
-# Variable relative depth
 depth_type = "variable_relative_depth"
-layout = "source_bellow_data"
-parameters[depth_type][layout] = [
+parameters[layout][depth_type] = [
     dict(
         damping=combo[0],
         depth_factor=combo[1],
@@ -276,8 +255,22 @@ parameters[depth_type][layout] = [
     for combo in itertools.product(dampings, depth_factors, depth_shifts, k_values)
 ]
 
+# Block reduced sources
 layout = "block_reduced_sources"
-parameters[depth_type][layout] = [
+depth_type = "constant_depth"
+parameters[layout][depth_type] = [
+    dict(damping=combo[0], constant_depth=combo[1], spacing=block_spacing)
+    for combo in itertools.product(dampings, constant_depths)
+]
+
+depth_type = "relative_depth"
+parameters[layout][depth_type] = [
+    dict(damping=combo[0], relative_depth=combo[1], spacing=block_spacing)
+    for combo in itertools.product(dampings, relative_depths)
+]
+
+depth_type = "variable_relative_depth"
+parameters[layout][depth_type] = [
     dict(
         damping=combo[0],
         spacing=block_spacing,
@@ -287,88 +280,77 @@ parameters[depth_type][layout] = [
     )
     for combo in itertools.product(dampings, depth_factors, depth_shifts, k_values)
 ]
+
+# Grid sources
+depth_type = "constant_depth"
+layout = "grid_sources"
+parameters[layout][depth_type] = [
+    dict(damping=combo[0], constant_depth=combo[1], pad=combo[2], spacing=combo[3])
+    for combo in itertools.product(
+        dampings, source_grid_depths, source_grid_paddings, source_grid_spacings
+    )
+]
+
 # -
 
 # ## Score each interpolation
 
 # +
-scores = {"constant_depth": {}, "relative_depth": {}, "variable_relative_depth": {}}
-best_predictions = {
-    "constant_depth": {},
-    "relative_depth": {},
-    "variable_relative_depth": {},
-}
-source_builders = {
-    "source_bellow_data": source_bellow_data,
-    "block_reduced_sources": block_reduced_sources,
-    "grid_sources": grid_sources,
-}
+scores = {layout: {} for layout in layouts}
+best_predictions = []
 
-for depth_type in parameters:
-    for layout in parameters[depth_type]:
+for layout in parameters:
+    for depth_type in parameters[layout]:
         print("Processing: {} with {}".format(layout, depth_type))
         best_prediction, params_and_scores = get_best_prediction(
             coordinates,
             getattr(survey, field),
             grid,
             target,
-            source_builders[layout],
+            layout,
             depth_type,
-            parameters[depth_type][layout],
+            parameters[layout][depth_type],
         )
-        best_predictions[depth_type][layout] = best_prediction
-        scores[depth_type][layout] = params_and_scores
+        best_predictions.append(best_prediction)
+        scores[layout][depth_type] = params_and_scores
 # -
 
 # ### Save best predictions and scores
 
-for depth_type in best_predictions:
-    for layout in best_predictions[depth_type]:
-        prediction = best_predictions[depth_type][layout]
-        score = scores[depth_type][layout]
-        prediction.to_netcdf(
-            os.path.join(
-                results_dir, "best_prediction-{}-{}.nc".format(depth_type, layout)
-            )
-        )
+# +
+datasets = predictions_to_datasets(best_predictions)
+for dataset in datasets:
+    dataset.to_netcdf(
+        os.path.join(results_dir, "best_predictions-{}.nc".format(dataset.layout))
+    )
+
+for layout in scores:
+    for depth_type in scores[layout]:
+        score = scores[layout][depth_type]
         score.to_csv(
             os.path.join(results_dir, "scores-{}-{}.nc".format(depth_type, layout)),
             index=False,
         )
+# -
 
 # ## 5. Plot best predictions
 
 # Read best predictions from saved files
 
-# +
-best_predictions = {
-    "constant_depth": {
-        "source_bellow_data": None,
-        "block_reduced_sources": None,
-        "grid_sources": None,
-    },
-    "relative_depth": {"source_bellow_data": None, "block_reduced_sources": None},
-    "variable_relative_depth": {
-        "source_bellow_data": None,
-        "block_reduced_sources": None,
-    },
-}
-
-predictions_fnames = [
-    os.path.join(results_dir, f)
-    for f in os.listdir(results_dir)
-    if "best_prediction" in f
-]
-for fname in predictions_fnames:
-    _, depth_type, layout = os.path.basename(fname).replace(".nc", "").split("-")
-    best_predictions[depth_type][layout] = xr.open_dataarray(fname)
-# -
+best_predictions = []
+for layout in layouts:
+    best_predictions.append(
+        xr.open_dataset(
+            os.path.join(results_dir, "best_predictions-{}.nc".format(layout))
+        )
+    )
 
 # Plot best predictions
 
-for depth_type in best_predictions:
-    for layout in best_predictions[depth_type]:
-        prediction = best_predictions[depth_type][layout]
+for dataset in best_predictions:
+    for depth_type in dataset:
+        layout = dataset.layout
+        prediction = dataset[depth_type]
         print("{} with {}".format(layout, depth_type))
         print("Score: {}".format(prediction.score))
         print("Parameters: {}".format(prediction.attrs))
@@ -383,7 +365,11 @@ for depth_type in best_predictions:
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
 vmax = np.percentile(
-    tuple(target - i for subset in best_predictions.values() for i in subset.values()),
+    tuple(
+        target - dataset[depth_type]
+        for dataset in best_predictions
+        for depth_type in dataset
+    ),
     q=99.9,
 )
 
@@ -391,33 +377,31 @@ vmax = np.percentile(
 fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(15, 15), sharex=True, sharey=True)
 
 # Plot the differences between the target and the best prediction for each layout
-axes = axes.T
-for ax_col, depth_type in zip(axes, best_predictions):
-    for ax, layout in zip(ax_col, best_predictions[depth_type]):
-        prediction = best_predictions[depth_type][layout]
+for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
+    for ax, depth_type in zip(ax_row, dataset):
+        prediction = dataset[depth_type]
         difference = target - prediction
         tmp = difference.plot.pcolormesh(
             ax=ax, vmin=-vmax, vmax=vmax, cmap="seismic", add_colorbar=False
         )
         ax.scatter(survey.easting, survey.northing, s=1, alpha=0.2, color="k")
         ax.set_aspect("equal")
-        ax.set_title("{} (r2: {:.3f})".format(layout, r2_score(target, prediction)))
+        ax.set_title("{} (r2: {:.3f})".format(dataset.layout, prediction.score))
+        # Annotate the columns of the figure
+        if i == 0:
+            ax.text(
+                0.5,
+                1.1,
+                depth_type,
+                fontsize="large",
+                fontweight="bold",
+                horizontalalignment="center",
+                transform=ax.transAxes,
+            )
 
 # Hide the last two axes because they are not used
 axes[-1][-1].set_visible(False)
-axes[-2][-1].set_visible(False)
-
-# Annotate the columns of the figure
-for i, depth_type in enumerate(list(best_predictions.keys())):
-    axes[i][0].text(
-        0.5,
-        1.1,
-        depth_type,
-        fontsize="large",
-        fontweight="bold",
-        horizontalalignment="center",
-        transform=axes[i][0].transAxes,
-    )
+axes[-1][-2].set_visible(False)
 
 # Add colorbar
 fig.subplots_adjust(bottom=0.1, wspace=0.05)

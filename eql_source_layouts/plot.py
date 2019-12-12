@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 
 def plot_prediction(
-    prediction, target, units, figsize=(18, 6), shrink_cbar=0.7, bins=20, show=True
+    prediction, target, units, figsize=(15, 5), shrink_cbar=0.7, bins=20, show=True
 ):
     """
     Plot prediction and comparison with target
