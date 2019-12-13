@@ -2,6 +2,7 @@
 \usepackage[left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}
 \setlength{\columnsep}{2\columnsep}
 \usepackage[utf8]{inputenc}
+\usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[round]{natbib}
@@ -127,17 +128,46 @@ How it can be understood in terms of Green's functions problem.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Source layouts}
+\section{Source distributions}
 
-Describe the proposed source layouts.
+Describe the proposed source distributions as combination of layouts and depths
+strategies.
+
+\begin{table*}
+    \begin{minipage}{80mm}
+        \caption{
+            Source distributions as combinations of source layouts and depth
+            strategies.
+        }
+        \label{tab:source-distributions}
+        \begin{tabular}{lccc}
+            & Source bellow data & Block-reduced data & Grid sources \\ \hline
+            Constant depth          & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+            Relative depth          & $\checkmark$ & $\checkmark$ & $\times$     \\
+            Variable relative depth & $\checkmark$ & $\checkmark$ & $\times$     \\
+        \end{tabular}
+    \end{minipage}
+\end{table*}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Comparison of source layouts}
+\section{Comparison of source distributions}
 
-Describe forward model made out of prisms, ground and airborne survey (plus noise), the
-target grid, how do we score each interpolation.
+\subsection{Synthetic Model}
+
+Describe forward model made out of prisms.
+Show prisms model?
+
+\subsection{Synthetic Surveys}
+
+Describe the ground and airborne survey (plus noise).
+Show survey values.
+
+\subsection{Comparisons}
+
+Describe the target grid. Show target grid figure.
+Describe the parameters used for each source distribution, how do we score each interpolation.
 Describe the Harmonica implementation of the EQL.
 
 Show results.
