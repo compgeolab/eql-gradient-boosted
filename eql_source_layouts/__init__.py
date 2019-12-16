@@ -5,9 +5,9 @@ from .layouts import source_bellow_data, block_reduced_sources, grid_sources
 from .synthetic_model import synthetic_model
 from .plot import plot_prediction
 from .utils import (
+    combine_parameters,
     get_best_prediction,
     grid_data,
-    parameters_scores_to_df,
     grid_to_dataarray,
     predictions_to_datasets,
 )

@@ -1,3 +1,4 @@
+import itertools
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -7,25 +8,16 @@ from sklearn.metrics import r2_score
 from . import layouts
 
 
-def parameters_scores_to_df(parameters_set, scores):
+def combine_parameters(**kwargs):
     """
-    Convert scores and parameters into a pandas.DataFrame
-
-    Parameters
-    ----------
-    parameters_set : list
-    scores : list
+    Create a combination of given parameters using itertools
     """
-    df = {}
-    for keys in parameters_set[0]:
-        df[keys] = []
-    df["score"] = []
-    for parameters, score in zip(parameters_set, scores):
-        for key, param in parameters.items():
-            df[key].append(param)
-        df["score"].append(score)
-    df = pd.DataFrame(df)
-    return df
+    values = [np.atleast_1d(v) for v in kwargs.values()]
+    parameters = [
+        {key: combo[i] for i, key in enumerate(kwargs.keys())}
+        for combo in itertools.product(*values)
+    ]
+    return parameters
 
 
 def grid_to_dataarray(prediction, grid, **kwargs):
@@ -88,7 +80,8 @@ def get_best_prediction(
         coordinates, data, grid, layout, depth_type, best_parameters
     )
     # Convert parameters and scores to a pandas.DataFrame
-    params_and_scores = parameters_scores_to_df(parameters_set, scores)
+    parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
+    parameters_and_scores["score"] = scores
     # Convert prediction to a xarray.DataArray
     da = target.copy()
     da.values = best_prediction
@@ -98,7 +91,7 @@ def get_best_prediction(
     for key, value in best_parameters.items():
         da.attrs[key] = value
     best_prediction = da
-    return best_prediction, params_and_scores
+    return best_prediction, parameters_and_scores
 
 
 def predictions_to_datasets(predictions):
