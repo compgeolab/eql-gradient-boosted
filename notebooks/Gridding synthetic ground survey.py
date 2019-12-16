@@ -226,16 +226,17 @@ parameters = {layout: {} for layout in layouts}
 layout = "source_bellow_data"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = combine_parameters(
-    damping=dampings, constant_depth=constant_depths
+    depth_type=depth_type, damping=dampings, constant_depth=constant_depths
 )
 
 depth_type = "relative_depth"
 parameters[layout][depth_type] = combine_parameters(
-    damping=dampings, relative_depth=relative_depths
+    depth_type=depth_type, damping=dampings, relative_depth=relative_depths
 )
 
 depth_type = "variable_relative_depth"
 parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
     damping=dampings,
     depth_factor=depth_factors,
     depth_shift=depth_shifts,
@@ -246,16 +247,23 @@ parameters[layout][depth_type] = combine_parameters(
 layout = "block_reduced_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = combine_parameters(
-    damping=dampings, constant_depth=constant_depths, spacing=block_spacing
+    depth_type=depth_type,
+    damping=dampings,
+    constant_depth=constant_depths,
+    spacing=block_spacing,
 )
 
 depth_type = "relative_depth"
 parameters[layout][depth_type] = combine_parameters(
-    damping=dampings, relative_depth=relative_depths, spacing=block_spacing
+    depth_type=depth_type,
+    damping=dampings,
+    relative_depth=relative_depths,
+    spacing=block_spacing,
 )
 
 depth_type = "variable_relative_depth"
 parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
     damping=dampings,
     spacing=block_spacing,
     depth_factor=depth_factors,
@@ -267,6 +275,7 @@ parameters[layout][depth_type] = combine_parameters(
 depth_type = "constant_depth"
 layout = "grid_sources"
 parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
     damping=dampings,
     constant_depth=source_grid_depths,
     pad=source_grid_paddings,
@@ -290,7 +299,6 @@ for layout in parameters:
             grid,
             target,
             layout,
-            depth_type,
             parameters[layout][depth_type],
         )
         best_predictions.append(best_prediction)

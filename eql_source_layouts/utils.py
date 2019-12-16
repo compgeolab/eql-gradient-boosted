@@ -30,7 +30,7 @@ def grid_to_dataarray(prediction, grid, **kwargs):
     return da
 
 
-def grid_data(coordinates, data, grid, layout, depth_type, parameters):
+def grid_data(coordinates, data, grid, layout, parameters):
     """
     Interpolate data on a regular grid using EQL
 
@@ -46,7 +46,7 @@ def grid_data(coordinates, data, grid, layout, depth_type, parameters):
     # Get function to build point sources
     source_builder = getattr(layouts, layout)
     # Create the source points
-    points = source_builder(coordinates, depth_type=depth_type, **parameters)
+    points = source_builder(coordinates, **parameters)
     # Initialize the gridder passing the points and the damping
     eql = hm.EQLHarmonic(points=points, damping=parameters["damping"])
     # Fit the gridder giving the survey data
@@ -57,7 +57,7 @@ def grid_data(coordinates, data, grid, layout, depth_type, parameters):
 
 
 def get_best_prediction(
-    coordinates, data, grid, target, layout, depth_type, parameters_set
+    coordinates, data, grid, target, layout, parameters_set
 ):
     """
     Score interpolations with different parameters and get the best prediction
@@ -68,7 +68,7 @@ def get_best_prediction(
     scores = []
     for parameters in parameters_set:
         prediction = grid_data(
-            coordinates, data, grid, layout, depth_type, parameters
+            coordinates, data, grid, layout, parameters
         )
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
@@ -77,7 +77,7 @@ def get_best_prediction(
     best_parameters = parameters_set[best]
     best_score = scores[best]
     best_prediction = grid_data(
-        coordinates, data, grid, layout, depth_type, best_parameters
+        coordinates, data, grid, layout, best_parameters
     )
     # Convert parameters and scores to a pandas.DataFrame
     parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
@@ -86,7 +86,6 @@ def get_best_prediction(
     da = target.copy()
     da.values = best_prediction
     da.attrs["layout"] = layout
-    da.attrs["depth_type"] = depth_type
     da.attrs["score"] = best_score
     for key, value in best_parameters.items():
         da.attrs[key] = value
