@@ -20,16 +20,12 @@
 # synthetic, we can compute the true value of the field on this regular grid. Therefore,
 # we have an objective way to score the interpolation. This allow us to objectively
 # compare the different source layouts.
-#
-# Firstly, we want to import useful packages and define some minor functions that will
-# help us to visualize better the notebook cells and reduce ammount of code on them.
 
 # **Import useful packages**
 
 # +
 from IPython.display import display
 import os
-import itertools
 import pyproj
 import numpy as np
 import xarray as xr
@@ -41,6 +37,7 @@ from matplotlib.collections import PatchCollection
 from eql_source_layouts import (
     synthetic_model,
     grid_to_dataarray,
+    combine_parameters,
     plot_prediction,
     get_best_prediction,
     predictions_to_datasets,
@@ -78,7 +75,6 @@ noise_std = 1
 
 # Define a seed to reproduce the same results on each run
 np.random.seed(12345)
-
 
 # Define the spacing of the target regular grid
 # and its observation height
@@ -229,63 +225,53 @@ parameters = {layout: {} for layout in layouts}
 # Source bellow data
 layout = "source_bellow_data"
 depth_type = "constant_depth"
-parameters[layout][depth_type] = [
-    dict(damping=combo[0], constant_depth=combo[1])
-    for combo in itertools.product(dampings, constant_depths)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings, constant_depth=constant_depths
+)
 
 depth_type = "relative_depth"
-parameters[layout][depth_type] = [
-    dict(damping=combo[0], relative_depth=combo[1])
-    for combo in itertools.product(dampings, relative_depths)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings, relative_depth=relative_depths
+)
 
 depth_type = "variable_relative_depth"
-parameters[layout][depth_type] = [
-    dict(
-        damping=combo[0],
-        depth_factor=combo[1],
-        depth_shift=combo[2],
-        k_nearest=combo[3],
-    )
-    for combo in itertools.product(dampings, depth_factors, depth_shifts, k_values)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings,
+    depth_factor=depth_factors,
+    depth_shift=depth_shifts,
+    k_nearest=k_values,
+)
 
 # Block reduced sources
 layout = "block_reduced_sources"
 depth_type = "constant_depth"
-parameters[layout][depth_type] = [
-    dict(damping=combo[0], constant_depth=combo[1], spacing=block_spacing)
-    for combo in itertools.product(dampings, constant_depths)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings, constant_depth=constant_depths, spacing=block_spacing
+)
 
 depth_type = "relative_depth"
-parameters[layout][depth_type] = [
-    dict(damping=combo[0], relative_depth=combo[1], spacing=block_spacing)
-    for combo in itertools.product(dampings, relative_depths)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings, relative_depth=relative_depths, spacing=block_spacing
+)
 
 depth_type = "variable_relative_depth"
-parameters[layout][depth_type] = [
-    dict(
-        damping=combo[0],
-        spacing=block_spacing,
-        depth_factor=combo[1],
-        depth_shift=combo[2],
-        k_nearest=combo[3],
-    )
-    for combo in itertools.product(dampings, depth_factors, depth_shifts, k_values)
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings,
+    spacing=block_spacing,
+    depth_factor=depth_factors,
+    depth_shift=depth_shifts,
+    k_nearest=k_values,
+)
 
 # Grid sources
 depth_type = "constant_depth"
 layout = "grid_sources"
-parameters[layout][depth_type] = [
-    dict(damping=combo[0], constant_depth=combo[1], pad=combo[2], spacing=combo[3])
-    for combo in itertools.product(
-        dampings, source_grid_depths, source_grid_paddings, source_grid_spacings
-    )
-]
+parameters[layout][depth_type] = combine_parameters(
+    damping=dampings,
+    constant_depth=source_grid_depths,
+    pad=source_grid_paddings,
+    spacing=source_grid_spacings,
+)
 
 # -
 
