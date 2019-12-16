@@ -35,15 +35,11 @@ import numpy as np
 import xarray as xr
 import verde as vd
 import harmonica as hm
-from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 
 from eql_source_layouts import (
     synthetic_model,
-    source_bellow_data,
-    block_reduced_sources,
-    grid_sources,
     grid_to_dataarray,
     plot_prediction,
     get_best_prediction,

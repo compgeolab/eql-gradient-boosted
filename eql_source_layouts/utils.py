@@ -118,4 +118,3 @@ def predictions_to_datasets(predictions):
         ds.attrs["layout"] = layout
         datasets.append(ds)
     return datasets
-
