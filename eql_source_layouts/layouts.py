@@ -92,7 +92,7 @@ def source_bellow_data(
     return points
 
 
-def block_reduced_sources(
+def block_median_sources(
     coordinates,
     spacing,
     depth_type,
@@ -104,7 +104,7 @@ def block_reduced_sources(
     **kwargs,
 ):
     """
-    Put one point source beneath the block reduced observation points
+    Put one point source beneath the block-median observation points
 
     The depth of the point sources will be the upward coordinate of the corresponding
     block reduced observation point minus a relative depth. This relative depth can

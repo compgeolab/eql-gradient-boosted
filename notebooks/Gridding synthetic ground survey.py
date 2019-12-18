@@ -84,7 +84,7 @@ grid_height = 2000
 # Define set of interpolation parameters
 # ======================================
 # Define a list of source layouts
-layouts = ["source_bellow_data", "block_reduced_sources", "grid_sources"]
+layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
 dampings = [None, 1e-4, 1e-3, 1e-2]
 # Define values of constant depth
@@ -101,7 +101,7 @@ source_grid_paddings = [0, 0.1, 0.2]
 depth_factors = [0.5, 1, 5, 10]
 depth_shifts = [-100, -1000, -5000]
 k_values = [1, 10]
-# We will set the block spacing for the block reduced
+# We will set the block spacing for the block-median
 # layouts equal to the target grid spacing
 block_spacing = grid_spacing
 # -
@@ -243,8 +243,8 @@ parameters[layout][depth_type] = combine_parameters(
     k_nearest=k_values,
 )
 
-# Block reduced sources
-layout = "block_reduced_sources"
+# Block-median sources
+layout = "block_median_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
