@@ -168,9 +168,45 @@ It creates one point source beneath each populated block, solving the problem of
 with the \emph{source beneath data} layout.
 
 The depth of the point sources can be chosen following different criteria.
+Deep sources generate low frequencies, while shallow ones generate high frequencies
+(cite).
 The most simple option is to locate all point sources at the same depth, which we will
 call \emph{constant depth} in the future.
-It could introduce some artifacts, like
+If the measurement where taken at significantly different altitudes, the elevated
+computation points will be more distant to the sources than the lower ones.
+This may create problems on reproducing high frequencies on the elevated points.
+
+One possible solution is to locate each source bellow its corresponding observation
+point or block-median point at a constant \emph{relative depth} from it.
+The sources won't be all at the same depth, but they will all be at the same distance
+from their corresponding observation point or block-median point.
+It worth mention that this approach could not be applied to \emph{grid sources}.
+
+In case our survey presents heavily clustered data points, we may want to reduce the
+depth of the sources bellow that region in order to reproduce the high frequencies
+measured by these clustered observation points.
+We can propose a \emph{variable relative depth} approach that locates each point source
+to a depth proportional to the mean distance to its $k$ nearest source neighbours
+\citep{cordell1992, guspi2004, guspi2009}.
+We propose to add a static shift to the computed depth in order to prevent very shallow
+sources in case the mean distance to the $k$ nearest neighbours is too small.
+In summary, the depth of the sources can be set as follows:
+
+\begin{equation}
+    \textrm{depth} =
+        \textrm{depth_factor} \textrm{mean_distance} + \textrm{static_shift}
+\end{equation}
+
+\noindent where the $\textrm{depth_factor}$ and the $\textrm{static_shift}$ are
+parameters and the $\textrm{mean_distance}$ is the mean distance to the $k$ nearest
+source neighbours.
+
+
+The combination of the three source layouts with the three strategies to define the
+depth of the sources define seven different source distributions
+(see Table~\ref{tab:source-distributions}).
+The \emph{grid sources} is only compatible with the \emph{constant depth} scheme.
+
 
 \begin{table*}
     \begin{minipage}{80mm}
