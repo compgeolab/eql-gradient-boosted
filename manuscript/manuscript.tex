@@ -77,9 +77,11 @@ Potential field data, like gravity and magnetics, are useful for geophysics expl
 The potential field data can be obtained from ground, airborne or satellite
 measurements.
 On ground surveys the data is often gathered on scattered points or following irregular
-paths.
+paths, usually at the topographic surface.
+The data points have different heights.
 On airborne surveys the data is gathered on flight paths, producing a large number of
 data points concentrated along almost straight lines.
+The height of measurement could change because of the vertical movement of the airship.
 To improve visualization of the data for interpretation and to prepare the data for
 processing through different methods (RTP, upward continuation, Euler deconvolution,
 etc), the data needs to be interpolated on a regular grid of data points.
@@ -108,12 +110,13 @@ It has been also used for applying a reduction to the pole to magnetic data
 
 The most widely used source distribution is a set of point sources.
 The potential field of point sources is easy to compute.
+\citet{barnes2011} make use of prisms.
 How to locate these point masses?
 Existing approaches:
 (i) one point source beneath each observation point at a constant depth (cite),
 (ii) one point source beneath each observation point at a depth proportional to the
 distance to its nearest data points (cite),
-(iii) a regular grid of point sources (missing citations).
+(iii) a regular grid of sources \citep{barnes2011}.
 
 We want to find out which distribution of sources produces the best interpolations.
 
@@ -132,6 +135,42 @@ How it can be understood in terms of Green's functions problem.
 
 Describe the proposed source distributions as combination of layouts and depths
 strategies.
+
+The choice of a source distribution is not trivial and plays an important role on the
+accuracy of the predictions.
+
+The most widely used source distributions are: a regular grid of point sources and
+one point source beneath each observation point.
+
+The \emph{regular grid} creates an homogeneous distribution of point sources bellow the
+surveyed region.
+It could create too many sources on areas without data and very few ones on
+areas with a high number of observation points, leading to an underfitting of the
+observed data.
+This could be solved by reducing the grid spacing and therefore increasing the number of
+point sources, heavily increasing the computational load of the interpolation process.
+
+The \emph{source beneath data} layout adds sources where they are more needed.
+If the survey is composed by a large number of data points clustered on paths
+(like an airborne survey), putting one source beneath each observation point will create
+an anisotropic source distribution: there will be several sources distributed along
+a privileged direction.
+This could introduce aliases on the predictions and increase the computational load for
+fitting the predictor.
+
+We propose a new source distribution that could simultaneously solve the problems of the
+preceding ones: the \emph{block-median sources}.
+It consist in dividing the region in blocks of equal size, computing the median location
+of the observation points that fall inside each block, and putting one point source
+bellow this block-median coordinate.
+It creates one point source beneath each populated block, solving the problem of the
+\emph{grid sources} layout, but also reducing the number of point sources in comparison
+with the \emph{source beneath data} layout.
+
+The depth of the point sources can be chosen following different criteria.
+The most simple option is to locate all point sources at the same depth, which we will
+call \emph{constant depth} in the future.
+It could introduce some artifacts, like
 
 \begin{table*}
     \begin{minipage}{80mm}
