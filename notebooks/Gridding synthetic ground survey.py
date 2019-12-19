@@ -199,6 +199,10 @@ grid = vd.grid_coordinates(
 target = hm.prism_gravity(grid, model["prisms"], model["densities"], field=field)
 target = grid_to_dataarray(target, grid, attrs={"height": grid_height})
 
+# Save target grid to disk for future usage
+
+target.to_netcdf(os.path.join(results_dir, "target.nc"))
+
 # Plot target gravity field
 
 fig, ax = plt.subplots(figsize=(6, 6))
