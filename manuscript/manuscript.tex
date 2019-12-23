@@ -127,14 +127,15 @@ We want to find out which distribution of sources produces the best interpolatio
 
 Mathematical background of the EQL\@.
 How it can be understood in terms of Green's functions problem.
+EQL implementation on Harmonica.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Source distributions}
 
-Describe the proposed source distributions as combination of layouts and depths
-strategies.
+% Describe the proposed source distributions as combination of layouts and depths
+% strategies.
 
 The choice of a source distribution is not trivial and plays an important role on the
 accuracy of the predictions.
@@ -148,7 +149,7 @@ It could create too many sources on areas without data and very few ones on
 areas with a high number of observation points, leading to an underfitting of the
 observed data.
 This could be solved by reducing the grid spacing and therefore increasing the number of
-point sources, heavily increasing the computational load of the interpolation process.
+point sources and the computational load of the interpolation process.
 
 The \emph{source beneath data} layout adds sources where they are more needed.
 If the survey is composed by a large number of data points clustered on paths
@@ -229,6 +230,20 @@ The \emph{grid sources} is only compatible with the \emph{constant depth} scheme
 
 \section{Comparison of source distributions}
 
+Compare the accuracy of the predictions made by each source distribution.
+Need an objective way to compare them.
+Propose a synthetic gravity model made out of prisms of different sizes and density
+contrasts.
+Create a regular grid of observation points where the gravitational effect of the
+synthetic model will be computed.
+Call it the \emph{target grid}.
+Generate synthetic surveys above the same synthetic model and compute the gravitational
+effect of the model on each survey.
+Use each source distribution to predict values based on the ones obtained on each survey
+onto the same grid points of the \emph{target grid}.
+Score each interpolation by comparing the predicted values with the \emph{target grid}.
+Finally compare the accuracy of the predictions made by each source distribution.
+
 \subsection{Synthetic Model}
 
 Describe forward model made out of prisms.
@@ -236,16 +251,54 @@ Show prisms model?
 
 \subsection{Synthetic Surveys}
 
-Describe the ground and airborne survey (plus noise).
-Show survey values.
+Create synthetic surveys to produce observation points.
+In order to compare each source layout under very different set of observation points we
+create a ground and an airborne synthetic surveys.
+We selected a portion of the Southern Africa Gravity Data obtained by Dr. R.J. Kleywegt
+et al.\ and made available through the NOAA website
+(\url{https://www.ngdc.noaa.gov/mgg/gravity/gravity.html}) for creating a synthetic
+ground survey.
+We selected a portion of the Great Britain Aeromagnetic Survey acquired by Hunting
+Geology and Geophysics Ltd and Canadian Aeroservices Ltd between 1955 and 1965 and made
+available by the
+\href{
+    https://www.bgs.ac.uk/products/geophysics/aeromagneticRegional.html
+    }{
+    British Geological Survey (BGS)
+}, for creating a synthetic airborne survey.
+
+The gravitation effect of the synthetic model has been computed on both surveys and
+added Gaussian noise (standard deviation of 1mGal) to simulate acquisition errors.
 
 \subsection{Comparisons}
 
-Describe the target grid. Show target grid figure.
-Describe the parameters used for each source distribution, how do we score each interpolation.
-Describe the Harmonica implementation of the EQL.
+%Describe the target grid. Show target grid figure.
+%Describe the parameters used for each source distribution, how do we score each interpolation.
+%Describe the Harmonica implementation of the EQL.
+%Show results.
 
-Show results.
+Compute the gravitational effect of the synthetic model on a regular grid of points
+located at the same height.
+This will be called our \emph{target grid}.
+We will use it to compute the accuracy of the predictions made by each source
+distribution.
+
+Take a source distribution, fit the source coefficients and then use them to predict
+data on the grid points where the \emph{target grid} is defined.
+Define prediction error as the difference between the predicted values and the
+\emph{target grid}.
+
+Each source distribution has parameters that need to be specified before fitting its
+coefficients.
+For example, the \emph{grid of sources} needs the depth at which the sources will be
+located.
+The damping parameter used on the fitting process must also be specified beforehand.
+These parameters play an important role on the accuracy of the prediction.
+We compute several predictions made by the same source distribution, but with different
+values for its parameters.
+Then we score each interpolation by computing the R$^2$ between each prediction and the
+target grid.
+We keep the best prediction, i.e.\ the one that has the highest R$^2$ score.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
