@@ -15,7 +15,7 @@ def source_bellow_data(
     relative_depth=None,
     depth_factor=None,
     depth_shift=None,
-    k_nearest=None,
+    k_nearest=1,
     **kwargs,
 ):
     """
@@ -100,7 +100,7 @@ def block_median_sources(
     relative_depth=None,
     depth_factor=None,
     depth_shift=None,
-    k_nearest=None,
+    k_nearest=1,
     **kwargs,
 ):
     """
