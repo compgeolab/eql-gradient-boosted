@@ -145,7 +145,111 @@ parameters[layout][depth_type] = {
 }
 # -
 
-# ## 1. Create a synthetic airborne survey
+# ## 1. Create a synthetic ground survey
+#
+
+# Get coordinates of observation points from a synthetic ground survey
+
+survey = hm.synthetic.ground_survey(region=region_degrees)
+display(survey)
+
+# Project survey points into Cartesian coordinates
+
+# +
+projection = pyproj.Proj(proj="merc", lat_ts=0)
+survey["easting"], survey["northing"] = projection(
+    survey.longitude.values, survey.latitude.values
+)
+display(survey)
+
+# Define region boundaries in projected coordinates
+region = (
+    survey.easting.values.min(),
+    survey.easting.values.max(),
+    survey.northing.min(),
+    survey.northing.max(),
+)
+# -
+
+# Plot the survey points
+
+fig, ax = plt.subplots(figsize=(6, 6))
+tmp = ax.scatter(survey.easting, survey.northing, c=survey.height, s=6)
+plt.colorbar(tmp, ax=ax, label="m")
+ax.set_aspect("equal")
+ax.set_title("Height of ground survey points")
+plt.show()
+
+# Define coordinates tuple and the projected region
+
+coordinates = (survey.easting, survey.northing, survey.height)
+region = vd.get_region(coordinates)
+
+# ### Generate the source distributions
+
+for layout in parameters:
+    for depth_type in parameters[layout]:
+        source_distributions[layout][depth_type] = getattr(eql_source_layouts, layout)(
+            coordinates, **parameters[layout][depth_type]
+        )
+
+
+# Plot source distributions
+
+# +
+heights = tuple(
+    source_distributions[layout][depth_type][2]
+    for layout in source_distributions
+    for depth_type in source_distributions[layout]
+)
+vmin = np.min([h.min() for h in heights])
+vmax = np.max([h.max() for h in heights])
+
+fig, axes = plt.subplots(figsize=(12, 12), nrows=3, ncols=3, sharex=True, sharey=True)
+for i, (ax_row, layout) in enumerate(zip(axes, source_distributions)):
+    for j, (ax, depth_type) in enumerate(zip(ax_row, source_distributions[layout])):
+        points = source_distributions[layout][depth_type]
+        tmp = ax.scatter(*points[:2], c=points[2], s=10, vmin=vmin, vmax=vmax)
+        ax.set_title("n_points: {}".format(points[0].size))
+        ax.set_aspect("equal")
+        # Annotate the columns of the figure
+        if i == 0:
+            ax.text(
+                0.5,
+                1.15,
+                depth_type,
+                fontsize="large",
+                fontweight="bold",
+                horizontalalignment="center",
+                transform=ax.transAxes,
+            )
+        # Annotate the rows of the figure
+        if j == 0:
+            ax.text(
+                -0.3,
+                0.5,
+                layout,
+                fontsize="large",
+                fontweight="bold",
+                verticalalignment="center",
+                transform=ax.transAxes,
+                rotation="vertical",
+            )
+
+
+# Hide the last two axes because they are not used
+axes[-1][-1].set_visible(False)
+axes[-1][-2].set_visible(False)
+
+# Add colorbar
+fig.subplots_adjust(bottom=0.1, wspace=0.05)
+cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
+fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label="m")
+
+plt.show()
+# -
+
+# ## 2. Create a synthetic airborne survey
 #
 
 # Get coordinates of observation points from a synthetic airborne survey
@@ -185,7 +289,7 @@ plt.show()
 coordinates = (survey.easting, survey.northing, survey.height)
 region = vd.get_region(coordinates)
 
-# ## Generate the source distributions
+# ### Generate the source distributions
 
 for layout in parameters:
     for depth_type in parameters[layout]:
@@ -205,9 +309,7 @@ heights = tuple(
 vmin = np.min([h.min() for h in heights])
 vmax = np.max([h.max() for h in heights])
 
-fig, axes = plt.subplots(
-    figsize=(12, 12), nrows=3, ncols=3, sharex=True, sharey=True,
-)
+fig, axes = plt.subplots(figsize=(12, 12), nrows=3, ncols=3, sharex=True, sharey=True)
 for i, (ax_row, layout) in enumerate(zip(axes, source_distributions)):
     for j, (ax, depth_type) in enumerate(zip(ax_row, source_distributions[layout])):
         points = source_distributions[layout][depth_type]
