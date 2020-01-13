@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.0
+#       jupytext_version: 1.3.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python [conda env:eql_source_layouts]
 #     language: python
-#     name: python3
+#     name: conda-env-eql_source_layouts-py
 # ---
 
 # # Gridding a synthetic airborne survey
@@ -86,7 +86,7 @@ grid_height = 2000
 # Define a list of source layouts
 layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = [None, 1e-4, 1e-3, 1e-2]
+dampings = [None, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3]
 # Define values of constant depth
 constant_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 # Define values of relative depth
@@ -94,13 +94,13 @@ relative_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 # Define parameters for the grid layout:
 #    spacing, depth and padding
 source_grid_spacings = [0.5e3, 1e3, 2e3]
-source_grid_depths = [1e3, 2e3, 5e3]
+source_grid_depths = [100, 500, 1e3, 2e3, 5e3]
 source_grid_paddings = [0, 0.1, 0.2]
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
 depth_factors = [0.5, 1, 5, 10]
-depth_shifts = [-100, -1000, -5000]
-k_values = [1, 10]
+depth_shifts = [-50, -100, -500, -1000, -2000, -5000]
+k_values = [1, 3, 5, 10]
 # We will set the block spacing for the block-median
 # layouts equal to the target grid spacing
 block_spacing = grid_spacing
