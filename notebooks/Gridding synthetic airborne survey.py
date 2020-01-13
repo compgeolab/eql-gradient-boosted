@@ -99,7 +99,7 @@ source_grid_paddings = [0, 0.1, 0.2]
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
 depth_factors = [0.5, 1, 5, 10]
-depth_shifts = [0, -100, -500, -1000, -2000, -5000]
+depth_shifts = [-50, -100, -500, -1000, -2000, -5000]
 k_values = [1, 3, 5, 10]
 # We will set the block spacing for the block-median
 # layouts equal to the target grid spacing
