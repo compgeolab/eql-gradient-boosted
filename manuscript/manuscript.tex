@@ -160,17 +160,22 @@ $\{\mathbf{q}_1, \ldots, \mathbf{q}_M\}$.
 The point sources must generate the same gravity field as the one measured:
 
 \begin{equation}
-    \mathbf{g}(\mathbf{p}) = \mathbf{A} \mathbf{m},
+    g_z(\mathbf{p}) = \mathbf{A} \mathbf{m},
+    \label{eq:linear-problem-g}
 \end{equation}
 
-\noindent where $\mathbf{g}(\mathbf{p})$ is the vector containing the measured
+\noindent where $g_z(\mathbf{p})$ is the vector containing the measured
 field on the points $\mathbf{p}$, $\mathbf{m}$ is the vector containing the
 masses of the point sources and $\mathbf{A}$ a matrix whose
-elements can be obtained as:
+elements can be obtained as the vertical component of the gravitational
+acceleration measured on $\mathbf{p}$ due to the point mass on $\mathbf{q}$:
 
 \begin{equation}
-    a_{ij} = G \frac{1}{|\mathbf{p}_i - \mathbf{q}_j|^2},
+    a_{ij} = G \frac{(z_i - z_j)}{|\mathbf{p}_i - \mathbf{q}_j|^3},
 \end{equation}
+
+\noindent where $z_i$ and $z_j$ are the vertical components of the
+$\mathbf{p}_i$ and $\mathbf{q}_j$ points, respectively.
 
 By solving equation~\ref{eq:linear-problem-g} we can obtain the values of
 $\mathbf{m}$ that better reproduce the measured field.
