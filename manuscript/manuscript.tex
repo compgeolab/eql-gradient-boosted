@@ -32,7 +32,7 @@
 
 }
 \newcommand{\DOI}{
-    doi:\href{https://doi.org/xxx.xxx/xxxxxx}{10.1093/xxx.xxx/xxxxxx}
+    doi:\href{https://doi.org/xxx.xxx/xxxxxx}{xxx.xxx/xxxxxx}
 }
 \newcommand{\DOILink}{
     \href{https://doi.org/xxx.xxx/xxxxxx}{doi.org/xxx.xxx/xxxxxx}
@@ -143,14 +143,14 @@ This introduces an ambiguity on the distribution that generates
 a potential field: multiple physical-property distributions can generate the
 same potential field.
 This represents an obstacle for determining the true shape and
-physical-property distribution that generates the measured potential field.
+physical-property distribution that generates any measured potential field.
 Nevertheless this ambiguity can also be exploited for developing preprocessing
 techniques like interpolating potential field data.
 
 Approximating the continuous distribution by a finite and discrete density
 distribution is the basis of the \emph{equivalent sources technique}
 \citep{dampney1969}.
-The most common approach is to make use of a set of point masses (the
+The most common approach is to make use of a set of point sources (the
 \emph{equivalent sources}) located beneath the observation points.
 
 Lets consider a set of gravity acceleration measurements $g_z$ on points
@@ -161,18 +161,15 @@ The point sources must generate the same gravity field as the one measured:
 
 \begin{equation}
     \mathbf{g}(\mathbf{p}) = \mathbf{A} \mathbf{m},
-    \label{eq:linear-problem-g}
 \end{equation}
 
 \noindent where $\mathbf{g}(\mathbf{p})$ is the vector containing the measured
 field on the points $\mathbf{p}$, $\mathbf{m}$ is the vector containing the
-masses of the point sources and $\mathbf{A}$ the \emph{Jacobian matrix}, whose
+masses of the point sources and $\mathbf{A}$ a matrix whose
 elements can be obtained as:
 
 \begin{equation}
     a_{ij} = G \frac{1}{|\mathbf{p}_i - \mathbf{q}_j|^2},
-    \quad \forall \,\, i = 1, \ldots, N
-    \quad \forall \,\, j = 1, \ldots, M.
 \end{equation}
 
 By solving equation~\ref{eq:linear-problem-g} we can obtain the values of
@@ -180,20 +177,11 @@ $\mathbf{m}$ that better reproduce the measured field.
 This source distribution along with the fitted masses can be used to predict
 gravity values on any point where the potential field has not been measured.
 
-Worth noting that solving equation~\ref{eq:linear-problem-g} is equivalent to
-an inversion and thus solving an ill-posed problem by nature due to the
-non-uniqueness and the instability of the possible solutions.
-Therefore is usually needed to add regularization functions in order to obtain
-stable solutions \citep{oliveira2013}.
-Moreover there's no limitation on the amount of point sources.
-The number of sources can either be equal, less or more than the number of
-observation points, leading to well, under or overdetermined linear problem,
-respectively.
-
-Add other possible applications to the EQL like RTP or upward continuation.
-
 
 \subsection{Generalization of equivalent sources}
+
+It's possible to generalize the equivalent sources technique to any harmonic
+field through a Green's function problem, regardless the nature of the field.
 
 By definition, any harmonic field $V$ must satisfy the Laplace's equation:
 
@@ -224,19 +212,88 @@ follows \citep{blakely1995}:
     \frac{\delta(\mathbf{p}, \mathbf{q})}{|\mathbf{p} - \mathbf{q}|}
     \textrm{d}v
     =
-    \frac{1}{|\mathbf{p} - \mathbf{q}|}
-    =
-    \frac{1}{r}.
+    \frac{1}{|\mathbf{p} - \mathbf{q}|}.
 \end{equation}
 
 This shows that the Green's function associated with any harmonic field is
-equal to one over the Cartesian distance between the evaluation and the source
-points.
+equal to the inverse of the Cartesian distance between the evaluation and the
+source points.
+Thus any harmonic field $V$ can be expressed as \citep[p.~37]{blakely1995}:
 
-Mathematical background of the EQL\@.
-How it can be understood in terms of Green's functions problem.
+\begin{equation}
+    V(\mathbf{p})
+    =
+    \int \psi(\mathbf{p}, \mathbf{q}) \rho(\mathbf{q}) d\mathbf{q}
+    =
+    \int \frac{\rho(\mathbf{q})}{|\mathbf{p} - \mathbf{q}|}  d\mathbf{q},
+\end{equation}
+
+\noindent where $\rho(\mathbf{q})$ is the density distribution of a certain
+physical-property evaluated on the point $\mathbf{q}$. This density
+distribution can be approximated by a finite and discrete set of point sources
+located on $\{\mathbf{q}_1, \ldots, \mathbf{q}_M\}$:
+
+\begin{equation}
+    \rho(\mathbf{q}) =
+        \sum\limits_{j=1}^{M} c_j \delta(\mathbf{q} - \mathbf{q_j}),
+\end{equation}
+
+\noindent where $c_j$ is a coefficient related to the point source located on
+$\mathbf{q}_j$, with the same units as the physical-property.
+Then the harmonic field $V$ can be approximated by:
+
+\begin{equation}
+    V(\mathbf{p})
+    \simeq
+    \sum\limits_{j=1}^{M} \frac{c_j}{|\mathbf{p} - \mathbf{q}_j|}.
+\end{equation}
+
+In case we have measured the value of the harmonic field on points
+$\{\mathbf{p}_1, \ldots, \mathbf{p}_N\}$, we can adjust the values of the $c$
+coefficients so they satisfy:
+
+\begin{equation}
+    V(\mathbf{p}_i)
+    =
+    \sum\limits_{j=1}^{M} \frac{c_j}{|\mathbf{p}_i - \mathbf{q}_j|}
+    \quad \forall i=1,\ldots,N.
+\end{equation}
+
+This system of linear equations can be written in an more algebraic way:
+
+\begin{equation}
+    V(\mathbf{p}) = \mathbf{A} \mathbf{c}
+    \label{eq:linear-problem}
+\end{equation}
+
+\noindent where $V(\mathbf{p}$) is a vertical vector containing the measured
+values of $V$ on the observation points, $\mathbf{c}$ a vertical vector
+containing the $c$ coefficients and $\mathbf{A}$ is the \emph{Jacobian matrix},
+whose elements are defined as the Green's function evaluated on each pair of
+points $\mathbf{p}$ and $\mathbf{q}$:
+
+\begin{equation}
+    a_{ij}
+    =
+    \psi(\mathbf{p}_i, \mathbf{q}_j)
+    =
+    \frac{1}{|\mathbf{p}_i - \mathbf{q}_j|}
+\end{equation}
+
+
+Worth noting that solving equation~\ref{eq:linear-problem} is equivalent to
+an inversion and thus solving an ill-posed problem by nature due to the
+non-uniqueness and the instability of the possible solutions.
+Therefore is usually needed to add regularization functions in order to obtain
+stable solutions \citep{oliveira2013}.
+Moreover there's no limitation on the amount of point sources.
+The number of sources can either be equal, less or more than the number of
+observation points, leading to well, under or overdetermined linear problem,
+respectively.
+
+Add other possible applications to the EQL like RTP or upward continuation.
+
 EQL implementation on Harmonica.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
