@@ -312,6 +312,73 @@ respectively.
 
 % EQL implementation on Harmonica.
 
+\subsection{Equivalent sources implementation}
+
+The subsequent comparisons between strategies for interpolating data through
+equivalent sources are carried out by the equivalent sources implementation in
+Harmonica \citep{harmonica}.
+
+It solves equation~\ref{eq:linear-problem} by a least-squares fit, with
+the option of adding a zeroth-order Tikhonov \citep{tikhonov} regularization
+through a dimensionless \emph{damping} parameter.
+This is achieved by scaling the Jacobian matrix so each column has unit
+variance.
+
+Define a diagonal matrix $S$, whose elements corresponds to the standard
+deviation of each column of the Jacobian matrix $\mathbf{A}$:
+
+\begin{equation}
+    \mathbf{S} =
+    \begin{bmatrix}
+        \sigma_1 & \cdots &0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \cdots & \sigma_M
+    \end{bmatrix}.
+\end{equation}
+
+Equation~\ref{eq:linear-problem} can be written as:
+
+\begin{equation}
+    V(\mathbf{p})
+    =
+    \mathbf{A} \mathbf{S}^{-1} \mathbf{S} \mathbf{c}
+    =
+    \left[
+        \mathbf{A} \mathbf{S}^{-1}
+    \right]
+    \left[
+        \mathbf{S} \mathbf{c}
+    \right]
+    =
+    \mathbf{A}' \mathbf{c}'
+\end{equation}
+
+\noindent where $\mathbf{A}'$ the scaled Jacobian matrix and $\mathbf{c}'$ is
+a vector containing scaled coefficients.
+
+Now we can define the misfit function as the sum between the data misift and
+the Tikhonov regularization function:
+
+\begin{equation}
+    \phi(\mathbf{c'}) =
+        \left\lVert V(\mathbf{p}) - \mathbf{A}'\mathbf{c}' \right\rVert ^ 2
+        + \lambda \left\lVert \mathbf{c}' \right\rVert ^2,
+    \label{eq:misfit}
+\end{equation}
+
+\noindent where $\lambda$ is a dimensionless damping parameter.
+
+After solving the least squares problem, we obtain the set of scaled
+coefficients $\mathbf{c}'$ that minimizes equation~\ref{eq:misfit}.
+We can get the corresponding coefficients $\mathbf{c}$ by rescaling
+$\mathbf{c}'$:
+
+\begin{equation}
+    \mathbf{c} = \mathbf{S}^{-1} \mathbf{c}'.
+\end{equation}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Source distributions}
