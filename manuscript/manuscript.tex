@@ -153,6 +153,10 @@ distribution is the basis of the \emph{equivalent sources technique}
 The most common approach is to make use of a set of point sources (the
 \emph{equivalent sources}) located beneath the observation points.
 
+A classical approach for applying the equivalent sources technique would be to
+propose a set of point sources that generate the same harmonic field that has
+been measured.
+This requires
 Lets consider a set of gravity acceleration measurements $g_z$ on points
 $\{\mathbf{p}_1, \ldots, \mathbf{p}_N\}$ and a set of point sources with mass
 $\{m_1, \ldots, m_M\}$ located on points
@@ -234,9 +238,10 @@ Thus any harmonic field $V$ can be expressed as \citep[p.~37]{blakely1995}:
 \end{equation}
 
 \noindent where $\rho(\mathbf{q})$ is the density distribution of a certain
-physical-property evaluated on the point $\mathbf{q}$. This density
-distribution can be approximated by a finite and discrete set of point sources
-located on $\{\mathbf{q}_1, \ldots, \mathbf{q}_M\}$:
+physical-property evaluated on the point $\mathbf{q}$. Following
+\citet{dampney1969}, this density distribution can be approximated by a finite
+and discrete set of point sources located on $\{\mathbf{q}_1, \ldots,
+\mathbf{q}_M\}$:
 
 \begin{equation}
     \rho(\mathbf{q}) =
@@ -249,8 +254,9 @@ Then the harmonic field $V$ can be approximated by:
 
 \begin{equation}
     V(\mathbf{p})
-    \simeq
+    =
     \sum\limits_{j=1}^{M} \frac{c_j}{|\mathbf{p} - \mathbf{q}_j|}.
+    \label{eq:eql-field}
 \end{equation}
 
 In case we have measured the value of the harmonic field on points
@@ -285,10 +291,16 @@ points $\mathbf{p}$ and $\mathbf{q}$:
     \frac{1}{|\mathbf{p}_i - \mathbf{q}_j|}
 \end{equation}
 
+By solving equation~\ref{eq:linear-problem} we can obtain the values of
+$\mathbf{c}$ that better reproduce the measured field.
+Then they can be used to predict the value of the harmonic field on any other
+point where no measurement has been taken by evaluating
+equation~\ref{eq:eql-field}.
 
-Worth noting that solving equation~\ref{eq:linear-problem} is equivalent to
-an inversion and thus solving an ill-posed problem by nature due to the
-non-uniqueness and the instability of the possible solutions.
+Worth noting that solving equations~\ref{eq:linear-problem-g}
+and~\ref{eq:linear-problem} is equivalent to performing an inversion and thus
+solving an ill-posed problem by nature due to the non-uniqueness and the
+instability of the possible solutions.
 Therefore is usually needed to add regularization functions in order to obtain
 stable solutions \citep{oliveira2013}.
 Moreover there's no limitation on the amount of point sources.
@@ -296,9 +308,9 @@ The number of sources can either be equal, less or more than the number of
 observation points, leading to well, under or overdetermined linear problem,
 respectively.
 
-Add other possible applications to the EQL like RTP or upward continuation.
+% Add other possible applications to the EQL like RTP or upward continuation.
 
-EQL implementation on Harmonica.
+% EQL implementation on Harmonica.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
