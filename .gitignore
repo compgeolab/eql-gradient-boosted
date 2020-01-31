@@ -8,6 +8,7 @@ dist/
 .*.swp
 .coverage
 .cache
+*.ipynb
 .ipynb_checkpoints
 *.egg-info
 MANIFEST
