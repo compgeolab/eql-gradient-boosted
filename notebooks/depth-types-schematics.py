@@ -63,7 +63,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 plt.style.use(os.path.join("..", "matplotlib.rc"))
-fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 2), dpi=300)
+fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 1.5), dpi=300)
 size = 8
 
 titles = ["Constant Depth", "Relative Depth", "Variable Relative Depth"]
