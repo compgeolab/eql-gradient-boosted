@@ -166,13 +166,14 @@ survey.to_csv(os.path.join(airborne_results_dir, "survey.csv"), index=False)
 # a regular grid at a constant height.
 
 grid = vd.grid_coordinates(
-    region=region, spacing=target_grid_spacing, extra_coords=target_grid_height
+    region=region,
+    spacing=target_grid_spacing,
+    adjust="region",
+    extra_coords=target_grid_height,
 )
 
 target = hm.prism_gravity(grid, model["prisms"], model["densities"], field=field)
 target = grid_to_dataarray(target, grid, attrs={"height": target_grid_height})
-
-target
 
 # Save target grid to disk for future usage
 
