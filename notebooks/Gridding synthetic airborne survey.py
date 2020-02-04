@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.3
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -93,7 +93,7 @@ constant_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 relative_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 # Define parameters for the grid layout:
 #    spacing, depth and padding
-source_grid_spacings = [0.5e3, 1e3, 2e3]
+source_grid_spacings = [1e3, 2e3, 3e3]
 source_grid_depths = [100, 500, 1e3, 2e3, 5e3]
 source_grid_paddings = [0, 0.1, 0.2]
 # Define parameters for variable relative depth layouts:
