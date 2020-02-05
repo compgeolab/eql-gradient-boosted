@@ -13,30 +13,19 @@
 #     name: conda-env-eql_source_layouts-py
 # ---
 
-# # Gridding a synthetic airborne survey
-#
-# Let's perform a synthetic airborne survey of the synthetic model made out of prisms
-# and try to interpolate the observed data on a regular grid. Because the model is
-# synthetic, we can compute the true value of the field on this regular grid. Therefore,
-# we have an objective way to score the interpolation. This allow us to objectively
-# compare the different source layouts.
+# # Grid ground survey data using different source distributions
 
 # **Import useful packages**
 
 # +
-from IPython.display import display
 import os
-import pyproj
 import numpy as np
+import pandas as pd
 import xarray as xr
 import verde as vd
-import harmonica as hm
 import matplotlib.pyplot as plt
-from matplotlib.collections import PatchCollection
 
 from eql_source_layouts import (
-    synthetic_model,
-    grid_to_dataarray,
     combine_parameters,
     plot_prediction,
     get_best_prediction,
@@ -45,41 +34,24 @@ from eql_source_layouts import (
 
 # -
 
-# ## 1. Define parameters used on the gridding
+# ## Define parameters used on the gridding
 #
 # Let's define all the parameters that will be used on this notebook in the following
 # cells. These control the results that will be obtain on the rest of the notebook. If
-# you want to change something (like the computation height of the grid, the survey
-# region, interpolation parameters, etc), you can just do it here.
+# you want to change something (like the interpolation parameters), you can just do it
+# here.
 #
 # We will avoid hardcoding parameters outside of these few cells in order to facilitate
 # reproducibility and keep things more organized.
 
 # +
 # Define results directory
-results_dir = os.path.join("..", "results", "airborne_survey")
-
-# Define a survey region of 1 x 1 degrees (~ 100km x 100km)
-region_degrees = (-0.5, 0.5, -0.5, 0.5)
-
-# Define bottom and top of the synthetic model
-model_bottom, model_top = -10e3, 0
+results_dir = os.path.join("..", "results")
+ground_results_dir = os.path.join(results_dir, "ground_survey")
 
 # Define which field will be meassured
 field = "g_z"
 field_units = "mGal"
-
-# Define standard deviation for the Gaussian noise that
-# will be added to the synthetic survey (in mGal)
-noise_std = 1
-
-# Define a seed to reproduce the same results on each run
-np.random.seed(12345)
-
-# Define the spacing of the target regular grid
-# and its observation height
-grid_spacing = 2e3
-grid_height = 2000
 
 # Define set of interpolation parameters
 # ======================================
@@ -93,126 +65,43 @@ constant_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 relative_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
 # Define parameters for the grid layout:
 #    spacing, depth and padding
-source_grid_spacings = [1e3, 2e3, 3e3]
-source_grid_depths = [100, 500, 1e3, 2e3, 5e3]
+source_grid_spacings = [1e3, 2e3, 3e3, 4e3]
+source_grid_depths = [100, 500, 1e3, 2e3, 5e3, 7e3, 10e3]
 source_grid_paddings = [0, 0.1, 0.2]
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
 depth_factors = [0.5, 1, 5, 10]
-depth_shifts = [-50, -100, -500, -1000, -2000, -5000]
+depth_shifts = [0, -100, -500, -1000, -2000, -5000]
 k_values = [1, 3, 5, 10]
 # We will set the block spacing for the block-median
 # layouts equal to the target grid spacing
-block_spacing = grid_spacing
+block_spacing = 2000
 # -
 
-# ## 2. Create the synthetic airborne survey
-#
-# To create the airborne survey we need to load the synthetic model made out of prisms,
-# the location of the observation points and then compute the field that the prisms
-# generate on those points.
+# ## Read synthetic ground survey and target grid
 
-# Get coordinates of observation points
+# Read ground survey
 
-survey = hm.synthetic.airborne_survey(region=region_degrees)
-display(survey)
+survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
 
-# Project survey points into Cartesian coordinates
+survey
+
+# Read target grid
+
+target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+
+target
+
+# Define coordinates and grid arrays
 
 # +
-projection = pyproj.Proj(proj="merc", lat_ts=0)
-survey["easting"], survey["northing"] = projection(
-    survey.longitude.values, survey.latitude.values
-)
-display(survey)
+coordinates = (survey.easting.values, survey.northing.values, survey.height.values)
 
-# Define region boundaries in projected coordinates
-region = (
-    survey.easting.values.min(),
-    survey.easting.values.max(),
-    survey.northing.min(),
-    survey.northing.max(),
-)
+grid = np.meshgrid(target.easting, target.northing)
+grid.extend(np.full_like(grid[0], target.height))
 # -
 
-# Plot the survey points
-
-fig, ax = plt.subplots(figsize=(6, 6))
-tmp = ax.scatter(survey.easting, survey.northing, c=survey.height, s=6)
-plt.colorbar(tmp, ax=ax, label="m")
-ax.set_aspect("equal")
-ax.set_title("Height of airborne survey points")
-plt.show()
-
-# Get the synthetic model
-
-# +
-# Define model region
-model_region = tuple(list(region) + [model_bottom, model_top])
-
-# Create synthetic model
-model = synthetic_model(model_region)
-print(model.keys())
-print("Number of prisms: {}".format(len(model["densities"])))
-# -
-
-fig, ax = plt.subplots(figsize=(6, 6))
-ax.add_collection(PatchCollection(model["rectangles"], match_original=True))
-ax.set_aspect("equal")
-ax.set_title("Synthetic model made out of prisms")
-ax.set_xlim(region[:2])
-ax.set_ylim(region[2:4])
-plt.show()
-
-# Compute the gravity field (g_z) on the observation points in mGal and add Gaussian
-# noise
-
-coordinates = (survey.easting, survey.northing, survey.height)
-survey[field] = hm.prism_gravity(
-    coordinates, model["prisms"], model["densities"], field=field
-) + np.random.normal(scale=noise_std, size=survey.easting.size)
-display(survey)
-
-# Plot the observed field
-
-fig, ax = plt.subplots(figsize=(6, 6))
-tmp = ax.scatter(survey.easting, survey.northing, c=getattr(survey, field), s=6)
-plt.colorbar(tmp, ax=ax, label=field_units)
-ax.set_aspect("equal")
-ax.set_title("Synthetic airborne survey")
-plt.show()
-
-# ## 3. Compute the field of the synthetic model on a grid
-#
-# Now, let's compute the gravity field that the synthetic model generates on the regular
-# grid. These results will serve as a target for the interpolations using different
-# source layouts.
-
-# Build the regular grid
-
-grid = vd.grid_coordinates(
-    region=region, spacing=grid_spacing, extra_coords=grid_height
-)
-
-# Compute the synthetic gravity field on the grid
-
-target = hm.prism_gravity(grid, model["prisms"], model["densities"], field=field)
-target = grid_to_dataarray(target, grid, attrs={"height": grid_height})
-
-# Save target grid to disk for future usage
-
-target.to_netcdf(os.path.join(results_dir, "target.nc"))
-
-# Plot target gravity field
-
-fig, ax = plt.subplots(figsize=(6, 6))
-tmp = target.plot.pcolormesh(center=False, add_colorbar=False)
-plt.colorbar(tmp, ax=ax, shrink=0.7, label=field_units)
-ax.set_aspect("equal")
-ax.set_title("Target grid values")
-plt.show()
-
-# ## 4. Grid data using different source layouts
+# ## Grid data using different source layouts
 #
 # Let's grid the synthetic data using the Equivalent Layer method using different source
 # layouts. For each layout we will perform several interpolations, one for each set of
@@ -290,7 +179,7 @@ parameters[layout][depth_type] = combine_parameters(
 
 # ## Score each interpolation
 
-# +
+# + jupyter={"outputs_hidden": true}
 scores = {layout: {} for layout in layouts}
 best_predictions = []
 
@@ -315,14 +204,18 @@ for layout in parameters:
 datasets = predictions_to_datasets(best_predictions)
 for dataset in datasets:
     dataset.to_netcdf(
-        os.path.join(results_dir, "best_predictions-{}.nc".format(dataset.layout))
+        os.path.join(
+            ground_results_dir, "best_predictions-{}.nc".format(dataset.layout)
+        )
     )
 
 for layout in scores:
     for depth_type in scores[layout]:
         score = scores[layout][depth_type]
         score.to_csv(
-            os.path.join(results_dir, "scores-{}-{}.nc".format(depth_type, layout)),
+            os.path.join(
+                ground_results_dir, "scores-{}-{}.nc".format(depth_type, layout)
+            ),
             index=False,
         )
 # -
@@ -335,7 +228,7 @@ best_predictions = []
 for layout in layouts:
     best_predictions.append(
         xr.open_dataset(
-            os.path.join(results_dir, "best_predictions-{}.nc".format(layout))
+            os.path.join(ground_results_dir, "best_predictions-{}.nc".format(layout))
         )
     )
 
@@ -354,17 +247,14 @@ for dataset in best_predictions:
 # ## 6. Plot and compare all best predictions
 
 # +
-# Get the boundary values of the colorbar as the 99 percentile of
-# the difference between target an all predictions.
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
-vmax = np.percentile(
-    tuple(
+vmax = vd.maxabs(
+    *list(
         target - dataset[depth_type]
         for dataset in best_predictions
         for depth_type in dataset
-    ),
-    q=99.9,
+    )
 )
 
 # Initialize figure
