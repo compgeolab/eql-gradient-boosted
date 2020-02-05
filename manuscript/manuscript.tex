@@ -349,10 +349,10 @@ Equation~\ref{eq:linear-problem} can be written as:
         \mathbf{S} \mathbf{c}
     \right]
     =
-    \mathbf{A}' \mathbf{c}'
+    \mathbf{A_s} \mathbf{c_s}
 \end{equation}
 
-\noindent where $\mathbf{A}'$ the scaled Jacobian matrix and $\mathbf{c}'$ is
+\noindent where $\mathbf{A_s}$ the scaled Jacobian matrix and $\mathbf{c_s}$ is
 a vector containing scaled coefficients.
 
 Now we can define the misfit function as the sum between the data misift and
@@ -360,20 +360,20 @@ the Tikhonov regularization function:
 
 \begin{equation}
     \phi(\mathbf{c'}) =
-        \left\lVert V(\mathbf{p}) - \mathbf{A}'\mathbf{c}' \right\rVert ^ 2
-        + \lambda \left\lVert \mathbf{c}' \right\rVert ^2,
+        \left\lVert V(\mathbf{p}) - \mathbf{A_s}\mathbf{c_s} \right\rVert ^ 2
+        + \lambda \left\lVert \mathbf{c_s} \right\rVert ^2,
     \label{eq:misfit}
 \end{equation}
 
 \noindent where $\lambda$ is a dimensionless damping parameter.
 
 After solving the least squares problem, we obtain the set of scaled
-coefficients $\mathbf{c}'$ that minimizes equation~\ref{eq:misfit}.
+coefficients $\mathbf{c_s}$ that minimizes equation~\ref{eq:misfit}.
 We can get the corresponding coefficients $\mathbf{c}$ by rescaling
-$\mathbf{c}'$:
+$\mathbf{c_s}$:
 
 \begin{equation}
-    \mathbf{c} = \mathbf{S}^{-1} \mathbf{c}'.
+    \mathbf{c} = \mathbf{S}^{-1} \mathbf{c_s}.
 \end{equation}
 
 
