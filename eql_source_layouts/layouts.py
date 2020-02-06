@@ -90,8 +90,7 @@ def block_median_sources(
     """
     reducer = BlockReduce(spacing=spacing, reduction=np.median)
     (easting, northing), upward = reducer.filter(coordinates[:2], coordinates[2])
-    points = (easting, northing, upward)
-    points = _dispatcher(points, depth_type, **kwargs)
+    points = _dispatcher((easting, northing, upward), depth_type, **kwargs)
     return points
 
 
@@ -138,8 +137,7 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
         region = pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
     upward = np.full_like(easting, coordinates[2].min()) - constant_depth
-    points = (easting, northing, upward)
-    return points
+    return easting, northing, upward
 
 
 def set_constant_depth(points, constant_depth, **kwargs):
@@ -148,8 +146,7 @@ def set_constant_depth(points, constant_depth, **kwargs):
     """
     easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
     upward = np.full_like(upward, upward.min()) - constant_depth
-    points = (easting, northing, upward)
-    return points
+    return easting, northing, upward
 
 
 def set_relative_depth(points, relative_depth, **kwargs):
@@ -161,8 +158,8 @@ def set_relative_depth(points, relative_depth, **kwargs):
     original points have different elevations.
     """
     easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
-    points = (easting, northing, upward - relative_depth)
-    return points
+    upward -= relative_depth
+    return easting, northing, upward
 
 
 def set_variable_depth(points, depth_factor, relative_depth, k_nearest, **kwargs):
@@ -172,5 +169,4 @@ def set_variable_depth(points, depth_factor, relative_depth, k_nearest, **kwargs
     easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
     upward -= relative_depth
     upward -= depth_factor * median_distance(points, k_nearest=k_nearest)
-    points = (easting, northing, upward)
-    return points
+    return easting, northing, upward
