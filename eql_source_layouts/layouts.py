@@ -15,11 +15,11 @@ def _dispatcher(points, depth_type, **kwargs):
     if depth_type not in DEPTH_TYPES:
         raise ValueError("Invalid depth type '{}'.".format(depth_type))
     if depth_type == "constant_depth":
-        return set_constant_depth(points, **kwargs)
+        return constant_depth(points, **kwargs)
     elif depth_type == "relative_depth":
-        return set_relative_depth(points, **kwargs)
+        return relative_depth(points, **kwargs)
     elif depth_type == "variable_depth":
-        return set_variable_depth(points, **kwargs)
+        return variable_depth(points, **kwargs)
 
 
 def source_bellow_data(
@@ -28,27 +28,40 @@ def source_bellow_data(
     """
     Put one point source beneath each observation point
 
-    The depth of the point sources will be the upward coordinate of the corresponding
-    observation point minus a relative depth. This relative depth can either be constant
-    or variable. In case it's variable, it will be equal to a quantity proportional to
-    the median distance to the k nearest neighbours. The variable depth can
-    also be static shifted by a constant depth.
+    The depth of the point sources can be set according to the following methods:
+    *constant*, *relative* or *variable* depth.
+
+    The *constant depth* locates all sources at the same depth. It can be computed as
+    the difference between the minimum elevation of observation points and the ``depth``
+    argument.
+
+    The *relative depth* locates all sources at a constant _relative_ ``depth`` beneath
+    its corresponding observation point. Each source point will be located at the same
+    distance from its corresponding observation point. Sources points will _copy_ the
+    elevations of the coordinates at a ``depth`` bellow.
+
+    The *variable depth* locates the sources in the same way the _relative depth_ does
+    but also adds a term that can be computed as the product of the ``depth_factor`` and
+    the median distance between the ``k_nearest`` nearest neighbor sources.
+
+    The depth type can be chosen through the ``depth_type`` argument, while the
+    ``depth``, ``depth_factor`` and ``k_nearest`` arguments can be passed as ``kwargs``.
+
 
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
-        (``easting``, ``northing``, ``upward``).
+        Tuple containing the coordinates of the observation points in the following
+        order: (``easting``, ``northing``, ``upward``).
     depth_type : str
         Type of depth distribution for source points.
-        Availables types: ``"constant_depth"``, ``"relative_depth"``,
+        Available types: ``"constant_depth"``, ``"relative_depth"``,
         ``"variable_depth"``.
-    kwargs
 
     Returns
     -------
     points : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
+        Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
     points = tuple(np.atleast_1d(i).copy() for i in coordinates)
@@ -62,17 +75,30 @@ def block_median_sources(
     """
     Put one point source beneath the block-median observation points
 
-    The depth of the point sources will be the upward coordinate of the corresponding
-    block reduced observation point minus a relative depth. This relative depth can
-    either be constant or variable. In case it's variable, it will be equal to
-    a quantity proportional to the median distance to the k nearest neighbours. The
-    variable relative depth can also be static shifted by a constant depth.
+    The depth of the point sources can be set according to the following methods:
+    *constant*, *relative* or *variable* depth.
+
+    The *constant depth* locates all sources at the same depth. It can be computed as
+    the difference between the minimum elevation of block-median coordinates and the
+    ``depth`` argument.
+
+    The *relative depth* locates all sources at a constant _relative_ ``depth`` beneath
+    its corresponding block-median point. Each source point will be located at the same
+    distance from its corresponding block-median point. Sources points will _copy_ the
+    elevations of the block-median coordinates at a ``depth`` bellow.
+
+    The *variable depth* locates the sources in the same way the _relative depth_ does
+    but also adds a term that can be computed as the product of the ``depth_factor`` and
+    the median distance between the ``k_nearest`` nearest neighbor sources.
+
+    The depth type can be chosen through the ``depth_type`` argument, while the
+    ``depth``, ``depth_factor`` and ``k_nearest`` arguments can be passed as ``kwargs``.
 
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
-        (``easting``, ``northing``, ``upward``).
+        Tuple containing the coordinates of the observation points in the following
+        order: (``easting``, ``northing``, ``upward``).
     spacing : float, tuple = (s_north, s_east)
         The block size in the South-North and West-East directions, respectively.
         A single value means that the size is equal in both directions.
@@ -85,7 +111,7 @@ def block_median_sources(
     Returns
     -------
     points : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
+        Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
     reducer = BlockReduce(spacing=spacing, reduction=np.median)
@@ -94,39 +120,34 @@ def block_median_sources(
     return points
 
 
-def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwargs):
+def grid_sources(coordinates, spacing=None, depth=None, pad=None, **kwargs):
     """
     Create a regular grid of point sources
 
-    All point sources will be located at the same depth, computed as the mean height of
-    data points minus the ``constant_depth``.
+    All point sources will be located at the same depth, equal to the difference between
+    the minimum elevation of observation points and the ``depth`` argument.
 
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
-        (``easting``, ``northing``, ``upward``).
+        Tuple containing the coordinates of the observation points in the following
+        order: (``easting``, ``northing``, ``upward``).
     spacing : float, tuple = (s_north, s_east)
         The block size in the South-North and West-East directions, respectively.
         A single value means that the size is equal in both directions.
-    constant_depth : float
-        Depth at which the sources will be located, relative to the mean height of the
-        data points.
+    depth : float
+        Depth shift used to compute the constant depth at which point sources will be
+        located.
     pad : float or None
-        Ratio of region padding. Controls the ammount of padding that will be added to
+        Ratio of region padding. Controls the amount of padding that will be added to
         the coordinates region. It's useful to remove boundary artifacts. The pad will
         be computed as the product of the ``pad`` and the dimension of the region along
         each direction.
-    kwargs
-        Additional keyword arguments that won't be taken into account on the generation
-        of point sources. These keyword arguments are taken in case the arguments for
-        this function are passed as a dictionary with additional keys that aren't meant
-        for building the sources (eg, the ``damping`` argument for the gridders).
 
     Returns
     -------
     points : tuple of arrays
-        Tuple containing the coordinates of the points in the following order:
+        Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
     # Generate grid sources (with or without padding)
@@ -136,37 +157,101 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
         padding = (pad * (n - s), pad * (e - w))
         region = pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
-    upward = np.full_like(easting, coordinates[2].min()) - constant_depth
+    upward = np.full_like(easting, coordinates[2].min()) - depth
     return easting, northing, upward
 
 
-def set_constant_depth(points, constant_depth, **kwargs):
+def constant_depth(coordinates, depth, **kwargs):
     """
-    Put all source points at a constant depth
+    Put all source points at the same depth
+
+    The depth at which the point sources will be located is computed as the difference
+    between the minimum height of ``coordinates`` and ``depth``.
+
+    Any extra keyword argument passed will be ignored.
+
+    Parameters
+    ----------
+    coordinates : tuple of arrays
+        Tuple containing the coordinates of the observation points or block-median
+        points in the following order: (``easting``, ``northing``, ``upward``).
+    depth : float
+        Depth shift used to compute the constant depth at which point sources will be
+        located.
+
+    Returns
+    -------
+    points : tuple of arrays
+        Tuple containing the coordinates of the source points in the following order:
+        (``easting``, ``northing``, ``upward``).
     """
-    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
-    upward = np.full_like(upward, upward.min()) - constant_depth
+    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in coordinates)
+    upward = np.full_like(upward, upward.min()) - depth
     return easting, northing, upward
 
 
-def set_relative_depth(points, relative_depth, **kwargs):
+def relative_depth(coordinates, depth, **kwargs):
     """
-    Put sources at a relative depth beneath computation points
+    Put sources at a relative depth beneath coordinates
 
-    The depth of sources is equal to the elevation of passed points minus
-    a relative_depth. So each source point will be located at a different depth if the
-    original points have different elevations.
+    The depth of sources is equal to difference between the height of ``coordinates``
+    and ``depth``. So each source point will be located at different depths if the
+    original points have different elevations. The point sources will _copy_ the
+    topography of ``coordinates``.
+
+    Any extra keyword argument passed will be ignored.
+
+    Parameters
+    ----------
+    coordinates : tuple of arrays
+        Tuple containing the coordinates of the observation points or block-median
+        points in the following order: (``easting``, ``northing``, ``upward``).
+    depth : float
+        Depth shift used to compute the relative depth at which point sources will be
+        located.
+
+    Returns
+    -------
+    points : tuple of arrays
+        Tuple containing the coordinates of the source points in the following order:
+        (``easting``, ``northing``, ``upward``).
     """
-    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
-    upward -= relative_depth
+    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in coordinates)
+    upward -= depth
     return easting, northing, upward
 
 
-def set_variable_depth(points, depth_factor, relative_depth, k_nearest, **kwargs):
+def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     """
-    Change depth of points based on the distance to nearest neighbours
+    Put sources at a depth based on the distance to nearest neighbors
+
+    Depth of sources will be set by applying the relative depth strategy plus a term
+    equal to the product of ``depth_factor`` and the median distance to the
+    ``k_nearest`` nearest neighbor sources. Sources beneath clustered ``coordinates``
+    points will be shallower than sources bellow scattered ``coordinates``.
+
+    Any extra keyword argument passed will be ignored.
+
+    Parameters
+    ----------
+    coordinates : tuple of arrays
+        Tuple containing the coordinates of the observation points or block-median
+        points in the following order: (``easting``, ``northing``, ``upward``).
+    depth : float
+        Depth shift used to compute the relative depth at which point sources will be
+        located.
+    depth_factor : float
+        Factor used on the variable depth term.
+    k_nearest : int
+        Number of nearest neighbor sources used to compute the median distance.
+
+    Returns
+    -------
+    points : tuple of arrays
+        Tuple containing the coordinates of the source points in the following order:
+        (``easting``, ``northing``, ``upward``).
     """
-    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
-    upward -= relative_depth
-    upward -= depth_factor * median_distance(points, k_nearest=k_nearest)
+    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in coordinates)
+    upward -= depth
+    upward -= depth_factor * median_distance(coordinates, k_nearest=k_nearest)
     return easting, northing, upward
