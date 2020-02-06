@@ -104,9 +104,8 @@ def block_median_sources(
         A single value means that the size is equal in both directions.
     depth_type : str
         Type of depth distribution for source points.
-        Availables types: ``"constant_depth"``, ``"relative_depth"``,
+        Available types: ``"constant_depth"``, ``"relative_depth"``,
         ``"variable_relative_depth"``.
-    kwargs
 
     Returns
     -------
