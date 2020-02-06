@@ -137,10 +137,8 @@ def grid_sources(coordinates, spacing=None, constant_depth=None, pad=None, **kwa
         padding = (pad * (n - s), pad * (e - w))
         region = pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
-    upward = np.zeros_like(easting)
-    points = set_constant_depth(
-        (easting, northing, upward), constant_depth=constant_depth
-    )
+    upward = np.full_like(easting, coordinates[2].min()) - constant_depth
+    points = (easting, northing, upward)
     return points
 
 
@@ -148,8 +146,8 @@ def set_constant_depth(points, constant_depth, **kwargs):
     """
     Put all source points at a constant depth
     """
-    easting, northing, upward = tuple(np.atleast_1d(i).ravel().copy() for i in points)
-    upward = np.zeros_like(upward) - constant_depth
+    easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in points)
+    upward = np.full_like(upward, upward.min()) - constant_depth
     points = (easting, northing, upward)
     return points
 
