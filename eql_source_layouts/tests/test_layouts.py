@@ -88,16 +88,14 @@ def test_source_bellow_data(coordinates):
     depth_factor = 1
     k_nearest = 3
     parameters = {
-        "constant_depth": {"depth": depth},
-        "relative_depth": {"depth": depth},
-        "variable_depth": {
-            "depth": depth,
-            "depth_factor": depth_factor,
-            "k_nearest": k_nearest,
-        },
+        "constant_depth": {},
+        "relative_depth": {},
+        "variable_depth": {"depth_factor": depth_factor, "k_nearest": k_nearest},
     }
     for depth_type, params in parameters.items():
-        points = source_bellow_data(coordinates, depth_type=depth_type, **params)
+        points = source_bellow_data(
+            coordinates, depth_type=depth_type, depth=depth, **params
+        )
         npt.assert_allclose(points[0], coordinates[0])
         npt.assert_allclose(points[1], coordinates[1])
 
