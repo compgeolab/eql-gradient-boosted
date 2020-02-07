@@ -12,6 +12,7 @@ from ..layouts import (
     variable_depth,
     source_bellow_data,
     block_median_sources,
+    grid_sources,
 )
 
 
@@ -152,3 +153,40 @@ def test_block_median_sources_kwargs(coordinates):
     block_median_sources(
         coordinates, depth_type="constant_depth", depth=100, spacing=4000, blabla=3.1415
     )
+
+
+# Grid sources
+# ------------
+def test_grid_sources(coordinates):
+    """
+    Check if grid_sources creates a regular grid of sources
+    """
+    depth = 100
+    spacing = 4000
+    # Check behaviour with zero padding
+    pad = 0
+    points = grid_sources(coordinates, spacing=spacing, depth=depth, pad=pad)
+    grid = vd.grid_coordinates(vd.get_region(coordinates), spacing=spacing)
+    npt.assert_allclose(points[0], grid[0])
+    npt.assert_allclose(points[1], grid[1])
+    npt.assert_allclose(points[2], coordinates[2].min() - depth)
+    # Check behaviour with non zero padding
+    pad = 0.1
+    points = grid_sources(coordinates, spacing=spacing, depth=depth, pad=pad)
+    region = vd.get_region(coordinates)
+    w = region[0] - (region[1] - region[0]) * pad
+    e = region[1] + (region[1] - region[0]) * pad
+    s = region[2] - (region[3] - region[2]) * pad
+    n = region[3] + (region[3] - region[2]) * pad
+    region = (w, e, s, n)
+    grid = vd.grid_coordinates(region, spacing=spacing)
+    npt.assert_allclose(points[0], grid[0])
+    npt.assert_allclose(points[1], grid[1])
+    npt.assert_allclose(points[2], coordinates[2].min() - depth)
+
+
+def test_grid_sources_kwargs(coordinates):
+    """
+    Check if extra kwargs on grid_sources are ignored
+    """
+    grid_sources(coordinates, depth=100, spacing=4000, blabla=3.1415)
