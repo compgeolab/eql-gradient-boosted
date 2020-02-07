@@ -113,9 +113,9 @@ def block_median_sources(
         Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
-    reducer = BlockReduce(spacing=spacing, reduction=np.median)
-    (easting, northing), upward = reducer.filter(coordinates[:2], coordinates[2])
-    points = _dispatcher((easting, northing, upward), depth_type, **kwargs)
+    reducer = BlockReduce(spacing=spacing, reduction=np.median, drop_coords=False)
+    points, _ = reducer.filter(coordinates, np.zeros_like(coordinates[0]))
+    points = _dispatcher(points, depth_type, **kwargs)
     return points
 
 
