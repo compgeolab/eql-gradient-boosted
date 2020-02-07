@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 import numpy.testing as npt
 
-from..layouts import constant_depth, relative_depth, variable_depth
+from ..layouts import constant_depth, relative_depth, variable_depth, source_bellow_data
 
 
 @pytest.fixture
@@ -72,3 +72,40 @@ def test_variable_depth(coordinates):
         coordinates, depth=depth, depth_factor=0, k_nearest=k_nearest,
     )
     npt.assert_allclose(coordinates[2] - depth, points[2])
+
+
+# --------------------
+# Source distributions
+# --------------------
+
+# Sources bellow data
+# -------------------
+def test_source_bellow_data(coordinates):
+    """
+    Check if source_bellow_data puts sources beneath data points
+    """
+    depth = 100
+    depth_factor = 1
+    k_nearest = 3
+    parameters = {
+        "constant_depth": {"depth": depth},
+        "relative_depth": {"depth": depth},
+        "variable_depth": {
+            "depth": depth,
+            "depth_factor": depth_factor,
+            "k_nearest": k_nearest,
+        },
+    }
+    for depth_type, params in parameters.items():
+        points = source_bellow_data(coordinates, depth_type=depth_type, **params)
+        npt.assert_allclose(points[0], coordinates[0])
+        npt.assert_allclose(points[1], coordinates[1])
+
+
+def test_source_bellow_data_kwargs(coordinates):
+    """
+    Check if extra kwargs on source_bellow_data are ignored
+    """
+    source_bellow_data(
+        coordinates, depth_type="constant_depth", depth=100, blabla=3.1415
+    )
