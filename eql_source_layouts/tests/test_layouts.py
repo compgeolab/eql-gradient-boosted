@@ -4,8 +4,15 @@ Test functions for layouts constructors
 import pytest
 import numpy as np
 import numpy.testing as npt
+import verde as vd
 
-from ..layouts import constant_depth, relative_depth, variable_depth, source_bellow_data
+from ..layouts import (
+    constant_depth,
+    relative_depth,
+    variable_depth,
+    source_bellow_data,
+    block_median_sources,
+)
 
 
 @pytest.fixture
@@ -106,4 +113,42 @@ def test_source_bellow_data_kwargs(coordinates):
     """
     source_bellow_data(
         coordinates, depth_type="constant_depth", depth=100, blabla=3.1415
+    )
+
+
+# Block median sources
+# --------------------
+def test_block_median_sources(coordinates):
+    """
+    Check if block_median_sources block average coordinates
+    """
+    spacing = 4000
+    depth = 100
+    depth_factor = 1
+    k_nearest = 3
+    parameters = {
+        "constant_depth": {},
+        "relative_depth": {},
+        "variable_depth": {"depth_factor": depth_factor, "k_nearest": k_nearest},
+    }
+    for depth_type, params in parameters.items():
+        points = block_median_sources(
+            coordinates, depth_type=depth_type, spacing=spacing, depth=depth, **params
+        )
+        # Check if there's one source per block
+        # We do so by checking if every averaged coordinate is close enough to
+        # the center of the block
+        block_coords, labels = vd.block_split(
+            points, spacing=spacing, region=vd.get_region(coordinates)
+        )
+        npt.assert_allclose(points[0], block_coords[0][labels], atol=spacing / 2)
+        npt.assert_allclose(points[1], block_coords[1][labels], atol=spacing / 2)
+
+
+def test_block_median_sources_kwargs(coordinates):
+    """
+    Check if extra kwargs on block_median_sources are ignored
+    """
+    block_median_sources(
+        coordinates, depth_type="constant_depth", depth=100, spacing=4000, blabla=3.1415
     )
