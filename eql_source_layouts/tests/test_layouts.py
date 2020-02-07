@@ -190,3 +190,16 @@ def test_grid_sources_kwargs(coordinates):
     Check if extra kwargs on grid_sources are ignored
     """
     grid_sources(coordinates, depth=100, spacing=4000, blabla=3.1415)
+
+
+# Invalid depth type
+# ------------------
+def test_invalid_depth_type(coordinates):
+    """
+    Test invalid depth_type
+    """
+    depth_type = "not a valid depth_type"
+    with pytest.raises(ValueError):
+        source_bellow_data(coordinates, depth_type=depth_type)
+    with pytest.raises(ValueError):
+        block_median_sources(coordinates, depth_type=depth_type, spacing=4000)
