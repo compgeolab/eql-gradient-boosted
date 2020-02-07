@@ -16,15 +16,14 @@ def _dispatcher(points, depth_type, **kwargs):
         raise ValueError("Invalid depth type '{}'.".format(depth_type))
     if depth_type == "constant_depth":
         return constant_depth(points, **kwargs)
-    elif depth_type == "relative_depth":
+    if depth_type == "relative_depth":
         return relative_depth(points, **kwargs)
-    elif depth_type == "variable_depth":
+    if depth_type == "variable_depth":
         return variable_depth(points, **kwargs)
+    return None
 
 
-def source_bellow_data(
-    coordinates, depth_type, **kwargs,
-):
+def source_bellow_data(coordinates, depth_type, **kwargs):
     """
     Put one point source beneath each observation point
 
@@ -69,9 +68,7 @@ def source_bellow_data(
     return points
 
 
-def block_median_sources(
-    coordinates, spacing, depth_type, **kwargs,
-):
+def block_median_sources(coordinates, spacing, depth_type, **kwargs,):
     """
     Put one point source beneath the block-median observation points
 
