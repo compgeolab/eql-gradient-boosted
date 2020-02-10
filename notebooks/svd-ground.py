@@ -76,7 +76,7 @@ for dataset in best_predictions:
         points = vd.base.n_1d_arrays(points, 3)
         eql = hm.EQLHarmonic(points=points)
         jac = np.matrix(eql.jacobian(coordinates, eql.points))
-        _, sv, _ = np.linalg.svd(jac)
+        sv = np.linalg.svd(jac, compute_uv=False)
         singular_values[prediction.layout][depth_type] = sv
 # -
 
@@ -131,3 +131,19 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+# -
+
+# ## Compute SVD quality measurements
+
+# +
+qualities = {}
+for layout in singular_values:
+    for depth_type in singular_values[layout]:
+        sv = singular_values[layout][depth_type]
+        qualities["{}-{}".format(layout, depth_type)] = eql_source_layouts.svd_quality_measurements(sv)
+
+indices = list("theta_{}".format(i) for i in range(4))
+df = pd.DataFrame(qualities, index=indices)
+# -
+
+df
