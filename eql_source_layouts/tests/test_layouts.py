@@ -112,8 +112,13 @@ def test_source_bellow_data_kwargs(coordinates):
     """
     Check if extra kwargs on source_bellow_data are ignored
     """
-    source_bellow_data(
-        coordinates, depth_type="constant_depth", depth=100, blabla=3.1415
+    depth_type = "constant_depth"
+    depth = 100
+    npt.assert_allclose(
+        source_bellow_data(coordinates, depth_type=depth_type, depth=depth,),
+        source_bellow_data(
+            coordinates, depth_type=depth_type, depth=depth, blabla=3.1415
+        ),
     )
 
 
@@ -150,8 +155,20 @@ def test_block_median_sources_kwargs(coordinates):
     """
     Check if extra kwargs on block_median_sources are ignored
     """
-    block_median_sources(
-        coordinates, depth_type="constant_depth", depth=100, spacing=4000, blabla=3.1415
+    depth_type = "constant_depth"
+    depth = 100
+    spacing = 4000
+    npt.assert_allclose(
+        block_median_sources(
+            coordinates, depth_type=depth_type, depth=depth, spacing=spacing,
+        ),
+        block_median_sources(
+            coordinates,
+            depth_type=depth_type,
+            depth=depth,
+            spacing=spacing,
+            blabla=3.1415,
+        ),
     )
 
 
@@ -189,7 +206,12 @@ def test_grid_sources_kwargs(coordinates):
     """
     Check if extra kwargs on grid_sources are ignored
     """
-    grid_sources(coordinates, depth=100, spacing=4000, blabla=3.1415)
+    depth = 100
+    spacing = 4000
+    npt.assert_allclose(
+        grid_sources(coordinates, depth=depth, spacing=spacing),
+        grid_sources(coordinates, depth=depth, spacing=spacing, blabla=3.1415),
+    )
 
 
 # Invalid depth type
