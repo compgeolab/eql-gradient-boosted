@@ -37,6 +37,7 @@ from eql_source_layouts import (
     get_best_prediction,
     predictions_to_datasets,
 )
+
 # -
 
 # ## Define parameters used on the gridding
@@ -208,14 +209,18 @@ for layout in parameters:
 datasets = predictions_to_datasets(best_predictions)
 for dataset in datasets:
     dataset.to_netcdf(
-        os.path.join(airborne_results_dir, "best_predictions-{}.nc".format(dataset.layout))
+        os.path.join(
+            airborne_results_dir, "best_predictions-{}.nc".format(dataset.layout)
+        )
     )
 
 for layout in scores:
     for depth_type in scores[layout]:
         score = scores[layout][depth_type]
         score.to_csv(
-            os.path.join(airborne_results_dir, "scores-{}-{}.nc".format(depth_type, layout)),
+            os.path.join(
+                airborne_results_dir, "scores-{}-{}.nc".format(depth_type, layout)
+            ),
             index=False,
         )
 # -

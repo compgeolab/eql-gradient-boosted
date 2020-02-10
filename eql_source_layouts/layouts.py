@@ -68,7 +68,9 @@ def source_bellow_data(coordinates, depth_type, **kwargs):
     return points
 
 
-def block_median_sources(coordinates, spacing, depth_type, **kwargs,):
+def block_median_sources(
+    coordinates, spacing, depth_type, **kwargs,
+):
     """
     Put one point source beneath the block-median observation points
 

@@ -56,9 +56,7 @@ def grid_data(coordinates, data, grid, layout, parameters):
     return prediction
 
 
-def get_best_prediction(
-    coordinates, data, grid, target, layout, parameters_set
-):
+def get_best_prediction(coordinates, data, grid, target, layout, parameters_set):
     """
     Score interpolations with different parameters and get the best prediction
 
@@ -67,18 +65,14 @@ def get_best_prediction(
     """
     scores = []
     for parameters in parameters_set:
-        prediction = grid_data(
-            coordinates, data, grid, layout, parameters
-        )
+        prediction = grid_data(coordinates, data, grid, layout, parameters)
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
     # Get best prediction
     best = np.nanargmax(scores)
     best_parameters = parameters_set[best]
     best_score = scores[best]
-    best_prediction = grid_data(
-        coordinates, data, grid, layout, best_parameters
-    )
+    best_prediction = grid_data(coordinates, data, grid, layout, best_parameters)
     # Convert parameters and scores to a pandas.DataFrame
     parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
     parameters_and_scores["score"] = scores
