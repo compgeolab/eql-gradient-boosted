@@ -95,8 +95,8 @@ def predictions_to_datasets(predictions):
     for each depth type.
     """
     datasets = []
-    layouts = list(set([prediction.layout for prediction in predictions]))
-    for layout in layouts:
+    layouts_ = list(set([prediction.layout for prediction in predictions]))
+    for layout in layouts_:
         predictions_same_layout = [p for p in predictions if p.layout == layout]
         for p in predictions_same_layout:
             p.name = p.depth_type
