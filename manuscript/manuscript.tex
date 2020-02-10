@@ -422,7 +422,7 @@ Deep sources generate low frequencies, while shallow ones generate high
 frequencies (cite).
 The most simple option is to locate all point sources at the same depth, which
 we will call \emph{constant depth} in the future.
-If the measurement where taken at significantly different altitudes, the
+If the measurement were taken at significantly different altitudes, the
 elevated computation points will be more distant to the sources than the lower
 ones.
 This may create problems on reproducing high frequencies on the elevated
@@ -432,30 +432,35 @@ One possible solution is to locate each source bellow its corresponding
 observation point or block-median point at a constant \emph{relative depth}
 from it.
 The sources won't be all at the same depth, but they will all be at the same
-distance from their corresponding observation point or block-median point.
+distance from their corresponding observation point (or block-median point).
 It worth mention that this approach could not be applied to \emph{grid
 sources}.
 
 In case our survey presents heavily clustered data points, we may want to
 reduce the depth of the sources bellow that region in order to reproduce the
 high frequencies measured by these clustered observation points.
-We can propose a \emph{variable relative depth} approach that locates each
-point source to a depth proportional to the mean distance to its $k$ nearest
-source neighbours \citep{cordell1992, guspi2004, guspi2009}.
-We propose to add a static shift to the computed depth in order to prevent very
-shallow sources in case the mean distance to the $k$ nearest neighbours is too
-small.
-In summary, the depth of the sources can be set as follows:
+We can propose a \emph{variable depth} approach: it locates each point source
+according to the \emph{relative depth} approach and then add a term
+proportional to the mean distance to its $k$ nearest neighbour sources.
+So, the depth of the sources can be computed as follows:
 
 \begin{equation}
-    \textrm{depth} =
-        \textrm{depth factor} \cdot \textrm{mean distance}
-        + \textrm{static shift}
+    \begin{split}
+        \textrm{depth} =
+           &\textrm{data point height} - \textrm{relative depth} \\
+           &- \textrm{depth factor} \cdot \textrm{mean distance}
+    \end{split}
 \end{equation}
 
-\noindent where the \emph{depth factor} and the \emph{static shift} are
-parameters and the \emph{mean distance} is the mean distance to the $k$
-nearest source neighbours.
+\noindent where \emph{data point height} is the elevation of the corresponding
+observation (or block-median) point to the source, \emph{depth factor} and
+\emph{relative depth} are parameters and \emph{mean distance} is the mean
+distance to the $k$ nearest source neighbours.
+
+Similar approaches for setting sources at depths that depend
+on the distance to their nearest neighbours were already proposed by
+\citet{cordell1992, guspi2004, guspi2009}.
+
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/depth_types.pdf}
