@@ -63,7 +63,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 plt.style.use(os.path.join("..", "matplotlib.rc"))
-fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 1.5), dpi=300)
+fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 1.5))
 size = 8
 
 titles = ["Constant Depth", "Relative Depth", "Variable Relative Depth"]
@@ -97,4 +97,3 @@ axes[0].set_ylim(-200, 130)
 plt.tight_layout(w_pad=0)
 plt.savefig(os.path.join("..", "manuscript", "figs", "depth_types.pdf"))
 plt.show()
-# -
