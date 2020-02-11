@@ -78,11 +78,15 @@ labels = "a b c".split()
 # Initialize figure and axes
 width = 6.66
 height = width / 3 * 1.1
-fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(width, height),)
+fig, axes = plt.subplots(
+    ncols=3, nrows=1, sharey=True, sharex=True, figsize=(width, height)
+)
 
 # Plot coordinates
 ax = axes[0]
-ax.scatter(*coordinates[:2], label="data points", **scatter_style)
+coords_scatter = ax.scatter(
+    *coordinates[:2], label="observation points", **scatter_style
+)
 
 # Plot coordinates and grid
 ax = axes[1]
@@ -98,7 +102,9 @@ for x in grid_lines[0]:
     ax.plot((x, x), (ymin, ymax), **grid_style)
 for y in grid_lines[1]:
     ax.plot((xmin, xmax), (y, y), **grid_style)
-ax.scatter(*points[:2], color="C1", label="block-median points", **scatter_style)
+sources_scatter = ax.scatter(
+    *points[:2], color="C1", label="block-median sources", **scatter_style
+)
 
 # Configure axes
 for ax, label in zip(axes, labels):
@@ -114,6 +120,18 @@ for ax, label in zip(axes, labels):
     )
     ax.tick_params(
         axis="x", which="both", bottom=False, top=False, labelbottom=False,
+    )
+    ax.legend(
+        loc="lower left",
+        bbox_to_anchor=(0, 1.01),
+        ncol=2,
+        frameon=False,
+        borderpad=0,
+        borderaxespad=0,
+        handletextpad=0,
+        labelspacing=0,
+        columnspacing=0,
+        # fontsize=7,
     )
 
 plt.tight_layout(w_pad=0)
