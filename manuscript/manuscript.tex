@@ -417,6 +417,17 @@ It creates one point source beneath each populated block, solving the problem
 of the \emph{grid sources} layout, but also reducing the number of point
 sources in comparison with the \emph{source beneath data} layout.
 
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/block-median-sources-schematics.pdf}
+    \caption{
+        Block-median sources. Given a set of observation points (a) we divide
+        the survey region on blocks of equal size (b) and compute the median
+        location of the observation points that fall inside each block.
+        A source point is located beneath each block-median coordinate (c).
+    }
+    \label{fig:depth-types}
+\end{figure*}
+
 The depth of the point sources can be chosen following different criteria.
 Deep sources generate low frequencies, while shallow ones generate high
 frequencies (cite).
