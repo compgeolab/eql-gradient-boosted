@@ -197,21 +197,21 @@ By definition, any harmonic field $V$ must satisfy the Laplace's equation:
     \nabla^2 V = 0.
 \end{equation}
 
-The fundamental solution $\psi$ \citep[p.~210]{vladimirov1979} of the harmonic
-field $V$ must satisfy:
+Considering as boundary condition that $V$ is equal to zero at infinity, then
+its fundamental solution $\psi$ (also known as Green's function or radial basis
+function) must satisfy \citep[p.~210]{vladimirov1979}:
 
 \begin{equation}
     \nabla_\mathbf{p}^2 \psi(\mathbf{p}, \mathbf{q}) =
-        - 4\pi \delta(\mathbf{p}, \mathbf{q})
+        - 4\pi \delta(\mathbf{p}, \mathbf{q}),
 \end{equation}
 
 \noindent where $\delta(\mathbf{p}, \mathbf{q})$ is the Dirac's delta function
-and $\nabla_\mathbf{p}$ symbolize the Nabla operator applied on the
-coordinates $\mathbf{p}$.
+and $\nabla_\mathbf{p}$ symbolize the Nabla operator applied on the coordinates
+$\mathbf{p}$.
 
-Assuming that $\psi$ tends to zero when approaching to infinity as boundary
-condition, the fundamental solution of any harmonic field can be obtained as
-follows \citep{blakely1995}:
+The fundamental solution of any harmonic field can be obtained as follows
+\citep{blakely1995}:
 
 \begin{equation}
     \psi(\mathbf{p}, \mathbf{q})
@@ -224,7 +224,7 @@ follows \citep{blakely1995}:
 \end{equation}
 
 This shows that the Green's function associated with any harmonic field is
-equal to the inverse of the Cartesian distance between the evaluation and the
+equal to the inverse of the Euclidean distance between the evaluation and the
 source points.
 Thus any harmonic field $V$ can be expressed as \citep[p.~37]{blakely1995}:
 
