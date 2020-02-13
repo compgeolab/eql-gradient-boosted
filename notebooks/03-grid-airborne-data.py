@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -77,9 +77,8 @@ source_grid_paddings = [0, 0.1, 0.2]
 depth_factors = [0.5, 1, 5, 10]
 depth_shifts = [-50, -100, -500, -1000, -2000, -5000]
 k_values = [1, 3, 5, 10]
-# We will set the block spacing for the block-median
-# layouts equal to the target grid spacing
-block_spacing = 2000
+# Define block spacing for block median sources
+block_spacings = [1_000, 2_000, 3_000, 4_000]
 # -
 
 # ## Read synthetic airborne survey and target grid
@@ -87,13 +86,11 @@ block_spacing = 2000
 # Read airborne survey
 
 survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
-
 survey
 
 # Read target grid
 
 target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
-
 target
 
 # Define coordinates and grid arrays
@@ -147,7 +144,7 @@ parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
     constant_depth=constant_depths,
-    spacing=block_spacing,
+    spacing=block_spacings,
 )
 
 depth_type = "relative_depth"
@@ -155,14 +152,14 @@ parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
     relative_depth=relative_depths,
-    spacing=block_spacing,
+    spacing=block_spacings,
 )
 
 depth_type = "variable_relative_depth"
 parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
-    spacing=block_spacing,
+    spacing=block_spacings,
     depth_factor=depth_factors,
     depth_shift=depth_shifts,
     k_nearest=k_values,
@@ -183,8 +180,8 @@ parameters[layout][depth_type] = combine_parameters(
 
 # ## Score each interpolation
 
-# +
-scores = {layout: {} for layout in layouts}
+# + jupyter={"outputs_hidden": true}
+scores = {layout: {} for layout in layouts if layouts != "grid_sources"}
 best_predictions = []
 
 for layout in parameters:
