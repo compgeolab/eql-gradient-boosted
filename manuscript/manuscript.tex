@@ -385,8 +385,23 @@ $\mathbf{c_s}$:
 % Describe the proposed source distributions as combination of layouts and
 % depths strategies.
 
-The choice of a source distribution is not trivial and plays an important role
-on the accuracy of the predictions.
+How to choose how many sources will be used and where to locate them are not
+trivial decisions and play an important role on the accuracy of the predictions
+and the computational resources needed to fit the sources' coefficients.
+
+The chosen distribution of sources should be reproduce the
+measured data on the survey points and simultaneously be able to make accurate
+predictions of the measured harmonic field on non observed locations.
+
+A high number of sources scattered on the survey region is capable of
+reproducing the observed data. Nevertheless, too many sources will make the
+Jacobian matrix too large. This could introduce computational problems: like
+the inability of storing the matrix on memory or increasing the computational
+time needed to fit the sources' coefficients.
+On the other hand, using very few sources will undoubtedly reduce the memory
+needs and lower the computational time when fitting the sources' coefficients.
+Nevertheless, it could be incapable of making accurate predictions and even
+reproducing the measured data if the number of sources is too low.
 
 The most widely used source distributions are: a regular grid of point sources
 and one point source beneath each observation point.
