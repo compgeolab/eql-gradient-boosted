@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -73,9 +73,8 @@ source_grid_paddings = [0, 0.1, 0.2]
 depth_factors = [0.5, 1, 5, 10]
 depth_shifts = [0, -100, -500, -1000, -2000, -5000]
 k_values = [1, 3, 5, 10]
-# We will set the block spacing for the block-median
-# layouts equal to the target grid spacing
-block_spacing = 2000
+# Define block spacing for block median sources
+block_spacings = [1_000, 2_000, 3_000, 4_000]
 # -
 
 # ## Read synthetic ground survey and target grid
@@ -83,13 +82,11 @@ block_spacing = 2000
 # Read ground survey
 
 survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
-
 survey
 
 # Read target grid
 
 target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
-
 target
 
 # Define coordinates and grid arrays
@@ -143,7 +140,7 @@ parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
     constant_depth=constant_depths,
-    spacing=block_spacing,
+    spacing=block_spacings,
 )
 
 depth_type = "relative_depth"
@@ -151,14 +148,14 @@ parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
     relative_depth=relative_depths,
-    spacing=block_spacing,
+    spacing=block_spacings,
 )
 
 depth_type = "variable_relative_depth"
 parameters[layout][depth_type] = combine_parameters(
     depth_type=depth_type,
     damping=dampings,
-    spacing=block_spacing,
+    spacing=block_spacings,
     depth_factor=depth_factors,
     depth_shift=depth_shifts,
     k_nearest=k_values,
@@ -240,6 +237,7 @@ for dataset in best_predictions:
         prediction = dataset[depth_type]
         print("{} with {}".format(layout, depth_type))
         print("Score: {}".format(prediction.score))
+        print("Number of sources: {}".format(prediction.n_points))
         print("Parameters: {}".format(prediction.attrs))
         plot_prediction(prediction, target, units=field_units)
 
@@ -262,7 +260,7 @@ fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(15, 15), sharex=True, sharey
 
 # Plot the differences between the target and the best prediction for each layout
 for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
-    for ax, depth_type in zip(ax_row, dataset):
+    for j, (ax, depth_type) in enumerate(zip(ax_row, dataset)):
         prediction = dataset[depth_type]
         difference = target - prediction
         tmp = difference.plot.pcolormesh(
@@ -270,7 +268,11 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         )
         ax.scatter(survey.easting, survey.northing, s=1, alpha=0.2, color="k")
         ax.set_aspect("equal")
-        ax.set_title("{} (r2: {:.3f})".format(dataset.layout, prediction.score))
+        ax.ticklabel_format(axis="both", style="sci")
+        ax.set_title(
+            "r2: {:.3f}, n_points: {}".format(prediction.score, prediction.n_points)
+        )
+
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
@@ -280,6 +282,18 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
+                transform=ax.transAxes,
+            )
+        # Annotate the rows of the figure
+        if j == 0:
+            ax.text(
+                -0.35,
+                0.5,
+                dataset.layout,
+                fontsize="large",
+                fontweight="bold",
+                verticalalignment="center",
+                rotation="vertical",
                 transform=ax.transAxes,
             )
 
@@ -293,3 +307,4 @@ cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=field_units)
 
 plt.show()
+# -

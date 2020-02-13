@@ -53,7 +53,7 @@ def grid_data(coordinates, data, grid, layout, parameters):
     eql.fit(coordinates, data)
     # Predict the field on the regular grid
     prediction = eql.predict(grid)
-    return prediction
+    return prediction, points
 
 
 def get_best_prediction(coordinates, data, grid, target, layout, parameters_set):
@@ -65,14 +65,18 @@ def get_best_prediction(coordinates, data, grid, target, layout, parameters_set)
     """
     scores = []
     for parameters in parameters_set:
-        prediction = grid_data(coordinates, data, grid, layout, parameters)
+        prediction, _ = grid_data(
+            coordinates, data, grid, layout, parameters
+        )
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
     # Get best prediction
     best = np.nanargmax(scores)
     best_parameters = parameters_set[best]
     best_score = scores[best]
-    best_prediction = grid_data(coordinates, data, grid, layout, best_parameters)
+    best_prediction, points = grid_data(
+        coordinates, data, grid, layout, best_parameters
+    )
     # Convert parameters and scores to a pandas.DataFrame
     parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
     parameters_and_scores["score"] = scores
@@ -81,6 +85,7 @@ def get_best_prediction(coordinates, data, grid, target, layout, parameters_set)
     da.values = best_prediction
     da.attrs["layout"] = layout
     da.attrs["score"] = best_score
+    da.attrs["n_points"] = points[0].size
     for key, value in best_parameters.items():
         da.attrs[key] = value
     best_prediction = da
