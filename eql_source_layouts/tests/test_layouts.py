@@ -74,7 +74,7 @@ def test_variable_depth(coordinates):
     # Check if depths are not all equal
     assert not np.allclose(points[2][0], points[2])
     # Check if all masses are bellow relative depth
-    assert np.all(points[2] <= coordinates[2] - depth)
+    assert np.all(points[2] < coordinates[2] - depth)
     # Set depth_factor equal to zero and check if relative depth is recovered
     points = variable_depth(
         coordinates, depth=depth, depth_factor=0, k_nearest=k_nearest,
