@@ -112,6 +112,8 @@ def block_median_sources(coordinates, spacing, depth_type, **kwargs):
         (``easting``, ``northing``, ``upward``).
     """
     reducer = BlockReduce(spacing=spacing, reduction=np.median, drop_coords=False)
+    # Must pass a dummy data array to BlockReduce.filter(), we choose a array full of
+    # zeros. We will ignore the returned reduced dummy array.
     points, _ = reducer.filter(coordinates, np.zeros_like(coordinates[0]))
     points = _dispatcher(points, depth_type, **kwargs)
     return points
