@@ -8,7 +8,9 @@ from verde import median_distance, BlockReduce, get_region, pad_region, grid_coo
 DEPTH_TYPES = ["constant_depth", "relative_depth", "variable_depth"]
 
 
-def _dispatcher(points, depth_type, **kwargs):
+def _dispatcher(
+    points, depth_type, **kwargs
+):  # pylint: disable=inconsistent-return-statements
     """
     Dispatch points to functions that change its upward component based on depth_type
     """
@@ -20,7 +22,6 @@ def _dispatcher(points, depth_type, **kwargs):
         return relative_depth(points, **kwargs)
     if depth_type == "variable_depth":
         return variable_depth(points, **kwargs)
-    return None
 
 
 def source_bellow_data(coordinates, depth_type, **kwargs):
