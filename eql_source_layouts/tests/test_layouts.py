@@ -82,6 +82,27 @@ def test_variable_depth(coordinates):
     npt.assert_allclose(coordinates[2] - depth, points[2])
 
 
+def test_variable_depth_analytical(coordinates):
+    """
+    Test variable depth against analytical solution
+    """
+    distance = 1.21e3
+    easting = np.array([-distance, 0, distance])
+    northing = np.array([150, 150, 150], dtype=float)
+    upward = np.array([100, 130, 120], dtype=float)
+    coordinates = (easting, northing, upward)
+    depth = 100
+    depth_factor = 1
+    k_nearest = 1
+    points = variable_depth(
+        coordinates, depth=depth, depth_factor=depth_factor, k_nearest=k_nearest
+    )
+    upward_expected = upward - depth - depth_factor * distance
+    npt.assert_allclose(easting, points[0])
+    npt.assert_allclose(northing, points[1])
+    npt.assert_allclose(upward_expected, points[2])
+
+
 # --------------------
 # Source distributions
 # --------------------
