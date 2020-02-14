@@ -10,6 +10,9 @@
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
 
+% Define inverse symbol with shorter minus
+\newcommand{\inv}{^{\text{-}1}}
+
 
 % Define title, authors, affiliations and DOI
 % ===========================================
@@ -272,11 +275,11 @@ coefficients so they satisfy:
 This system of linear equations can be written in an more algebraic way:
 
 \begin{equation}
-    V(\mathbf{p}) = \mathbf{A} \mathbf{c}
+    \mathbf{d} = \mathbf{A} \mathbf{c}
     \label{eq:linear-problem}
 \end{equation}
 
-\noindent where $V(\mathbf{p}$) is a vertical vector containing the measured
+\noindent where $\mathbf{d}$ is a vertical vector containing the measured
 values of $V$ on the observation points, $\mathbf{c}$ a vertical vector
 containing the $c$ coefficients and $\mathbf{A}$ is the \emph{Jacobian matrix},
 whose elements are defined as the Green's function evaluated on each pair of
@@ -317,14 +320,28 @@ The subsequent comparisons between strategies for interpolating data through
 equivalent sources are carried out by the equivalent sources implementation in
 Harmonica \citep{harmonica}.
 
-It solves equation~\ref{eq:linear-problem} by a least-squares fit, with
-the option of adding a zeroth-order Tikhonov \citep{tikhonov} regularization
-through a dimensionless \emph{damping} parameter.
-This is achieved by scaling the Jacobian matrix so each column has unit
-variance.
+It solves equation~\ref{eq:linear-problem} through least squares with
+a zeroth-order Tikhonov \citep{tikhonov1977} regularization in order to
+stabilize the solution.
+It consists in minimizing the misfit function:
 
-Define a diagonal matrix $S$, whose elements corresponds to the standard
-deviation of each column of the Jacobian matrix $\mathbf{A}$:
+\begin{equation}
+    \phi(\mathbf{c}) =
+        \left\lVert
+            \mathbf{d} - \mathbf{A}\mathbf{c}
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c} \right\rVert ^2,
+    \label{eq:misfit-unscaled}
+\end{equation}
+
+\noindent where $\left\lVert \cdot \right\rVert ^ 2$ symbolizes the L$_2$ norm
+and $\lambda_d$ is a \emph{damping} parameter that has the same dimension as
+the Jacobian matrix elements.
+
+In order to simplify the choice of this parameter we scale the Jacobian matrix
+so each column has unit variance.
+We define a diagonal matrix $\mathbf{S}$, whose elements corresponds to the
+standard deviation of each column of the Jacobian matrix $\mathbf{A}$:
 
 \begin{equation}
     \mathbf{S} =
@@ -332,48 +349,80 @@ deviation of each column of the Jacobian matrix $\mathbf{A}$:
         \sigma_1 & \cdots &0 \\
         \vdots & \ddots & \vdots \\
         0 & \cdots & \sigma_M
-    \end{bmatrix}.
+    \end{bmatrix}
+    ,
 \end{equation}
 
-Equation~\ref{eq:linear-problem} can be written as:
+\noindent so equation~\ref{eq:linear-problem} can be written as:
 
 \begin{equation}
-    V(\mathbf{p})
+    \mathbf{d}
     =
-    \mathbf{A} \mathbf{S}^{-1} \mathbf{S} \mathbf{c}
+    \mathbf{A} \mathbf{S}\inv \mathbf{S} \mathbf{c}
     =
     \left[
-        \mathbf{A} \mathbf{S}^{-1}
+        \mathbf{A} \mathbf{S}\inv
     \right]
     \left[
         \mathbf{S} \mathbf{c}
     \right]
     =
-    \mathbf{A_s} \mathbf{c_s}
+    \hat{\mathbf{A}} \hat{\mathbf{c}}
 \end{equation}
 
-\noindent where $\mathbf{A_s}$ the scaled Jacobian matrix and $\mathbf{c_s}$ is
-a vector containing scaled coefficients.
+\noindent where $\hat{\mathbf{A}}$ is the scaled Jacobian matrix and
+$\hat{\mathbf{c}}$ is a vector containing scaled coefficients.
 
-Now we can define the misfit function as the sum between the data misfit and
-the Tikhonov regularization function:
+The misfit function defined on equation~\ref{eq:misfit-unscaled} can be then
+rewritten as follows:
 
 \begin{equation}
-    \phi(\mathbf{c'}) =
-        \left\lVert V(\mathbf{p}) - \mathbf{A_s}\mathbf{c_s} \right\rVert ^ 2
-        + \lambda \left\lVert \mathbf{c_s} \right\rVert ^2,
+    \phi(\hat{\mathbf{c}}) =
+        \left\lVert \mathbf{d}
+        - \hat{\mathbf{A}}\hat{\mathbf{c}} \right\rVert ^ 2
+        + \lambda \left\lVert \hat{\mathbf{c}} \right\rVert ^2,
     \label{eq:misfit}
 \end{equation}
 
-\noindent where $\lambda$ is a dimensionless damping parameter.
+\noindent where now $\lambda$ is a \emph{dimensionless} damping parameter.
 
-After solving the least squares problem, we obtain the set of scaled
-coefficients $\mathbf{c_s}$ that minimizes equation~\ref{eq:misfit}.
-We can get the corresponding coefficients $\mathbf{c}$ by rescaling
-$\mathbf{c_s}$:
+Misfit function from equation~\ref{eq:misfit} is solved through least squares.
+If the number of observation points is equal or larger to the number of
+sources, then the linear problem defined on equation~\ref{eq:linear-problem} is
+well- or over-determined, respectively. Therefore, the scaled coefficients that
+minimize the misfit function can be obtained through \citep{menke1989}:
 
 \begin{equation}
-    \mathbf{c} = \mathbf{S}^{-1} \mathbf{c_s}.
+    \hat{\mathbf{c}}_\text{est} =
+        \left[
+            \hat{\mathbf{A}}^\text{T} \hat{\mathbf{A}}
+            + \lambda^2 \mathbf{I}
+        \right]\inv
+        \hat{\mathbf{A}}^\text{T}
+        \mathbf{d}.
+\end{equation}
+
+On the other hand, if there are more sources than observation points, the
+problem is under-determined and the scaled coefficients can be obtained as
+\citep{menke1989}:
+
+\begin{equation}
+    \hat{\mathbf{c}}_\text{est} =
+    \hat{\mathbf{A}}^\text{T}
+        \left[
+            \hat{\mathbf{A}} \hat{\mathbf{A}}^\text{T}
+            + \lambda^2 \mathbf{I}
+        \right]\inv
+        \mathbf{d}.
+\end{equation}
+
+
+Once the scaled coefficients are obtained, the sources coefficients
+$\mathbf{c}_\text{est}$ can be obtained by rescaling
+$\hat{\mathbf{c}}_\text{est}$:
+
+\begin{equation}
+    \mathbf{c}_\text{est} = \mathbf{S}\inv \hat{\mathbf{c}}_\text{est}.
 \end{equation}
 
 
