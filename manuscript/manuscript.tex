@@ -335,8 +335,8 @@ It consists in minimizing the misfit function:
 \end{equation}
 
 \noindent where $\left\lVert \cdot \right\rVert ^ 2$ symbolizes the L$_2$ norm
-and $\lambda_d$ is a \emph{damping} parameter that has the same dimension as
-the Jacobian matrix elements.
+and $\lambda_d$ is a \emph{damping} parameter with the same units as the
+Jacobian matrix elements.
 
 In order to simplify the choice of this parameter we scale the Jacobian matrix
 so each column has unit variance.
@@ -386,7 +386,8 @@ rewritten as follows:
 
 \noindent where now $\lambda$ is a \emph{dimensionless} damping parameter.
 
-Misfit function from equation~\ref{eq:misfit} is solved through least squares.
+Misfit function from equation~\ref{eq:misfit} is minimized through Cholesky
+decomposition.
 If the number of observation points is equal or larger to the number of
 sources, then the linear problem defined on equation~\ref{eq:linear-problem} is
 well- or over-determined, respectively. Therefore, the scaled coefficients that
@@ -417,7 +418,7 @@ problem is under-determined and the scaled coefficients can be obtained as
 \end{equation}
 
 
-Once the scaled coefficients are obtained, the sources coefficients
+Once the scaled coefficients are obtained, the sources' coefficients
 $\mathbf{c}_\text{est}$ can be obtained by rescaling
 $\hat{\mathbf{c}}_\text{est}$:
 
