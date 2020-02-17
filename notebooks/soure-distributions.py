@@ -7,11 +7,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.0
+#       jupytext_version: 1.3.2
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python [conda env:eql_source_layouts]
 #     language: python
-#     name: python3
+#     name: conda-env-eql_source_layouts-py
 # ---
 
 # # Source Distributions
@@ -23,7 +23,7 @@
 # Lets define three layouts of point sources:
 #
 # 1. **Source beneath data**: One source point beneath each data point
-# 2. **Block-median sources**: Split the region in blocks of equal size, compute the
+# 2. **Block averaged sources**: Split the region in blocks of equal size, compute the
 #    median coordinate of the data points per block, and put one point source beneath
 #    this block-median coordinate.
 # 3. **Grid of sources**: A regular grid of source points
@@ -31,25 +31,21 @@
 # And the depth types, i.e. how deep do we put the point sources:
 #
 # 1. **Constant depth**: Source points located all at the same depth, which can be
-#    computed as the mean height of the data points minus a constant depth.
-# 2. **Relative depth**: Source points located at a constant relative depth bellow the
-#    data points. If the data points are not at the same height (which is the usual
-#    case), the point sources will be located at different depths, but at the same
-#    relative depth from its corresponding data point -or block reduced data point.
-# 3. **Variable relative depth**: Source points located at a variable relative depth
-#    from the data points. We can define a relative depth for each source point as
-#    a quantity proportional to the median distance to its k nearest source points.
-#    Also, this relative depth can be static shifted by a constant depth in order to
-#    avoid very shallow sources in case of too close source points.
+#    computed as the minimum height of the data points minus a constant depth.
+# 2. **Relative depth**: Each source is located at a constant distance beneath its 
+#    corresponding observation (or block averaged) point.
+# 3. **Variable depth**: Locate each source according to the Relative dpeth approach
+#    and then modify this depth by removing a term that depends on the median distance
+#    to the k nearest source points.
 #
 # The first two layouts can be setted with any of these three types of depth, although
 # the grid of sources can only be defined with the constant depth.
 # Therefore we get a total of 7 possible combinations of layouts and depths:
 #
-# |    | Constant depth | Relative depth | Variable relative depth |
-# | -- |----------------|----------------|-------------------------|
+# |    | Constant depth | Relative depth | Variable depth |
+# | -- |----------------|----------------|----------------|
 # | **Source beneath data** | ✅ | ✅ | ✅ |
-# | **Block reduced sources** | ✅ | ✅ | ✅ |
+# | **Block averaged sources** | ✅ | ✅ | ✅ |
 # | **Grid of sources** | ✅ | ❌ | ❌ |
 #
 #
@@ -60,19 +56,24 @@
 
 # +
 from IPython.display import display
+import os
 import pyproj
 import numpy as np
+import pandas as pd
 import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 
 import eql_source_layouts
-
 # -
 
 # ## Define parameters for building the source distributions
 
 # +
+# Define results directory to read synthetic ground survey
+ground_results_dir = os.path.join("..", "results", "ground_survey")
+airborne_results_dir = os.path.join("..", "results", "airborne_survey")
+
 # Define dictionaries where the source distributions will be stored
 layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
 source_distributions = {layout: {} for layout in layouts}
@@ -80,11 +81,8 @@ source_distributions = {layout: {} for layout in layouts}
 # Define a region for the synthetic survey
 region_degrees = [-0.5, 0.5, -0.5, 0.5]  # given in degrees
 
-# Set a constant depth of 2km
-constant_depth = 2000
-
-# Set a relative depth of 2km
-relative_depth = 2000
+# Set a depth of 2km
+depth = 2000
 
 # Define a block size of 2km for block-median layouts
 spacing = 4000
@@ -98,18 +96,18 @@ layout = "source_bellow_data"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
-    "constant_depth": constant_depth,
+    "depth": depth,
 }
 depth_type = "relative_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
-    "relative_depth": relative_depth,
+    "depth": depth,
 }
-depth_type = "variable_relative_depth"
+depth_type = "variable_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
     "depth_factor": 0.5,
-    "depth_shift": -500,
+    "depth": 500,
     "k_nearest": 15,
 }
 
@@ -119,19 +117,19 @@ depth_type = "constant_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
     "spacing": spacing,
-    "constant_depth": constant_depth,
+    "depth": depth,
 }
 depth_type = "relative_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
     "spacing": spacing,
-    "relative_depth": relative_depth,
+    "depth": depth,
 }
-depth_type = "variable_relative_depth"
+depth_type = "variable_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
     "depth_factor": 0.2,
-    "depth_shift": -500,
+    "depth": 500,
     "k_nearest": 2,
     "spacing": spacing,
 }
@@ -141,35 +139,16 @@ depth_type = "constant_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,
     "spacing": spacing,
-    "constant_depth": constant_depth,
+    "depth": depth,
 }
 # -
 
-# ## 1. Create a synthetic ground survey
+# ## Read synthetic ground survey
 #
 
 # Get coordinates of observation points from a synthetic ground survey
 
-survey = hm.synthetic.ground_survey(region=region_degrees)
-display(survey)
-
-# Project survey points into Cartesian coordinates
-
-# +
-projection = pyproj.Proj(proj="merc", lat_ts=0)
-survey["easting"], survey["northing"] = projection(
-    survey.longitude.values, survey.latitude.values
-)
-display(survey)
-
-# Define region boundaries in projected coordinates
-region = (
-    survey.easting.values.min(),
-    survey.easting.values.max(),
-    survey.northing.min(),
-    survey.northing.max(),
-)
-# -
+survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
 
 # Plot the survey points
 
@@ -249,13 +228,12 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label="m")
 plt.show()
 # -
 
-# ## 2. Create a synthetic airborne survey
+# ## Read synthetic airborne survey
 #
 
 # Get coordinates of observation points from a synthetic airborne survey
 
-survey = hm.synthetic.airborne_survey(region=region_degrees)
-display(survey)
+survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
 
 # Project survey points into Cartesian coordinates
 
