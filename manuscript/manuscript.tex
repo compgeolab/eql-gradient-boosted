@@ -446,13 +446,27 @@ predictions of the measured harmonic field on non observed locations.
 
 A high number of sources scattered on the survey region is capable of
 reproducing the observed data. Nevertheless, too many sources will make the
-Jacobian matrix too large. This could introduce computational problems: like
-the inability of storing the matrix on memory or increasing the computational
+Jacobian matrix too large, what could introduce computational problems like
+the inability of storing the matrix on memory or a high computational
 time needed to fit the sources' coefficients.
 On the other hand, using very few sources will undoubtedly reduce the memory
 needs and lower the computational time when fitting the sources' coefficients.
-Nevertheless, it could be incapable of making accurate predictions and even
+Nevertheless, it could be incapable of making accurate predictions or even
 reproducing the measured data if the number of sources is too low.
+
+The choice of the source distribution could also depend on the characteristic
+of the survey and how the observation points are distributed on the region.
+
+A ground survey usually consists in observation points located along irregular
+paths plus some possible scattered points. The survey region is usually
+heterogeneously covered, leaving areas without any observation.
+
+On the other hand, an airborne survey consists in observation points located
+along almost straight flight lines. The measurements are usually taken at
+a high frequency, so the observation points along the flight lines are very
+close to each other. This creates an anisotropy on the observation points:
+there are much more observation points along the flight lines directions.
+Airborne surveys homogeneously cover the survey region.
 
 The most widely used source distributions are: a regular grid of point sources
 and one point source beneath each observation point.
