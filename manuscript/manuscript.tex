@@ -436,7 +436,7 @@ $\hat{\mathbf{c}}_\text{est}$:
 % depths strategies.
 
 How to choose how many sources to use and where to locate them are not
-trivial decisions which play an important role on the accuracy of the
+trivial decisions that play an important role on the accuracy of the
 predictions and the computational resources needed to fit the sources'
 coefficients.
 
@@ -444,11 +444,11 @@ The chosen distribution of sources should simultaneously reproduce the measured
 data on the survey points and be able to make accurate predictions of the
 measured harmonic field on non observed locations.
 
-A high number of sources scattered on the survey region is capable of
-reproducing the observed data. Nevertheless, too many sources will make the
-Jacobian matrix too large, what could introduce computational problems like
-the inability of storing the matrix on memory or a high computational
-time needed to fit the sources' coefficients.
+A high number of sources homogeneously distributed on the survey region are
+capable of reproducing the observed data. Nevertheless, too many sources will
+make the Jacobian matrix too large, what could introduce computational problems
+like the inability of storing the matrix on memory or a high computational time
+needed to fit the sources' coefficients.
 On the other hand, using very few sources will undoubtedly reduce the memory
 needs and lower the computational time when fitting the sources' coefficients.
 Nevertheless, it could be incapable of making accurate predictions or even
@@ -456,55 +456,75 @@ reproducing the measured data if the number of sources is too low.
 
 The choice of the source distribution could also depend on the characteristic
 of the survey and how the observation points are distributed on the region.
-
 A ground survey usually consists in observation points located along irregular
-paths plus some possible scattered points. The survey region is usually
-heterogeneously covered, leaving areas without any observation.
-
+paths plus some possible scattered points.
+The survey region is usually heterogeneously covered, leaving areas without any
+observation.
 On the other hand, an airborne survey consists in observation points located
 along almost straight flight lines. The measurements are usually taken at
 a high frequency, so the observation points along the flight lines are very
-close to each other. This creates an anisotropy on the observation points:
-there are much more observation points along the flight lines directions.
-Airborne surveys homogeneously cover the survey region.
+close to each other.
+This creates an anisotropy on the observation points: there are much more
+observation points along the flight lines directions.
 
 The most widely used source distributions are: a regular grid of point sources
 and one point source beneath each observation point.
 
 The \emph{regular grid} creates an homogeneous distribution of point sources
 bellow the surveyed region.
-It could create too many sources on areas without data and very few ones on
-areas with a high number of observation points, leading to an underfitting of
-the observed data.
-This could be solved by reducing the grid spacing and therefore increasing the
-number of point sources and the computational load of the interpolation
-process.
+The distance between sources is controlled by the grid spacing parameter.
+Keeping the boundaries of the grid constant, reducing the spacing increases the
+number of sources.
 
-The \emph{source beneath data} layout adds sources where they are more needed.
-If the survey is composed by a large number of data points clustered on paths
-(like an airborne survey), putting one source beneath each observation point
-will create an anisotropic source distribution: there will be several sources
-distributed along a privileged direction.
-This could introduce aliases on the predictions and increase the computational
-load for fitting the predictor.
+The \emph{source beneath data} layout locates one source bellow each
+observation point, therefore the number of sources will be equal to the number
+of data points.
 
-We propose a new source distribution that could simultaneously solve the
-problems of the preceding ones: the \emph{block averaged sources}.
-It consist in dividing the region in blocks of equal size, computing the median
-location of the observation points that fall inside each block, and putting one
-point source bellow this block averaged coordinate
-(fig.~\ref{fig:block-median-sources}).
-It creates one source beneath each populated block, solving the problem
-of the \emph{grid sources} layout, but also reducing the number of point
-sources in comparison with the \emph{source beneath data} layout.
+When working with ground surveys, the \emph{regular grid} needs the grid
+spacing to be sufficiently small so observed values can be accurately
+reproduced by the source distribution.
+This will create too many sources on areas where no observation has been
+carried out.
+In contrast, the \emph{source beneath data} layout is more likely to accurately
+fit the observed data with much less sources, reducing the computational load
+to fit the equivalent sources' coefficients.
+
+When working with airborne surveys, the \emph{source beneath data} may
+generate an anisotropic distribution of sources by locating too many sources
+along the flight paths.
+It could lead to unwanted aliases on the predicted values.
+In contrast, the \emph{regular grid} won't generate aliases by homogeneously
+locating sources.
+
+We propose a new source distribution that could simultaneously reduce the
+computational load and remove the drawbacks of the preceding ones: the
+\emph{block averaged sources}.
+It consist in:
+
+\begin{enumerate}
+    \item Dividing the region in blocks of equal size. The size of the blocks
+        is controlled by a \emph{spacing} parameter.
+        (see Fig.~\ref{fig:block-median-sources}(a)-(b)).
+    \item Computing the median location of the observation points that fall
+        inside each block. Blocks without any observation point are ignored.
+    \item Locating one point source bellow each block averaged coordinate.
+        (see Fig.~\ref{fig:block-median-sources}(c)).
+\end{enumerate}
+
+The number of sources created by this new distribution will be less or equal to
+the ones created by the \emph{source beneath data} and the \emph{regular
+grid} with the same spacing.
+Moreover, the sources are only located beneath populated blocks, so sources
+will be concentrated on regions where data has been gathered and no anisotropic
+distribution of sources will be generated.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/block-median-sources-schematics.pdf}
     \caption{
-        Block averaged sources. Given a set of observation points (a) we divide
-        the survey region on blocks of equal size (b) and compute the median
+        Block averaged sources. (a) Given a set of observation points (b) we divide
+        the survey region on blocks of equal size and compute the median
         location of the observation points that fall inside each block.
-        A source point is located beneath each block averaged coordinate (c).
+        (c) A source point is located beneath each block averaged coordinate.
         The number of point sources could be less or equal to the number of
         observation points.
         No source is located beneath unpopulated blocks.
@@ -515,8 +535,8 @@ sources in comparison with the \emph{source beneath data} layout.
 The depth of the point sources can be chosen following different criteria.
 Deep sources generate low frequencies, while shallow ones generate high
 frequencies (cite).
-The most simple option is to locate all point sources at the same depth, which
-we will call \emph{constant depth} in the future.
+The simplest option is to locate all sources at the same depth, which we will
+call \emph{constant depth} in the future (see Fig.~\ref{fig:depth-types}(a)).
 If the measurement were taken at significantly different altitudes, the
 elevated computation points will be more distant to the sources than the lower
 ones.
@@ -524,19 +544,21 @@ This may create problems on reproducing high frequencies on the elevated
 points.
 
 One possible solution is to locate each source bellow its corresponding
-observation point or block averaged point at a constant \emph{relative depth}
+observation (or block averaged) point at a constant \emph{relative depth}
 from it.
+The depth of each source can be computed as the height of its corresponding
+observation (or block averaged) point minus a depth parameter that assumes the
+same value for all sources (see Fig.~\ref{fig:depth-types}(b)).
 The sources won't be all at the same depth, but they will all be at the same
-distance from their corresponding observation point (or block averaged point).
-It worth mention that this approach could not be applied to \emph{grid
-sources}.
+distance from their corresponding observation (or block averaged) point.
 
-In case our survey presents heavily clustered data points, we may want to
-reduce the depth of the sources bellow that region in order to reproduce the
+In case our survey presents heavily clustered data points on some areas, we may
+want the sources bellow that region to be shallower in order to reproduce the
 high frequencies measured by these clustered observation points.
 We can propose a \emph{variable depth} approach: it locates each point source
-according to the \emph{relative depth} approach and then add a term
-proportional to the mean distance to its $k$ nearest neighbour sources.
+according to the \emph{relative depth} and then subtracts a term proportional
+to the mean distance to its $k$ nearest neighbour sources
+(see Fig.~\ref{fig:depth-types}(c)).
 So, the depth of the sources can be computed as follows:
 
 \begin{equation}
@@ -551,26 +573,31 @@ So, the depth of the sources can be computed as follows:
 observation (or block averaged) point to the source, \emph{depth factor} and
 \emph{relative depth} are parameters and \emph{mean distance} is the mean
 distance to the $k$ nearest source neighbours.
+This term will be smaller in case of clustered sources, making them shallower
+than scattered and distant sources.
 
 Similar approaches for setting sources at depths that depend
 on the distance to their nearest neighbours were already proposed by
 \citet{cordell1992, guspi2004, guspi2009}.
+
+Worth mention that the two last approaches (the \emph{relative depth} and the
+\emph{variable depth}) could not be applied to \emph{grid sources}.
 
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/depth_types.pdf}
     \caption{
         Depth types for locating point sources. We put one source beneath each
-        observation point (station) using: (a)~a \emph{constant depth} where all sources
-        are located at the same depth, (b)~a \emph{relative depth} where all sources are
-        located at the same vertical distance from its corresponding observation point,
-        and (c)~a \emph{variable relative depth} where the depth of the sources is
-        proportional to the average distance to its neighbour sources. Notice how the
-        clustered sources on (c) are relatively shallower than the other ones.
+        observation point (station) using: (a)~a \emph{constant depth} where
+        all sources are located at the same depth, (b)~a \emph{relative depth}
+        where all sources are located at the same vertical distance from its
+        corresponding observation point, and (c)~a \emph{variable relative
+        depth} where the depth of the sources is proportional to the average
+        distance to its neighbour sources. Notice how the clustered sources on
+        (c) are relatively shallower than the other ones.
     }
     \label{fig:depth-types}
 \end{figure*}
-
 
 The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
