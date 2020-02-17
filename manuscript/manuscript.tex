@@ -475,26 +475,27 @@ This could introduce aliases on the predictions and increase the computational
 load for fitting the predictor.
 
 We propose a new source distribution that could simultaneously solve the
-problems of the preceding ones: the \emph{block-median sources}.
+problems of the preceding ones: the \emph{block averaged sources}.
 It consist in dividing the region in blocks of equal size, computing the median
 location of the observation points that fall inside each block, and putting one
-point source bellow this block-median coordinate.
-It creates one point source beneath each populated block, solving the problem
+point source bellow this block averaged coordinate
+(fig.~\ref{fig:block-median-sources}).
+It creates one source beneath each populated block, solving the problem
 of the \emph{grid sources} layout, but also reducing the number of point
 sources in comparison with the \emph{source beneath data} layout.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/block-median-sources-schematics.pdf}
     \caption{
-        Block-median sources. Given a set of observation points (a) we divide
+        Block averaged sources. Given a set of observation points (a) we divide
         the survey region on blocks of equal size (b) and compute the median
         location of the observation points that fall inside each block.
-        A source point is located beneath each block-median coordinate (c).
+        A source point is located beneath each block averaged coordinate (c).
         The number of point sources could be less or equal to the number of
         observation points.
         No source is located beneath unpopulated blocks.
     }
-    \label{fig:depth-types}
+    \label{fig:block-median-sources}
 \end{figure*}
 
 The depth of the point sources can be chosen following different criteria.
@@ -509,10 +510,10 @@ This may create problems on reproducing high frequencies on the elevated
 points.
 
 One possible solution is to locate each source bellow its corresponding
-observation point or block-median point at a constant \emph{relative depth}
+observation point or block averaged point at a constant \emph{relative depth}
 from it.
 The sources won't be all at the same depth, but they will all be at the same
-distance from their corresponding observation point (or block-median point).
+distance from their corresponding observation point (or block averaged point).
 It worth mention that this approach could not be applied to \emph{grid
 sources}.
 
@@ -533,7 +534,7 @@ So, the depth of the sources can be computed as follows:
 \end{equation}
 
 \noindent where \emph{data point height} is the elevation of the corresponding
-observation (or block-median) point to the source, \emph{depth factor} and
+observation (or block averaged) point to the source, \emph{depth factor} and
 \emph{relative depth} are parameters and \emph{mean distance} is the mean
 distance to the $k$ nearest source neighbours.
 
@@ -572,7 +573,7 @@ scheme.
     }
     \label{tab:source-distributions}
     \begin{tabular}{lccc}
-        & Source bellow data & Block-median sources & Grid sources \\ \hline
+        & Source bellow data & Block averaged sources & Grid sources \\ \hline
         Constant depth          & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
         Relative depth          & $\checkmark$ & $\checkmark$ & $\times$     \\
         Variable relative depth & $\checkmark$ & $\checkmark$ & $\times$     \\
