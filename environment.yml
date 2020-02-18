@@ -8,6 +8,7 @@ dependencies:
     - verde
     # Other dependencies
     - matplotlib
+    - pyvista
     - ipython
     - jupyter
     - pyproj
