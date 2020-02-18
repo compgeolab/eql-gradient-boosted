@@ -24,14 +24,15 @@ import pyproj
 import numpy as np
 import verde as vd
 import harmonica as hm
+import pyvista as pv
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 
 from eql_source_layouts import (
     synthetic_model,
     grid_to_dataarray,
+    plot_prisms
 )
-
 # -
 
 # **Define parameters**
@@ -89,6 +90,28 @@ ax.set_title("Synthetic model made out of prisms")
 ax.set_xlim(region[:2])
 ax.set_ylim(region[2:4])
 plt.show()
+
+# +
+model_3d = plot_prisms(model["prisms"], density=model["densities"])
+
+pv.set_plot_theme("document")
+
+# Hard code camera position
+camera_position = [
+    (-155725.61291594387, -159856.6201254788, 113780.28463514982),
+    (-4992.242698210126, -7105.6451280616075, -16878.53502201562),
+    (0.3726131376247387, 0.36287751349854375, 0.854095638594743),
+]
+
+sargs = dict(height=0.05, width=0.25, vertical=False, position_x=0.05, position_y=0.75, font_family="times")
+
+plotter = pv.Plotter(notebook=True)
+plotter.add_mesh(model_3d, opacity=0.5, scalar_bar_args=sargs)
+
+plotter.camera_position = camera_position
+# view = plotter.show(screenshot="3d_model.png")  # save a screenshot
+view = plotter.show()
+# -
 
 # ## Synthetic ground survey
 
