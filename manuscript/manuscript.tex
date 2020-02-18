@@ -627,26 +627,48 @@ scheme.
 
 \section{Comparison of source distributions}
 
-Compare the accuracy of the predictions made by each source distribution.
-Need an objective way to compare them.
-Propose a synthetic gravity model made out of prisms of different sizes and
-density contrasts.
-Create a regular grid of observation points where the gravitational effect of
-the synthetic model will be computed.
-Call it the \emph{target grid}.
-Generate synthetic surveys above the same synthetic model and compute the
-gravitational effect of the model on each survey.
-Use each source distribution to predict values based on the ones obtained on
-each survey onto the same grid points of the \emph{target grid}.
-Score each interpolation by comparing the predicted values with the
-\emph{target grid}.
-Finally compare the accuracy of the predictions made by each source
-distribution.
+%Compare the accuracy of the predictions made by each source distribution.
+%Need an objective way to compare them.
+%Propose a synthetic gravity model made out of prisms of different sizes and
+%density contrasts.
+%Create a regular grid of observation points where the gravitational effect of
+%the synthetic model will be computed.
+%Call it the \emph{target grid}.
+%Generate synthetic surveys above the same synthetic model and compute the
+%gravitational effect of the model on each survey.
+%Use each source distribution to predict values based on the ones obtained on
+%each survey onto the same grid points of the \emph{target grid}.
+%Score each interpolation by comparing the predicted values with the
+%\emph{target grid}.
+%Finally compare the accuracy of the predictions made by each source
+%distribution.
+
+Our goal is to to compare the performance of all source distributions from
+Table~\ref{tab:source-distributions} when predicting harmonic field data using
+the equivalent layer technique.
+To do so we have created a synthetic model made out of prisms of different
+shape and density contrasts.
+The gravitational effect of this synthetic model have been computed on two
+different set of observation points that we will call \emph{synthetic surveys}:
+a ground and an airborne survey.
+Its effect have also been computed on a regular grid at a constant height which
+we will use as the \emph{target} values of the harmonic field.
+Then the data from each synthetic survey is interpolated on the same grid
+points as the \emph{target} grid using each source
+distribution with different sets of parameters.
+Each prediction is then scored against the \emph{target} grid and keep the one
+that achieves the highest score.
+We can then quantitatively compare how accurate is each source distribution at
+predicting unobserved data on each synthetic survey and quantify the
+computational load needed to do it.
 
 \subsection{Synthetic Model}
 
-Describe forward model made out of prisms.
-Show prisms model?
+%Describe forward model made out of prisms.
+%Show prisms model?
+
+The synthetic model is made out of \textbf{number} number of prisms distributed
+on a region of 100km$\times$100km between 10km deep and surface level.
 
 \subsection{Synthetic Surveys}
 
