@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{siunitx}
 \usepackage[round]{natbib}
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
@@ -668,7 +669,27 @@ computational load needed to do it.
 %Show prisms model?
 
 The synthetic model is made out of \textbf{number} number of prisms distributed
-on a region of 100km$\times$100km between 10km deep and surface level.
+on a region of \SI{100}{\km}$\times$\SI{100}{\km} between \SI{10}{\km} deep and
+the zero height plane.
+Density of prisms range from \SI{-900}{\kg\per\cubic\m} and
+\SI{500}{\kg\per\cubic\m}.
+We created deep big and thin shallow prisms for creating gravity anomalies with
+long and short wavelengths, respectively.
+
+The gravitational effect of the synthetic model has been computed on a regular
+grid of 56$\times$57 points with a spacing of \SI{2}{\km} located
+\SI{2000}{\m} above the zero height plane (Fig.~\ref{fig:target-grid}).
+We will refer to this grid as the \emph{target} grid in the future.
+
+\begin{figure*}
+    %\includegraphics[width=\linewidth]{}
+    \caption{
+        Target grid. Gravitational effect of synthetic model on a regular grid
+        composed of 56$\times$57 points with a spacing of \SI{2}{\km} located
+        \SI{2000}{\m} above the zero height plane.
+    }
+    \label{fig:target-grid}
+\end{figure*}
 
 \subsection{Synthetic Surveys}
 
