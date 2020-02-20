@@ -75,7 +75,7 @@ grid_sources_dampings = [1e1, 1e2, 1e3, 1e4]
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
 depth_factors = [1, 2, 3, 4, 5, 6]
-variable_depths = np.arange(0, 1500, 200)
+variable_depths = np.arange(50, 1500, 200)
 k_values = [1, 5, 10, 15]
 # Define block spacing for block median sources
 block_spacings = [1_000, 2_000, 3_000, 4_000]
