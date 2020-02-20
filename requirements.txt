@@ -2,3 +2,4 @@ numpy
 scipy
 xarray
 matplotlib
+git+git://github.com/fatiando/harmonica.git@master#egg=harmonica
