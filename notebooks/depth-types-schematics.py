@@ -66,7 +66,7 @@ plt.style.use(os.path.join("..", "matplotlib.rc"))
 fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 2), dpi=300)
 size = 8
 
-titles = ["Constant Depth", "Relative Depth", "Variable Relative Depth"]
+titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
 labels = "(a) (b) (c)".split()
 
 for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, labels)):
