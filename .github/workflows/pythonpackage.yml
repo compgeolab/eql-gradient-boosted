@@ -20,9 +20,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Install package
-      run: |
-        pip install -e .
     - name: Check styling with black and flake8
       run: |
         pip install flake8 black
@@ -30,4 +27,5 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov coverage
+        pip install -e .
         make test
