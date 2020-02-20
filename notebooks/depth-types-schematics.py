@@ -32,9 +32,7 @@ points = {}
 # +
 depth_type = "constant_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(
-    coordinates, depth_type=depth_type, constant_depth=150
-)
+points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
@@ -43,19 +41,17 @@ plt.show()
 # +
 depth_type = "relative_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(
-    coordinates, depth_type=depth_type, relative_depth=150
-)
+points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 
 # +
-depth_type = "variable_relative_depth"
+depth_type = "variable_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
 points[depth_type] = source_bellow_data(
-    coordinates, depth_type=depth_type, depth_factor=1, depth_shift=-100, k_nearest=3
+    coordinates, depth_type=depth_type, depth_factor=1, depth=100, k_nearest=3
 )
 
 plt.scatter(coordinates[0], coordinates[2])
@@ -66,7 +62,7 @@ plt.style.use(os.path.join("..", "matplotlib.rc"))
 fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 2), dpi=300)
 size = 8
 
-titles = ["Constant Depth", "Relative Depth", "Variable Relative Depth"]
+titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
 labels = "(a) (b) (c)".split()
 
 for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, labels)):
@@ -97,4 +93,3 @@ axes[0].set_ylim(-200, 130)
 plt.tight_layout(w_pad=0)
 plt.savefig(os.path.join("..", "manuscript", "figs", "depth_types.pdf"))
 plt.show()
-# -

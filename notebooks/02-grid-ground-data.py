@@ -58,23 +58,85 @@ field_units = "mGal"
 # Define a list of source layouts
 layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = [None, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3]
-# Define values of constant depth
-constant_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
-# Define values of relative depth
-relative_depths = [1e3, 2e3, 5e3, 10e3, 15e3]
-# Define parameters for the grid layout:
-#    spacing, depth and padding
-source_grid_spacings = [1e3, 2e3, 3e3, 4e3]
-source_grid_depths = [100, 500, 1e3, 2e3, 5e3, 7e3, 10e3]
-source_grid_paddings = [0, 0.1, 0.2]
+dampings = [None, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2]
+# Define depht values
+depths = np.arange(1e3, 18e3, 2e3)
+# Define parameters for the grid sources:
+#    spacing, depth, padding and damping
+grid_sources_spacings = [1e3, 2e3, 3e3, 4e3]
+grid_sources_depths = np.arange(3e3, 15e3, 2e3)
+grid_sources_paddings = [0, 0.1]
+grid_sources_dampings = [1e1, 1e2, 1e3, 1e4]
 # Define parameters for variable relative depth layouts:
-#    depth factor, depth shift and k_values
-depth_factors = [0.5, 1, 5, 10]
-depth_shifts = [0, -100, -500, -1000, -2000, -5000]
-k_values = [1, 3, 5, 10]
+#    depth_factor, depth and k_nearest
+depth_factors = [0.1, 0.5, 1, 2, 3, 4, 5, 6]
+variable_depths = np.arange(0, 1500, 200)
+k_values = [1, 5, 10, 15]
 # Define block spacing for block median sources
 block_spacings = [1_000, 2_000, 3_000, 4_000]
+# -
+
+# ### Define set of parameters for each source distribution
+#
+# Lets create combinations of parameter values for each source distribution
+
+# +
+parameters = {layout: {} for layout in layouts}
+
+# Source bellow data
+layout = "source_bellow_data"
+depth_type = "constant_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type, damping=dampings, depth=depths
+)
+
+depth_type = "relative_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type, damping=dampings, depth=depths
+)
+
+depth_type = "variable_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
+    damping=dampings,
+    depth_factor=depth_factors,
+    depth=variable_depths,
+    k_nearest=k_values,
+)
+
+# Block-median sources
+layout = "block_median_sources"
+depth_type = "constant_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
+)
+
+depth_type = "relative_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
+)
+
+depth_type = "variable_depth"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
+    damping=dampings,
+    spacing=block_spacings,
+    depth_factor=depth_factors,
+    depth=variable_depths,
+    k_nearest=k_values,
+)
+
+# Grid sources
+depth_type = "constant_depth"
+layout = "grid_sources"
+parameters[layout][depth_type] = combine_parameters(
+    depth_type=depth_type,
+    damping=grid_sources_dampings,
+    depth=grid_sources_depths,
+    pad=grid_sources_paddings,
+    spacing=grid_sources_spacings,
+)
+
 # -
 
 # ## Read synthetic ground survey and target grid
@@ -107,76 +169,7 @@ grid.extend(np.full_like(grid[0], target.height))
 # We will finally compare the performance of each source layout based on the best
 # prediction produce by each of them.
 
-# ### Define set of parameters for each source layout
-
 # +
-parameters = {layout: {} for layout in layouts}
-
-# Source bellow data
-layout = "source_bellow_data"
-depth_type = "constant_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type, damping=dampings, constant_depth=constant_depths
-)
-
-depth_type = "relative_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type, damping=dampings, relative_depth=relative_depths
-)
-
-depth_type = "variable_relative_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    depth_factor=depth_factors,
-    depth_shift=depth_shifts,
-    k_nearest=k_values,
-)
-
-# Block-median sources
-layout = "block_median_sources"
-depth_type = "constant_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    constant_depth=constant_depths,
-    spacing=block_spacings,
-)
-
-depth_type = "relative_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    relative_depth=relative_depths,
-    spacing=block_spacings,
-)
-
-depth_type = "variable_relative_depth"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    spacing=block_spacings,
-    depth_factor=depth_factors,
-    depth_shift=depth_shifts,
-    k_nearest=k_values,
-)
-
-# Grid sources
-depth_type = "constant_depth"
-layout = "grid_sources"
-parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    constant_depth=source_grid_depths,
-    pad=source_grid_paddings,
-    spacing=source_grid_spacings,
-)
-
-# -
-
-# ## Score each interpolation
-
-# + jupyter={"outputs_hidden": true}
 scores = {layout: {} for layout in layouts}
 best_predictions = []
 
@@ -217,9 +210,7 @@ for layout in scores:
         )
 # -
 
-# ## 5. Plot best predictions
-
-# Read best predictions from saved files
+# ### Read best predictions from saved files
 
 best_predictions = []
 for layout in layouts:
@@ -229,7 +220,7 @@ for layout in layouts:
         )
     )
 
-# Plot best predictions
+# ## Plot best predictions
 
 for dataset in best_predictions:
     for depth_type in dataset:
@@ -242,7 +233,7 @@ for dataset in best_predictions:
         plot_prediction(prediction, target, units=field_units)
 
 
-# ## 6. Plot and compare all best predictions
+# ## Plot and compare all best predictions
 
 # +
 # We will use the same boundary value for each plot in order to
@@ -307,4 +298,3 @@ cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=field_units)
 
 plt.show()
-# -

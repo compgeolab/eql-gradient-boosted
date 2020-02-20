@@ -56,9 +56,7 @@ def grid_data(coordinates, data, grid, layout, parameters):
     return prediction, points
 
 
-def get_best_prediction(
-    coordinates, data, grid, target, layout, parameters_set
-):
+def get_best_prediction(coordinates, data, grid, target, layout, parameters_set):
     """
     Score interpolations with different parameters and get the best prediction
 
@@ -67,9 +65,7 @@ def get_best_prediction(
     """
     scores = []
     for parameters in parameters_set:
-        prediction, _ = grid_data(
-            coordinates, data, grid, layout, parameters
-        )
+        prediction, _ = grid_data(coordinates, data, grid, layout, parameters)
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
     # Get best prediction
@@ -102,8 +98,8 @@ def predictions_to_datasets(predictions):
     for each depth type.
     """
     datasets = []
-    layouts = list(set([prediction.layout for prediction in predictions]))
-    for layout in layouts:
+    layouts_ = list(set([prediction.layout for prediction in predictions]))
+    for layout in layouts_:
         predictions_same_layout = [p for p in predictions if p.layout == layout]
         for p in predictions_same_layout:
             p.name = p.depth_type
