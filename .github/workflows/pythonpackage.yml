@@ -26,5 +26,5 @@ jobs:
         make check
     - name: Test with pytest
       run: |
-        pip install pytest pytext-cov coverage
+        pip install pytest pytest-cov coverage
         make test
