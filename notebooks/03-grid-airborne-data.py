@@ -113,18 +113,12 @@ parameters[layout][depth_type] = combine_parameters(
 layout = "block_median_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    depth=depths,
-    spacing=block_spacings,
+    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
 )
 
 depth_type = "relative_depth"
 parameters[layout][depth_type] = combine_parameters(
-    depth_type=depth_type,
-    damping=dampings,
-    depth=depths,
-    spacing=block_spacings,
+    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
 )
 
 depth_type = "variable_depth"

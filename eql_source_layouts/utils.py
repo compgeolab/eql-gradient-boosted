@@ -65,9 +65,7 @@ def get_best_prediction(coordinates, data, grid, target, layout, parameters_set)
     """
     scores = []
     for parameters in parameters_set:
-        prediction, _ = grid_data(
-            coordinates, data, grid, layout, parameters
-        )
+        prediction, _ = grid_data(coordinates, data, grid, layout, parameters)
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
     # Get best prediction

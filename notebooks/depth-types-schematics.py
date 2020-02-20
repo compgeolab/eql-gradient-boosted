@@ -32,9 +32,7 @@ points = {}
 # +
 depth_type = "constant_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(
-    coordinates, depth_type=depth_type, depth=150
-)
+points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
@@ -43,9 +41,7 @@ plt.show()
 # +
 depth_type = "relative_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(
-    coordinates, depth_type=depth_type, depth=150
-)
+points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])

@@ -32,7 +32,7 @@
 #
 # 1. **Constant depth**: Source points located all at the same depth, which can be
 #    computed as the minimum height of the data points minus a constant depth.
-# 2. **Relative depth**: Each source is located at a constant distance beneath its 
+# 2. **Relative depth**: Each source is located at a constant distance beneath its
 #    corresponding observation (or block averaged) point.
 # 3. **Variable depth**: Locate each source according to the Relative dpeth approach
 #    and then modify this depth by removing a term that depends on the median distance
@@ -65,6 +65,7 @@ import harmonica as hm
 import matplotlib.pyplot as plt
 
 import eql_source_layouts
+
 # -
 
 # ## Define parameters for building the source distributions
