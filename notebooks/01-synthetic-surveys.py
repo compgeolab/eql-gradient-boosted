@@ -121,6 +121,54 @@ survey[field] = hm.prism_gravity(
 ) + np.random.normal(scale=noise_std, size=survey.easting.size)
 display(survey)
 
+# +
+# Load matplotlib configuration
+plt.style.use(os.path.join("..", "matplotlib.rc"))
+
+# Define useful parameters
+width = 3.33
+figsize = (width, width * 1.5)
+cbar_shrink = 0.9
+size = 2
+
+# Initialize figure and axes
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
+
+# Plot survey points
+tmp = ax1.scatter(
+    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
+)
+clb = plt.colorbar(
+    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+)
+clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
+
+# Plot measured values
+tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
+clb = plt.colorbar(
+    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+)
+clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+
+ax2.set_xlabel("easting [m]")
+ax1.tick_params(
+    axis="x", which="both", bottom=False, top=False, labelbottom=False,
+)
+
+for ax in (ax1, ax2):
+    ax.set_aspect("equal")
+    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
+    ax.set_ylabel("northing [m]")
+
+plt.tight_layout(h_pad=0)
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "ground-survey.pdf"),
+    bbox_inches="tight",
+    dpi=300,
+)
+plt.show()
+# -
+
 # Save ground survey for future usage
 
 survey.to_csv(os.path.join(ground_results_dir, "survey.csv"), index=False)
@@ -155,6 +203,54 @@ survey[field] = hm.prism_gravity(
     coordinates, model["prisms"], model["densities"], field=field
 ) + np.random.normal(scale=noise_std, size=survey.easting.size)
 display(survey)
+
+# +
+# Load matplotlib configuration
+plt.style.use(os.path.join("..", "matplotlib.rc"))
+
+# Define useful parameters
+width = 3.33
+figsize = (width, width * 1.5)
+cbar_shrink = 0.9
+size = 2
+
+# Initialize figure and axes
+fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
+
+# Plot survey points
+tmp = ax1.scatter(
+    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
+)
+clb = plt.colorbar(
+    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+)
+clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
+
+# Plot measured values
+tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
+clb = plt.colorbar(
+    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+)
+clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+
+ax2.set_xlabel("easting [m]")
+ax1.tick_params(
+    axis="x", which="both", bottom=False, top=False, labelbottom=False,
+)
+
+for ax in (ax1, ax2):
+    ax.set_aspect("equal")
+    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
+    ax.set_ylabel("northing [m]")
+
+plt.tight_layout(h_pad=0)
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "airborne-survey.pdf"),
+    bbox_inches="tight",
+    dpi=300,
+)
+plt.show()
+# -
 
 # Save ground survey for future usage
 
