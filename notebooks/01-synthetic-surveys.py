@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -178,3 +178,32 @@ target = grid_to_dataarray(target, grid, attrs={"height": target_grid_height})
 # Save target grid to disk for future usage
 
 target.to_netcdf(os.path.join(results_dir, "target.nc"))
+
+# +
+# Load matplotlib configuration
+plt.style.use(os.path.join("..", "matplotlib.rc"))
+
+width = 3.33
+figsize = (width, width * 0.85)
+fig, ax = plt.subplots(figsize=figsize)
+
+tmp = target.plot.pcolormesh(
+    ax=ax, add_colorbar=False, cmap="viridis", center=False, rasterized=True
+)
+ax.set_aspect("equal")
+ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
+# ax.xaxis.set_label_position('top')
+# ax.xaxis.tick_top()
+ax.set_xlabel(ax.get_xlabel() + " [m]")
+ax.set_ylabel(ax.get_ylabel() + " [m]")
+clb = plt.colorbar(tmp, ax=ax, shrink=1, orientation="vertical", pad=0.03, aspect=30)
+clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+
+plt.tight_layout()
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "target-grid.pdf"),
+    bbox_inches="tight",
+    dpi=300,
+)
+plt.show()
+# -
