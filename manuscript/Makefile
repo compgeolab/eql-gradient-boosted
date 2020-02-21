@@ -1,27 +1,22 @@
-# All tex files in the working directory
-TEX_FILES = $(shell find . -maxdepth 1 -name '*.tex')
-
-# Output directory name
-OUTPUT = _output
-
-# Output PDF files
-PDFS = $(addprefix $(OUTPUT)/, $(TEX_FILES:.tex=.pdf))
+# The name of the main .tex file to build.
+PROJECT = manuscript
+# Folder where output will be placed
+OUTDIR = _output
+# Name of the output file
+OUTPUT = $(OUTDIR)/$(PROJECT).pdf
 
 LATEX_COMPILER = latexmk
-LATEX_FLAGS = -pdf -outdir=$(OUTPUT)
+LATEX_FLAGS = -pdf -outdir=$(OUTDIR)
 PDFVIEWER = xdg-open
 
 
-all: $(PDFS)
+all: $(OUTPUT)
 
 clean:
-	rm -rf $(OUTPUT)
+	rm -rf $(OUTDIR)
 
 show: all
-	@ ( $(foreach PDF,$(PDFS),$(PDFVIEWER) $(PDF) 2> /dev/null;) )
+	@( $(PDFVIEWER) $(OUTPUT) 2> /dev/null; )
 
-$(OUTPUT)/%.pdf: %.tex | $(OUTPUT)/
+$(OUTPUT): $(PROJECT).tex
 	$(LATEX_COMPILER) $(LATEX_FLAGS) $<
-
-$(OUTPUT)/:
-	mkdir $(OUTPUT)
