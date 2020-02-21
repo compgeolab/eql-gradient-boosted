@@ -192,8 +192,6 @@ tmp = target.plot.pcolormesh(
 )
 ax.set_aspect("equal")
 ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-# ax.xaxis.set_label_position('top')
-# ax.xaxis.tick_top()
 ax.set_xlabel(ax.get_xlabel() + " [m]")
 ax.set_ylabel(ax.get_ylabel() + " [m]")
 clb = plt.colorbar(tmp, ax=ax, shrink=1, orientation="vertical", pad=0.03, aspect=30)
@@ -206,4 +204,3 @@ plt.savefig(
     dpi=300,
 )
 plt.show()
-# -
