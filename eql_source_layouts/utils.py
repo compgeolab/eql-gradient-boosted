@@ -53,12 +53,10 @@ def grid_data(coordinates, data, grid, layout, parameters):
     eql.fit(coordinates, data)
     # Predict the field on the regular grid
     prediction = eql.predict(grid)
-    return prediction
+    return prediction, points
 
 
-def get_best_prediction(
-    coordinates, data, grid, target, layout, parameters_set
-):
+def get_best_prediction(coordinates, data, grid, target, layout, parameters_set):
     """
     Score interpolations with different parameters and get the best prediction
 
@@ -67,16 +65,14 @@ def get_best_prediction(
     """
     scores = []
     for parameters in parameters_set:
-        prediction = grid_data(
-            coordinates, data, grid, layout, parameters
-        )
+        prediction, _ = grid_data(coordinates, data, grid, layout, parameters)
         # Score the prediction against target data
         scores.append(r2_score(target, prediction))
     # Get best prediction
     best = np.nanargmax(scores)
     best_parameters = parameters_set[best]
     best_score = scores[best]
-    best_prediction = grid_data(
+    best_prediction, points = grid_data(
         coordinates, data, grid, layout, best_parameters
     )
     # Convert parameters and scores to a pandas.DataFrame
@@ -87,6 +83,7 @@ def get_best_prediction(
     da.values = best_prediction
     da.attrs["layout"] = layout
     da.attrs["score"] = best_score
+    da.attrs["n_points"] = points[0].size
     for key, value in best_parameters.items():
         da.attrs[key] = value
     best_prediction = da
@@ -101,8 +98,8 @@ def predictions_to_datasets(predictions):
     for each depth type.
     """
     datasets = []
-    layouts = list(set([prediction.layout for prediction in predictions]))
-    for layout in layouts:
+    layouts_ = list(set([prediction.layout for prediction in predictions]))
+    for layout in layouts_:
         predictions_same_layout = [p for p in predictions if p.layout == layout]
         for p in predictions_same_layout:
             p.name = p.depth_type
