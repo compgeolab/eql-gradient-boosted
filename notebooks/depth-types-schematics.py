@@ -84,7 +84,7 @@ fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(width, height))
 
 # Define styles and axes labels and titles
 size = 8
-titles = ["Constant Depth", "Relative Depth", "Variable Relative Depth"]
+titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
 labels = "a b c".split()
 
 # Plot
