@@ -13,3 +13,7 @@ dist/
 *.egg-info
 MANIFEST
 .coverage.*
+
+*.bak
+*.sav
+_output

@@ -13,6 +13,10 @@
 #     name: conda-env-eql_source_layouts-py
 # ---
 
+# # Schematic figure of depth types
+
+# Import packages
+
 # +
 from IPython.display import display
 import os
@@ -24,10 +28,16 @@ from eql_source_layouts.layouts import source_bellow_data
 
 # -
 
+# Read a synthetic 1d survey
+
 survey = pd.read_csv(os.path.join("..", "data", "survey_1d.csv"))
 display(survey)
 
+# ## Create source distributions
+
 points = {}
+
+# Source beneath data with constant depth
 
 # +
 depth_type = "constant_depth"
@@ -37,6 +47,9 @@ points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, dept
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
+# -
+
+# Source beneath data with relative depth
 
 # +
 depth_type = "relative_depth"
@@ -46,6 +59,9 @@ points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, dept
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
+# -
+
+# Source beneath data with variable depth
 
 # +
 depth_type = "variable_depth"
@@ -58,13 +74,20 @@ plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
+# Load matplotlib configuration
 plt.style.use(os.path.join("..", "matplotlib.rc"))
-fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(6.66, 2), dpi=300)
+
+# Initialize figure and axes
+width = 6.66
+height = 1.5
+fig, axes = plt.subplots(ncols=3, nrows=1, sharey=True, figsize=(width, height))
+
+# Define styles and axes labels and titles
 size = 8
-
 titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
-labels = "(a) (b) (c)".split()
+labels = "a b c".split()
 
+# Plot
 for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, labels)):
     ax.scatter(coordinates[0], coordinates[2], s=size, label="stations", marker="^")
     ax.scatter(points[depth_type][0], points[depth_type][2], s=size, label="sources")
@@ -85,7 +108,12 @@ for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, lab
         top=False,  # ticks along the right edge are off
         labelbottom=False,  # labels along the bottom edge are off
     )
-    ax.annotate(label, xy=(0.03, 0.88), xycoords="axes fraction")
+    ax.annotate(
+        label,
+        xy=(0.045, 0.88),
+        xycoords="axes fraction",
+        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
+    )
 
 axes[0].legend(loc=(0.6, 0.32), borderpad=0.2, labelspacing=0.3)
 axes[0].set_ylim(-200, 130)
