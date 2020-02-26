@@ -10,6 +10,7 @@
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
+\usepackage{multirow}
 
 % Define special units
 \DeclareSIUnit\mgal{\milli Gal}
@@ -816,6 +817,32 @@ The synthetic airborne survey was based upon the Great Britain aeromagnetic
 data, reproduced with the permission of the British Geological Survey
 $\textcopyright$UKRI\@.
 All rights reserved.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Source distributions parameters}
+
+\begin{table*}
+    \centering
+    \caption{
+        Parameters used with each source distribution when gridding the
+        synthetic ground survey. Depths and spacings are given in km.
+    }
+    \label{tab:parameters-ground-survey}
+    \input{parameters_ground_survey.tex}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{
+        Parameters used with each source distribution when gridding the
+        synthetic airborne survey. Depths and spacings are given in km.
+    }
+    \label{tab:parameters-airborne-survey}
+    \input{parameters_airborne_survey.tex}
+\end{table*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
