@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -36,7 +36,7 @@ from eql_source_layouts import (
     plot_prediction,
     get_best_prediction,
     predictions_to_datasets,
-    latex_parameters_table,
+    latex_parameters,
 )
 
 # -
@@ -142,10 +142,10 @@ parameters[layout][depth_type] = dict(
 )
 # -
 
-# ### Create LaTeX table with parameters values
+# ### Save parameters to LaTeX variables file
 
 with open(os.path.join("..", "manuscript", "parameters_airborne_survey.tex"), "w") as f:
-    f.write(latex_parameters_table(parameters))
+    f.write("\n".join(latex_parameters(parameters, "airborne")))
 
 # ### Combine parameter values for each source distribution
 #
