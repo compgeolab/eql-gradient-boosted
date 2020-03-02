@@ -3,3 +3,4 @@ scipy
 xarray
 matplotlib
 harmonica==0.1.0
+verde==1.3.0
