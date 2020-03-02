@@ -6,6 +6,7 @@ dependencies:
     - pip
     - numpy
     - verde>=1.3.0
+    - harmonica=0.1.0
     # Other dependencies
     - matplotlib
     - ipython
@@ -19,5 +20,3 @@ dependencies:
     - black
     - pylint
     - flake8
-    - pip:
-        - git+git://github.com/fatiando/harmonica
