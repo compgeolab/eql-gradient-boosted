@@ -2,4 +2,5 @@ numpy
 scipy
 xarray
 matplotlib
-git+git://github.com/fatiando/harmonica.git@master#egg=harmonica
+harmonica==0.1.0
+verde==1.3.0
