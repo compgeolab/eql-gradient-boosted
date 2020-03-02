@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.3
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -31,6 +31,7 @@ from eql_source_layouts import (
     get_best_prediction,
     predictions_to_datasets,
     latex_parameters,
+    latex_variables,
 )
 
 # -
@@ -322,3 +323,38 @@ cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=field_units)
 
 plt.show()
+# -
+
+# ## Save best predictions parameters
+#
+# Save best predictions parameters as LaTeX variables
+
+# +
+tex_variables = []
+for dataset in best_predictions:
+    for depth_type in dataset:
+        parameters = dataset[depth_type].attrs
+        layout = parameters["layout"]
+        for parameter, value in parameters.items():
+            if parameter in ("depth_type", "layout", "height"):
+                continue
+            fmt = ""
+            variable_name = (
+                "_".join(["best", "ground", layout, depth_type, parameter])
+                .replace("_", " ")
+                .title()
+                .replace(" ", "")
+            )
+            if parameter in ("spacing", "depth"):
+                fmt = ".1f"
+            if parameter == "score":
+                fmt = ".3f"
+            if value == 0:
+                fmt = ".0f"
+            tex_variables.append(latex_variables(variable_name, value, fmt=fmt))
+
+
+with open(
+    os.path.join("..", "manuscript", "best_parameters_ground_survey.tex"), "w"
+) as f:
+    f.write("\n".join(tex_variables,))
