@@ -321,8 +321,8 @@ cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
-plt.savefig(os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"), dpi=300)
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"), dpi=300
+)
 plt.show()
 # -
-
-
