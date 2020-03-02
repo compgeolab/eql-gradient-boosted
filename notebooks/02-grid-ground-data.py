@@ -272,6 +272,8 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
         ax.yaxis.offsetText.set_x(-0.13)
+        ax.set_xlabel(ax.get_xlabel() + " [m]")
+        ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with r2 score and number of points
         ax.set_title(
             r"R$^2$: {:.3f}, \#sources: {}".format(
@@ -319,6 +321,8 @@ cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
-plt.savefig(os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"))
+plt.savefig(os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"), dpi=300)
 plt.show()
 # -
+
+
