@@ -58,7 +58,7 @@ def format_parameters(parameters_list, parameter_name):
     if parameter_name in ("spacing", "depth"):
         parameters_list = np.array(parameters_list) * 1e-3
         if min(parameters_list) < 1:  # asign formats if min value is lower than 1 km
-            fmt = ".1f"
+            fmt = ".2f"
         else:
             fmt = ".0f"
     # Create a string of parameters separated by commas
