@@ -37,7 +37,7 @@ display(survey)
 
 points = {}
 
-# Source beneath data with constant depth
+# Source bellow data with constant depth
 
 # +
 depth_type = "constant_depth"
@@ -49,7 +49,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # -
 
-# Source beneath data with relative depth
+# Source bellow data with relative depth
 
 # +
 depth_type = "relative_depth"
@@ -61,7 +61,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # -
 
-# Source beneath data with variable depth
+# Source bellow data with variable depth
 
 # +
 depth_type = "variable_depth"

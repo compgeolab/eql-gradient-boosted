@@ -488,7 +488,7 @@ The distance between sources is controlled by the grid spacing parameter.
 Keeping the boundaries of the grid constant, reducing the spacing increases the
 number of sources.
 
-The \emph{source beneath data} layout locates one source bellow each
+The \emph{source bellow data} layout locates one source bellow each
 observation point, therefore the number of sources will be equal to the number
 of data points.
 
@@ -497,11 +497,11 @@ spacing to be sufficiently small so observed values can be accurately
 reproduced by the source distribution.
 This will create too many sources on areas where no observation has been
 carried out.
-In contrast, the \emph{source beneath data} layout is more likely to accurately
+In contrast, the \emph{source bellow data} layout is more likely to accurately
 fit the observed data with much less sources, reducing the computational load
 to fit the equivalent sources' coefficients.
 
-When working with airborne surveys, the \emph{source beneath data} may
+When working with airborne surveys, the \emph{source bellow data} may
 generate an anisotropic distribution of sources by locating too many sources
 along the flight paths.
 It could lead to unwanted aliases on the predicted values.
@@ -524,7 +524,7 @@ It consist in:
 \end{enumerate}
 
 The number of sources created by this new distribution will be less or equal to
-the ones created by the \emph{source beneath data} and the \emph{regular
+the ones created by the \emph{source bellow data} and the \emph{regular
 grid} with the same spacing.
 Moreover, the sources are only located beneath populated blocks, so sources
 will be concentrated on regions where data has been gathered and no anisotropic

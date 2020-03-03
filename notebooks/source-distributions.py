@@ -22,7 +22,7 @@
 # a combination of a source layout and a depth type.
 # Lets define three layouts of point sources:
 #
-# 1. **Source beneath data**: One source point beneath each data point
+# 1. **Source bellow data**: One source point beneath each data point
 # 2. **Block averaged sources**: Split the region in blocks of equal size, compute the
 #    median coordinate of the data points per block, and put one point source beneath
 #    this block-median coordinate.
@@ -44,7 +44,7 @@
 #
 # |    | Constant depth | Relative depth | Variable depth |
 # | -- |----------------|----------------|----------------|
-# | **Source beneath data** | ✅ | ✅ | ✅ |
+# | **Source bellow data** | ✅ | ✅ | ✅ |
 # | **Block averaged sources** | ✅ | ✅ | ✅ |
 # | **Grid of sources** | ✅ | ❌ | ❌ |
 #
@@ -92,7 +92,7 @@ spacing = 4000
 # =====================================================
 parameters = {layout: {} for layout in layouts}
 
-# ... for source beneath data layout
+# ... for source bellow data layout
 layout = "source_bellow_data"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = {
