@@ -11,6 +11,7 @@
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{multirow}
+\usepackage{booktabs}
 
 % Define special units
 \DeclareSIUnit\mgal{\milli Gal}
@@ -987,47 +988,89 @@ All rights reserved.
         synthetic ground survey.
     }
     \label{tab:parameters-ground-survey}
-    \begin{tabular}{l c c c}
-        & \textbf{Sources bellow data} & \textbf{Block median sources}
-        & \textbf{Grid sources} \\
-
-        \textbf{Constant depth} & & & \\
+    \begin{tabular}{c | l l c c}
+        \multicolumn{1}{c}{\textbf{Source layout}}
+            & \multicolumn{1}{c}{\textbf{Depth type}}
+            & \multicolumn{1}{c}{\textbf{Parameters}}
+            & \multicolumn{1}{c}{\textbf{Values}}
+            & \multicolumn{1}{c}{\textbf{Interval}} \\
         \hline
-        Depth (km) & \GroundSourceBellowDataConstantDepthDepth
-                   & \GroundBlockMedianSourcesConstantDepthDepth
-                   & \GroundGridSourcesConstantDepthDepth \\
-        Spacing (km) & -
-                     & \GroundBlockMedianSourcesConstantDepthSpacing
-                     & \GroundGridSourcesConstantDepthSpacing \\
-        Pad & -
-            & -
-            & \GroundGridSourcesConstantDepthPad \\
 
-        & & & \\
-        \textbf{Relative depth} & & & \\
-        \cline{1-3}
-        Depth (km) & \GroundSourceBellowDataRelativeDepthDepth
-                   & \GroundBlockMedianSourcesRelativeDepthDepth
-                   & \\
-        Spacing (km) & -
+        \multirow{5}{*}{Source Bellow Data}
+            & Constant Depth
+                & Depth (km)
+                & \GroundSourceBellowDataConstantDepthDepth
+                & \GroundSourceBellowDataConstantDepthDepthInterval \\
+            \cline{2-5}
+            & Relative Depth
+                & Depth (km)
+                & \GroundSourceBellowDataRelativeDepthDepth
+                & \GroundSourceBellowDataRelativeDepthDepthInterval \\
+            \cline{2-5}
+            & \multirow{3}{*}{Variable Depth}
+                & Depth (km)
+                & \GroundSourceBellowDataVariableDepthDepth
+                & \GroundSourceBellowDataVariableDepthDepthInterval \\
+            &
+                & Depth factor
+                & \GroundSourceBellowDataVariableDepthDepthFactor
+                & \GroundSourceBellowDataVariableDepthDepthFactorInterval \\
+            &
+                & K nearest
+                & \GroundSourceBellowDataVariableDepthKNearest
+                & \GroundSourceBellowDataVariableDepthKNearestInterval \\
+        \hline
+
+        \multirow{8}{*}{Block median sources}
+            & \multirow{2}{*}{Constant Depth}
+                & Depth (km)
+                & \GroundBlockMedianSourcesConstantDepthDepth
+                & \GroundBlockMedianSourcesConstantDepthDepthInterval \\
+            &
+                & Spacing (km)
+                & \GroundBlockMedianSourcesConstantDepthSpacing
+                & \GroundBlockMedianSourcesConstantDepthSpacingInterval \\
+            \cline{2-5}
+            & \multirow{2}{*}{Relative Depth}
+                & Depth (km)
+                & \GroundBlockMedianSourcesRelativeDepthDepth
+                & \GroundBlockMedianSourcesRelativeDepthDepthInterval \\
+            &
+                & Spacing (km)
                 & \GroundBlockMedianSourcesRelativeDepthSpacing
-                & \\
+                & \GroundBlockMedianSourcesRelativeDepthSpacingInterval \\
+            \cline{2-5}
+            & \multirow{4}{*}{Variable Depth}
+                & Depth (km)
+                & \GroundBlockMedianSourcesVariableDepthDepth
+                & \GroundBlockMedianSourcesVariableDepthDepthInterval \\
+            &
+                & Depth factor
+                & \GroundBlockMedianSourcesVariableDepthDepthFactor
+                & \GroundBlockMedianSourcesVariableDepthDepthFactorInterval \\
+            &
+                & K nearest
+                & \GroundBlockMedianSourcesVariableDepthKNearest
+                & \GroundBlockMedianSourcesVariableDepthKNearestInterval \\
+            &
+                & Spacing (km)
+                & \GroundBlockMedianSourcesVariableDepthSpacing
+                & \GroundBlockMedianSourcesVariableDepthSpacingInterval \\
+        \hline
 
-        & & & \\
-        \textbf{Variable depth} & & & \\
-        \cline{1-3}
-        Depth (km) & \GroundSourceBellowDataVariableDepthDepth
-                   & \GroundBlockMedianSourcesVariableDepthDepth
-                   & \\
-        Depth factor & \GroundSourceBellowDataVariableDepthDepthFactor
-                     & \GroundBlockMedianSourcesVariableDepthDepthFactor
-                     & \\
-        K nearest & \GroundSourceBellowDataVariableDepthKNearest
-                  & \GroundBlockMedianSourcesVariableDepthKNearest
-                  & \\
-        Spacing (km) & -
-                     & \GroundBlockMedianSourcesVariableDepthSpacing
-                     & \\
+        \multirow{3}{*}{Grid Sources}
+            & \multirow{3}{*}{Constant Depth}
+                & Depth (km)
+                    & \GroundGridSourcesConstantDepthDepth
+                    & \GroundGridSourcesConstantDepthDepthInterval \\
+            &
+                & Spacing (km)
+                    & \GroundGridSourcesConstantDepthSpacing
+                    & \GroundGridSourcesConstantDepthSpacingInterval \\
+            &
+                & Pad
+                    & \GroundGridSourcesConstantDepthPad
+                    & \GroundGridSourcesConstantDepthPadInterval \\
     \end{tabular}
 \end{table*}
 
