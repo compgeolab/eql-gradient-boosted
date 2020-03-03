@@ -75,7 +75,7 @@ depth_factors = [0.1, 0.5, 1, 2, 3, 4, 5, 6]
 variable_depths = np.arange(0, 1500, 200)
 k_values = [1, 5, 10, 15]
 # Define block spacing for block median sources
-block_spacings = np.arange(1e3, 5e4, 1e3)
+block_spacings = np.arange(1e3, 5e3, 1e3)
 # -
 
 # ## Create dictionary with the parameter values for each source distribution
