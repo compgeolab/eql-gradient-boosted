@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.3
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -36,6 +36,8 @@ from eql_source_layouts import (
     plot_prediction,
     get_best_prediction,
     predictions_to_datasets,
+    latex_parameters,
+    latex_variables,
 )
 
 # -
@@ -81,9 +83,7 @@ k_values = [1, 5, 10, 15]
 block_spacings = [1_000, 2_000, 3_000, 4_000]
 # -
 
-# ### Define set of parameters for each source distribution
-#
-# Lets create combinations of parameter values for each source distribution
+# ## Create dictionary with the parameter values for each source distribution
 
 # +
 parameters = {layout: {} for layout in layouts}
@@ -91,17 +91,17 @@ parameters = {layout: {} for layout in layouts}
 # Source bellow data
 layout = "source_bellow_data"
 depth_type = "constant_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths
 )
 
 depth_type = "relative_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths
 )
 
 depth_type = "variable_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type,
     damping=dampings,
     depth_factor=depth_factors,
@@ -112,17 +112,17 @@ parameters[layout][depth_type] = combine_parameters(
 # Block-median sources
 layout = "block_median_sources"
 depth_type = "constant_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
 )
 
 depth_type = "relative_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
 )
 
 depth_type = "variable_depth"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type,
     damping=dampings,
     spacing=block_spacings,
@@ -134,13 +134,32 @@ parameters[layout][depth_type] = combine_parameters(
 # Grid sources
 depth_type = "constant_depth"
 layout = "grid_sources"
-parameters[layout][depth_type] = combine_parameters(
+parameters[layout][depth_type] = dict(
     depth_type=depth_type,
     damping=grid_sources_dampings,
     depth=grid_sources_depths,
     pad=grid_sources_paddings,
     spacing=grid_sources_spacings,
 )
+# -
+
+# ### Save parameters to LaTeX variables file
+
+with open(os.path.join("..", "manuscript", "parameters_airborne_survey.tex"), "w") as f:
+    f.write("\n".join(latex_parameters(parameters, "airborne")))
+
+# ### Combine parameter values for each source distribution
+#
+# Lets create combinations of parameter values for each source distribution
+
+# +
+parameters_combined = {layout: {} for layout in layouts}
+
+for layout in parameters:
+    for depth_type in parameters[layout]:
+        parameters_combined[layout][depth_type] = combine_parameters(
+            **parameters[layout][depth_type]
+        )
 # -
 
 # ## Read synthetic airborne survey and target grid
@@ -179,8 +198,8 @@ grid.extend(np.full_like(grid[0], target.height))
 scores = {layout: {} for layout in layouts if layouts != "grid_sources"}
 best_predictions = []
 
-for layout in parameters:
-    for depth_type in parameters[layout]:
+for layout in parameters_combined:
+    for depth_type in parameters_combined[layout]:
         print("Processing: {} with {}".format(layout, depth_type))
         best_prediction, params_and_scores = get_best_prediction(
             coordinates,
@@ -188,7 +207,7 @@ for layout in parameters:
             grid,
             target,
             layout,
-            parameters[layout][depth_type],
+            parameters_combined[layout][depth_type],
         )
         best_predictions.append(best_prediction)
         scores[layout][depth_type] = params_and_scores
@@ -306,3 +325,39 @@ cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=field_units)
 
 plt.show()
+# -
+
+# ## Save best predictions parameters
+#
+# Save best predictions parameters as LaTeX variables
+
+# +
+tex_variables = []
+for dataset in best_predictions:
+    for depth_type in dataset:
+        parameters = dataset[depth_type].attrs
+        layout = parameters["layout"]
+        for parameter, value in parameters.items():
+            if parameter in ("depth_type", "layout", "height"):
+                continue
+            fmt = ""
+            variable_name = (
+                "_".join(["best", "airborne", layout, depth_type, parameter])
+                .replace("_", " ")
+                .title()
+                .replace(" ", "")
+            )
+            if parameter in ("spacing", "depth"):
+                fmt = ".1f"
+            if parameter == "score":
+                fmt = ".3f"
+            if value == 0:
+                fmt = ".0f"
+            tex_variables.append(latex_variables(variable_name, value, fmt=fmt))
+
+
+with open(
+    os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
+) as f:
+    f.write("\n".join(tex_variables,))
+# -
