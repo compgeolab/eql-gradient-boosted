@@ -41,7 +41,7 @@ ground_results_dir = os.path.join("..", "results", "ground_survey")
 survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
 
 inside = np.logical_and(
-    np.logical_and(survey.easting > 0e3, survey.easting < 40e3,),
+    np.logical_and(survey.easting > 0, survey.easting < 40e3,),
     np.logical_and(survey.northing > -60e3, survey.northing < -20e3,),
 )
 survey = survey.loc[inside]
@@ -59,6 +59,9 @@ coordinates = (survey.easting, survey.northing, survey.height)
 # ### Generate the source distributions
 
 # +
+block_spacing = 4000
+grid_spacing = 4000
+
 layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
 depth_type = "constant_depth"
 
@@ -68,10 +71,10 @@ layout = "source_bellow_data"
 parameters[layout] = dict(depth_type=depth_type, depth=500,)
 
 layout = "block_median_sources"
-parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=4000,)
+parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=block_spacing)
 
 layout = "grid_sources"
-parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=4000,)
+parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=grid_spacing)
 # -
 
 source_distributions = {}
@@ -124,14 +127,19 @@ plt.show()
 # ## Save number of observation points and sources to LaTeX variables
 
 # +
-tex_lines = [
-    latex_variables("SourceLayoutsSchematicsObservations", survey.easting.size),
-]
+tex_lines = []
 
+tex_lines.append(
+    latex_variables("SourceLayoutsSchematicsObservations", survey.easting.size),
+)
 for layout in layouts:
     tex_lines.append(
         latex_variables(
             "SourceLayoutsSchematics{}".format(format_variable_name(layout)),
-            source_distributions[layout][0].size
+            source_distributions[layout][0].size,
         )
     )
+# -
+
+with open(os.path.join("..", "manuscript", "source_layouts_schematics.tex"), "w") as f:
+    f.write("\n".join(tex_lines))
