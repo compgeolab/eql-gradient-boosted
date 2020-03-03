@@ -95,6 +95,8 @@
 
 \section{Introduction}
 
+\num{1e3}
+
 Potential field data, like gravity and magnetics, are useful for geophysics
 exploration.
 The potential field data can be obtained from ground, airborne or satellite
@@ -996,18 +998,26 @@ All rights reserved.
             & \multicolumn{1}{c}{\textbf{Interval}} \\
         \hline
 
-        \multirow{5}{*}{Source Bellow Data}
-            & Constant Depth
+        \multirow{8}{*}{Source Bellow Data}
+            & \multirow{2}{*}{Constant Depth}
                 & Depth (km)
                 & \GroundSourceBellowDataConstantDepthDepth
                 & \GroundSourceBellowDataConstantDepthDepthInterval \\
+            &
+                & Damping
+                & \GroundSourceBellowDataConstantDepthDamping
+                & \GroundSourceBellowDataConstantDepthDampingInterval \\
             \cline{2-5}
-            & Relative Depth
+            & \multirow{2}{*}{Relative Depth}
                 & Depth (km)
                 & \GroundSourceBellowDataRelativeDepthDepth
                 & \GroundSourceBellowDataRelativeDepthDepthInterval \\
+            &
+                & Damping
+                & \GroundSourceBellowDataRelativeDepthDamping
+                & \GroundSourceBellowDataRelativeDepthDampingInterval \\
             \cline{2-5}
-            & \multirow{3}{*}{Variable Depth}
+            & \multirow{4}{*}{Variable Depth}
                 & Depth (km)
                 & \GroundSourceBellowDataVariableDepthDepth
                 & \GroundSourceBellowDataVariableDepthDepthInterval \\
@@ -1019,10 +1029,14 @@ All rights reserved.
                 & K nearest
                 & \GroundSourceBellowDataVariableDepthKNearest
                 & \GroundSourceBellowDataVariableDepthKNearestInterval \\
+            &
+                & Damping
+                & \GroundSourceBellowDataVariableDepthDamping
+                & \GroundSourceBellowDataVariableDepthDampingInterval \\
         \hline
 
-        \multirow{8}{*}{Block median sources}
-            & \multirow{2}{*}{Constant Depth}
+        \multirow{11}{*}{Block median sources}
+            & \multirow{3}{*}{Constant Depth}
                 & Depth (km)
                 & \GroundBlockMedianSourcesConstantDepthDepth
                 & \GroundBlockMedianSourcesConstantDepthDepthInterval \\
@@ -1030,8 +1044,12 @@ All rights reserved.
                 & Spacing (km)
                 & \GroundBlockMedianSourcesConstantDepthSpacing
                 & \GroundBlockMedianSourcesConstantDepthSpacingInterval \\
+            &
+                & Damping
+                & \GroundBlockMedianSourcesConstantDepthDamping
+                & \GroundBlockMedianSourcesConstantDepthDampingInterval \\
             \cline{2-5}
-            & \multirow{2}{*}{Relative Depth}
+            & \multirow{3}{*}{Relative Depth}
                 & Depth (km)
                 & \GroundBlockMedianSourcesRelativeDepthDepth
                 & \GroundBlockMedianSourcesRelativeDepthDepthInterval \\
@@ -1039,8 +1057,12 @@ All rights reserved.
                 & Spacing (km)
                 & \GroundBlockMedianSourcesRelativeDepthSpacing
                 & \GroundBlockMedianSourcesRelativeDepthSpacingInterval \\
+            &
+                & Damping
+                & \GroundBlockMedianSourcesRelativeDepthDamping
+                & \GroundBlockMedianSourcesRelativeDepthDampingInterval \\
             \cline{2-5}
-            & \multirow{4}{*}{Variable Depth}
+            & \multirow{5}{*}{Variable Depth}
                 & Depth (km)
                 & \GroundBlockMedianSourcesVariableDepthDepth
                 & \GroundBlockMedianSourcesVariableDepthDepthInterval \\
@@ -1056,10 +1078,14 @@ All rights reserved.
                 & Spacing (km)
                 & \GroundBlockMedianSourcesVariableDepthSpacing
                 & \GroundBlockMedianSourcesVariableDepthSpacingInterval \\
+            &
+                & Damping
+                & \GroundBlockMedianSourcesVariableDepthDamping
+                & \GroundBlockMedianSourcesVariableDepthDampingInterval \\
         \hline
 
-        \multirow{3}{*}{Grid Sources}
-            & \multirow{3}{*}{Constant Depth}
+        \multirow{4}{*}{Grid Sources}
+            & \multirow{4}{*}{Constant Depth}
                 & Depth (km)
                     & \GroundGridSourcesConstantDepthDepth
                     & \GroundGridSourcesConstantDepthDepthInterval \\
@@ -1071,6 +1097,10 @@ All rights reserved.
                 & Pad
                     & \GroundGridSourcesConstantDepthPad
                     & \GroundGridSourcesConstantDepthPadInterval \\
+            &
+                & Damping
+                    & \GroundGridSourcesConstantDepthDamping
+                    & \GroundGridSourcesConstantDepthDampingInterval \\
     \end{tabular}
 \end{table*}
 

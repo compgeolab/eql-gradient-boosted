@@ -115,13 +115,12 @@ def _format_damping(parameters):
     """
     Create range of values for damping parameters
     """
-    fmt = ".0f"
     parameters = np.log10(parameters)
     differences = parameters[1:] - parameters[:-1]
     interval = differences[1] - differences[0]
     assert np.allclose(differences[0], differences)
-    values = r"\numrange{{10$^{min:>{fmt}}$}}{{10$^{max:>{fmt}}$}}".format(
-        min=parameters.min(), max=parameters.max(), fmt=fmt
+    values = r"\num{{e{:.0f}}}, \num{{e{:.0f}}},$\dots$, \num{{e{:.0f}}}".format(
+        parameters[0], parameters[1], parameters[-1]
     )
-    interval = r"\num{{10$^{interval:>{fmt}}$}}".format(interval=interval, fmt=fmt)
+    interval = "-"
     return values, interval
