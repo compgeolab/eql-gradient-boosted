@@ -93,7 +93,7 @@ def _create_numrange(parameters):
     return values, interval
 
 
-def _create_numlist(parameters, fmt=None):
+def _create_numlist(parameters):
     """
     Create list of values using LaTeX numlist
     """
