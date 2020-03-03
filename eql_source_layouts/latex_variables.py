@@ -107,7 +107,7 @@ def _create_numlist(parameters):
         values.append("{v:>{fmt}}".format(v=value, fmt=fmt))
     values = ";".join(values)
     values = r"\numlist{{{values}}}".format(values=values)
-    interval = "-"
+    interval = ""
     return values, interval
 
 
@@ -122,5 +122,5 @@ def _format_damping(parameters):
     values = r"\num{{e{:.0f}}}, \num{{e{:.0f}}},$\dots$, \num{{e{:.0f}}}".format(
         parameters[0], parameters[1], parameters[-1]
     )
-    interval = "-"
+    interval = ""
     return values, interval
