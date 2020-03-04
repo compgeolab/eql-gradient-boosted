@@ -62,9 +62,9 @@ def format_parameters(parameters, parameter_name):
     if parameter_name == "damping":
         return _format_damping(parameters)
 
-    # Check if parameters are given in ranges
+    # Check if parameters are given in ranges and create numrages if # parameter > 4
     differences = parameters[1:] - parameters[:-1]
-    if np.allclose(differences, differences[0]):
+    if np.allclose(differences, differences[0]) and len(parameters) > 4:
         values, increment = _create_numrange(parameters)
     else:
         values, increment = _create_numlist(parameters)

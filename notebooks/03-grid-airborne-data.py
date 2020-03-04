@@ -360,4 +360,3 @@ with open(
     os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
 ) as f:
     f.write("\n".join(tex_variables,))
-# -
