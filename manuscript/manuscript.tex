@@ -1111,47 +1111,117 @@ All rights reserved.
         synthetic airborne survey.
     }
     \label{tab:parameters-airborne-survey}
-    \begin{tabular}{l c c c}
-        & \textbf{Sources bellow data} & \textbf{Block median sources}
-        & \textbf{Grid sources} \\
-
-        \textbf{Constant depth} & & & \\
+    \begin{tabular}{c | l l c c}
+        \multicolumn{1}{c}{\textbf{Source layout}}
+            & \multicolumn{1}{c}{\textbf{Depth type}}
+            & \multicolumn{1}{c}{\textbf{Parameters}}
+            & \multicolumn{1}{c}{\textbf{Values}}
+            & \multicolumn{1}{c}{\textbf{Interval}} \\
         \hline
-        Depth (km) & \AirborneSourceBellowDataConstantDepthDepth
-                   & \AirborneBlockMedianSourcesConstantDepthDepth
-                   & \AirborneGridSourcesConstantDepthDepth \\
-        Spacing (km) & -
-                     & \AirborneBlockMedianSourcesConstantDepthSpacing
-                     & \AirborneGridSourcesConstantDepthSpacing \\
-        Pad & -
-            & -
-            & \AirborneGridSourcesConstantDepthPad \\
 
-        & & & \\
-        \textbf{Relative depth} & & & \\
-        \cline{1-3}
-        Depth (km) & \AirborneSourceBellowDataRelativeDepthDepth
-                   & \AirborneBlockMedianSourcesRelativeDepthDepth
-                   & \\
-        Spacing (km) & -
-                     & \AirborneBlockMedianSourcesRelativeDepthSpacing
-                     & \\
+        \multirow{8}{*}{Source Bellow Data}
+            & \multirow{2}{*}{Constant Depth}
+                & Depth (km)
+                & \AirborneSourceBellowDataConstantDepthDepth
+                & \AirborneSourceBellowDataConstantDepthDepthInterval \\
+            &
+                & Damping
+                & \AirborneSourceBellowDataConstantDepthDamping
+                & \AirborneSourceBellowDataConstantDepthDampingInterval \\
+            \cline{2-5}
+            & \multirow{2}{*}{Relative Depth}
+                & Depth (km)
+                & \AirborneSourceBellowDataRelativeDepthDepth
+                & \AirborneSourceBellowDataRelativeDepthDepthInterval \\
+            &
+                & Damping
+                & \AirborneSourceBellowDataRelativeDepthDamping
+                & \AirborneSourceBellowDataRelativeDepthDampingInterval \\
+            \cline{2-5}
+            & \multirow{4}{*}{Variable Depth}
+                & Depth (km)
+                & \AirborneSourceBellowDataVariableDepthDepth
+                & \AirborneSourceBellowDataVariableDepthDepthInterval \\
+            &
+                & Depth factor
+                & \AirborneSourceBellowDataVariableDepthDepthFactor
+                & \AirborneSourceBellowDataVariableDepthDepthFactorInterval \\
+            &
+                & K nearest
+                & \AirborneSourceBellowDataVariableDepthKNearest
+                & \AirborneSourceBellowDataVariableDepthKNearestInterval \\
+            &
+                & Damping
+                & \AirborneSourceBellowDataVariableDepthDamping
+                & \AirborneSourceBellowDataVariableDepthDampingInterval \\
+        \hline
 
-        & & & \\
-        \textbf{Variable depth} & & & \\
-        \cline{1-3}
-        Depth (km) & \AirborneSourceBellowDataVariableDepthDepth
-                   & \AirborneBlockMedianSourcesVariableDepthDepth
-                   & \\
-        Depth factor & \AirborneSourceBellowDataVariableDepthDepthFactor
-                     & \AirborneBlockMedianSourcesVariableDepthDepthFactor
-                     & \\
-        K nearest & \AirborneSourceBellowDataVariableDepthKNearest
-                  & \AirborneBlockMedianSourcesVariableDepthKNearest
-                  & \\
-        Spacing (km) & -
-                     & \AirborneBlockMedianSourcesVariableDepthSpacing
-                     & \\
+        \multirow{11}{*}{Block median sources}
+            & \multirow{3}{*}{Constant Depth}
+                & Depth (km)
+                & \AirborneBlockMedianSourcesConstantDepthDepth
+                & \AirborneBlockMedianSourcesConstantDepthDepthInterval \\
+            &
+                & Spacing (km)
+                & \AirborneBlockMedianSourcesConstantDepthSpacing
+                & \AirborneBlockMedianSourcesConstantDepthSpacingInterval \\
+            &
+                & Damping
+                & \AirborneBlockMedianSourcesConstantDepthDamping
+                & \AirborneBlockMedianSourcesConstantDepthDampingInterval \\
+            \cline{2-5}
+            & \multirow{3}{*}{Relative Depth}
+                & Depth (km)
+                & \AirborneBlockMedianSourcesRelativeDepthDepth
+                & \AirborneBlockMedianSourcesRelativeDepthDepthInterval \\
+            &
+                & Spacing (km)
+                & \AirborneBlockMedianSourcesRelativeDepthSpacing
+                & \AirborneBlockMedianSourcesRelativeDepthSpacingInterval \\
+            &
+                & Damping
+                & \AirborneBlockMedianSourcesRelativeDepthDamping
+                & \AirborneBlockMedianSourcesRelativeDepthDampingInterval \\
+            \cline{2-5}
+            & \multirow{5}{*}{Variable Depth}
+                & Depth (km)
+                & \AirborneBlockMedianSourcesVariableDepthDepth
+                & \AirborneBlockMedianSourcesVariableDepthDepthInterval \\
+            &
+                & Depth factor
+                & \AirborneBlockMedianSourcesVariableDepthDepthFactor
+                & \AirborneBlockMedianSourcesVariableDepthDepthFactorInterval \\
+            &
+                & K nearest
+                & \AirborneBlockMedianSourcesVariableDepthKNearest
+                & \AirborneBlockMedianSourcesVariableDepthKNearestInterval \\
+            &
+                & Spacing (km)
+                & \AirborneBlockMedianSourcesVariableDepthSpacing
+                & \AirborneBlockMedianSourcesVariableDepthSpacingInterval \\
+            &
+                & Damping
+                & \AirborneBlockMedianSourcesVariableDepthDamping
+                & \AirborneBlockMedianSourcesVariableDepthDampingInterval \\
+        \hline
+
+        \multirow{4}{*}{Grid Sources}
+            & \multirow{4}{*}{Constant Depth}
+                & Depth (km)
+                    & \AirborneGridSourcesConstantDepthDepth
+                    & \AirborneGridSourcesConstantDepthDepthInterval \\
+            &
+                & Spacing (km)
+                    & \AirborneGridSourcesConstantDepthSpacing
+                    & \AirborneGridSourcesConstantDepthSpacingInterval \\
+            &
+                & Pad
+                    & \AirborneGridSourcesConstantDepthPad
+                    & \AirborneGridSourcesConstantDepthPadInterval \\
+            &
+                & Damping
+                    & \AirborneGridSourcesConstantDepthDamping
+                    & \AirborneGridSourcesConstantDepthDampingInterval \\
     \end{tabular}
 \end{table*}
 
