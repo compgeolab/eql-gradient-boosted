@@ -115,8 +115,7 @@ def _format_damping(parameters):
     differences = parameters[1:] - parameters[:-1]
     increment = differences[1] - differences[0]
     assert np.allclose(differences[0], differences)
-    values = r"\num{{e{:.0f}}}, \num{{e{:.0f}}},$\dots$, \num{{e{:.0f}}}".format(
-        parameters[0], parameters[1], parameters[-1]
-    )
+    values = [r"\num{{e{:.0f}}}".format(p) for p in parameters]
+    values = r"{}, {},$\dots$, {}".format(values[0], values[1], values[-1])
     increment = ""
     return values, increment
