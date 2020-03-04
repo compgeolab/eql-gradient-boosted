@@ -77,15 +77,32 @@ def _create_numrange(parameters):
     """
     increment = parameters[1] - parameters[0]
     # Set format
-    if parameters.min() < 1:
-        fmt = ".1f"
-    else:
-        fmt = ".0f"
-    values = r"\numrange{{{min:>{fmt}}}}{{{max:>{fmt}}}}".format(
-        min=parameters.min(), max=parameters.max(), fmt=fmt
+    params_min_max = []
+    for value in (parameters.min(), parameters.max()):
+        fmt = _determine_fmt(value)
+        params_min_max.append("{v:>{fmt}}".format(v=value, fmt=fmt))
+    values = r"\numrange{{{min}}}{{{max}}}".format(
+        min=params_min_max[0], max=params_min_max[1]
     )
+    fmt = _determine_fmt(increment)
     increment = r"\num{{{increment:>{fmt}}}}".format(increment=increment, fmt=fmt)
     return values, increment
+
+
+def _determine_fmt(value, decimal_digits=1):
+    """
+    Determine the proper format for float numbers
+
+    We assume that value is > 0.
+    """
+    if value == 0:
+        fmt = ".0f"
+    else:
+        if value < 1:
+            fmt = ".{:d}f".format(decimal_digits)
+        else:
+            fmt = ".0f"
+    return fmt
 
 
 def _create_numlist(parameters):
@@ -94,12 +111,7 @@ def _create_numlist(parameters):
     """
     values = []
     for value in parameters:
-        if value == 0:
-            fmt = ".0f"
-        if value < 1:
-            fmt = ".1f"
-        else:
-            fmt = ".0f"
+        fmt = _determine_fmt(value)
         values.append("{v:>{fmt}}".format(v=value, fmt=fmt))
     values = ";".join(values)
     values = r"\numlist{{{values}}}".format(values=values)
