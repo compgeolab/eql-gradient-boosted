@@ -361,5 +361,3 @@ with open(
 ) as f:
     f.write("\n".join(tex_variables,))
 # -
-
-

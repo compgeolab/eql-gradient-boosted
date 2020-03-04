@@ -62,10 +62,6 @@ def format_parameters(parameters, parameter_name):
     if parameter_name == "damping":
         return _format_damping(parameters)
 
-    # Convert depths and spacings to km
-    if parameter_name in ("depth", "spacing"):
-        parameters *= 1e-3
-
     # Check if parameters are given in ranges
     differences = parameters[1:] - parameters[:-1]
     if np.allclose(differences, differences[0]):
