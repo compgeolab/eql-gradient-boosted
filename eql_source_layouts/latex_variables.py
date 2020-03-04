@@ -30,7 +30,7 @@ def latex_parameters(parameters, survey):
         for depth_type in parameters[layout]:
             for parameter in parameters[layout][depth_type]:
                 if parameter != "depth_type":
-                    values, interval = format_parameters(
+                    values, increment = format_parameters(
                         parameters[layout][depth_type][parameter], parameter
                     )
                     variable_name = format_variable_name(
@@ -38,7 +38,7 @@ def latex_parameters(parameters, survey):
                     )
                     tex_variables.append(latex_variables(variable_name, values))
                     tex_variables.append(
-                        latex_variables(variable_name + "Interval", interval)
+                        latex_variables(variable_name + "Increment", increment)
                     )
     return tex_variables
 
@@ -69,17 +69,17 @@ def format_parameters(parameters, parameter_name):
     # Check if parameters are given in ranges
     differences = parameters[1:] - parameters[:-1]
     if np.allclose(differences, differences[0]):
-        values, interval = _create_numrange(parameters)
+        values, increment = _create_numrange(parameters)
     else:
-        values, interval = _create_numlist(parameters)
-    return values, interval
+        values, increment = _create_numlist(parameters)
+    return values, increment
 
 
 def _create_numrange(parameters):
     """
     Create range of values using LaTeX numrange
     """
-    interval = parameters[1] - parameters[0]
+    increment = parameters[1] - parameters[0]
     # Set format
     if parameters.min() < 1:
         fmt = ".1f"
@@ -88,8 +88,8 @@ def _create_numrange(parameters):
     values = r"\numrange{{{min:>{fmt}}}}{{{max:>{fmt}}}}".format(
         min=parameters.min(), max=parameters.max(), fmt=fmt
     )
-    interval = r"\num{{{interval:>{fmt}}}}".format(interval=interval, fmt=fmt)
-    return values, interval
+    increment = r"\num{{{increment:>{fmt}}}}".format(increment=increment, fmt=fmt)
+    return values, increment
 
 
 def _create_numlist(parameters):
@@ -107,8 +107,8 @@ def _create_numlist(parameters):
         values.append("{v:>{fmt}}".format(v=value, fmt=fmt))
     values = ";".join(values)
     values = r"\numlist{{{values}}}".format(values=values)
-    interval = ""
-    return values, interval
+    increment = ""
+    return values, increment
 
 
 def _format_damping(parameters):
@@ -117,10 +117,10 @@ def _format_damping(parameters):
     """
     parameters = np.log10(parameters)
     differences = parameters[1:] - parameters[:-1]
-    interval = differences[1] - differences[0]
+    increment = differences[1] - differences[0]
     assert np.allclose(differences[0], differences)
     values = r"\num{{e{:.0f}}}, \num{{e{:.0f}}},$\dots$, \num{{e{:.0f}}}".format(
         parameters[0], parameters[1], parameters[-1]
     )
-    interval = ""
-    return values, interval
+    increment = ""
+    return values, increment
