@@ -987,116 +987,178 @@ All rights reserved.
         synthetic ground survey.
     }
     \label{tab:parameters-ground-survey}
-    \begin{tabular}{c l l c}
+    \begin{tabular}{c l l c c c}
         \textbf{Source layout}
             & \multicolumn{1}{c}{\textbf{Depth type}}
             & \multicolumn{1}{c}{\textbf{Parameters}}
-            & \textbf{Values} \\
+            & \textbf{Values}
+            & \textbf{Best}
+            & \textbf{R$^2$ score} \\
         \toprule
 
         \multirow{8}{*}{Source Bellow Data}
             & \multirow{2}{*}{Constant Depth}
                 & Depth (m)
                 & \GroundSourceBellowDataConstantDepthDepth
-                  \GroundSourceBellowDataConstantDepthDepthIncrement \\
+                  \GroundSourceBellowDataConstantDepthDepthIncrement
+                & \BestGroundSourceBellowDataConstantDepthDepth
+                & \multirow{2}{*}{
+                    \BestGroundSourceBellowDataConstantDepthScore
+                  } \\
             &
                 & Damping
                 & \GroundSourceBellowDataConstantDepthDamping
-                  \GroundSourceBellowDataConstantDepthDampingIncrement \\
-            \cmidrule{2-4}
+                  \GroundSourceBellowDataConstantDepthDampingIncrement
+                & \BestGroundSourceBellowDataConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
             & \multirow{2}{*}{Relative Depth}
                 & Depth (m)
                 & \GroundSourceBellowDataRelativeDepthDepth
-                  \GroundSourceBellowDataRelativeDepthDepthIncrement \\
+                  \GroundSourceBellowDataRelativeDepthDepthIncrement
+                & \BestGroundSourceBellowDataRelativeDepthDepth
+                & \multirow{2}{*}{
+                    \BestGroundSourceBellowDataRelativeDepthScore
+                  } \\
             &
                 & Damping
                 & \GroundSourceBellowDataRelativeDepthDamping
-                  \GroundSourceBellowDataRelativeDepthDampingIncrement \\
-            \cmidrule{2-4}
+                  \GroundSourceBellowDataRelativeDepthDampingIncrement
+                & \BestGroundSourceBellowDataRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
             & \multirow{4}{*}{Variable Depth}
                 & Depth (m)
                 & \GroundSourceBellowDataVariableDepthDepth
-                  \GroundSourceBellowDataVariableDepthDepthIncrement \\
+                  \GroundSourceBellowDataVariableDepthDepthIncrement
+                & \BestGroundSourceBellowDataVariableDepthDepth
+                & \multirow{4}{*}{
+                    \BestGroundSourceBellowDataVariableDepthScore
+                  } \\
             &
                 & Depth factor
                 & \GroundSourceBellowDataVariableDepthDepthFactor
-                  \GroundSourceBellowDataVariableDepthDepthFactorIncrement \\
+                  \GroundSourceBellowDataVariableDepthDepthFactorIncrement
+                & \BestGroundSourceBellowDataVariableDepthDepthFactor
+                & \\
             &
                 & K nearest
                 & \GroundSourceBellowDataVariableDepthKNearest
-                  \GroundSourceBellowDataVariableDepthKNearestIncrement \\
+                  \GroundSourceBellowDataVariableDepthKNearestIncrement
+                & \BestGroundSourceBellowDataVariableDepthKNearest
+                & \\
             &
                 & Damping
                 & \GroundSourceBellowDataVariableDepthDamping
-                  \GroundSourceBellowDataVariableDepthDampingIncrement \\
+                  \GroundSourceBellowDataVariableDepthDampingIncrement
+                & \BestGroundSourceBellowDataVariableDepthDamping
+                & \\
         \midrule
 
         \multirow{11}{*}{Block median sources}
             & \multirow{3}{*}{Constant Depth}
                 & Depth (m)
                 & \GroundBlockMedianSourcesConstantDepthDepth
-                  \GroundBlockMedianSourcesConstantDepthDepthIncrement \\
+                  \GroundBlockMedianSourcesConstantDepthDepthIncrement
+                & \BestGroundBlockMedianSourcesConstantDepthDepth
+                & \multirow{3}{*}{
+                    \textbf{\BestGroundBlockMedianSourcesConstantDepthScore}
+                  } \\
             &
                 & Spacing (m)
                 & \GroundBlockMedianSourcesConstantDepthSpacing
-                  \GroundBlockMedianSourcesConstantDepthSpacingIncrement \\
+                  \GroundBlockMedianSourcesConstantDepthSpacingIncrement
+                & \BestGroundBlockMedianSourcesConstantDepthSpacing
+                & \\
             &
                 & Damping
                 & \GroundBlockMedianSourcesConstantDepthDamping
-                  \GroundBlockMedianSourcesConstantDepthDampingIncrement \\
-            \cmidrule{2-4}
+                  \GroundBlockMedianSourcesConstantDepthDampingIncrement
+                & \BestGroundBlockMedianSourcesConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
             & \multirow{3}{*}{Relative Depth}
                 & Depth (m)
                 & \GroundBlockMedianSourcesRelativeDepthDepth
-                  \GroundBlockMedianSourcesRelativeDepthDepthIncrement \\
+                  \GroundBlockMedianSourcesRelativeDepthDepthIncrement
+                & \BestGroundBlockMedianSourcesRelativeDepthDepth
+                & \multirow{3}{*}{
+                    \BestGroundBlockMedianSourcesRelativeDepthScore
+                  } \\
             &
                 & Spacing (m)
                 & \GroundBlockMedianSourcesRelativeDepthSpacing
-                  \GroundBlockMedianSourcesRelativeDepthSpacingIncrement \\
+                  \GroundBlockMedianSourcesRelativeDepthSpacingIncrement
+                & \BestGroundBlockMedianSourcesRelativeDepthSpacing
+                & \\
             &
                 & Damping
                 & \GroundBlockMedianSourcesRelativeDepthDamping
-                  \GroundBlockMedianSourcesRelativeDepthDampingIncrement \\
-            \cmidrule{2-4}
+                  \GroundBlockMedianSourcesRelativeDepthDampingIncrement
+                & \BestGroundBlockMedianSourcesRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
             & \multirow{5}{*}{Variable Depth}
                 & Depth (m)
                 & \GroundBlockMedianSourcesVariableDepthDepth
-                  \GroundBlockMedianSourcesVariableDepthDepthIncrement \\
+                  \GroundBlockMedianSourcesVariableDepthDepthIncrement
+                & \BestGroundBlockMedianSourcesVariableDepthDepth
+                & \multirow{5}{*}{
+                    \BestGroundBlockMedianSourcesVariableDepthScore
+                  } \\
             &
                 & Depth factor
                 & \GroundBlockMedianSourcesVariableDepthDepthFactor
-                  \GroundBlockMedianSourcesVariableDepthDepthFactorIncrement \\
+                  \GroundBlockMedianSourcesVariableDepthDepthFactorIncrement
+                & \BestGroundBlockMedianSourcesVariableDepthDepthFactor
+                & \\
             &
                 & K nearest
                 & \GroundBlockMedianSourcesVariableDepthKNearest
-                  \GroundBlockMedianSourcesVariableDepthKNearestIncrement \\
+                  \GroundBlockMedianSourcesVariableDepthKNearestIncrement
+                & \BestGroundBlockMedianSourcesVariableDepthKNearest
+                & \\
             &
                 & Spacing (m)
                 & \GroundBlockMedianSourcesVariableDepthSpacing
-                  \GroundBlockMedianSourcesVariableDepthSpacingIncrement \\
+                  \GroundBlockMedianSourcesVariableDepthSpacingIncrement
+                & \BestGroundBlockMedianSourcesVariableDepthSpacing
+                & \\
             &
                 & Damping
                 & \GroundBlockMedianSourcesVariableDepthDamping
-                  \GroundBlockMedianSourcesVariableDepthDampingIncrement \\
+                  \GroundBlockMedianSourcesVariableDepthDampingIncrement
+                & \BestGroundBlockMedianSourcesVariableDepthDamping
+                & \\
         \midrule
 
         \multirow{4}{*}{Grid Sources}
             & \multirow{4}{*}{Constant Depth}
                 & Depth (m)
-                    & \GroundGridSourcesConstantDepthDepth
-                      \GroundGridSourcesConstantDepthDepthIncrement \\
+                & \GroundGridSourcesConstantDepthDepth
+                  \GroundGridSourcesConstantDepthDepthIncrement
+                & \BestGroundGridSourcesConstantDepthDepth
+                & \multirow{4}{*}{
+                    \BestGroundGridSourcesConstantDepthScore
+                  } \\
             &
                 & Spacing (m)
-                    & \GroundGridSourcesConstantDepthSpacing
-                      \GroundGridSourcesConstantDepthSpacingIncrement \\
+                & \GroundGridSourcesConstantDepthSpacing
+                  \GroundGridSourcesConstantDepthSpacingIncrement
+                & \BestGroundGridSourcesConstantDepthSpacing
+                & \\
             &
                 & Pad
-                    & \GroundGridSourcesConstantDepthPad
-                     \GroundGridSourcesConstantDepthPadIncrement \\
+                & \GroundGridSourcesConstantDepthPad
+                  \GroundGridSourcesConstantDepthPadIncrement
+                & \BestGroundGridSourcesConstantDepthPad
+                & \\
             &
                 & Damping
-                    & \GroundGridSourcesConstantDepthDamping
-                      \GroundGridSourcesConstantDepthDampingIncrement \\
+                & \GroundGridSourcesConstantDepthDamping
+                  \GroundGridSourcesConstantDepthDampingIncrement
+                & \BestGroundGridSourcesConstantDepthDamping
+                & \\
     \end{tabular}
 \end{table*}
 
