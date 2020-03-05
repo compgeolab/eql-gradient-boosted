@@ -21,6 +21,28 @@ def latex_variables(variable, number, unit=None, fmt=None):
     return tex_line
 
 
+def latex_best_parameters(best_parameters, survey, layout, depth_type):
+    """
+    Create LaTeX variables for best parameters
+    """
+    tex_lines = []
+    for parameter, value in best_parameters.items():
+        if parameter in ("depth_type", "layout", "height"):
+            continue
+        variable_name = format_variable_name(
+            "_".join(["best", survey, layout, depth_type, parameter])
+        )
+        if parameter == "damping":
+            value = r"\num{{e{:.0f}}}".format(np.log10(value))
+            fmt = None
+        elif parameter == "score":
+            fmt = ".3f"
+        else:
+            fmt = _determine_fmt(value)
+        tex_lines.append(latex_variables(variable_name, value, fmt=fmt))
+    return tex_lines
+
+
 def latex_parameters(parameters, survey):
     """
     Create list or ranges of parameters for each source distribution as LaTeX variables
