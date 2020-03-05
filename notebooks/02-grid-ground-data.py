@@ -31,7 +31,6 @@ from eql_source_layouts import (
     get_best_prediction,
     predictions_to_datasets,
     latex_parameters,
-    latex_variables,
     latex_best_parameters,
 )
 
