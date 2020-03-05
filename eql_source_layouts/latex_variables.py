@@ -85,7 +85,9 @@ def _create_numrange(parameters):
         min=params_min_max[0], max=params_min_max[1]
     )
     fmt = _determine_fmt(increment)
-    increment = r"\num{{{increment:>{fmt}}}}".format(increment=increment, fmt=fmt)
+    increment = r", step size \num{{{increment:>{fmt}}}}".format(
+        increment=increment, fmt=fmt
+    )
     return values, increment
 
 
