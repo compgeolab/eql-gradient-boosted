@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -37,7 +37,7 @@ from eql_source_layouts import (
     get_best_prediction,
     predictions_to_datasets,
     latex_parameters,
-    latex_variables,
+    latex_best_parameters,
 )
 
 # -
@@ -331,32 +331,17 @@ plt.show()
 #
 # Save best predictions parameters as LaTeX variables
 
-# +
-tex_variables = []
+tex_lines = []
 for dataset in best_predictions:
     for depth_type in dataset:
         parameters = dataset[depth_type].attrs
         layout = parameters["layout"]
-        for parameter, value in parameters.items():
-            if parameter in ("depth_type", "layout", "height"):
-                continue
-            fmt = ""
-            variable_name = (
-                "_".join(["best", "airborne", layout, depth_type, parameter])
-                .replace("_", " ")
-                .title()
-                .replace(" ", "")
-            )
-            if parameter in ("spacing", "depth"):
-                fmt = ".1f"
-            if parameter == "score":
-                fmt = ".3f"
-            if value == 0:
-                fmt = ".0f"
-            tex_variables.append(latex_variables(variable_name, value, fmt=fmt))
+        tex_lines.extend(
+            latex_best_parameters(parameters, "airborne", layout, depth_type)
+        )
 
 
 with open(
     os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
 ) as f:
-    f.write("\n".join(tex_variables,))
+    f.write("\n".join(tex_lines,))
