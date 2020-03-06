@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -103,7 +103,7 @@ for ax, label in zip(axes, labels):
     )
     ax.annotate(
         label,
-        xy=(0.05, 0.07),
+        xy=(0.05, 0.9),
         xycoords="axes fraction",
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
