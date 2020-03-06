@@ -83,6 +83,17 @@ for layout in parameters:
         coordinates, **parameters[layout]
     )
 
+# Create lines for plotting the boundaries of the blocks
+
+# +
+region = vd.get_region(coordinates)
+grid_nodes = vd.grid_coordinates(region, spacing=block_spacing)
+
+grid_lines = (np.unique(grid_nodes[0]), np.unique(grid_nodes[1]))
+for nodes in grid_lines:
+    nodes.sort()
+# -
+
 # ## Plot observation points and source layouts
 
 # +
@@ -108,13 +119,24 @@ for ax, label in zip(axes, labels):
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
 
+# Plot observation points
 ax = axes[0]
 ax.scatter(survey.easting, survey.northing, s=size, c="C0")
 ax.set_title("Observation points")
 
+# Plot location of sources for each source layout
 for ax, layout in zip(axes[1:], layouts):
     ax.scatter(*source_distributions[layout][:2], s=size, c="C1")
     ax.set_title(layout.replace("_", " ").title())
+
+# Add blocks boundaries to Block Median Sources plot
+ax = axes[2]
+grid_style = dict(color="grey", linewidth=0.3, linestyle="--")
+xmin, xmax, ymin, ymax = region[:]
+for x in grid_lines[0]:
+    ax.plot((x, x), (ymin, ymax), **grid_style)
+for y in grid_lines[1]:
+    ax.plot((xmin, xmax), (y, y), **grid_style)
 
 
 plt.tight_layout(w_pad=0)
