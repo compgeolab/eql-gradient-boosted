@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -22,7 +22,7 @@
 # a combination of a source layout and a depth type.
 # Lets define three layouts of point sources:
 #
-# 1. **Source beneath data**: One source point beneath each data point
+# 1. **Source below data**: One source point beneath each data point
 # 2. **Block averaged sources**: Split the region in blocks of equal size, compute the
 #    median coordinate of the data points per block, and put one point source beneath
 #    this block-median coordinate.
@@ -44,7 +44,7 @@
 #
 # |    | Constant depth | Relative depth | Variable depth |
 # | -- |----------------|----------------|----------------|
-# | **Source beneath data** | ✅ | ✅ | ✅ |
+# | **Source below data** | ✅ | ✅ | ✅ |
 # | **Block averaged sources** | ✅ | ✅ | ✅ |
 # | **Grid of sources** | ✅ | ❌ | ❌ |
 #
@@ -76,7 +76,7 @@ ground_results_dir = os.path.join("..", "results", "ground_survey")
 airborne_results_dir = os.path.join("..", "results", "airborne_survey")
 
 # Define dictionaries where the source distributions will be stored
-layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_median_sources", "grid_sources"]
 source_distributions = {layout: {} for layout in layouts}
 
 # Define a region for the synthetic survey
@@ -92,8 +92,8 @@ spacing = 4000
 # =====================================================
 parameters = {layout: {} for layout in layouts}
 
-# ... for source beneath data layout
-layout = "source_bellow_data"
+# ... for source below data layout
+layout = "source_below_data"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,

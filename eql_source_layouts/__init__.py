@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring
 # Import functions/classes to make the public API
 from ._version import get_versions
-from .layouts import source_bellow_data, block_median_sources, grid_sources
+from .layouts import source_below_data, block_median_sources, grid_sources
 from .synthetic_model import synthetic_model
 from .plot import plot_prediction
 from .latex_variables import (

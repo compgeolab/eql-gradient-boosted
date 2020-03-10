@@ -25,6 +25,7 @@
 \input{parameters_airborne_survey.tex}
 \input{best_parameters_ground_survey.tex}
 \input{best_parameters_airborne_survey.tex}
+\input{source_layouts_schematics.tex}
 
 
 % Define title, authors, affiliations and DOI
@@ -486,12 +487,12 @@ The most widely used source distributions are: a regular grid of point sources
 and one point source beneath each observation point.
 
 The \emph{regular grid} creates an homogeneous distribution of point sources
-bellow the surveyed region.
+below the surveyed region.
 The distance between sources is controlled by the grid spacing parameter.
 Keeping the boundaries of the grid constant, reducing the spacing increases the
 number of sources.
 
-The \emph{source beneath data} layout locates one source bellow each
+The \emph{source below data} layout locates one source below each
 observation point, therefore the number of sources will be equal to the number
 of data points.
 
@@ -500,11 +501,11 @@ spacing to be sufficiently small so observed values can be accurately
 reproduced by the source distribution.
 This will create too many sources on areas where no observation has been
 carried out.
-In contrast, the \emph{source beneath data} layout is more likely to accurately
+In contrast, the \emph{source below data} layout is more likely to accurately
 fit the observed data with much less sources, reducing the computational load
 to fit the equivalent sources' coefficients.
 
-When working with airborne surveys, the \emph{source beneath data} may
+When working with airborne surveys, the \emph{source below data} may
 generate an anisotropic distribution of sources by locating too many sources
 along the flight paths.
 It could lead to unwanted aliases on the predicted values.
@@ -522,12 +523,12 @@ It consist in:
         (see Fig.~\ref{fig:block-median-sources}(a)-(b)).
     \item Computing the median location of the observation points that fall
         inside each block. Blocks without any observation point are ignored.
-    \item Locating one point source bellow each block averaged coordinate.
+    \item Locating one point source below each block averaged coordinate.
         (see Fig.~\ref{fig:block-median-sources}(c)).
 \end{enumerate}
 
 The number of sources created by this new distribution will be less or equal to
-the ones created by the \emph{source beneath data} and the \emph{regular
+the ones created by the \emph{source below data} and the \emph{regular
 grid} with the same spacing.
 Moreover, the sources are only located beneath populated blocks, so sources
 will be concentrated on regions where data has been gathered and no anisotropic
@@ -549,6 +550,23 @@ distribution of sources will be generated.
     \label{fig:block-median-sources}
 \end{figure*}
 
+
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/source-layouts-schematics.pdf}
+    \caption{
+        Source layouts.
+        (a) Set of \SourceLayoutsSchematicsObservations{} synthetic observation
+            points that resemble a ground survey.
+        (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
+            obtained through the \emph{sources beneath data} layout.
+        (c) Location of the \SourceLayoutsSchematicsBlockMedianSources{}
+            sources obtained through the \emph{block averaged sources} layout.
+        (d) Location of the \SourceLayoutsSchematicsGridSources{} sources
+            obtained through the \emph{grid sources} layout.
+    }
+    \label{fig:source-layouts-schematics}
+\end{figure*}
+
 The depth of the point sources can be chosen following different criteria.
 Deep sources generate low frequencies, while shallow ones generate high
 frequencies (cite).
@@ -560,7 +578,7 @@ ones.
 This may create problems on reproducing high frequencies on the elevated
 points.
 
-One possible solution is to locate each source bellow its corresponding
+One possible solution is to locate each source below its corresponding
 observation (or block averaged) point at a constant \emph{relative depth}
 from it.
 The depth of each source can be computed as the height of its corresponding
@@ -570,7 +588,7 @@ The sources won't be all at the same depth, but they will all be at the same
 distance from their corresponding observation (or block averaged) point.
 
 In case our survey presents heavily clustered data points on some areas, we may
-want the sources bellow that region to be shallower in order to reproduce the
+want the sources below that region to be shallower in order to reproduce the
 high frequencies measured by these clustered observation points.
 We can propose a \emph{variable depth} approach: it locates each point source
 according to the \emph{relative depth} and then subtracts a term proportional
@@ -634,7 +652,7 @@ scheme.
     }
     \label{tab:source-distributions}
     \begin{tabular}{lccc}
-        & Source bellow data & Block averaged sources & Grid sources \\ \hline
+        & Source below data & Block averaged sources & Grid sources \\ \hline
         Constant depth & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
         Relative depth & $\checkmark$ & $\checkmark$ & $\times$     \\
         Variable depth & $\checkmark$ & $\checkmark$ & $\times$     \\
@@ -806,6 +824,25 @@ grid.
 We can therefore obtain the \emph{best prediction} generated by each source
 distribution as the one that achieves the highest score.
 
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
+    \caption{
+        Differences between gravitational effects measured on the target grid
+        and the ones produced by the best prediction made by each source
+        distribution based on the synthetic ground survey.
+    }
+    \label{fig:ground-survey-differences}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/airborne_survey_differences.pdf}
+    \caption{
+        Differences between gravitational effects measured on the target grid
+        and the ones produced by the best prediction made by each source
+        distribution based on the synthetic airborne survey.
+    }
+    \label{fig:airborne-survey-differences}
+\end{figure*}
 
 \begin{table*}
     \centering
@@ -816,12 +853,12 @@ distribution as the one that achieves the highest score.
     }
     \label{tab:parameters-ground-survey}
     \begin{tabular}{l c c c}
-        & \textbf{Sources bellow data} & \textbf{Block median sources}
+        & \textbf{Sources below data} & \textbf{Block median sources}
         & \textbf{Grid sources} \\
 
         \textbf{Constant depth} & & & \\
         \hline
-        Depth (m) & \BestGroundSourceBellowDataConstantDepthDepth
+        Depth (m) & \BestGroundSourceBelowDataConstantDepthDepth
                    & \BestGroundBlockMedianSourcesConstantDepthDepth
                    & \BestGroundGridSourcesConstantDepthDepth \\
         Spacing (m) & -
@@ -830,51 +867,51 @@ distribution as the one that achieves the highest score.
         Pad & -
             & -
             & \BestGroundGridSourcesConstantDepthPad \\
-        Damping & \BestGroundSourceBellowDataConstantDepthDamping
+        Damping & \BestGroundSourceBelowDataConstantDepthDamping
                 & \BestGroundBlockMedianSourcesConstantDepthDamping
                 & \BestGroundGridSourcesConstantDepthDamping \\
         \textbf{R$^2$ score}
-                & \textbf{\BestGroundSourceBellowDataConstantDepthScore}
+                & \textbf{\BestGroundSourceBelowDataConstantDepthScore}
                 & \textbf{\BestGroundBlockMedianSourcesConstantDepthScore}
                 & \textbf{\BestGroundGridSourcesConstantDepthScore} \\
 
         & & & \\
         \textbf{Relative depth} & & & \\
         \cline{1-3}
-        Depth (m) & \BestGroundSourceBellowDataRelativeDepthDepth
+        Depth (m) & \BestGroundSourceBelowDataRelativeDepthDepth
                    & \BestGroundBlockMedianSourcesRelativeDepthDepth
                    & \\
         Spacing (m) & -
                 & \BestGroundBlockMedianSourcesRelativeDepthSpacing
                 & \\
-        Damping & \BestGroundSourceBellowDataRelativeDepthDamping
+        Damping & \BestGroundSourceBelowDataRelativeDepthDamping
                 & \BestGroundBlockMedianSourcesRelativeDepthDamping
                 & \\
         \textbf{R$^2$ score}
-                & \textbf{\BestGroundSourceBellowDataRelativeDepthScore}
+                & \textbf{\BestGroundSourceBelowDataRelativeDepthScore}
                 & \textbf{\BestGroundBlockMedianSourcesRelativeDepthScore}
                 & \\
 
         & & & \\
         \textbf{Variable depth} & & & \\
         \cline{1-3}
-        Depth (m) & \BestGroundSourceBellowDataVariableDepthDepth
+        Depth (m) & \BestGroundSourceBelowDataVariableDepthDepth
                    & \BestGroundBlockMedianSourcesVariableDepthDepth
                    & \\
-        Depth factor & \BestGroundSourceBellowDataVariableDepthDepthFactor
+        Depth factor & \BestGroundSourceBelowDataVariableDepthDepthFactor
                      & \BestGroundBlockMedianSourcesVariableDepthDepthFactor
                      & \\
-        K nearest & \BestGroundSourceBellowDataVariableDepthKNearest
+        K nearest & \BestGroundSourceBelowDataVariableDepthKNearest
                   & \BestGroundBlockMedianSourcesVariableDepthKNearest
                   & \\
         Spacing (m) & -
                      & \BestGroundBlockMedianSourcesVariableDepthSpacing
                      & \\
-        Damping & \BestGroundSourceBellowDataVariableDepthDamping
+        Damping & \BestGroundSourceBelowDataVariableDepthDamping
                 & \BestGroundBlockMedianSourcesVariableDepthDamping
                 &  \\
         \textbf{R$^2$ score}
-                & \textbf{\BestGroundSourceBellowDataVariableDepthScore}
+                & \textbf{\BestGroundSourceBelowDataVariableDepthScore}
                 & \textbf{\BestGroundBlockMedianSourcesVariableDepthScore}
                 & \\
     \end{tabular}
@@ -889,12 +926,12 @@ distribution as the one that achieves the highest score.
     }
     \label{tab:parameters-ground-survey}
     \begin{tabular}{l c c c}
-        & \textbf{Sources bellow data} & \textbf{Block median sources}
+        & \textbf{Sources below data} & \textbf{Block median sources}
         & \textbf{Grid sources} \\
 
         \textbf{Constant depth} & & & \\
         \hline
-        Depth (m) & \BestAirborneSourceBellowDataConstantDepthDepth
+        Depth (m) & \BestAirborneSourceBelowDataConstantDepthDepth
                    & \BestAirborneBlockMedianSourcesConstantDepthDepth
                    & \BestAirborneGridSourcesConstantDepthDepth \\
         Spacing (m) & -
@@ -903,56 +940,55 @@ distribution as the one that achieves the highest score.
         Pad & -
             & -
             & \BestAirborneGridSourcesConstantDepthPad \\
-        Damping & \BestAirborneSourceBellowDataConstantDepthDamping
+        Damping & \BestAirborneSourceBelowDataConstantDepthDamping
                 & \BestAirborneBlockMedianSourcesConstantDepthDamping
                 & \BestAirborneGridSourcesConstantDepthDamping \\
         \textbf{R$^2$ score}
-                & \textbf{\BestAirborneSourceBellowDataConstantDepthScore}
+                & \textbf{\BestAirborneSourceBelowDataConstantDepthScore}
                 & \textbf{\BestAirborneBlockMedianSourcesConstantDepthScore}
                 & \textbf{\BestAirborneGridSourcesConstantDepthScore} \\
 
         & & & \\
         \textbf{Relative depth} & & & \\
         \cline{1-3}
-        Depth (m) & \BestAirborneSourceBellowDataRelativeDepthDepth
+        Depth (m) & \BestAirborneSourceBelowDataRelativeDepthDepth
                    & \BestAirborneBlockMedianSourcesRelativeDepthDepth
                    & \\
         Spacing (m) & -
                 & \BestAirborneBlockMedianSourcesRelativeDepthSpacing
                 & \\
-        Damping & \BestAirborneSourceBellowDataRelativeDepthDamping
+        Damping & \BestAirborneSourceBelowDataRelativeDepthDamping
                 & \BestAirborneBlockMedianSourcesRelativeDepthDamping
                 & \\
         \textbf{R$^2$ score}
-                & \textbf{\BestAirborneSourceBellowDataRelativeDepthScore}
+                & \textbf{\BestAirborneSourceBelowDataRelativeDepthScore}
                 & \textbf{\BestAirborneBlockMedianSourcesRelativeDepthScore}
                 & \\
 
         & & & \\
         \textbf{Variable depth} & & & \\
         \cline{1-3}
-        Depth (m) & \BestAirborneSourceBellowDataVariableDepthDepth
+        Depth (m) & \BestAirborneSourceBelowDataVariableDepthDepth
                    & \BestAirborneBlockMedianSourcesVariableDepthDepth
                    & \\
-        Depth factor & \BestAirborneSourceBellowDataVariableDepthDepthFactor
+        Depth factor & \BestAirborneSourceBelowDataVariableDepthDepthFactor
                      & \BestAirborneBlockMedianSourcesVariableDepthDepthFactor
                      & \\
-        K nearest & \BestAirborneSourceBellowDataVariableDepthKNearest
+        K nearest & \BestAirborneSourceBelowDataVariableDepthKNearest
                   & \BestAirborneBlockMedianSourcesVariableDepthKNearest
                   & \\
         Spacing (m) & -
                      & \BestAirborneBlockMedianSourcesVariableDepthSpacing
                      & \\
-        Damping & \BestAirborneSourceBellowDataVariableDepthDamping
+        Damping & \BestAirborneSourceBelowDataVariableDepthDamping
                 & \BestAirborneBlockMedianSourcesVariableDepthDamping
                 &  \\
         \textbf{R$^2$ score}
-                & \textbf{\BestAirborneSourceBellowDataVariableDepthScore}
+                & \textbf{\BestAirborneSourceBelowDataVariableDepthScore}
                 & \textbf{\BestAirborneBlockMedianSourcesVariableDepthScore}
                 & \\
     \end{tabular}
 \end{table*}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
