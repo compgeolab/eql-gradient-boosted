@@ -10,7 +10,7 @@ from ..layouts import (
     constant_depth,
     relative_depth,
     variable_depth,
-    source_bellow_data,
+    source_below_data,
     block_median_sources,
     grid_sources,
 )
@@ -73,7 +73,7 @@ def test_variable_depth(coordinates):
     assert not np.allclose(coordinates[2] - depth, points[2])
     # Check if depths are not all equal
     assert not np.allclose(points[2][0], points[2])
-    # Check if all masses are bellow relative depth
+    # Check if all masses are below relative depth
     assert np.all(points[2] < coordinates[2] - depth)
     # Set depth_factor equal to zero and check if relative depth is recovered
     points = variable_depth(
@@ -107,11 +107,11 @@ def test_variable_depth_analytical(coordinates):
 # Source distributions
 # --------------------
 
-# Sources bellow data
+# Sources below data
 # -------------------
-def test_source_bellow_data(coordinates):
+def test_source_below_data(coordinates):
     """
-    Check if source_bellow_data puts sources beneath data points
+    Check if source_below_data puts sources beneath data points
     """
     depth = 100
     depth_factor = 1
@@ -122,22 +122,22 @@ def test_source_bellow_data(coordinates):
         "variable_depth": {"depth_factor": depth_factor, "k_nearest": k_nearest},
     }
     for depth_type, params in parameters.items():
-        points = source_bellow_data(
+        points = source_below_data(
             coordinates, depth_type=depth_type, depth=depth, **params
         )
         npt.assert_allclose(points[0], coordinates[0])
         npt.assert_allclose(points[1], coordinates[1])
 
 
-def test_source_bellow_data_kwargs(coordinates):
+def test_source_below_data_kwargs(coordinates):
     """
-    Check if extra kwargs on source_bellow_data are ignored
+    Check if extra kwargs on source_below_data are ignored
     """
     depth_type = "constant_depth"
     depth = 100
     npt.assert_allclose(
-        source_bellow_data(coordinates, depth_type=depth_type, depth=depth,),
-        source_bellow_data(
+        source_below_data(coordinates, depth_type=depth_type, depth=depth,),
+        source_below_data(
             coordinates, depth_type=depth_type, depth=depth, blabla=3.1415
         ),
     )
@@ -243,6 +243,6 @@ def test_invalid_depth_type(coordinates):
     """
     depth_type = "not a valid depth_type"
     with pytest.raises(ValueError):
-        source_bellow_data(coordinates, depth_type=depth_type)
+        source_below_data(coordinates, depth_type=depth_type)
     with pytest.raises(ValueError):
         block_median_sources(coordinates, depth_type=depth_type, spacing=4000)
