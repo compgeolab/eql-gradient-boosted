@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -358,3 +358,4 @@ with open(
     os.path.join("..", "manuscript", "best_parameters_ground_survey.tex"), "w"
 ) as f:
     f.write("\n".join(tex_variables,))
+# -

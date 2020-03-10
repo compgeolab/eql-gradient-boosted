@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -235,9 +235,7 @@ for layout in scores:
         )
 # -
 
-# ## 5. Plot best predictions
-
-# Read best predictions from saved files
+# ### Read best predictions from saved files
 
 best_predictions = []
 for layout in layouts:
@@ -247,7 +245,7 @@ for layout in layouts:
         )
     )
 
-# Plot best predictions
+# ## Plot best predictions
 
 for dataset in best_predictions:
     for depth_type in dataset:
@@ -260,7 +258,7 @@ for dataset in best_predictions:
         plot_prediction(prediction, target, units=field_units)
 
 
-# ## 6. Plot and compare all best predictions
+# ## Plot and compare all best predictions
 
 # +
 # We will use the same boundary value for each plot in order to
@@ -360,4 +358,3 @@ with open(
     os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
 ) as f:
     f.write("\n".join(tex_variables,))
-# -
