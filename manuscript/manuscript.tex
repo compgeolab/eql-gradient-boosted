@@ -24,6 +24,7 @@
 \input{parameters_airborne_survey.tex}
 \input{best_parameters_ground_survey.tex}
 \input{best_parameters_airborne_survey.tex}
+\input{source_layouts_schematics.tex}
 
 
 % Define title, authors, affiliations and DOI
@@ -544,6 +545,23 @@ distribution of sources will be generated.
             blocks.
     }
     \label{fig:block-median-sources}
+\end{figure*}
+
+
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/source-layouts-schematics.pdf}
+    \caption{
+        Source layouts.
+        (a) Set of \SourceLayoutsSchematicsObservations{} synthetic observation
+            points that resemble a ground survey.
+        (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
+            obtained through the \emph{sources beneath data} layout.
+        (c) Location of the \SourceLayoutsSchematicsBlockMedianSources{}
+            sources obtained through the \emph{block averaged sources} layout.
+        (d) Location of the \SourceLayoutsSchematicsGridSources{} sources
+            obtained through the \emph{grid sources} layout.
+    }
+    \label{fig:source-layouts-schematics}
 \end{figure*}
 
 The depth of the point sources can be chosen following different criteria.
