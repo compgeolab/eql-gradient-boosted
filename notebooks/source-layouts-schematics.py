@@ -62,12 +62,12 @@ coordinates = (survey.easting, survey.northing, survey.height)
 block_spacing = 4000
 grid_spacing = 4000
 
-layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_median_sources", "grid_sources"]
 depth_type = "constant_depth"
 
 parameters = {}
 
-layout = "source_bellow_data"
+layout = "source_below_data"
 parameters[layout] = dict(depth_type=depth_type, depth=500,)
 
 layout = "block_median_sources"
