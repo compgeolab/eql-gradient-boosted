@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -48,7 +48,7 @@ coordinates = vd.scatter_points(
 # Create block-median sources
 
 points = block_median_sources(
-    coordinates, constant_depth=depth, spacing=spacing, depth_type="constant_depth"
+    coordinates, depth=depth, spacing=spacing, depth_type="constant_depth"
 )
 
 # Create grid lines

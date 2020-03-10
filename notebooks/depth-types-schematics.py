@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.2
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts.layouts import source_bellow_data
+from eql_source_layouts.layouts import source_below_data
 
 # -
 
@@ -37,36 +37,36 @@ display(survey)
 
 points = {}
 
-# Source beneath data with constant depth
+# Source below data with constant depth
 
 # +
 depth_type = "constant_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
+points[depth_type] = source_below_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # -
 
-# Source beneath data with relative depth
+# Source below data with relative depth
 
 # +
 depth_type = "relative_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(coordinates, depth_type=depth_type, depth=150)
+points[depth_type] = source_below_data(coordinates, depth_type=depth_type, depth=150)
 
 plt.scatter(coordinates[0], coordinates[2])
 plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # -
 
-# Source beneath data with variable depth
+# Source below data with variable depth
 
 # +
 depth_type = "variable_depth"
 coordinates = (survey.easting, np.zeros_like(survey.easting), survey.height)
-points[depth_type] = source_bellow_data(
+points[depth_type] = source_below_data(
     coordinates, depth_type=depth_type, depth_factor=1, depth=100, k_nearest=3
 )
 

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.3
+#       jupytext_version: 1.3.5
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -63,7 +63,7 @@ field_units = "mGal"
 # Define set of interpolation parameters
 # ======================================
 # Define a list of source layouts
-layouts = ["source_bellow_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_median_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
 dampings = [None, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2]
 # Define depht values
@@ -88,8 +88,8 @@ block_spacings = [1_000, 2_000, 3_000, 4_000]
 # +
 parameters = {layout: {} for layout in layouts}
 
-# Source bellow data
-layout = "source_bellow_data"
+# Source below data
+layout = "source_below_data"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths
@@ -235,9 +235,7 @@ for layout in scores:
         )
 # -
 
-# ## 5. Plot best predictions
-
-# Read best predictions from saved files
+# ### Read best predictions from saved files
 
 best_predictions = []
 for layout in layouts:
@@ -247,7 +245,7 @@ for layout in layouts:
         )
     )
 
-# Plot best predictions
+# ## Plot best predictions
 
 for dataset in best_predictions:
     for depth_type in dataset:
@@ -260,7 +258,7 @@ for dataset in best_predictions:
         plot_prediction(prediction, target, units=field_units)
 
 
-# ## 6. Plot and compare all best predictions
+# ## Plot and compare all best predictions
 
 # +
 # We will use the same boundary value for each plot in order to
@@ -360,4 +358,3 @@ with open(
     os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
 ) as f:
     f.write("\n".join(tex_variables,))
-# -
