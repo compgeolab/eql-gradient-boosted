@@ -24,7 +24,7 @@ def _dispatcher(
         return variable_depth(points, **kwargs)
 
 
-def source_bellow_data(coordinates, depth_type, **kwargs):
+def source_below_data(coordinates, depth_type, **kwargs):
     """
     Put one point source beneath each observation point
 
@@ -38,7 +38,7 @@ def source_bellow_data(coordinates, depth_type, **kwargs):
     The *relative depth* locates all sources at a constant _relative_ ``depth`` beneath
     its corresponding observation point. Each source point will be located at the same
     distance from its corresponding observation point. Sources points will _copy_ the
-    elevations of the coordinates at a ``depth`` bellow.
+    elevations of the coordinates at a ``depth`` below.
 
     The *variable depth* locates the sources in the same way the _relative depth_ does
     but also adds a term that can be computed as the product of the ``depth_factor`` and
@@ -83,7 +83,7 @@ def block_median_sources(coordinates, spacing, depth_type, **kwargs):
     The *relative depth* locates all sources at a constant _relative_ ``depth`` beneath
     its corresponding block-median point. Each source point will be located at the same
     distance from its corresponding block-median point. Sources points will _copy_ the
-    elevations of the block-median coordinates at a ``depth`` bellow.
+    elevations of the block-median coordinates at a ``depth`` below.
 
     The *variable depth* locates the sources in the same way the _relative depth_ does
     but also adds a term that can be computed as the product of the ``depth_factor`` and
@@ -227,7 +227,7 @@ def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     Depth of sources will be set by applying the relative depth strategy plus a term
     equal to the product of ``depth_factor`` and the median distance to the
     ``k_nearest`` nearest neighbor sources. Sources beneath clustered ``coordinates``
-    points will be shallower than sources bellow scattered ``coordinates``.
+    points will be shallower than sources below scattered ``coordinates``.
 
     Any extra keyword argument passed will be ignored.
 
