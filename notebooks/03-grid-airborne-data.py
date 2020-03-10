@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -261,6 +261,9 @@ for dataset in best_predictions:
 # ## Plot and compare all best predictions
 
 # +
+# Load matplotlib configuration
+plt.style.use(os.path.join("..", "matplotlib.rc"))
+
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
 vmax = vd.maxabs(
@@ -272,7 +275,9 @@ vmax = vd.maxabs(
 )
 
 # Initialize figure
-fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(15, 15), sharex=True, sharey=True)
+fig, axes = plt.subplots(
+    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+)
 
 # Plot the differences between the target and the best prediction for each layout
 for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
@@ -280,21 +285,35 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         prediction = dataset[depth_type]
         difference = target - prediction
         tmp = difference.plot.pcolormesh(
-            ax=ax, vmin=-vmax, vmax=vmax, cmap="seismic", add_colorbar=False
+            ax=ax,
+            vmin=-vmax,
+            vmax=vmax,
+            cmap="seismic",
+            add_colorbar=False,
+            rasterized=True,
         )
-        ax.scatter(survey.easting, survey.northing, s=1, alpha=0.2, color="k")
+        ax.scatter(survey.easting, survey.northing, s=0.1, alpha=0.2, color="k")
         ax.set_aspect("equal")
-        ax.ticklabel_format(axis="both", style="sci")
+        # Set scientific notation on axis labels (and change offset text position)
+        ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
+        ax.yaxis.offsetText.set_x(-0.13)
+        ax.set_xlabel(ax.get_xlabel() + " [m]")
+        ax.set_ylabel(ax.get_ylabel() + " [m]")
+        # Set title with r2 score and number of points
         ax.set_title(
-            "r2: {:.3f}, n_points: {}".format(prediction.score, prediction.n_points)
+            r"R$^2$: {:.3f}, \#sources: {}".format(
+                prediction.score, prediction.n_points
+            ),
+            fontsize="small",
+            horizontalalignment="center",
         )
 
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
                 0.5,
-                1.1,
-                depth_type,
+                1.16,
+                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -303,27 +322,36 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Annotate the rows of the figure
         if j == 0:
             ax.text(
-                -0.35,
+                -0.38,
                 0.5,
-                dataset.layout,
+                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
                 rotation="vertical",
                 transform=ax.transAxes,
             )
+        # Remove xlabels and ylabels from inner axes
+        if i != 2:
+            ax.set_xlabel("")
+        if j != 0:
+            ax.set_ylabel("")
 
 # Hide the last two axes because they are not used
 axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-fig.subplots_adjust(bottom=0.1, wspace=0.05)
-cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])
-fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=field_units)
+cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
+fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
+plt.tight_layout()
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "airborne_survey_differences.pdf"), dpi=300
+)
 plt.show()
 # -
+
 
 # ## Save best predictions parameters
 #
