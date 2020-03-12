@@ -31,7 +31,7 @@ from eql_source_layouts import (
     get_best_prediction,
     predictions_to_datasets,
     latex_parameters,
-    latex_variables,
+    latex_best_parameters,
 )
 
 # -
@@ -60,22 +60,22 @@ field_units = "mGal"
 # Define a list of source layouts
 layouts = ["source_below_data", "block_median_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = [None, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2]
+dampings = np.logspace(-4, 2, 7)
 # Define depht values
 depths = np.arange(1e3, 18e3, 2e3)
 # Define parameters for the grid sources:
 #    spacing, depth, padding and damping
-grid_sources_spacings = [1e3, 2e3, 3e3, 4e3]
+grid_sources_spacings = np.arange(1e3, 5e3, 1e3)
 grid_sources_depths = np.arange(3e3, 15e3, 2e3)
 grid_sources_paddings = [0, 0.1]
-grid_sources_dampings = [1e1, 1e2, 1e3, 1e4]
+grid_sources_dampings = np.logspace(1, 4, 4)
 # Define parameters for variable relative depth layouts:
 #    depth_factor, depth and k_nearest
 depth_factors = [0.1, 0.5, 1, 2, 3, 4, 5, 6]
 variable_depths = np.arange(0, 1500, 200)
 k_values = [1, 5, 10, 15]
 # Define block spacing for block median sources
-block_spacings = [1_000, 2_000, 3_000, 4_000]
+block_spacings = np.arange(1e3, 5e3, 1e3)
 # -
 
 # ## Create dictionary with the parameter values for each source distribution
@@ -357,32 +357,17 @@ plt.show()
 #
 # Save best predictions parameters as LaTeX variables
 
-# +
-tex_variables = []
+tex_lines = []
 for dataset in best_predictions:
     for depth_type in dataset:
         parameters = dataset[depth_type].attrs
         layout = parameters["layout"]
-        for parameter, value in parameters.items():
-            if parameter in ("depth_type", "layout", "height"):
-                continue
-            fmt = ""
-            variable_name = (
-                "_".join(["best", "ground", layout, depth_type, parameter])
-                .replace("_", " ")
-                .title()
-                .replace(" ", "")
-            )
-            if parameter in ("spacing", "depth"):
-                fmt = ".1f"
-            if parameter == "score":
-                fmt = ".3f"
-            if value == 0:
-                fmt = ".0f"
-            tex_variables.append(latex_variables(variable_name, value, fmt=fmt))
+        tex_lines.extend(
+            latex_best_parameters(parameters, "ground", layout, depth_type)
+        )
 
 
 with open(
     os.path.join("..", "manuscript", "best_parameters_ground_survey.tex"), "w"
 ) as f:
-    f.write("\n".join(tex_variables,))
+    f.write("\n".join(tex_lines,))

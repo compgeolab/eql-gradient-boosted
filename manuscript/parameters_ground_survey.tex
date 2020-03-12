@@ -1,23 +1,46 @@
-\newcommand{\GroundSourceBelowDataConstantDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundSourceBelowDataConstantDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\GroundSourceBelowDataRelativeDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundSourceBelowDataRelativeDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\GroundSourceBelowDataVariableDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundSourceBelowDataVariableDepthDepthFactor}{0.1, 0.5, 1, 2, 3, 4, 5, 6}
-\newcommand{\GroundSourceBelowDataVariableDepthDepth}{0, 0.20, 0.40, 0.60, 0.80, 1.00, 1.20, 1.40}
-\newcommand{\GroundSourceBelowDataVariableDepthKNearest}{1, 5, 10, 15}
-\newcommand{\GroundBlockMedianSourcesConstantDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundBlockMedianSourcesConstantDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\GroundBlockMedianSourcesConstantDepthSpacing}{1, 2, 3, 4}
-\newcommand{\GroundBlockMedianSourcesRelativeDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundBlockMedianSourcesRelativeDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\GroundBlockMedianSourcesRelativeDepthSpacing}{1, 2, 3, 4}
-\newcommand{\GroundBlockMedianSourcesVariableDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\GroundBlockMedianSourcesVariableDepthSpacing}{1, 2, 3, 4}
-\newcommand{\GroundBlockMedianSourcesVariableDepthDepthFactor}{0.1, 0.5, 1, 2, 3, 4, 5, 6}
-\newcommand{\GroundBlockMedianSourcesVariableDepthDepth}{0, 0.20, 0.40, 0.60, 0.80, 1.00, 1.20, 1.40}
-\newcommand{\GroundBlockMedianSourcesVariableDepthKNearest}{1, 5, 10, 15}
-\newcommand{\GroundGridSourcesConstantDepthDamping}{10.0, 100.0, 1000.0, 10000.0}
-\newcommand{\GroundGridSourcesConstantDepthDepth}{3, 5, 7, 9, 11, 13}
-\newcommand{\GroundGridSourcesConstantDepthPad}{0, 0.1}
-\newcommand{\GroundGridSourcesConstantDepthSpacing}{1, 2, 3, 4}
+\newcommand{\GroundSourceBelowDataConstantDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundSourceBelowDataConstantDepthDampingIncrement}{}
+\newcommand{\GroundSourceBelowDataConstantDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\GroundSourceBelowDataConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\GroundSourceBelowDataRelativeDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundSourceBelowDataRelativeDepthDampingIncrement}{}
+\newcommand{\GroundSourceBelowDataRelativeDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\GroundSourceBelowDataRelativeDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\GroundSourceBelowDataVariableDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundSourceBelowDataVariableDepthDampingIncrement}{}
+\newcommand{\GroundSourceBelowDataVariableDepthDepthFactor}{\numlist{0.1;0.5;1;2;3;4;5;6}}
+\newcommand{\GroundSourceBelowDataVariableDepthDepthFactorIncrement}{}
+\newcommand{\GroundSourceBelowDataVariableDepthDepth}{\numrange{0}{1400}}
+\newcommand{\GroundSourceBelowDataVariableDepthDepthIncrement}{, step size \num{200}}
+\newcommand{\GroundSourceBelowDataVariableDepthKNearest}{\numlist{1;5;10;15}}
+\newcommand{\GroundSourceBelowDataVariableDepthKNearestIncrement}{}
+\newcommand{\GroundBlockMedianSourcesConstantDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundBlockMedianSourcesConstantDepthDampingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesConstantDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\GroundBlockMedianSourcesConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\GroundBlockMedianSourcesConstantDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\GroundBlockMedianSourcesConstantDepthSpacingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthDampingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\GroundBlockMedianSourcesRelativeDepthSpacingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDampingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesVariableDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthSpacingIncrement}{}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDepthFactor}{\numlist{0.1;0.5;1;2;3;4;5;6}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDepthFactorIncrement}{}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDepth}{\numrange{0}{1400}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthDepthIncrement}{, step size \num{200}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthKNearest}{\numlist{1;5;10;15}}
+\newcommand{\GroundBlockMedianSourcesVariableDepthKNearestIncrement}{}
+\newcommand{\GroundGridSourcesConstantDepthDamping}{\numlist{e1;e2;e3;e4}}
+\newcommand{\GroundGridSourcesConstantDepthDampingIncrement}{}
+\newcommand{\GroundGridSourcesConstantDepthDepth}{\numrange{3000}{13000}}
+\newcommand{\GroundGridSourcesConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\GroundGridSourcesConstantDepthPad}{\numlist{0;0.1}}
+\newcommand{\GroundGridSourcesConstantDepthPadIncrement}{}
+\newcommand{\GroundGridSourcesConstantDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\GroundGridSourcesConstantDepthSpacingIncrement}{}

@@ -1,23 +1,46 @@
-\newcommand{\AirborneSourceBelowDataConstantDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneSourceBelowDataConstantDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\AirborneSourceBelowDataRelativeDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneSourceBelowDataRelativeDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\AirborneSourceBelowDataVariableDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneSourceBelowDataVariableDepthDepthFactor}{1, 2, 3, 4, 5, 6}
-\newcommand{\AirborneSourceBelowDataVariableDepthDepth}{0.05, 0.25, 0.45, 0.65, 0.85, 1.05, 1.25, 1.45}
-\newcommand{\AirborneSourceBelowDataVariableDepthKNearest}{1, 5, 10, 15}
-\newcommand{\AirborneBlockMedianSourcesConstantDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneBlockMedianSourcesConstantDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\AirborneBlockMedianSourcesConstantDepthSpacing}{1, 2, 3, 4}
-\newcommand{\AirborneBlockMedianSourcesRelativeDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneBlockMedianSourcesRelativeDepthDepth}{1, 3, 5, 7, 9, 11, 13, 15, 17}
-\newcommand{\AirborneBlockMedianSourcesRelativeDepthSpacing}{1, 2, 3, 4}
-\newcommand{\AirborneBlockMedianSourcesVariableDepthDamping}{None, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}
-\newcommand{\AirborneBlockMedianSourcesVariableDepthSpacing}{1, 2, 3, 4}
-\newcommand{\AirborneBlockMedianSourcesVariableDepthDepthFactor}{1, 2, 3, 4, 5, 6}
-\newcommand{\AirborneBlockMedianSourcesVariableDepthDepth}{0.05, 0.25, 0.45, 0.65, 0.85, 1.05, 1.25, 1.45}
-\newcommand{\AirborneBlockMedianSourcesVariableDepthKNearest}{1, 5, 10, 15}
-\newcommand{\AirborneGridSourcesConstantDepthDamping}{10.0, 100.0, 1000.0, 10000.0}
-\newcommand{\AirborneGridSourcesConstantDepthDepth}{3, 5, 7, 9, 11, 13}
-\newcommand{\AirborneGridSourcesConstantDepthPad}{0, 0.1, 0.2}
-\newcommand{\AirborneGridSourcesConstantDepthSpacing}{1, 2, 3}
+\newcommand{\AirborneSourceBelowDataConstantDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneSourceBelowDataConstantDepthDampingIncrement}{}
+\newcommand{\AirborneSourceBelowDataConstantDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\AirborneSourceBelowDataConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\AirborneSourceBelowDataRelativeDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneSourceBelowDataRelativeDepthDampingIncrement}{}
+\newcommand{\AirborneSourceBelowDataRelativeDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\AirborneSourceBelowDataRelativeDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\AirborneSourceBelowDataVariableDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneSourceBelowDataVariableDepthDampingIncrement}{}
+\newcommand{\AirborneSourceBelowDataVariableDepthDepthFactor}{\numrange{1}{6}}
+\newcommand{\AirborneSourceBelowDataVariableDepthDepthFactorIncrement}{, step size \num{1}}
+\newcommand{\AirborneSourceBelowDataVariableDepthDepth}{\numrange{50}{1450}}
+\newcommand{\AirborneSourceBelowDataVariableDepthDepthIncrement}{, step size \num{200}}
+\newcommand{\AirborneSourceBelowDataVariableDepthKNearest}{\numlist{1;5;10;15}}
+\newcommand{\AirborneSourceBelowDataVariableDepthKNearestIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthDampingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\AirborneBlockMedianSourcesConstantDepthSpacingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthDampingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthDepth}{\numrange{1000}{17000}}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\AirborneBlockMedianSourcesRelativeDepthSpacingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDamping}{\num{e-4}, \num{e-3},$\dots$, \num{e2}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDampingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthSpacing}{\numlist{1000;2000;3000;4000}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthSpacingIncrement}{}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDepthFactor}{\numrange{1}{6}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDepthFactorIncrement}{, step size \num{1}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDepth}{\numrange{50}{1450}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthDepthIncrement}{, step size \num{200}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthKNearest}{\numlist{1;5;10;15}}
+\newcommand{\AirborneBlockMedianSourcesVariableDepthKNearestIncrement}{}
+\newcommand{\AirborneGridSourcesConstantDepthDamping}{\numlist{e1;e2;e3;e4}}
+\newcommand{\AirborneGridSourcesConstantDepthDampingIncrement}{}
+\newcommand{\AirborneGridSourcesConstantDepthDepth}{\numrange{3000}{13000}}
+\newcommand{\AirborneGridSourcesConstantDepthDepthIncrement}{, step size \num{2000}}
+\newcommand{\AirborneGridSourcesConstantDepthPad}{\numlist{0;0.1;0.2}}
+\newcommand{\AirborneGridSourcesConstantDepthPadIncrement}{}
+\newcommand{\AirborneGridSourcesConstantDepthSpacing}{\numlist{1000;2000;3000}}
+\newcommand{\AirborneGridSourcesConstantDepthSpacingIncrement}{}
