@@ -3,7 +3,7 @@ Create different layouts of point sources
 """
 import numpy as np
 from verde import (
-    averaged_distance,
+    median_distance,
     BlockReduce,
     get_region,
     pad_region,
