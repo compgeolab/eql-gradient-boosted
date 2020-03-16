@@ -63,7 +63,7 @@ field_units = "mGal"
 # Define set of interpolation parameters
 # ======================================
 # Define a list of source layouts
-layouts = ["source_below_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
 dampings = np.logspace(-4, 2, 7)
 # Define depht values
@@ -79,7 +79,7 @@ grid_sources_dampings = np.logspace(1, 4, 4)
 depth_factors = [1, 2, 3, 4, 5, 6]
 variable_depths = np.arange(50, 1500, 200)
 k_values = [1, 5, 10, 15]
-# Define block spacing for block median sources
+# Define block spacing for block averaged sources
 block_spacings = np.arange(1e3, 5e3, 1e3)
 # -
 
@@ -109,8 +109,8 @@ parameters[layout][depth_type] = dict(
     k_nearest=k_values,
 )
 
-# Block-median sources
-layout = "block_median_sources"
+# Block-averaged sources
+layout = "block_averaged_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = dict(
     depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,

@@ -62,7 +62,7 @@ coordinates = (survey.easting, survey.northing, survey.height)
 block_spacing = 4000
 grid_spacing = 4000
 
-layouts = ["source_below_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 depth_type = "constant_depth"
 
 parameters = {}
@@ -70,7 +70,7 @@ parameters = {}
 layout = "source_below_data"
 parameters[layout] = dict(depth_type=depth_type, depth=500,)
 
-layout = "block_median_sources"
+layout = "block_averaged_sources"
 parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=block_spacing)
 
 layout = "grid_sources"
@@ -129,7 +129,7 @@ for ax, layout in zip(axes[1:], layouts):
     ax.scatter(*source_distributions[layout][:2], s=size, c="C1")
     ax.set_title(layout.replace("_", " ").title())
 
-# Add blocks boundaries to Block Median Sources plot
+# Add blocks boundaries to Block Averaged Sources plot
 ax = axes[2]
 grid_style = dict(color="grey", linewidth=0.3, linestyle="--")
 xmin, xmax, ymin, ymax = region[:]
