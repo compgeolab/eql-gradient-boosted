@@ -117,7 +117,7 @@ def block_averaged_sources(coordinates, spacing, depth_type, **kwargs):
         Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
-    reducer = BlockReduce(spacing=spacing, reduction=np.averaged, drop_coords=False)
+    reducer = BlockReduce(spacing=spacing, reduction=np.median, drop_coords=False)
     # Must pass a dummy data array to BlockReduce.filter(), we choose a array full of
     # zeros. We will ignore the returned reduced dummy array.
     points, _ = reducer.filter(coordinates, np.zeros_like(coordinates[0]))
@@ -258,5 +258,5 @@ def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     """
     easting, northing, upward = tuple(np.atleast_1d(i).copy() for i in coordinates)
     upward -= depth
-    upward -= depth_factor * averaged_distance(coordinates, k_nearest=k_nearest)
+    upward -= depth_factor * median_distance(coordinates, k_nearest=k_nearest)
     return easting, northing, upward
