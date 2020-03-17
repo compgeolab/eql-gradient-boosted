@@ -165,5 +165,3 @@ for layout in layouts:
 
 with open(os.path.join("..", "manuscript", "source_layouts_schematics.tex"), "w") as f:
     f.write("\n".join(tex_lines))
-
-
