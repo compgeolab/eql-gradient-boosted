@@ -24,8 +24,8 @@
 #
 # 1. **Source below data**: One source point beneath each data point
 # 2. **Block averaged sources**: Split the region in blocks of equal size, compute the
-#    median coordinate of the data points per block, and put one point source beneath
-#    this block-median coordinate.
+#    averaged coordinate of the data points per block, and put one point source beneath
+#    this block-averaged coordinate.
 # 3. **Grid of sources**: A regular grid of source points
 #
 # And the depth types, i.e. how deep do we put the point sources:
@@ -35,7 +35,7 @@
 # 2. **Relative depth**: Each source is located at a constant distance beneath its
 #    corresponding observation (or block averaged) point.
 # 3. **Variable depth**: Locate each source according to the Relative dpeth approach
-#    and then modify this depth by removing a term that depends on the median distance
+#    and then modify this depth by removing a term that depends on the averaged distance
 #    to the k nearest source points.
 #
 # The first two layouts can be setted with any of these three types of depth, although
@@ -76,7 +76,7 @@ ground_results_dir = os.path.join("..", "results", "ground_survey")
 airborne_results_dir = os.path.join("..", "results", "airborne_survey")
 
 # Define dictionaries where the source distributions will be stored
-layouts = ["source_below_data", "block_median_sources", "grid_sources"]
+layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 source_distributions = {layout: {} for layout in layouts}
 
 # Define a region for the synthetic survey
@@ -85,7 +85,7 @@ region_degrees = [-0.5, 0.5, -0.5, 0.5]  # given in degrees
 # Set a depth of 2km
 depth = 2000
 
-# Define a block size of 2km for block-median layouts
+# Define a block size of 2km for block-averaged layouts
 spacing = 4000
 
 # Define set of parameters for each source distribution
@@ -112,8 +112,8 @@ parameters[layout][depth_type] = {
     "k_nearest": 15,
 }
 
-# ... for block-median sources layout
-layout = "block_median_sources"
+# ... for block-averaged sources layout
+layout = "block_averaged_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = {
     "depth_type": depth_type,

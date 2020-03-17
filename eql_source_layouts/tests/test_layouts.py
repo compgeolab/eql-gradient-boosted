@@ -11,7 +11,7 @@ from ..layouts import (
     relative_depth,
     variable_depth,
     source_below_data,
-    block_median_sources,
+    block_averaged_sources,
     grid_sources,
 )
 
@@ -143,11 +143,11 @@ def test_source_below_data_kwargs(coordinates):
     )
 
 
-# Block median sources
-# --------------------
-def test_block_median_sources(coordinates):
+# Block averaged sources
+# ----------------------
+def test_block_averaged_sources(coordinates):
     """
-    Check if block_median_sources block average coordinates
+    Check if block_averaged_sources block average coordinates
     """
     spacing = 4000
     depth = 100
@@ -159,7 +159,7 @@ def test_block_median_sources(coordinates):
         "variable_depth": {"depth_factor": depth_factor, "k_nearest": k_nearest},
     }
     for depth_type, params in parameters.items():
-        points = block_median_sources(
+        points = block_averaged_sources(
             coordinates, depth_type=depth_type, spacing=spacing, depth=depth, **params
         )
         # Check if there's one source per block
@@ -172,18 +172,18 @@ def test_block_median_sources(coordinates):
         npt.assert_allclose(points[1], block_coords[1][labels], atol=spacing / 2)
 
 
-def test_block_median_sources_kwargs(coordinates):
+def test_block_averaged_sources_kwargs(coordinates):
     """
-    Check if extra kwargs on block_median_sources are ignored
+    Check if extra kwargs on block_averaged_sources are ignored
     """
     depth_type = "constant_depth"
     depth = 100
     spacing = 4000
     npt.assert_allclose(
-        block_median_sources(
+        block_averaged_sources(
             coordinates, depth_type=depth_type, depth=depth, spacing=spacing,
         ),
-        block_median_sources(
+        block_averaged_sources(
             coordinates,
             depth_type=depth_type,
             depth=depth,
@@ -245,4 +245,4 @@ def test_invalid_depth_type(coordinates):
     with pytest.raises(ValueError):
         source_below_data(coordinates, depth_type=depth_type)
     with pytest.raises(ValueError):
-        block_median_sources(coordinates, depth_type=depth_type, spacing=4000)
+        block_averaged_sources(coordinates, depth_type=depth_type, spacing=4000)

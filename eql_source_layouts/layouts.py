@@ -2,7 +2,13 @@
 Create different layouts of point sources
 """
 import numpy as np
-from verde import median_distance, BlockReduce, get_region, pad_region, grid_coordinates
+from verde import (
+    median_distance,
+    BlockReduce,
+    get_region,
+    pad_region,
+    grid_coordinates,
+)
 
 
 DEPTH_TYPES = ["constant_depth", "relative_depth", "variable_depth"]
@@ -42,7 +48,7 @@ def source_below_data(coordinates, depth_type, **kwargs):
 
     The *variable depth* locates the sources in the same way the _relative depth_ does
     but also adds a term that can be computed as the product of the ``depth_factor`` and
-    the median distance between the ``k_nearest`` nearest neighbor sources.
+    the averaged distance between the ``k_nearest`` nearest neighbor sources.
 
     The depth type can be chosen through the ``depth_type`` argument, while the
     ``depth``, ``depth_factor`` and ``k_nearest`` arguments can be passed as ``kwargs``.
@@ -69,25 +75,25 @@ def source_below_data(coordinates, depth_type, **kwargs):
     return points
 
 
-def block_median_sources(coordinates, spacing, depth_type, **kwargs):
+def block_averaged_sources(coordinates, spacing, depth_type, **kwargs):
     """
-    Put one point source beneath the block-median observation points
+    Put one point source beneath the block-averaged observation points
 
     The depth of the point sources can be set according to the following methods:
     *constant*, *relative* or *variable* depth.
 
     The *constant depth* locates all sources at the same depth. It can be computed as
-    the difference between the minimum elevation of block-median coordinates and the
+    the difference between the minimum elevation of block-averaged coordinates and the
     ``depth`` argument.
 
     The *relative depth* locates all sources at a constant _relative_ ``depth`` beneath
-    its corresponding block-median point. Each source point will be located at the same
-    distance from its corresponding block-median point. Sources points will _copy_ the
-    elevations of the block-median coordinates at a ``depth`` below.
+    its corresponding block-averaged point. Each source point will be located at the
+    same distance from its corresponding block-averaged point. Sources points will
+    _copy_ the elevations of the block-averaged coordinates at a ``depth`` below.
 
     The *variable depth* locates the sources in the same way the _relative depth_ does
     but also adds a term that can be computed as the product of the ``depth_factor`` and
-    the median distance between the ``k_nearest`` nearest neighbor sources.
+    the averaged distance between the ``k_nearest`` nearest neighbor sources.
 
     The depth type can be chosen through the ``depth_type`` argument, while the
     ``depth``, ``depth_factor`` and ``k_nearest`` arguments can be passed as ``kwargs``.
@@ -172,7 +178,7 @@ def constant_depth(coordinates, depth, **kwargs):
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the observation points or block-median
+        Tuple containing the coordinates of the observation points or block-averaged
         points in the following order: (``easting``, ``northing``, ``upward``).
     depth : float
         Depth shift used to compute the constant depth at which point sources will be
@@ -203,7 +209,7 @@ def relative_depth(coordinates, depth, **kwargs):
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the observation points or block-median
+        Tuple containing the coordinates of the observation points or block-averaged
         points in the following order: (``easting``, ``northing``, ``upward``).
     depth : float
         Depth shift used to compute the relative depth at which point sources will be
@@ -225,7 +231,7 @@ def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     Put sources at a depth based on the distance to nearest neighbors
 
     Depth of sources will be set by applying the relative depth strategy plus a term
-    equal to the product of ``depth_factor`` and the median distance to the
+    equal to the product of ``depth_factor`` and the averaged distance to the
     ``k_nearest`` nearest neighbor sources. Sources beneath clustered ``coordinates``
     points will be shallower than sources below scattered ``coordinates``.
 
@@ -234,7 +240,7 @@ def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     Parameters
     ----------
     coordinates : tuple of arrays
-        Tuple containing the coordinates of the observation points or block-median
+        Tuple containing the coordinates of the observation points or block-averaged
         points in the following order: (``easting``, ``northing``, ``upward``).
     depth : float
         Depth shift used to compute the relative depth at which point sources will be
@@ -242,7 +248,7 @@ def variable_depth(coordinates, depth, depth_factor, k_nearest, **kwargs):
     depth_factor : float
         Factor used on the variable depth term.
     k_nearest : int
-        Number of nearest neighbor sources used to compute the median distance.
+        Number of nearest neighbor sources used to compute the averaged distance.
 
     Returns
     -------

@@ -520,11 +520,11 @@ It consist in:
 \begin{enumerate}
     \item Dividing the region in blocks of equal size. The size of the blocks
         is controlled by a \emph{spacing} parameter.
-        (see Fig.~\ref{fig:block-median-sources}(a)-(b)).
+        (see Fig.~\ref{fig:block-averaged-sources}(a)-(b)).
     \item Computing the median location of the observation points that fall
         inside each block. Blocks without any observation point are ignored.
     \item Locating one point source below each block averaged coordinate.
-        (see Fig.~\ref{fig:block-median-sources}(c)).
+        (see Fig.~\ref{fig:block-averaged-sources}(c)).
 \end{enumerate}
 
 The number of sources created by this new distribution will be less or equal to
@@ -535,7 +535,7 @@ will be concentrated on regions where data has been gathered and no anisotropic
 distribution of sources will be generated.
 
 \begin{figure*}
-    \includegraphics[width=\linewidth]{figs/block-median-sources-schematics.pdf}
+    \includegraphics[width=\linewidth]{figs/block-averaged-sources-schematics.pdf}
     \caption{
         Block averaged sources.
         (a)~Given a set of observation points
@@ -547,7 +547,7 @@ distribution of sources will be generated.
             observation points. No source is located beneath unpopulated
             blocks.
     }
-    \label{fig:block-median-sources}
+    \label{fig:block-averaged-sources}
 \end{figure*}
 
 
@@ -559,7 +559,7 @@ distribution of sources will be generated.
             points that resemble a ground survey.
         (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
             obtained through the \emph{sources beneath data} layout.
-        (c) Location of the \SourceLayoutsSchematicsBlockMedianSources{}
+        (c) Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
             sources obtained through the \emph{block averaged sources} layout.
         (d) Location of the \SourceLayoutsSchematicsGridSources{} sources
             obtained through the \emph{grid sources} layout.
@@ -854,7 +854,7 @@ Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey} also show the parameter combination
 that produces the best prediction for each source distribution and its
 corresponding R$^2$ score, for both ground and synthetic surveys, respectively.
-Figures~ \ref{fig:ground-survey-differences}
+Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution, for
 both ground and synthetic surveys, respectively.
@@ -884,7 +884,7 @@ both ground and synthetic surveys, respectively.
 
 \section{Discussion}
 
-Figures~ \ref{fig:ground-survey-differences}
+Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show that all source distributions
 produce accurate predictions, both for the ground and airborne survey.
 The R$^2$ scores don't show significant difference, so we can only conclude
@@ -992,80 +992,80 @@ All rights reserved.
                 & \\
         \midrule
 
-        \multirow{11}{*}{Block median sources}
+        \multirow{11}{*}{Block averaged sources}
             & \multirow{3}{*}{Constant Depth}
                 & Depth (m)
-                & \GroundBlockMedianSourcesConstantDepthDepth
-                  \GroundBlockMedianSourcesConstantDepthDepthIncrement
-                & \BestGroundBlockMedianSourcesConstantDepthDepth
+                & \GroundBlockAveragedSourcesConstantDepthDepth
+                  \GroundBlockAveragedSourcesConstantDepthDepthIncrement
+                & \BestGroundBlockAveragedSourcesConstantDepthDepth
                 & \multirow{3}{*}{
-                    \BestGroundBlockMedianSourcesConstantDepthScore
+                    \BestGroundBlockAveragedSourcesConstantDepthScore
                   } \\
             &
                 & Spacing (m)
-                & \GroundBlockMedianSourcesConstantDepthSpacing
-                  \GroundBlockMedianSourcesConstantDepthSpacingIncrement
-                & \BestGroundBlockMedianSourcesConstantDepthSpacing
+                & \GroundBlockAveragedSourcesConstantDepthSpacing
+                  \GroundBlockAveragedSourcesConstantDepthSpacingIncrement
+                & \BestGroundBlockAveragedSourcesConstantDepthSpacing
                 & \\
             &
                 & Damping
-                & \GroundBlockMedianSourcesConstantDepthDamping
-                  \GroundBlockMedianSourcesConstantDepthDampingIncrement
-                & \BestGroundBlockMedianSourcesConstantDepthDamping
+                & \GroundBlockAveragedSourcesConstantDepthDamping
+                  \GroundBlockAveragedSourcesConstantDepthDampingIncrement
+                & \BestGroundBlockAveragedSourcesConstantDepthDamping
                 & \\
             \cmidrule{2-6}
             & \multirow{3}{*}{Relative Depth}
                 & Depth (m)
-                & \GroundBlockMedianSourcesRelativeDepthDepth
-                  \GroundBlockMedianSourcesRelativeDepthDepthIncrement
-                & \BestGroundBlockMedianSourcesRelativeDepthDepth
+                & \GroundBlockAveragedSourcesRelativeDepthDepth
+                  \GroundBlockAveragedSourcesRelativeDepthDepthIncrement
+                & \BestGroundBlockAveragedSourcesRelativeDepthDepth
                 & \multirow{3}{*}{
-                    \BestGroundBlockMedianSourcesRelativeDepthScore
+                    \BestGroundBlockAveragedSourcesRelativeDepthScore
                   } \\
             &
                 & Spacing (m)
-                & \GroundBlockMedianSourcesRelativeDepthSpacing
-                  \GroundBlockMedianSourcesRelativeDepthSpacingIncrement
-                & \BestGroundBlockMedianSourcesRelativeDepthSpacing
+                & \GroundBlockAveragedSourcesRelativeDepthSpacing
+                  \GroundBlockAveragedSourcesRelativeDepthSpacingIncrement
+                & \BestGroundBlockAveragedSourcesRelativeDepthSpacing
                 & \\
             &
                 & Damping
-                & \GroundBlockMedianSourcesRelativeDepthDamping
-                  \GroundBlockMedianSourcesRelativeDepthDampingIncrement
-                & \BestGroundBlockMedianSourcesRelativeDepthDamping
+                & \GroundBlockAveragedSourcesRelativeDepthDamping
+                  \GroundBlockAveragedSourcesRelativeDepthDampingIncrement
+                & \BestGroundBlockAveragedSourcesRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
             & \multirow{5}{*}{Variable Depth}
                 & Depth (m)
-                & \GroundBlockMedianSourcesVariableDepthDepth
-                  \GroundBlockMedianSourcesVariableDepthDepthIncrement
-                & \BestGroundBlockMedianSourcesVariableDepthDepth
+                & \GroundBlockAveragedSourcesVariableDepthDepth
+                  \GroundBlockAveragedSourcesVariableDepthDepthIncrement
+                & \BestGroundBlockAveragedSourcesVariableDepthDepth
                 & \multirow{5}{*}{
-                    \BestGroundBlockMedianSourcesVariableDepthScore
+                    \BestGroundBlockAveragedSourcesVariableDepthScore
                   } \\
             &
                 & Depth factor
-                & \GroundBlockMedianSourcesVariableDepthDepthFactor
-                  \GroundBlockMedianSourcesVariableDepthDepthFactorIncrement
-                & \BestGroundBlockMedianSourcesVariableDepthDepthFactor
+                & \GroundBlockAveragedSourcesVariableDepthDepthFactor
+                  \GroundBlockAveragedSourcesVariableDepthDepthFactorIncrement
+                & \BestGroundBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
                 & K nearest
-                & \GroundBlockMedianSourcesVariableDepthKNearest
-                  \GroundBlockMedianSourcesVariableDepthKNearestIncrement
-                & \BestGroundBlockMedianSourcesVariableDepthKNearest
+                & \GroundBlockAveragedSourcesVariableDepthKNearest
+                  \GroundBlockAveragedSourcesVariableDepthKNearestIncrement
+                & \BestGroundBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
                 & Spacing (m)
-                & \GroundBlockMedianSourcesVariableDepthSpacing
-                  \GroundBlockMedianSourcesVariableDepthSpacingIncrement
-                & \BestGroundBlockMedianSourcesVariableDepthSpacing
+                & \GroundBlockAveragedSourcesVariableDepthSpacing
+                  \GroundBlockAveragedSourcesVariableDepthSpacingIncrement
+                & \BestGroundBlockAveragedSourcesVariableDepthSpacing
                 & \\
             &
                 & Damping
-                & \GroundBlockMedianSourcesVariableDepthDamping
-                  \GroundBlockMedianSourcesVariableDepthDampingIncrement
-                & \BestGroundBlockMedianSourcesVariableDepthDamping
+                & \GroundBlockAveragedSourcesVariableDepthDamping
+                  \GroundBlockAveragedSourcesVariableDepthDampingIncrement
+                & \BestGroundBlockAveragedSourcesVariableDepthDamping
                 & \\
         \midrule
 
@@ -1176,80 +1176,80 @@ All rights reserved.
                 & \\
         \midrule
 
-        \multirow{11}{*}{Block median sources}
+        \multirow{11}{*}{Block averaged sources}
             & \multirow{3}{*}{Constant Depth}
                 & Depth (m)
-                & \AirborneBlockMedianSourcesConstantDepthDepth
-                  \AirborneBlockMedianSourcesConstantDepthDepthIncrement
-                & \BestAirborneBlockMedianSourcesConstantDepthDepth
+                & \AirborneBlockAveragedSourcesConstantDepthDepth
+                  \AirborneBlockAveragedSourcesConstantDepthDepthIncrement
+                & \BestAirborneBlockAveragedSourcesConstantDepthDepth
                 & \multirow{3}{*}{
-                    \BestAirborneBlockMedianSourcesConstantDepthScore
+                    \BestAirborneBlockAveragedSourcesConstantDepthScore
                   } \\
             &
                 & Spacing (m)
-                & \AirborneBlockMedianSourcesConstantDepthSpacing
-                  \AirborneBlockMedianSourcesConstantDepthSpacingIncrement
-                & \BestAirborneBlockMedianSourcesConstantDepthSpacing
+                & \AirborneBlockAveragedSourcesConstantDepthSpacing
+                  \AirborneBlockAveragedSourcesConstantDepthSpacingIncrement
+                & \BestAirborneBlockAveragedSourcesConstantDepthSpacing
                 & \\
             &
                 & Damping
-                & \AirborneBlockMedianSourcesConstantDepthDamping
-                  \AirborneBlockMedianSourcesConstantDepthDampingIncrement
-                & \BestAirborneBlockMedianSourcesConstantDepthDamping
+                & \AirborneBlockAveragedSourcesConstantDepthDamping
+                  \AirborneBlockAveragedSourcesConstantDepthDampingIncrement
+                & \BestAirborneBlockAveragedSourcesConstantDepthDamping
                 & \\
             \cmidrule{2-6}
             & \multirow{3}{*}{Relative Depth}
                 & Depth (m)
-                & \AirborneBlockMedianSourcesRelativeDepthDepth
-                  \AirborneBlockMedianSourcesRelativeDepthDepthIncrement
-                & \BestAirborneBlockMedianSourcesRelativeDepthDepth
+                & \AirborneBlockAveragedSourcesRelativeDepthDepth
+                  \AirborneBlockAveragedSourcesRelativeDepthDepthIncrement
+                & \BestAirborneBlockAveragedSourcesRelativeDepthDepth
                 & \multirow{3}{*}{
-                    \BestAirborneBlockMedianSourcesRelativeDepthScore
+                    \BestAirborneBlockAveragedSourcesRelativeDepthScore
                   } \\
             &
                 & Spacing (m)
-                & \AirborneBlockMedianSourcesRelativeDepthSpacing
-                  \AirborneBlockMedianSourcesRelativeDepthSpacingIncrement
-                & \BestAirborneBlockMedianSourcesRelativeDepthSpacing
+                & \AirborneBlockAveragedSourcesRelativeDepthSpacing
+                  \AirborneBlockAveragedSourcesRelativeDepthSpacingIncrement
+                & \BestAirborneBlockAveragedSourcesRelativeDepthSpacing
                 & \\
             &
                 & Damping
-                & \AirborneBlockMedianSourcesRelativeDepthDamping
-                  \AirborneBlockMedianSourcesRelativeDepthDampingIncrement
-                & \BestAirborneBlockMedianSourcesRelativeDepthDamping
+                & \AirborneBlockAveragedSourcesRelativeDepthDamping
+                  \AirborneBlockAveragedSourcesRelativeDepthDampingIncrement
+                & \BestAirborneBlockAveragedSourcesRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
             & \multirow{5}{*}{Variable Depth}
                 & Depth (m)
-                & \AirborneBlockMedianSourcesVariableDepthDepth
-                  \AirborneBlockMedianSourcesVariableDepthDepthIncrement
-                & \BestAirborneBlockMedianSourcesVariableDepthDepth
+                & \AirborneBlockAveragedSourcesVariableDepthDepth
+                  \AirborneBlockAveragedSourcesVariableDepthDepthIncrement
+                & \BestAirborneBlockAveragedSourcesVariableDepthDepth
                 & \multirow{5}{*}{
-                    \BestAirborneBlockMedianSourcesVariableDepthScore
+                    \BestAirborneBlockAveragedSourcesVariableDepthScore
                   } \\
             &
                 & Depth factor
-                & \AirborneBlockMedianSourcesVariableDepthDepthFactor
-                  \AirborneBlockMedianSourcesVariableDepthDepthFactorIncrement
-                & \BestAirborneBlockMedianSourcesVariableDepthDepthFactor
+                & \AirborneBlockAveragedSourcesVariableDepthDepthFactor
+                  \AirborneBlockAveragedSourcesVariableDepthDepthFactorIncrement
+                & \BestAirborneBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
                 & K nearest
-                & \AirborneBlockMedianSourcesVariableDepthKNearest
-                  \AirborneBlockMedianSourcesVariableDepthKNearestIncrement
-                & \BestAirborneBlockMedianSourcesVariableDepthKNearest
+                & \AirborneBlockAveragedSourcesVariableDepthKNearest
+                  \AirborneBlockAveragedSourcesVariableDepthKNearestIncrement
+                & \BestAirborneBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
                 & Spacing (m)
-                & \AirborneBlockMedianSourcesVariableDepthSpacing
-                  \AirborneBlockMedianSourcesVariableDepthSpacingIncrement
-                & \BestAirborneBlockMedianSourcesVariableDepthSpacing
+                & \AirborneBlockAveragedSourcesVariableDepthSpacing
+                  \AirborneBlockAveragedSourcesVariableDepthSpacingIncrement
+                & \BestAirborneBlockAveragedSourcesVariableDepthSpacing
                 & \\
             &
                 & Damping
-                & \AirborneBlockMedianSourcesVariableDepthDamping
-                  \AirborneBlockMedianSourcesVariableDepthDampingIncrement
-                & \BestAirborneBlockMedianSourcesVariableDepthDamping
+                & \AirborneBlockAveragedSourcesVariableDepthDamping
+                  \AirborneBlockAveragedSourcesVariableDepthDampingIncrement
+                & \BestAirborneBlockAveragedSourcesVariableDepthDamping
                 & \\
         \midrule
 

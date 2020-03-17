@@ -13,7 +13,7 @@
 #     name: conda-env-eql_source_layouts-py
 # ---
 
-# # Schematic figure of block-median sources
+# # Schematic figure of block-averaged sources
 
 # Import packages
 
@@ -23,7 +23,7 @@ import numpy as np
 import verde as vd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts import block_median_sources
+from eql_source_layouts import block_averaged_sources
 
 # -
 
@@ -45,9 +45,9 @@ coordinates = vd.scatter_points(
     region, size=n_data, random_state=seed, extra_coords=height
 )
 
-# Create block-median sources
+# Create block-averaged sources
 
-points = block_median_sources(
+points = block_averaged_sources(
     coordinates, depth=depth, spacing=spacing, depth_type="constant_depth"
 )
 
@@ -96,14 +96,14 @@ for y in grid_lines[1]:
     ax.plot((xmin, xmax), (y, y), **grid_style)
 ax.scatter(*coordinates[:2], **scatter_style)
 
-# Plot block-median sources and grid
+# Plot block-averaged sources and grid
 ax = axes[2]
 for x in grid_lines[0]:
     ax.plot((x, x), (ymin, ymax), **grid_style)
 for y in grid_lines[1]:
     ax.plot((xmin, xmax), (y, y), **grid_style)
 sources_scatter = ax.scatter(
-    *points[:2], color="C1", label="block-median sources", **scatter_style
+    *points[:2], color="C1", label="block-averaged sources", **scatter_style
 )
 
 # Configure axes
@@ -136,7 +136,6 @@ for ax, label in zip(axes, labels):
 
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "block-median-sources-schematics.pdf")
+    os.path.join("..", "manuscript", "figs", "block-averaged-sources-schematics.pdf")
 )
 plt.show()
-# -
