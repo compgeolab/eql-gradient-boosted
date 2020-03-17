@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -165,9 +165,12 @@ plt.style.use(os.path.join("..", "matplotlib.rc"))
 
 # Define useful parameters
 width = 3.33
-figsize = (width, width * 1.5)
-cbar_shrink = 0.9
+figsize = (width, width * 1.7)
+cbar_shrink = 0.95
+cbar_pad = 0.03
+cbar_aspect = 30
 size = 2
+labels = "a b".split()
 
 # Initialize figure and axes
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
@@ -177,28 +180,50 @@ tmp = ax1.scatter(
     survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
 )
 clb = plt.colorbar(
-    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+    tmp,
+    ax=ax1,
+    shrink=cbar_shrink,
+    orientation="vertical",
+    pad=cbar_pad,
+    aspect=cbar_aspect,
 )
 clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
 
 # Plot measured values
 tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
 clb = plt.colorbar(
-    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
+    tmp,
+    ax=ax2,
+    shrink=cbar_shrink,
+    orientation="vertical",
+    pad=cbar_pad,
+    aspect=cbar_aspect,
 )
 clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+
 
 ax2.set_xlabel("easting [m]")
 ax1.tick_params(
     axis="x", which="both", bottom=False, top=False, labelbottom=False,
 )
 
-for ax in (ax1, ax2):
+for ax, label in zip((ax1, ax2), labels):
     ax.set_aspect("equal")
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
     ax.set_ylabel("northing [m]")
+    ax.yaxis.offsetText.set_x(-0.2)
+    ax.annotate(
+        label,
+        xy=(0.04, 0.94),
+        xycoords="axes fraction",
+        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
+    )
 
-plt.tight_layout(h_pad=0)
+ax1.set_title("Ground survey points", pad=3)
+ax2.set_title("Observed gravity acceleration", pad=3)
+
+
+plt.tight_layout(h_pad=0.2)
 plt.savefig(
     os.path.join("..", "manuscript", "figs", "ground-survey.pdf"),
     bbox_inches="tight",
@@ -265,9 +290,12 @@ plt.style.use(os.path.join("..", "matplotlib.rc"))
 
 # Define useful parameters
 width = 3.33
-figsize = (width, width * 1.5)
-cbar_shrink = 0.9
+figsize = (width, width * 1.7)
+cbar_shrink = 0.95
+cbar_pad = 0.03
+cbar_aspect = 30
 size = 2
+labels = "a b".split()
 
 # Initialize figure and axes
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
@@ -293,12 +321,22 @@ ax1.tick_params(
     axis="x", which="both", bottom=False, top=False, labelbottom=False,
 )
 
-for ax in (ax1, ax2):
+for ax, label in zip((ax1, ax2), labels):
     ax.set_aspect("equal")
     ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
     ax.set_ylabel("northing [m]")
+    ax.yaxis.offsetText.set_x(-0.2)
+    ax.annotate(
+        label,
+        xy=(0.04, 0.94),
+        xycoords="axes fraction",
+        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
+    )
 
-plt.tight_layout(h_pad=0)
+ax1.set_title("Airborne survey points", pad=3)
+ax2.set_title("Observed gravity acceleration", pad=3)
+
+plt.tight_layout(h_pad=0.2)
 plt.savefig(
     os.path.join("..", "manuscript", "figs", "airborne-survey.pdf"),
     bbox_inches="tight",
