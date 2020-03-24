@@ -411,6 +411,7 @@ ax.set_ylabel(ax.get_ylabel() + " [m]")
 clb = plt.colorbar(tmp, ax=ax, shrink=1, orientation="vertical", pad=0.03, aspect=30)
 clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
 
+ax.set_title("Target grid")
 plt.tight_layout()
 plt.savefig(
     os.path.join("..", "manuscript", "figs", "target-grid.pdf"),
