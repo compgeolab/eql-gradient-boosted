@@ -228,7 +228,7 @@ and $\nabla_\mathbf{p}$ symbolize the Nabla operator applied on the coordinates
 $\mathbf{p}$.
 
 The fundamental solution of any harmonic field can be obtained as follows
-\citep{blakely1995}:
+\citep[p.~37]{blakely1995}:
 
 \begin{equation}
     \psi(\mathbf{p}, \mathbf{q})
@@ -318,15 +318,13 @@ and~\ref{eq:linear-problem} is equivalent to performing an inversion and thus
 solving an ill-posed problem by nature due to the non-uniqueness and the
 instability of the possible solutions.
 Therefore is usually needed to add regularization functions in order to obtain
-stable solutions \citep{oliveira2013}.
-Moreover there's no limitation on the amount of point sources.
-The number of sources can either be equal, less or more than the number of
-observation points, leading to well, under or overdetermined linear problem,
-respectively.
+stable solutions
+(\citealp[p.~52]{menke1989}; \citealp{cooper2000}; \citealp{oliveira2013}).
+Worth noting that the number of sources can either be equal, greater or lower
+than the number of observation points, leading to well, under or overdetermined
+linear problem, respectively.
 
 % Add other possible applications to the EQL like RTP or upward continuation.
-
-% EQL implementation on Harmonica.
 
 \subsection{Equivalent sources implementation}
 
@@ -531,6 +529,14 @@ grid} with the same spacing.
 Moreover, the sources are only located beneath populated blocks, so sources
 will be concentrated on regions where data has been gathered and no anisotropic
 distribution of sources will be generated.
+
+% Worth noting that the \emph{source below data} generates a number of sources
+% equal to the data points, obtaining a well determined linear problem.
+% The \emph{block averaged sources} layouts can generate a number of point
+% sources equal or lower than the number of data points, well or
+% overdetermined.
+% The \emph{grid sources} is the only layout that can generate either a well,
+% over or under determined problem.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/block-averaged-sources-schematics.pdf}
