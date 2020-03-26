@@ -201,23 +201,8 @@ def test_grid_sources(coordinates):
     """
     depth = 100
     spacing = 4000
-    # Check behaviour with zero padding
-    pad = 0
-    points = grid_sources(coordinates, spacing=spacing, depth=depth, pad=pad)
+    points = grid_sources(coordinates, spacing=spacing, depth=depth)
     grid = vd.grid_coordinates(vd.get_region(coordinates), spacing=spacing)
-    npt.assert_allclose(points[0], grid[0])
-    npt.assert_allclose(points[1], grid[1])
-    npt.assert_allclose(points[2], coordinates[2].min() - depth)
-    # Check behaviour with non zero padding
-    pad = 0.1
-    points = grid_sources(coordinates, spacing=spacing, depth=depth, pad=pad)
-    region = vd.get_region(coordinates)
-    w = region[0] - (region[1] - region[0]) * pad
-    e = region[1] + (region[1] - region[0]) * pad
-    s = region[2] - (region[3] - region[2]) * pad
-    n = region[3] + (region[3] - region[2]) * pad
-    region = (w, e, s, n)
-    grid = vd.grid_coordinates(region, spacing=spacing)
     npt.assert_allclose(points[0], grid[0])
     npt.assert_allclose(points[1], grid[1])
     npt.assert_allclose(points[2], coordinates[2].min() - depth)

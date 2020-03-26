@@ -6,7 +6,6 @@ from verde import (
     median_distance,
     BlockReduce,
     get_region,
-    pad_region,
     grid_coordinates,
 )
 
@@ -125,7 +124,7 @@ def block_averaged_sources(coordinates, spacing, depth_type, **kwargs):
     return points
 
 
-def grid_sources(coordinates, spacing=None, depth=None, pad=None, **kwargs):
+def grid_sources(coordinates, spacing=None, depth=None, **kwargs):
     """
     Create a regular grid of point sources
 
@@ -143,11 +142,6 @@ def grid_sources(coordinates, spacing=None, depth=None, pad=None, **kwargs):
     depth : float
         Depth shift used to compute the constant depth at which point sources will be
         located.
-    pad : float or None
-        Ratio of region padding. Controls the amount of padding that will be added to
-        the coordinates region. It's useful to remove boundary artifacts. The pad will
-        be computed as the product of the ``pad`` and the dimension of the region along
-        each direction.
 
     Returns
     -------
@@ -155,12 +149,8 @@ def grid_sources(coordinates, spacing=None, depth=None, pad=None, **kwargs):
         Tuple containing the coordinates of the source points in the following order:
         (``easting``, ``northing``, ``upward``).
     """
-    # Generate grid sources (with or without padding)
+    # Generate grid sources
     region = get_region(coordinates)
-    if pad:
-        w, e, s, n = region[:]
-        padding = (pad * (n - s), pad * (e - w))
-        region = pad_region(region, padding)
     easting, northing = grid_coordinates(region=region, spacing=spacing)
     upward = np.full_like(easting, coordinates[2].min()) - depth
     return easting, northing, upward
