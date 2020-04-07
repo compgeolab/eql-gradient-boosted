@@ -40,12 +40,12 @@
 \newcommand{\AuthorAffil}{
     {\large
         S.R. Soler$^{1,2}$,
-        L. Uieda$^{3}$
+        Leonardo Uieda$^{3}$
     }
     \\[0.4cm]
     {\small $^{1}$CONICET, Argentina (santiago.r.soler@gmail.com)} \\
     {\small $^{2}$Instituto Geofísico Sismológico Volponi, UNSJ, Argentina} \\
-    {\small $^{3}$University of Liverpool} \\
+    {\small $^{3}$Department of Earth, Ocean and Ecological Sciences, School of Environmental Sciences, University of Liverpool, UK} \\
 
 }
 \newcommand{\DOI}{
@@ -112,7 +112,7 @@ Processing of the data often involves interpolation onto a regular grid at
 constant height, both to improve visualization for interpretation purposes as
 well as to prepare the data for further processing and modelling (e.g.,
 reduction-to-the-pole, derivative calculations, upward continuation, Euler
-deconvolution),
+deconvolution).
 
 Several methods exist in the literature for interpolation in two dimensions,
 for example continuous curvature splines in tension \citep{smith1990},
@@ -120,37 +120,57 @@ biharmonic (thin-plate) splines \citep{sandwell1987}, and kriging.
 These general-purpose methods have limitations when it comes to interpolating
 potential field data:
 (i) they are not able to take into account the variable height of the
-observation points;
+observation points and
 (ii) the interpolating functions are not necessarily harmonic functions, which
 is the underlying assumption behind many processing techniques
 (e.g., upward continuation and vertical derivatives).
 
-One of the most widely used methods for interpolating gravity and magnetic data
-is the equivalent sources technique (also known as equivalent layer, radial
-basis functions or Green's functions interpolation).
-It consists in estimating a source distribution that produces the same field as
-the one measured and using this estimate to predict new values.
-\citet{dampney1969} was the first to introduce the equivalent source technique.
+A widely used method for interpolating gravity and magnetic data
+is the equivalent source technique (also known as equivalent layer, radial
+basis functions, or Green's functions interpolation), first introduced by
+\citet{dampney1969}.
+It consists in fitting a model of point sources to the data and using this
+model to predict new data values.
+Besides interpolation, equivalent sources have been used for
+reduction-to-the-pole of magnetic data
+\citep{guspi2009, silva1986, emilia1973, nakatsuka2006}, upward
+continuation (CITATION NEEDED), and merging datasets (CITATION NEEDED).
 
-The EQL can be used for interpolation of potential field data
-\citep{cordell1992, cooper2000}.
-It has been also used for applying a reduction to the pole to magnetic data
-\citep{guspi2009, silva1986, emilia1973, nakatsuka2006} or an upward
-continuation (cite).
+Many variants of the equivalent source technique have been proposed.
+The key factors that vary between them are: (i) the type of source, (ii)
+the location of the sources, and (iii) the solution strategy.
+The type of source is most commonly a point mass (for gravity) or dipole (for
+magnetics) (CITATION NEEDED).
+However, an inverse distance function $1/r$ (CITATION NEEDED),
+right-rectangular prisms (CITATION NEEDED:
+one by the simpeg group and one for magnetic data integration),
+and tesseroids \citep{bouman2016} have also been used successfully.
+The sources are often distributed on a regular grid at a constant depth (e.g.,
+CITATION NEEDED) or placed beneath each data point (e.g., CITATION NEEDED).
+The model is usually estimated through damped least-squares, which imposes a
+heavy computational load when the number of data points is large (e.g.,
+airborne and satellite surveys).
+Other solution strategies have been proposed to attempt to reduce this load and
+make the use of equivalent sources feasible.
+\citet{mendonca1994} blablabla.
+\citet{leao1989} blablabla.
+\citet{li2010} blablabla.
+\citet{barnes2011} blablabla.
+\citet{oliveira2013} blablabla.
+\citet{siqueira2017} blablabla.
+\citet{jirigalatu2019} blablabla.
+Many other techniques have been proposed, more so than could be included here.
 
-The most widely used source distribution is a set of point sources.
-The potential field of point sources is easy to compute.
-\citet{barnes2011} make use of prisms.
-How to locate these point masses?
-Existing approaches:
-(i) one point source beneath each observation point at a constant depth (cite),
-(ii) one point source beneath each observation point at a depth proportional to
-the distance to its nearest data points (cite),
-(iii) a regular grid of sources \citep{barnes2011}.
-
-We want to find out which distribution of sources produces the best
-interpolations.
-
+In the present study, we will evaluate the impact of different source
+distributions, both horizontally and vertically, on the performance of
+equivalent source interpolation.
+Vertically, the sources can be located: (i) at a constant depth, (ii) at a
+depth proportional to the height of observations, and (iii) at a depth
+proportional to the median distance to adjacent data points.
+The horizontal source distribution strategies are: (i) regular grid, (ii)
+beneath data point, (iii) on the median location of data points inside spatial
+blocks. The latter is a novel method while the others have been used in some
+form in the past.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
