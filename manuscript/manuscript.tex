@@ -96,31 +96,34 @@
 
 \section{Introduction}
 
-Potential field data, like gravity and magnetics, are useful for geophysics
-exploration.
-The potential field data can be obtained from ground, airborne or satellite
-measurements.
-On ground surveys the data is often gathered on scattered points or following
-irregular paths, usually at the topographic surface.
-The data points have different heights.
-On airborne surveys the data is gathered on flight paths, producing a large
-number of data points concentrated along almost straight lines.
-The height of measurement could change because of the vertical movement of the
-airship.
-To improve visualization of the data for interpretation and to prepare the data
-for processing through different methods (RTP, upward continuation, Euler
-deconvolution, etc), the data needs to be interpolated on a regular grid of
-data points.
+Measurements of anomalies in potential fields, like gravity disturbances and
+total-field magnetic anomalies, are widely used in geophysical exploration for
+their relatively low cost of acquisition.
+These data can be surveyed using ground, airborne, shipborne, or satellite
+systems.
+In ground surveys, the data are often gathered following
+irregular paths or networks along the surface of the terrain, leading to highly
+variable elevations in mountainous regions.
+On airborne surveys, the data are gathered along flight lines, producing a
+large number of measurements concentrated along almost straight lines.
+In surveys that drape the topography, the height of measurement could change
+dramatically because of the vertical movement of the aircraft.
+Processing of the data often involves interpolation onto a regular grid at
+constant height, both to improve visualization for interpretation purposes as
+well as to prepare the data for further processing and modelling (e.g.,
+reduction-to-the-pole, derivative calculations, upward continuation, Euler
+deconvolution),
 
-There are several methods for interpolating 2D data like minimum curvature,
-biharmonic Splines or Kriging.
-These all-purpose methods show a few problems when applied to potential field
-data.
-(i) They don't take into account the height of the observation points.
-Potential field data has a strong dependency on measurement height.
-(ii) The predicted grid data is not necessary an Harmonic function.
-(iii) They don't usually take into account the anisotropy of the observation
-points in ground and airborne surveys.
+Several methods exist in the literature for interpolation in two dimensions,
+for example continuous curvature splines in tension \citep{smith1990},
+biharmonic (thin-plate) splines \citep{sandwell1987}, and kriging.
+These general-purpose methods have limitations when it comes to interpolating
+potential field data:
+(i) they are not able to take into account the variable height of the
+observation points;
+(ii) the interpolating functions are not necessarily harmonic functions, which
+is the underlying assumption behind many processing techniques
+(e.g., upward continuation and vertical derivatives).
 
 One of the most widely used methods for interpolating gravity and magnetic data
 is the equivalent sources technique (also known as equivalent layer, radial
