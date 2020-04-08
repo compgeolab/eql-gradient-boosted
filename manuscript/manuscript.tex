@@ -39,7 +39,7 @@
 }
 \newcommand{\AuthorAffil}{
     {\large
-        S.R. Soler$^{1,2}$,
+        Santiago R. Soler$^{1,2}$,
         Leonardo Uieda$^{3}$
     }
     \\[0.4cm]
@@ -106,8 +106,7 @@ irregular paths or networks along the surface of the terrain, leading to highly
 variable elevations in mountainous regions.
 On airborne surveys, the data are gathered along flight lines, producing a
 large number of measurements concentrated along almost straight lines.
-In surveys that drape the topography, the height of measurement could change
-dramatically because of the vertical movement of the aircraft.
+Measurement height can also change because of the vertical movement of the aircraft.
 Processing of the data often involves interpolation onto a regular grid at
 constant height, both to improve visualization for interpretation purposes as
 well as to prepare the data for further processing and modelling (e.g.,
@@ -116,7 +115,7 @@ deconvolution).
 
 Several methods exist in the literature for interpolation in two dimensions,
 for example continuous curvature splines in tension \citep{smith1990},
-biharmonic (thin-plate) splines \citep{sandwell1987}, and kriging.
+biharmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
 These general-purpose methods have limitations when it comes to interpolating
 potential field data:
 (i) they are not able to take into account the variable height of the
@@ -129,7 +128,7 @@ A widely used method for interpolating gravity and magnetic data
 is the equivalent source technique (also known as equivalent layer, radial
 basis functions, or Green's functions interpolation), first introduced by
 \citet{dampney1969}.
-It consists in fitting a model of point sources to the data and using this
+It consists in fitting a model of elementary sources to the data and using this
 model to predict new data values.
 Besides interpolation, equivalent sources have been used for
 reduction-to-the-pole of magnetic data
@@ -142,11 +141,12 @@ the location of the sources, and (iii) the solution strategy.
 The type of source is most commonly a point mass (for gravity) or dipole (for
 magnetics) (CITATION NEEDED).
 However, an inverse distance function $1/r$ (CITATION NEEDED),
-right-rectangular prisms (CITATION NEEDED:
+right-rectangular prisms \citep{barnes2011} (CITATION NEEDED:
 one by the simpeg group and one for magnetic data integration),
 and tesseroids \citep{bouman2016} have also been used successfully.
-The sources are often distributed on a regular grid at a constant depth (e.g.,
-CITATION NEEDED) or placed beneath each data point (e.g., CITATION NEEDED).
+The sources are often distributed on a regular grid at a constant depth
+\citep[e.g.,~]{barnes2011,oliveira2013}
+(e.g., CITATION NEEDED) or placed beneath each data point (e.g., CITATION NEEDED).
 The model is usually estimated through damped least-squares, which imposes a
 heavy computational load when the number of data points is large (e.g.,
 airborne and satellite surveys).
