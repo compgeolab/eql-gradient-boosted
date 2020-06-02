@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.1
+#       jupytext_version: 1.4.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -50,9 +50,9 @@ cbar_kwargs = dict(shrink=0.82, pad=0.04)
 cbar_label_kwargs = dict(label="mGal", rotation=0, labelpad=-25, y=1.06)
 # -
 
-dirname = "egu_figures"
-if not os.path.isdir("egu_figures"):
-    os.makedirs(dirname)
+egu2020 = os.path.join("..", "egu2020")
+if not os.path.isdir(egu2020):
+    os.makedirs(egu2020)
 
 ground_survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
 airborne_survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
@@ -77,29 +77,33 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "target_grid.svg"))
+plt.savefig(os.path.join(egu2020, "target_grid.svg"))
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
-tmp = ax.scatter(ground_survey.easting, ground_survey.northing, c=ground_survey.g_z, s=10)
+tmp = ax.scatter(
+    ground_survey.easting, ground_survey.northing, c=ground_survey.g_z, s=10
+)
 ax.set_aspect("equal")
 ax.set_yticks([])
 ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "ground_survey.svg"))
+plt.savefig(os.path.join(egu2020, "ground_survey.svg"))
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
-tmp = ax.scatter(airborne_survey.easting, airborne_survey.northing, c=airborne_survey.g_z, s=10)
+tmp = ax.scatter(
+    airborne_survey.easting, airborne_survey.northing, c=airborne_survey.g_z, s=10
+)
 ax.set_aspect("equal")
 ax.set_yticks([])
 ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "airborne_survey.svg"))
+plt.savefig(os.path.join(egu2020, "airborne_survey.svg"))
 plt.show()
 
 # +
@@ -126,7 +130,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "ground_prediction.svg"))
+plt.savefig(os.path.join(egu2020, "ground_prediction.svg"))
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -145,7 +149,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "ground_difference.svg"))
+plt.savefig(os.path.join(egu2020, "ground_difference.svg"))
 plt.show()
 
 # +
@@ -164,7 +168,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "airborne_prediction.svg"))
+plt.savefig(os.path.join(egu2020, "airborne_prediction.svg"))
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -183,5 +187,5 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(dirname, "airborne_difference.svg"))
+plt.savefig(os.path.join(egu2020, "airborne_difference.svg"))
 plt.show()
