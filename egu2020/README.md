@@ -6,3 +6,5 @@ presentation
 
 The slides are freely available for download though
 [this link](https://doi.org/10.6084/M9.FIGSHARE.12217973).
+
+The figures have been created by running `notebooks/egu2020_figures.py`.
