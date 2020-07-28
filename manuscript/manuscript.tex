@@ -144,13 +144,16 @@ attempting to obtain faster or more accurate solutions.
 The key factors that vary between them are: (i) the type of source, (ii)
 the location of the sources, and (iii) the solution strategy.
 The type of source is most commonly a point mass (for gravity) or dipole (for
-magnetics) \citep[e.g.,~]{vonfrese1981, silva1986, mendonca1994, siqueira2017}.
-However, an inverse distance function $1/r$ \citep{cordell1992},
+magnetics) \citep[e.g.,~][]{vonfrese1981, silva1986, mendonca1994, siqueira2017}.
+However,
+point sources with a simple inverse distance function instead of gravity or
+magnetic fields \citep{cordell1992},
 right-rectangular prisms \citep[e.g.,][]{barnes2011, jirigalatu2019, li2020},
-and tesseroids \citep{bouman2016} have also been used successfully.
+and tesseroids \citep{bouman2016}
+have also been used successfully.
 The sources are often distributed on a regular grid at a constant depth
-\citep[e.g.,~]{leao1989, barnes2011, oliveira2013}
-or placed beneath each data point \citep[e.g.,~]{cordell1992, siqueira2017}.
+\citep[e.g.,~][]{leao1989, barnes2011, oliveira2013}
+or placed beneath each data point \citep[e.g.,~][]{cordell1992, siqueira2017}.
 The model is usually estimated through damped least-squares, which imposes a
 heavy computational load when the number of data points is large (e.g.,
 airborne and satellite surveys).
