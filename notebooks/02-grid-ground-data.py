@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.5.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -174,14 +174,9 @@ survey
 target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
 target
 
-# Define coordinates and grid arrays
+# Define coordiantes tuple with the location of the survey points
 
-# +
 coordinates = (survey.easting.values, survey.northing.values, survey.height.values)
-
-grid = np.meshgrid(target.easting, target.northing)
-grid.extend(np.full_like(grid[0], target.height))
-# -
 
 # ## Grid data using different source layouts
 #
@@ -201,8 +196,7 @@ for layout in parameters_combined:
         print("Processing: {} with {}".format(layout, depth_type))
         best_prediction, params_and_scores = get_best_prediction(
             coordinates,
-            getattr(survey, field),
-            grid,
+            getattr(survey, field).values,
             target,
             layout,
             parameters_combined[layout][depth_type],
@@ -259,11 +253,6 @@ for dataset in best_predictions:
 # ## Plot and compare all best predictions
 
 # +
-# Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
-
-# We will use the same boundary value for each plot in order to
-# show them with the same color scale.
 vmax = vd.maxabs(
     *list(
         target - dataset[depth_type]
@@ -273,36 +262,24 @@ vmax = vd.maxabs(
 )
 
 # Initialize figure
-fig, axes = plt.subplots(
-    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
-)
+fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(12, 12), sharex=True, sharey=True)
 
-# Plot the differences between the target and the best prediction for each layout
 for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
     for j, (ax, depth_type) in enumerate(zip(ax_row, dataset)):
         prediction = dataset[depth_type]
         difference = target - prediction
         tmp = difference.plot.pcolormesh(
-            ax=ax,
-            vmin=-vmax,
-            vmax=vmax,
-            cmap="seismic",
-            add_colorbar=False,
-            rasterized=True,
+            ax=ax, vmin=-vmax, vmax=vmax, cmap="seismic", add_colorbar=False,
         )
         ax.scatter(survey.easting, survey.northing, s=0.3, alpha=0.2, color="k")
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        ax.yaxis.offsetText.set_x(-0.13)
-        ax.set_xlabel(ax.get_xlabel() + " [m]")
-        ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with r2 score and number of points
         ax.set_title(
-            r"R$^2$: {:.3f}, \#sources: {}".format(
+            r"R$^2$: {:.3f}, #sources: {}".format(
                 prediction.score, prediction.n_points
             ),
-            fontsize="small",
             horizontalalignment="center",
         )
 
@@ -311,7 +288,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 0.5,
                 1.16,
-                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                depth_type.replace("_", " ").title(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -322,7 +299,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 -0.38,
                 0.5,
-                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                dataset.layout.replace("_", " ").title(),
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
@@ -343,13 +320,9 @@ axes[-1][-2].set_visible(False)
 cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
-plt.tight_layout()
-plt.savefig(
-    os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"), dpi=300
-)
+# plt.tight_layout()
 plt.show()
 # -
-
 
 # ## Save best predictions parameters
 #

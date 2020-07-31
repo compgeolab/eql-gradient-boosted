@@ -2,6 +2,7 @@ import itertools
 import numpy as np
 import pandas as pd
 import xarray as xr
+import verde as vd
 import harmonica as hm
 from sklearn.metrics import r2_score
 
@@ -20,7 +21,7 @@ def combine_parameters(**kwargs):
     return parameters
 
 
-def grid_data(coordinates, data, grid, layout, parameters):
+def grid_data(coordinates, data, region, shape, height, layout, parameters):
     """
     Interpolate data on a regular grid using EQL
 
@@ -42,41 +43,48 @@ def grid_data(coordinates, data, grid, layout, parameters):
     # Fit the gridder giving the survey data
     eql.fit(coordinates, data)
     # Predict the field on the regular grid
-    prediction = eql.predict(grid)
-    return prediction, points
+    eql.extra_coords_name = "upward"
+    grid = eql.grid(region=region, shape=shape, extra_coords=height)
+    # Transform the xr.Dataset to xr.DataArray
+    grid = grid.scalars
+    # Append parameters to the attrs
+    grid.attrs.update(parameters)
+    grid.attrs["layout"] = layout
+    return grid, points
 
 
-def get_best_prediction(coordinates, data, grid, target, layout, parameters_set):
+def get_best_prediction(coordinates, data, target, layout, parameters_set):
     """
     Score interpolations with different parameters and get the best prediction
 
     Performs several predictions using the same source layout (but with different
     parameters) and score each of them agains the target grid.
     """
+    # Get shape, region and height of the target grid
+    region = vd.get_region((target.easting.values, target.northing.values))
+    shape = target.shape
+    height = target.height
+    # Score the predictions
     scores = []
     for parameters in parameters_set:
-        prediction, _ = grid_data(coordinates, data, grid, layout, parameters)
+        prediction, _ = grid_data(
+            coordinates, data, region, shape, height, layout, parameters
+        )
         # Score the prediction against target data
-        scores.append(r2_score(target, prediction))
+        scores.append(r2_score(target.values, prediction.values))
     # Get best prediction
     best = np.nanargmax(scores)
     best_parameters = parameters_set[best]
     best_score = scores[best]
     best_prediction, points = grid_data(
-        coordinates, data, grid, layout, best_parameters
+        coordinates, data, region, shape, height, layout, best_parameters
     )
     # Convert parameters and scores to a pandas.DataFrame
     parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
     parameters_and_scores["score"] = scores
-    # Convert prediction to a xarray.DataArray
-    da = target.copy()
-    da.values = best_prediction
-    da.attrs["layout"] = layout
-    da.attrs["score"] = best_score
-    da.attrs["n_points"] = points[0].size
-    for key, value in best_parameters.items():
-        da.attrs[key] = value
-    best_prediction = da
+    # Add score and number of sources to the grid attributes
+    best_prediction.attrs["score"] = best_score
+    best_prediction.attrs["n_points"] = points[0].size
     return best_prediction, parameters_and_scores
 
 
