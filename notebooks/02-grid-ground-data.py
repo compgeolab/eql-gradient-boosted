@@ -187,6 +187,8 @@ coordinates = (survey.easting.values, survey.northing.values, survey.height.valu
 # We will finally compare the performance of each source layout based on the best
 # prediction produce by each of them.
 
+# ## Score each interpolation
+
 # +
 scores = {layout: {} for layout in layouts}
 best_predictions = []
