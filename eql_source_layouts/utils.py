@@ -20,16 +20,6 @@ def combine_parameters(**kwargs):
     return parameters
 
 
-def grid_to_dataarray(prediction, grid, **kwargs):
-    """
-    Convert a 2D grid to a xarray.DataArray
-    """
-    dims = ("northing", "easting")
-    coords = {"northing": grid[1][:, 0], "easting": grid[0][0, :]}
-    da = xr.DataArray(prediction, dims=dims, coords=coords, **kwargs)
-    return da
-
-
 def grid_data(coordinates, data, grid, layout, parameters):
     """
     Interpolate data on a regular grid using EQL
