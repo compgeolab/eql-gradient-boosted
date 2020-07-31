@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.4
+#       jupytext_version: 1.5.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -22,6 +22,7 @@ from IPython.display import display
 import os
 import pyproj
 import numpy as np
+import xarray as xr
 import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
@@ -29,7 +30,6 @@ from matplotlib.collections import PatchCollection
 
 from eql_source_layouts import (
     synthetic_model,
-    grid_to_dataarray,
     latex_variables,
 )
 
@@ -159,76 +159,25 @@ survey[field] = hm.prism_gravity(
 ) + np.random.normal(scale=noise_std, size=survey.easting.size)
 display(survey)
 
+# Plot survey points and observed gravity field
+
 # +
-# Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+size = 6
 
-# Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
+plt.scatter(survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size)
+plt.colorbar(label="m")
+plt.gca().set_aspect("equal")
+plt.xlabel("easting")
+plt.ylabel("northing")
+plt.title("Ground survey points")
+plt.show()
 
-# Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
-
-# Plot survey points
-tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
-)
-clb = plt.colorbar(
-    tmp,
-    ax=ax1,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
-)
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
-
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp,
-    ax=ax2,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
-)
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
-
-
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x", which="both", bottom=False, top=False, labelbottom=False,
-)
-
-for ax, label in zip((ax1, ax2), labels):
-    ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
-    ax.annotate(
-        label,
-        xy=(0.04, 0.94),
-        xycoords="axes fraction",
-        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
-    )
-
-ax1.set_title("Ground survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
-
-
-plt.tight_layout(h_pad=0.2)
-plt.savefig(
-    os.path.join("..", "manuscript", "figs", "ground-survey.pdf"),
-    bbox_inches="tight",
-    dpi=300,
-)
+plt.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
+plt.colorbar(label="mGal")
+plt.gca().set_aspect("equal")
+plt.xlabel("easting")
+plt.ylabel("northing")
+plt.title("Observed gravity acceleration")
 plt.show()
 # -
 
@@ -284,64 +233,25 @@ survey[field] = hm.prism_gravity(
 ) + np.random.normal(scale=noise_std, size=survey.easting.size)
 display(survey)
 
+# Plot survey points and observed gravity field
+
 # +
-# Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+size = 6
 
-# Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
+plt.scatter(survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size)
+plt.colorbar(label="m")
+plt.gca().set_aspect("equal")
+plt.xlabel("easting")
+plt.ylabel("northing")
+plt.title("Airborne survey points")
+plt.show()
 
-# Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
-
-# Plot survey points
-tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
-)
-clb = plt.colorbar(
-    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
-
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
-
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x", which="both", bottom=False, top=False, labelbottom=False,
-)
-
-for ax, label in zip((ax1, ax2), labels):
-    ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
-    ax.annotate(
-        label,
-        xy=(0.04, 0.94),
-        xycoords="axes fraction",
-        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
-    )
-
-ax1.set_title("Airborne survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
-
-plt.tight_layout(h_pad=0.2)
-plt.savefig(
-    os.path.join("..", "manuscript", "figs", "airborne-survey.pdf"),
-    bbox_inches="tight",
-    dpi=300,
-)
+plt.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
+plt.colorbar(label="mGal")
+plt.gca().set_aspect("equal")
+plt.xlabel("easting")
+plt.ylabel("northing")
+plt.title("Observed gravity acceleration")
 plt.show()
 # -
 
@@ -375,8 +285,17 @@ grid = vd.grid_coordinates(
     extra_coords=target_grid_height,
 )
 
+# Compute gravity field on the grid
+
 target = hm.prism_gravity(grid, model["prisms"], model["densities"], field=field)
-target = grid_to_dataarray(target, grid, attrs={"height": target_grid_height})
+
+# Create a xarray.DataArray for the grid
+
+dims = ("northing", "easting")
+coords = {"northing": grid[1][:, 0], "easting": grid[0][0, :]}
+target = xr.DataArray(
+    target, dims=dims, coords=coords, attrs={"height": target_grid_height}
+)
 
 # Save target grid to disk for future usage
 
@@ -393,33 +312,11 @@ latex_lines.extend(
     ]
 )
 
-# +
-# Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+# Plot target grid
 
-width = 3.33
-figsize = (width, width * 0.85)
-fig, ax = plt.subplots(figsize=figsize)
-
-tmp = target.plot.pcolormesh(
-    ax=ax, add_colorbar=False, cmap="viridis", center=False, rasterized=True
-)
-ax.set_aspect("equal")
-ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-ax.set_xlabel(ax.get_xlabel() + " [m]")
-ax.set_ylabel(ax.get_ylabel() + " [m]")
-clb = plt.colorbar(tmp, ax=ax, shrink=1, orientation="vertical", pad=0.03, aspect=30)
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
-
-ax.set_title("Target grid")
-plt.tight_layout()
-plt.savefig(
-    os.path.join("..", "manuscript", "figs", "target-grid.pdf"),
-    bbox_inches="tight",
-    dpi=300,
-)
-plt.show()
-# -
+target.plot(center=False, cbar_kwargs={"label": "mGal"})
+plt.gca().set_aspect("equal")
+plt.title("Target grid")
 
 # ## Dump LaTeX variables to file
 
