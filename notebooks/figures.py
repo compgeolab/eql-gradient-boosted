@@ -304,4 +304,104 @@ plt.savefig(
 plt.show()
 # -
 
+# ## Gridding airborne survey
 
+# +
+layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+field_units = "mGal"
+
+best_predictions = []
+for layout in layouts:
+    best_predictions.append(
+        xr.open_dataset(
+            os.path.join(airborne_results_dir, "best_predictions-{}.nc".format(layout))
+        )
+    )
+
+# +
+# We will use the same boundary value for each plot in order to
+# show them with the same color scale.
+vmax = vd.maxabs(
+    *list(
+        target - dataset[depth_type]
+        for dataset in best_predictions
+        for depth_type in dataset
+    )
+)
+
+# Initialize figure
+fig, axes = plt.subplots(
+    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+)
+
+# Plot the differences between the target and the best prediction for each layout
+for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
+    for j, (ax, depth_type) in enumerate(zip(ax_row, dataset)):
+        prediction = dataset[depth_type]
+        difference = target - prediction
+        tmp = difference.plot.pcolormesh(
+            ax=ax,
+            vmin=-vmax,
+            vmax=vmax,
+            cmap="seismic",
+            add_colorbar=False,
+            rasterized=True,
+        )
+        ax.scatter(survey.easting, survey.northing, s=0.1, alpha=0.2, color="k")
+        ax.set_aspect("equal")
+        # Set scientific notation on axis labels (and change offset text position)
+        ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
+        ax.yaxis.offsetText.set_x(-0.13)
+        ax.set_xlabel(ax.get_xlabel() + " [m]")
+        ax.set_ylabel(ax.get_ylabel() + " [m]")
+        # Set title with r2 score and number of points
+        ax.set_title(
+            r"R$^2$: {:.3f}, \#sources: {}".format(
+                prediction.score, prediction.n_points
+            ),
+            fontsize="small",
+            horizontalalignment="center",
+        )
+
+        # Annotate the columns of the figure
+        if i == 0:
+            ax.text(
+                0.5,
+                1.16,
+                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                fontsize="large",
+                fontweight="bold",
+                horizontalalignment="center",
+                transform=ax.transAxes,
+            )
+        # Annotate the rows of the figure
+        if j == 0:
+            ax.text(
+                -0.38,
+                0.5,
+                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                fontsize="large",
+                fontweight="bold",
+                verticalalignment="center",
+                rotation="vertical",
+                transform=ax.transAxes,
+            )
+        # Remove xlabels and ylabels from inner axes
+        if i != 2:
+            ax.set_xlabel("")
+        if j != 0:
+            ax.set_ylabel("")
+
+# Hide the last two axes because they are not used
+axes[-1][-1].set_visible(False)
+axes[-1][-2].set_visible(False)
+
+# Add colorbar
+cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
+fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
+
+plt.tight_layout()
+plt.savefig(
+    os.path.join("..", "manuscript", "figs", "airborne_survey_differences.pdf"), dpi=300
+)
+plt.show()
