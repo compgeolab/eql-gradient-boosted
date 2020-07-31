@@ -16,6 +16,7 @@ from .utils import (
     grid_data,
     predictions_to_datasets,
 )
+from .eql_iterative import EQLIterative
 
 # Get the version number through versioneer
 __version__ = get_versions()["version"]
