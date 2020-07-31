@@ -6,7 +6,6 @@ import verde as vd
 import verde.base as vdb
 from sklearn.utils import shuffle
 from harmonica import EQLHarmonic
-from sklearn.metrics import mean_squared_error
 
 
 class EQLIterative(EQLHarmonic):
