@@ -148,12 +148,14 @@ class EQLIterative(EQLHarmonic):
         """
         # Create rolling windows
         point_windows, data_windows = self._create_rolling_windows(coordinates)
+        # Get number of windows
+        n_windows = len(point_windows)
         # Initialize errors array
-        self.errors_ = np.zeros(len(point_windows))
+        self.errors_ = np.zeros(n_windows)
         # Iterate over the windows
-        for i, (point_window, data_window) in enumerate(
-            zip(point_windows, data_windows)
-        ):
+        for window_i in range(n_windows):
+            # Get source and data points indices for current window
+            point_window, data_window = point_windows[window_i], data_windows[window_i]
             # Choose source and data points that fall inside the window
             points_chunk = tuple(p[point_window] for p in self.points_)
             coords_chunk = tuple(c[data_window] for c in coordinates)
@@ -178,7 +180,7 @@ class EQLIterative(EQLHarmonic):
             self.coefs_[point_window] += coeffs_chunk
             # Update residue (on every point)
             residue -= np.dot(jacobian, coeffs_chunk)
-            self.errors_[i] = np.sqrt(np.mean(residue ** 2))
+            self.errors_[window_i] = np.sqrt(np.mean(residue ** 2))
 
     def _create_rolling_windows(self, coordinates):
         """
