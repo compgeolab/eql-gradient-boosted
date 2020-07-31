@@ -317,6 +317,7 @@ latex_lines.extend(
 target.plot(center=False, cbar_kwargs={"label": "mGal"})
 plt.gca().set_aspect("equal")
 plt.title("Target grid")
+plt.show()
 
 # ## Dump LaTeX variables to file
 
