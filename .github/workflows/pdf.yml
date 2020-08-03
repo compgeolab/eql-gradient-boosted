@@ -53,8 +53,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: manuscript
+          path: manuscript/_output
 
-      - run: ls -R mauscript
+      - run: ls -R
 
       - name: Publish manuscript to PR branch
         # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
