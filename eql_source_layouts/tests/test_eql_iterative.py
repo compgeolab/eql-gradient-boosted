@@ -13,7 +13,7 @@ from .. import block_averaged_sources
 
 def test_eql_iterative_single_window():
     """
-    Check if EQLIterative works if a single window covers the whole region
+    Check if EQLIterative works with a single window that covers the whole region
     """
     # Define a squared region
     region = (-3e3, -1e3, 5e3, 7e3)
@@ -109,7 +109,9 @@ def test_eql_iterative_warm_start():
     eql.fit(coordinates, data)
     assert not np.allclose(coefs, eql.coefs_)
 
-    # Check if refitting with warm_start=False doesnt' change its coefficients
+    # Check if refitting with warm_start=False doesn't change its coefficients
+    # (need to set random_state, otherwise coefficients might be different due
+    # to another random shuffling of the windows).
     eql = EQLIterative(window_size=500, warm_start=False, random_state=0)
     eql.fit(coordinates, data)
     coefs = eql.coefs_.copy()
@@ -120,6 +122,10 @@ def test_eql_iterative_warm_start():
 def test_eql_iterative_warm_start_new_coords():
     """
     Check if sources are not changed when warm_start is True
+
+    If the gridder is already fitted (and has warm_start=True), the location of
+    the sources must not be modified, even if the new fitting process is
+    carried out with another set of observation points.
     """
     region = (-3e3, -1e3, 5e3, 7e3)
     # Build synthetic point masses
@@ -147,6 +153,11 @@ def test_eql_iterative_warm_start_new_coords():
 def test_eql_iterative_custom_points():
     """
     Check EQLIterative with custom points
+
+    Check if the iterative gridder works well with a custom set of sources.
+    By default, the gridder puts one source beneath each data point, therefore
+    the indices of data and sources windows are identical. When passing
+    a custom set of sources, these indices may differ.
     """
     region = (-3e3, -1e3, 5e3, 7e3)
     # Build synthetic point masses
