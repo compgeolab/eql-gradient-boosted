@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install LaTeX
-        run: sudo apt-get install texlive texlive-xetex
+        run: sudo apt-get install latexmk texlive texlive-xetex
 
       - name: Compile PDF
         run: |
