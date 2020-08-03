@@ -6,7 +6,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{siunitx}
-\usepackage[round]{natbib}
+\usepackage[round,authoryear,sort]{natbib}
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
@@ -39,13 +39,13 @@
 }
 \newcommand{\AuthorAffil}{
     {\large
-        S.R. Soler$^{1,2}$,
-        L. Uieda$^{3}$
+        Santiago R. Soler$^{1,2}$,
+        Leonardo Uieda$^{3}$
     }
     \\[0.4cm]
     {\small $^{1}$CONICET, Argentina (santiago.r.soler@gmail.com)} \\
     {\small $^{2}$Instituto Geofísico Sismológico Volponi, UNSJ, Argentina} \\
-    {\small $^{3}$University of Liverpool} \\
+    {\small $^{3}$Department of Earth, Ocean and Ecological Sciences, School of Environmental Sciences, University of Liverpool, UK} \\
 
 }
 \newcommand{\DOI}{
@@ -96,58 +96,101 @@
 
 \section{Introduction}
 
-Potential field data, like gravity and magnetics, are useful for geophysics
-exploration.
-The potential field data can be obtained from ground, airborne or satellite
-measurements.
-On ground surveys the data is often gathered on scattered points or following
-irregular paths, usually at the topographic surface.
-The data points have different heights.
-On airborne surveys the data is gathered on flight paths, producing a large
-number of data points concentrated along almost straight lines.
-The height of measurement could change because of the vertical movement of the
-airship.
-To improve visualization of the data for interpretation and to prepare the data
-for processing through different methods (RTP, upward continuation, Euler
-deconvolution, etc), the data needs to be interpolated on a regular grid of
-data points.
+Measurements of anomalies in potential fields, like gravity disturbances and
+total-field magnetic anomalies, are widely used in geophysical exploration for
+their relatively low cost of acquisition.
+These data can be surveyed using ground, airborne, shipborne, or satellite
+systems.
+In ground surveys, the data are often gathered following irregular paths or
+networks along the surface of the terrain, leading to highly variable
+elevations in mountainous regions.
+On airborne surveys, the data are gathered along flight lines, producing a
+large number of measurements concentrated along almost straight lines.
+Measurement height can also change because of the vertical movement of the
+aircraft.
+Processing of the data often involves interpolation onto a regular grid at
+constant height, both to improve visualization for interpretation purposes as
+well as to prepare the data for further processing and modelling (e.g.,
+reduction-to-the-pole, derivative calculations, upward continuation, Euler
+deconvolution).
 
-There are several methods for interpolating 2D data like minimum curvature,
-biharmonic Splines or Kriging.
-These all-purpose methods show a few problems when applied to potential field
-data.
-(i) They don't take into account the height of the observation points.
-Potential field data has a strong dependency on measurement height.
-(ii) The predicted grid data is not necessary an Harmonic function.
-(iii) They don't usually take into account the anisotropy of the observation
-points in ground and airborne surveys.
+Several methods exist in the literature for interpolation in two dimensions,
+for example continuous curvature splines in tension \citep{smith1990},
+bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
+These general-purpose methods have limitations when it comes to interpolating
+potential field data:
+(i) they are not able to take into account the variable height of the
+observation points and
+(ii) the interpolating functions are not necessarily harmonic functions, which
+is the underlying assumption behind many processing techniques
+(e.g., upward continuation and vertical derivatives).
 
-One of the most widely used methods for interpolating gravity and magnetic data
-is the equivalent sources technique (also known as equivalent layer, radial
-basis functions or Green's functions interpolation).
-It consists in estimating a source distribution that produces the same field as
-the one measured and using this estimate to predict new values.
-\citet{dampney1969} was the first to introduce the equivalent source technique.
+A widely used method for interpolating gravity and magnetic data
+is the equivalent source technique (also known as equivalent layer, radial
+basis functions, or Green's functions interpolation), first introduced by
+\citet{dampney1969}.
+It consists in fitting a model of elementary sources to the data and using this
+model to predict new data values.
+Besides interpolation, equivalent sources have been used for
+reduction-to-the-pole of magnetic data
+\citep{silva1986, nakatsuka2006, guspi2009}, upward
+continuation \citep{emilia1973, li2010}, joint processing of gravity gradient
+data \citep{barnes2011}, modelling the lithospheric magnetic field
+\citep{kother2015}, recovering the magnetic induction vector from
+total-field magnetic anomalies \citep{li2020}, and more.
 
-The EQL can be used for interpolation of potential field data
-\citep{cordell1992, cooper2000}.
-It has been also used for applying a reduction to the pole to magnetic data
-\citep{guspi2009, silva1986, emilia1973, nakatsuka2006} or an upward
-continuation (cite).
+Many variants of the equivalent source technique have been proposed, often
+attempting to obtain faster or more accurate solutions.
+The key factors that vary between them are: (i) the type of source, (ii)
+the location of the sources, and (iii) the solution strategy.
+The type of source is most commonly a point mass for gravity or dipole for
+magnetics \citep[e.g.,~][]{vonfrese1981, silva1986, mendonca1994, siqueira2017}.
+However, right-rectangular prisms \citep[e.g.,][]{barnes2011, jirigalatu2019,
+li2020} and tesseroids \citep{bouman2016} have also been used successfully.
+In fact, even point sources with a simple inverse distance function, instead of
+actual gravity or magnetic fields, can be used as
+equivalent sources \citep{cordell1992}.
+The sources are often distributed on a regular grid at a constant depth
+\citep[e.g.,~][]{leao1989, barnes2011, oliveira2013}
+or placed beneath each data point \citep[e.g.,~][]{cordell1992, siqueira2017}.
+The model is usually estimated through damped least-squares, which imposes a
+heavy computational load when the number of data points is large (e.g.,
+airborne and satellite surveys).
+To reduce the computational load, \citet{mendonca1994} built the solution
+iteratively by incorporating one data point at a time using the ``equivalent
+data concept''.
+\citet{leao1989} processed the input data using a moving window, only fitting the
+data inside the window and predicting observations at the center of the window.
+\citet{li2010} and \citet{barnes2011} apply different operations to generate a
+sparse representation of the sensitive matrix (respectively, wavelet
+compression and quadtree discretization), which significantly improves the
+speed of the least-squares solution.
+\citet{oliveira2013} parametrized the equivalent layer as a piecewise bivariate
+polynomial function, reducing the number of parameters in the solution.
+\citet{siqueira2017} developed an iterative solution in which the sensitivity
+matrix is transformed into a diagonal matrix with constant terms through the
+``excess mass criterion''.
+\citet{jirigalatu2019} applied the Gauss-FFT method to speed up the forward
+modelling operations and solved the least-squares problem using steepest
+descent to avoid calculating the Hessian matrix and solving linear systems.
+Most existing methods solve under-determined problems, requiring a much larger
+number of equivalent sources than the number of data points.
+Furthermore, many of the optimizations proposed are also complex to implement
+in a computer program, limiting their wider adoption.
 
-The most widely used source distribution is a set of point sources.
-The potential field of point sources is easy to compute.
-\citet{barnes2011} make use of prisms.
-How to locate these point masses?
-Existing approaches:
-(i) one point source beneath each observation point at a constant depth (cite),
-(ii) one point source beneath each observation point at a depth proportional to
-the distance to its nearest data points (cite),
-(iii) a regular grid of sources \citep{barnes2011}.
-
-We want to find out which distribution of sources produces the best
-interpolations.
-
+In the present study,
+we propose a simple method for reducing the number of equivalent sources.
+The survey area is divided into horizontal blocks and one source is assigned
+to each block at the median horizontal location of the data points.
+For airborne surveys, which are oversampled along tracks, this can greatly
+reduce the size of the inverse problem while retaining the quality of
+interpolation.
+We experiment with the existing strategies of assigning sources at
+a uniform depth, a depth relative to the data height, or a depth proportional
+to the median distance to adjacent data points.
+Through tests on synthetic data, we show that non-uniform depths perform better
+at interpolation and that our method is able to achieve the same accuracy as a
+traditional equivalent layer while using a fraction of the number of sources.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -161,7 +204,7 @@ a potential field: multiple physical-property distributions can generate the
 same potential field.
 This represents an obstacle for determining the true shape and
 physical-property distribution that generates any measured potential field.
-Nevertheless this ambiguity can also be exploited for developing preprocessing
+Nevertheless this ambiguity can also be exploited for developing pre-processing
 techniques like interpolating potential field data.
 
 Approximating the continuous distribution by a finite and discrete density
@@ -797,7 +840,7 @@ these parameters.
 For example, locating the sources beneath the data points at constant depth
 needs the definition of the \emph{depth} parameter.
 If the sources are set too close to the data points, the source distribution
-it's very likely to overfit the data: the measured field will be recovered, but
+it's very likely to over-fit the data: the measured field will be recovered, but
 the predictions on unobserved locations will be very inaccurate.
 Another parameter that plays an important role on the predictive capabilities
 of the sources is the \emph{damping}.
@@ -1273,7 +1316,7 @@ All rights reserved.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibliographystyle{plainnat}
+\bibliographystyle{humannat}
 \bibliography{references}
 
 \end{document}
