@@ -137,7 +137,6 @@ class EQLIterative(EQLHarmonic):
                 self.points_ = vdb.n_1d_arrays(self.points, 3)
         # Initialize coefficients and resiude arrays
         if self.warm_start and hasattr(self, "coefs_"):
-            print("Warm start fitting")
             residue = data - self.predict(coordinates)
         else:
             self.coefs_ = np.zeros(self.points_[0].size)
