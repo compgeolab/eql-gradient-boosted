@@ -54,22 +54,19 @@ jobs:
         with:
           name: manuscript
 
+      - run: ls -R mauscript
+
       - name: Publish manuscript to PR branch
         # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
         uses: peaceiris/actions-gh-pages@8a36f3edfc5d1cbae6b09e6f5a7d7b19e5b7a73b
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: manuscript/_output
+          publish_dir: ./manuscript/_output/
           publish_branch: pr-${{ github.event.number }}
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           # Only keep the latest commit to avoid bloating the repository
           force_orphan: true
-
-  #clean_pr:
-    #if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
-    #runs-on: ubuntu-latest
-    #steps:
 
   publish:
     needs: [build]
