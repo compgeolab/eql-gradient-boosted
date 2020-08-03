@@ -170,7 +170,7 @@ def test_eql_iterative_custom_points():
 
     # Define a set of block-averaged equivalent sources
     sources = block_averaged_sources(
-        coordinates, 200, depth_type="relative_depth", depth=500
+        coordinates, 100, depth_type="relative_depth", depth=500
     )
 
     # Fit EQLIterative with the block-averaged sources
@@ -182,6 +182,4 @@ def test_eql_iterative_custom_points():
         npt.assert_allclose(sources[i], eql.points_[i])
 
     # The interpolation should be sufficiently accurate on the data points
-    eql = EQLIterative(window_size=500)
-    eql.fit(coordinates, data)
-    assert mean_squared_error(data, eql.predict(coordinates)) < 1e-4 * vd.maxabs(data)
+    assert mean_squared_error(data, eql.predict(coordinates)) < 1e-3 * vd.maxabs(data)
