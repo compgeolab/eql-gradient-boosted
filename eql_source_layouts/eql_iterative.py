@@ -155,6 +155,8 @@ class EQLIterative(EQLHarmonic):
         n_windows = len(point_windows)
         # Initialize errors array
         self.errors_ = np.zeros(n_windows)
+        # Set weights_chunk to None (will be changed unless weights is None)
+        weights_chunk = None
         # Iterate over the windows
         for window_i in range(n_windows):
             # Get source and data points indices for current window
@@ -166,7 +168,6 @@ class EQLIterative(EQLHarmonic):
             if points_chunk[0].size == 0 or coords_chunk[0].size == 0:
                 continue
             # Choose weights for data points inside the window (if not None)
-            weights_chunk = None
             if weights is not None:
                 weights_chunk = weights[data_window]
             # Compute jacobian (for sources in windows and all data points)
