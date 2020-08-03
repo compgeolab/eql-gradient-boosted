@@ -1,0 +1,47 @@
+name: compile-pdf
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install LaTeX
+        run: sudo apt-get install texlive texlive-xetex
+
+      - name: Compile PDF
+        run: |
+          cd manuscript
+          make
+          cd _output
+          rm -f *.aux *.log *.bbl *.blg *.out *.toc
+          touch .nojekyll
+          cd ..
+          cd ..
+
+      - name: Upload PR mauscript as an artifact
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v2
+        with:
+          name: manuscript-{{ github.sha }}
+          path: _output/manuscript.pdf
+
+      - name: Publish manuscript to to gh-pages
+        if: success() && github.event_name == 'push'
+        # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+        uses: peaceiris/actions-gh-pages@8a36f3edfc5d1cbae6b09e6f5a7d7b19e5b7a73b
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Only keep the latest commit to avoid bloating the repository
+          force_orphan: true
