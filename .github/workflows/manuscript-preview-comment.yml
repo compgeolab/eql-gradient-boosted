@@ -5,9 +5,8 @@ on:
   pull_request:
     types:
       - opened
-      - synchronize
-    #paths:
-      #- 'manuscript/**'
+    paths:
+      - 'manuscript/**'
 
 jobs:
   comment:

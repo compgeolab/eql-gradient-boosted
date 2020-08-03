@@ -2,8 +2,8 @@ name: manuscript
 
 on:
   pull_request:
-    #paths:
-      #- 'manuscript/**'
+    paths:
+      - 'manuscript/**'
   push:
     branches:
       - master
