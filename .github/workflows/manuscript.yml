@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Install LaTeX
         run: sudo apt-get install latexmk texlive texlive-xetex texlive-science
@@ -42,11 +44,13 @@ jobs:
     env:
       OUTPUT_DIR: ./manuscript/_output/
       # Name of the preview branch.
-      # REMEMBER: edit name in manuscript cleanup workflow as well.
+      # REMEMBER: edit name in the other workflows as well.
       PREVIEW_BRANCH: preview-pr${{ github.event.number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Download the built PDF
         uses: actions/download-artifact@v2

@@ -9,12 +9,15 @@ on:
 jobs:
   clean_branches:
     runs-on: ubuntu-latest
+    env:
+      PREVIEW_BRANCH: preview-pr${{ github.event.number }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+        uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b
 
       - name: Delete the manuscript preview branch
         # Allow this to fail if there is no branch to delete
         continue-on-error: true
         run: |
-          git push origin --delete preview-pr${{ github.event.number }}
+          git push origin --delete ${{ env.PREVIEW_BRANCH }}

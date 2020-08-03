@@ -1,0 +1,29 @@
+# Comment on the PR with a link to the preview paper PDF
+name: manuscript-preview-comment
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronized
+    #paths:
+      #- 'manuscript/**'
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    env:
+      PREVIEW_BRANCH: preview-pr${{ github.event.number }}
+    steps:
+      - name: Create comment with preview link
+        # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+        uses: peter-evans/create-or-update-comment@41f3207a84f33bd70388036109082784d059dcaa
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.number }}
+          body: |
+            :robot: Hi there, human. It looks like you're editing the
+            manuscript. I'll build it for you whenever you make changes and
+            place the resulting PDF at:
+            https://github.com/${{ github.repository }}/blob/${{ env.PREVIEW_BRANCH }}/manuscript.pdf
+          comment-author: 'github-actions[bot]'
