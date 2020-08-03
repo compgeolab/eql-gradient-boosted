@@ -42,6 +42,8 @@ INSTALL_REQUIRES = [
     "scipy",
     "xarray",
     "matplotlib",
+    "harmonica==0.1.0",
+    "verde==1.5.0",
 ]
 PYTHON_REQUIRES = ">=3.6"
 

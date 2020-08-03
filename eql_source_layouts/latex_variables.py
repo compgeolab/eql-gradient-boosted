@@ -27,7 +27,7 @@ def latex_best_parameters(best_parameters, survey, layout, depth_type):
     """
     tex_lines = []
     for parameter, value in best_parameters.items():
-        if parameter in ("depth_type", "layout", "height"):
+        if parameter in ("depth_type", "layout", "height", "metadata"):
             continue
         variable_name = format_variable_name(
             "_".join(["best", survey, layout, depth_type, parameter])

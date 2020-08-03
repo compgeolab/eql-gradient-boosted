@@ -14,7 +14,6 @@ from .utils import (
     combine_parameters,
     get_best_prediction,
     grid_data,
-    grid_to_dataarray,
     predictions_to_datasets,
 )
 
