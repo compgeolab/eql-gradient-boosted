@@ -2,8 +2,12 @@ name: manuscript
 
 on:
   pull_request:
-    paths:
-      - 'manuscript/**'
+    types:
+      - opened
+      - synchronize
+      - closed
+    #paths:
+      #- 'manuscript/**'
   push:
     branches:
       - master
@@ -61,6 +65,18 @@ jobs:
           user_email: 'github-actions[bot]@users.noreply.github.com'
           # Only keep the latest commit to avoid bloating the repository
           force_orphan: true
+
+  clean_pr:
+    #if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Delete the manuscript preview branch
+        run: |
+          git push origin --delete pr-${{ github.event.number }}
 
   publish:
     needs: [build]
