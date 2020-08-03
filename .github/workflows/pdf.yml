@@ -2,12 +2,8 @@ name: manuscript
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - closed
-    #paths:
-      #- 'manuscript/**'
+    paths:
+      - 'manuscript/**'
   push:
     branches:
       - master
@@ -17,7 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.action != 'closed' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,7 +37,7 @@ jobs:
           path: manuscript/_output/manuscript.pdf
 
   publish_pr:
-    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
+    if: ${{ github.event_name == 'pull_request' }}
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -54,8 +49,6 @@ jobs:
         with:
           name: manuscript
           path: manuscript/_output
-
-      - run: ls -R
 
       - name: Publish manuscript to PR branch
         # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
@@ -81,13 +74,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: manuscript
+          path: manuscript/_output
 
-      - name: Publish manuscript to to gh-pages
+      - name: Publish manuscript to gh-pages
         # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
         uses: peaceiris/actions-gh-pages@8a36f3edfc5d1cbae6b09e6f5a7d7b19e5b7a73b
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: manuscript/_output
+          publish_dir: ./manuscript/_output/
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           # Only keep the latest commit to avoid bloating the repository
