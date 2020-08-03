@@ -6,8 +6,8 @@ on:
       - opened
       - synchronize
       - closed
-    paths:
-      - 'manuscript/**'
+    #paths:
+      #- 'manuscript/**'
   push:
     branches:
       - master
