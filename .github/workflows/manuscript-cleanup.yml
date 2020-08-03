@@ -1,0 +1,20 @@
+# Remove generated previews from building manuscripts for PRs
+name: manuscript-cleanup
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  clean_branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Delete the manuscript preview branch
+        # Allow this to fail if there is no branch to delete
+        continue-on-error: true
+        run: |
+          git push origin --delete preview-pr${{ github.event.number }}
