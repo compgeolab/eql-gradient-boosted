@@ -180,3 +180,8 @@ def test_eql_iterative_custom_points():
     # Check if sources are located on the same points
     for i in range(3):
         npt.assert_allclose(sources[i], eql.points_[i])
+
+    # The interpolation should be sufficiently accurate on the data points
+    eql = EQLIterative(window_size=500)
+    eql.fit(coordinates, data)
+    assert mean_squared_error(data, eql.predict(coordinates)) < 1e-4 * vd.maxabs(data)
