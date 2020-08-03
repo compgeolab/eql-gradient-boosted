@@ -123,14 +123,17 @@ class EQLIterative(EQLHarmonic):
         # Capture the data region to use as a default when gridding.
         self.region_ = vd.get_region(coordinates[:2])
         coordinates = vdb.n_1d_arrays(coordinates, 3)
-        if self.points is None:
-            self.points_ = (
-                coordinates[0],
-                coordinates[1],
-                coordinates[2] - self.relative_depth,
-            )
-        else:
-            self.points_ = vdb.n_1d_arrays(self.points, 3)
+        # Define self.points_ if warm_start is False and gridder is not
+        # already fitted
+        if not self.warm_start or not hasattr(self, "coefs_"):
+            if self.points is None:
+                self.points_ = (
+                    coordinates[0],
+                    coordinates[1],
+                    coordinates[2] - self.relative_depth,
+                )
+            else:
+                self.points_ = vdb.n_1d_arrays(self.points, 3)
         # Initialize coefficients and resiude arrays
         if self.warm_start and hasattr(self, "coefs_"):
             print("Warm start fitting")
