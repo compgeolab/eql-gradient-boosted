@@ -73,7 +73,7 @@ class EQLIterative(EQLHarmonic):
         points=None,
         relative_depth=500,
         window_size=10e3,
-        warm_start=True,
+        warm_start=False,
         random_state=None,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
