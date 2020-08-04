@@ -122,8 +122,11 @@ class EQLIterative(EQLHarmonic):
         coordinates, data, weights = vdb.check_fit_input(coordinates, data, weights)
         # Capture the data region to use as a default when gridding.
         self.region_ = vd.get_region(coordinates[:2])
+        # Ravel coordinates, data and weights to 1d-arrays
         coordinates = vdb.n_1d_arrays(coordinates, 3)
         data = data.ravel()
+        if weights is not None:
+            weights = weights.ravel()
         # Define self.points_ if warm_start is False and gridder is not
         # already fitted
         if not self.warm_start or not hasattr(self, "coefs_"):
