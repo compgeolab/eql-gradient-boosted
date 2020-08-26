@@ -195,15 +195,26 @@ class EQLIterative(EQLHarmonic):
         """
         # Compute window spacing based on overlapping
         window_spacing = self.window_size * (1 - self.overlapping)
+        # Get the largest region between data points and sources
+        data_region = vd.get_region(coordinates)
+        sources_region = vd.get_region(self.points_)
+        region = (
+            min(data_region[0], sources_region[0]),
+            max(data_region[1], sources_region[1]),
+            min(data_region[2], sources_region[2]),
+            max(data_region[3], sources_region[3]),
+        )
         # The windows for sources and data points are the same, but the
         # verde.rolling_window function creates indices for the given
         # coordinates. That's why we need to create two set of window indices:
         # one for the sources and one for the data points
+        # We pass the same region, size and spacing to be sure that both set of
+        # windows are the same
         _, source_windows = vd.rolling_window(
-            self.points_, size=self.window_size, spacing=window_spacing
+            self.points_, region=region, size=self.window_size, spacing=window_spacing
         )
         _, data_windows = vd.rolling_window(
-            coordinates, size=self.window_size, spacing=window_spacing
+            coordinates, region=region, size=self.window_size, spacing=window_spacing
         )
         # Ravel the indices
         source_windows = [i[0] for i in source_windows.ravel()]
