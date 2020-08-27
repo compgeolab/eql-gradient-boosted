@@ -138,7 +138,7 @@ class EQLIterative(EQLHarmonic):
                 )
             else:
                 self.points_ = vdb.n_1d_arrays(self.points, 3)
-        # Initialize coefficients and resiude arrays
+        # Initialize coefficients and residue arrays
         if self.warm_start and hasattr(self, "coefs_"):
             residue = data - self.predict(coordinates)
         else:
