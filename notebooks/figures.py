@@ -78,7 +78,11 @@ clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
 
 ax2.set_xlabel("easting [m]")
 ax1.tick_params(
-    axis="x", which="both", bottom=False, top=False, labelbottom=False,
+    axis="x",
+    which="both",
+    bottom=False,
+    top=False,
+    labelbottom=False,
 )
 
 for ax, label in zip((ax1, ax2), labels):
@@ -140,7 +144,11 @@ clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
 
 ax2.set_xlabel("easting [m]")
 ax1.tick_params(
-    axis="x", which="both", bottom=False, top=False, labelbottom=False,
+    axis="x",
+    which="both",
+    bottom=False,
+    top=False,
+    labelbottom=False,
 )
 
 for ax, label in zip((ax1, ax2), labels):
