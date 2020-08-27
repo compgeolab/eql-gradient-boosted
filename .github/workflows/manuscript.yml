@@ -1,0 +1,84 @@
+name: manuscript
+
+on:
+  pull_request:
+    paths:
+      - 'manuscript/**'
+  push:
+    branches:
+      - master
+    paths:
+      - 'manuscript/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Install LaTeX
+        run: sudo apt-get install latexmk texlive texlive-xetex texlive-science
+
+      - name: Compile PDF
+        run: |
+          cd manuscript
+          make
+          cd _output
+          rm -f *.aux *.log *.bbl *.blg *.out *.toc
+          touch .nojekyll
+          cd ..
+          cd ..
+
+      - name: Upload PR manuscript as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: manuscript
+          path: manuscript/_output/manuscript.pdf
+
+  publish:
+    needs: [build]
+    runs-on: ubuntu-latest
+    env:
+      OUTPUT_DIR: ./manuscript/_output/
+      # Name of the preview branch.
+      # REMEMBER: edit name in the other workflows as well.
+      PREVIEW_BRANCH: preview-pr${{ github.event.number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Download the built PDF
+        uses: actions/download-artifact@v2
+        with:
+          name: manuscript
+          path: manuscript/_output
+
+      - name: Publish manuscript to preview branch
+        if: ${{ github.event_name == 'pull_request' }}
+        # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+        uses: peaceiris/actions-gh-pages@8a36f3edfc5d1cbae6b09e6f5a7d7b19e5b7a73b
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.OUTPUT_DIR }}
+          publish_branch: ${{ env.PREVIEW_BRANCH }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Only keep the latest commit to avoid bloating the repository
+          force_orphan: true
+
+      - name: Publish manuscript to gh-pages
+        if: ${{ github.event_name == 'push' }}
+        # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
+        uses: peaceiris/actions-gh-pages@8a36f3edfc5d1cbae6b09e6f5a7d7b19e5b7a73b
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.OUTPUT_DIR }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Only keep the latest commit to avoid bloating the repository
+          force_orphan: true
