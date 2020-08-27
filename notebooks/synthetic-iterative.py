@@ -148,6 +148,10 @@ plt.gca().set_aspect("equal")
 plt.show()
 # -
 
+# Save grid
+
+grid.to_netcdf(os.path.join(results_dir, "gravity_grid_iterative_20km.nc"))
+
 # ### Use a window size of 50km
 
 dampings = np.logspace(-4, 3, 8)
@@ -220,3 +224,6 @@ maxabs = vd.maxabs(grid - target)
 plt.gca().set_aspect("equal")
 plt.show()
 # -
+# Save grid
+
+grid.to_netcdf(os.path.join(results_dir, "gravity_grid_iterative_50km.nc"))
