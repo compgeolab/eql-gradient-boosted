@@ -106,12 +106,18 @@ parameters[layout][depth_type] = dict(
 layout = "block_averaged_sources"
 depth_type = "constant_depth"
 parameters[layout][depth_type] = dict(
-    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
+    depth_type=depth_type,
+    damping=dampings,
+    depth=depths,
+    spacing=block_spacings,
 )
 
 depth_type = "relative_depth"
 parameters[layout][depth_type] = dict(
-    depth_type=depth_type, damping=dampings, depth=depths, spacing=block_spacings,
+    depth_type=depth_type,
+    damping=dampings,
+    depth=depths,
+    spacing=block_spacings,
 )
 
 depth_type = "variable_depth"
@@ -265,7 +271,11 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         prediction = dataset[depth_type]
         difference = target - prediction
         tmp = difference.plot.pcolormesh(
-            ax=ax, vmin=-vmax, vmax=vmax, cmap="seismic", add_colorbar=False,
+            ax=ax,
+            vmin=-vmax,
+            vmax=vmax,
+            cmap="seismic",
+            add_colorbar=False,
         )
         ax.scatter(survey.easting, survey.northing, s=0.3, alpha=0.2, color="k")
         ax.set_aspect("equal")
@@ -337,4 +347,8 @@ for dataset in best_predictions:
 with open(
     os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
 ) as f:
-    f.write("\n".join(tex_lines,))
+    f.write(
+        "\n".join(
+            tex_lines,
+        )
+    )

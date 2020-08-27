@@ -65,7 +65,10 @@ def test_variable_depth(coordinates):
     depth_factor = 1
     k_nearest = 3
     points = variable_depth(
-        coordinates, depth=depth, depth_factor=depth_factor, k_nearest=k_nearest,
+        coordinates,
+        depth=depth,
+        depth_factor=depth_factor,
+        k_nearest=k_nearest,
     )
     npt.assert_allclose(coordinates[0], points[0])
     npt.assert_allclose(coordinates[1], points[1])
@@ -77,7 +80,10 @@ def test_variable_depth(coordinates):
     assert np.all(points[2] < coordinates[2] - depth)
     # Set depth_factor equal to zero and check if relative depth is recovered
     points = variable_depth(
-        coordinates, depth=depth, depth_factor=0, k_nearest=k_nearest,
+        coordinates,
+        depth=depth,
+        depth_factor=0,
+        k_nearest=k_nearest,
     )
     npt.assert_allclose(coordinates[2] - depth, points[2])
 
@@ -136,7 +142,11 @@ def test_source_below_data_kwargs(coordinates):
     depth_type = "constant_depth"
     depth = 100
     npt.assert_allclose(
-        source_below_data(coordinates, depth_type=depth_type, depth=depth,),
+        source_below_data(
+            coordinates,
+            depth_type=depth_type,
+            depth=depth,
+        ),
         source_below_data(
             coordinates, depth_type=depth_type, depth=depth, blabla=3.1415
         ),
@@ -181,7 +191,10 @@ def test_block_averaged_sources_kwargs(coordinates):
     spacing = 4000
     npt.assert_allclose(
         block_averaged_sources(
-            coordinates, depth_type=depth_type, depth=depth, spacing=spacing,
+            coordinates,
+            depth_type=depth_type,
+            depth=depth,
+            spacing=spacing,
         ),
         block_averaged_sources(
             coordinates,
