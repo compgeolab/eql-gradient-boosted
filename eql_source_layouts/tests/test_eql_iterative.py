@@ -89,9 +89,9 @@ def test_eql_iterative_random_state():
     npt.assert_allclose(eql_a.coefs_, eql_b.coefs_)
 
 
-def test_same_windows_data_and_sources():
+def test_same_number_of_windows_data_and_sources():
     """
-    Check if the defined windows are the same for data and sources
+    Check if it creates the same number of windows for data and sources
     """
     spacing = 1
     # Create data points on a large region
