@@ -89,16 +89,16 @@ def test_eql_iterative_random_state():
     npt.assert_allclose(eql_a.coefs_, eql_b.coefs_)
 
 
-def test_same_windows_data_and_sources():
+def test_same_number_of_windows_data_and_sources():
     """
-    Check if the defined windows are the same for data and sources
+    Check if it creates the same number of windows for data and sources
     """
     spacing = 1
     # Create data points on a large region
     region = (1, 3, 1, 3)
     coordinates = vd.grid_coordinates(region=region, spacing=spacing, extra_coords=0)
     # Create source points on a smaller region
-    sources_region = (0.5, 1.5, 0.5, 1.5)
+    sources_region = (1.5, 2.5, 1.5, 2.5)
     points = vd.grid_coordinates(
         region=sources_region, spacing=spacing, extra_coords=-10
     )
@@ -110,6 +110,39 @@ def test_same_windows_data_and_sources():
     source_windows, data_windows = eql._create_rolling_windows(coordinates)
     # Check if number of windows are the same
     assert len(source_windows) == len(data_windows)
+
+
+def test_same_windows_data_and_sources():
+    """
+    Check if it creates the same windows for data and sources
+    """
+    spacing = 1
+    # Create data points on a large region
+    region = (1, 3, 1, 3)
+    coordinates = vd.grid_coordinates(region=region, spacing=spacing, extra_coords=0)
+    # Create source points on a subregion
+    sources_region = (1, 2, 1, 3)
+    points = vd.grid_coordinates(
+        region=sources_region, spacing=spacing, extra_coords=-10
+    )
+    # Create EQLIterative
+    # I use no shuffle so I can compare the windows with expected values
+    eql = EQLIterative(window_size=spacing, shuffle=False)
+    # Make EQL believe that it has already created the points
+    eql.points_ = points
+    # Create windows for data points and sources
+    source_windows, data_windows = eql._create_rolling_windows(coordinates)
+    # Check number of windows
+    assert len(source_windows) == 9
+    assert len(data_windows) == 9
+    # Define expected number of points inside each window for data and sources
+    expected_data_windows = np.array([[4, 2, 4], [2, 1, 2], [4, 2, 4]]).ravel()
+    expected_source_windows = np.array([[4, 2, 2], [2, 1, 1], [4, 2, 2]]).ravel()
+    # Check if the windows were created correctly
+    for i, window in enumerate(data_windows):
+        assert len(window) == expected_data_windows[i]
+    for i, window in enumerate(source_windows):
+        assert len(window) == expected_source_windows[i]
 
 
 def test_eql_iterative_warm_start():

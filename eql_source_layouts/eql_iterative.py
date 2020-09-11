@@ -44,12 +44,18 @@ class EQLIterative(EQLHarmonic):
         previous fitted coefficients (if existent) and using the residue
         between the data and the field the fitted sources predict on the same
         points. Default True.
+    shuffle : bool
+        If True, the rolling windows are randomly shuffled to prevent
+        prioritinzing a portion of the sources (the ones that are fitted on the
+        first iterations) over the rest. If False, windows won't be shuffled.
+        Default True.
     random_state : int, RandomState instance or None
         Random state for shuffling the rolling windows. If int,
         ``random_state`` is the seed used by the random number generator. If
         ``np.random.RandomState`` instance, ``random_state`` is the random
         number generator. If None, the random number generator is the
-        ``RandomState`` instance used by `np.random`. Default None.
+        ``RandomState`` instance used by `np.random`. Ignored if ``shuffle`` is
+        False. Default None.
 
     Attributes
     ----------
@@ -74,11 +80,13 @@ class EQLIterative(EQLHarmonic):
         relative_depth=500,
         window_size=10e3,
         warm_start=False,
+        shuffle=True,
         random_state=None,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
         self.window_size = window_size
         self.warm_start = warm_start
+        self.shuffle = shuffle
         self.random_state = random_state
 
     def fit(self, coordinates, data, weights=None):
@@ -220,7 +228,8 @@ class EQLIterative(EQLHarmonic):
         source_windows = [i[0] for i in source_windows.ravel()]
         data_windows = [i[0] for i in data_windows.ravel()]
         # Shuffle windows
-        source_windows, data_windows = shuffle(
-            source_windows, data_windows, random_state=self.random_state
-        )
+        if self.shuffle:
+            source_windows, data_windows = shuffle(
+                source_windows, data_windows, random_state=self.random_state
+            )
         return source_windows, data_windows
