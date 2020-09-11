@@ -98,7 +98,7 @@ def test_same_number_of_windows_data_and_sources():
     region = (1, 3, 1, 3)
     coordinates = vd.grid_coordinates(region=region, spacing=spacing, extra_coords=0)
     # Create source points on a smaller region
-    sources_region = (0.5, 1.5, 0.5, 1.5)
+    sources_region = (1.5, 2.5, 1.5, 2.5)
     points = vd.grid_coordinates(
         region=sources_region, spacing=spacing, extra_coords=-10
     )
