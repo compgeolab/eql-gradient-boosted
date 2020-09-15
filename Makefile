@@ -10,16 +10,12 @@ FLAKE8_FILES=setup.py $(PROJECT) notebooks
 help:
 	@echo "Commands:"
 	@echo ""
-	@echo "  install   install in editable mode"
 	@echo "  test      run the test suite and report coverage"
 	@echo "  format    run black to automatically format the code"
 	@echo "  check     run code style and quality checks (black and flake8)"
 	@echo "  lint      run pylint for a deeper (and slower) quality check"
 	@echo "  clean     clean up build and generated files"
 	@echo ""
-
-install:
-	pip install --no-deps -e .
 
 test:
 	# Run a tmp folder to make sure the tests are run on the installed version
