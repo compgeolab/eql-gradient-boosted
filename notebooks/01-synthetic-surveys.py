@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.0
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -28,7 +28,7 @@ import harmonica as hm
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 
-from eql_source_layouts import (
+from source_layouts import (
     synthetic_model,
     latex_variables,
 )

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.0
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -25,7 +25,7 @@ import xarray as xr
 import verde as vd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts import (
+from source_layouts import (
     combine_parameters,
     plot_prediction,
     get_best_prediction,

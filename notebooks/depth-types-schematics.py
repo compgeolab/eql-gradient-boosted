@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts.layouts import source_below_data
+from source_layouts import source_below_data
 
 # -
 

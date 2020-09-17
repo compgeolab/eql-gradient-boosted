@@ -1,6 +1,5 @@
 # pylint: disable=missing-docstring
 # Import functions/classes to make the public API
-from ._version import get_versions
 from .layouts import source_below_data, block_averaged_sources, grid_sources
 from .synthetic_model import synthetic_model
 from .plot import plot_prediction
@@ -17,7 +16,3 @@ from .utils import (
     predictions_to_datasets,
 )
 from .eql_iterative import EQLIterative
-
-# Get the version number through versioneer
-__version__ = get_versions()["version"]
-del get_versions

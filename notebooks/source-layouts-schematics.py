@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.4
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -23,8 +23,8 @@ import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 
-import eql_source_layouts
-from eql_source_layouts import latex_variables, format_variable_name
+import source_layouts
+from source_layouts import latex_variables, format_variable_name
 
 # -
 
@@ -88,7 +88,7 @@ parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=grid_spacing
 
 source_distributions = {}
 for layout in parameters:
-    source_distributions[layout] = getattr(eql_source_layouts, layout)(
+    source_distributions[layout] = getattr(source_layouts, layout)(
         coordinates, **parameters[layout]
     )
 

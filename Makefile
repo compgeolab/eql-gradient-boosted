@@ -1,11 +1,9 @@
-# Build, package, test, and clean
-PROJECT=eql_source_layouts
-TESTDIR=tmp-test-dir-with-unique-name
-PYTEST_ARGS=--cov-config=../.coveragerc --cov-report=term-missing --cov=$(PROJECT) --doctest-modules -v --pyargs
-NUMBATEST_ARGS=--doctest-modules -v --pyargs -m use_numba
-LINT_FILES=setup.py $(PROJECT)
-BLACK_FILES=setup.py $(PROJECT) notebooks
-FLAKE8_FILES=setup.py $(PROJECT) notebooks
+# Check styling and test notebooks and extra code
+NOTEBOOKS=notebooks
+PYTEST_ARGS=--cov --cov-report=term-missing --cov -v
+LINT_FILES=$(NOTEBOOKS)
+BLACK_FILES=$(NOTEBOOKS)
+FLAKE8_FILES=$(NOTEBOOKS)
 
 help:
 	@echo "Commands:"
@@ -19,10 +17,7 @@ help:
 
 test:
 	# Run a tmp folder to make sure the tests are run on the installed version
-	mkdir -p $(TESTDIR)
-	cd $(TESTDIR); MPLBACKEND='agg' pytest $(PYTEST_ARGS) $(PROJECT)
-	cp $(TESTDIR)/.coverage* .
-	rm -rvf $(TESTDIR)
+	MPLBACKEND='agg' pytest $(PYTEST_ARGS) $(NOTEBOOKS)
 
 format:
 	black $(BLACK_FILES)
@@ -37,5 +32,5 @@ lint:
 clean:
 	find . -name "*.pyc" -exec rm -v {} \;
 	find . -name ".coverage.*" -exec rm -v {} \;
-	rm -rvf build dist MANIFEST *.egg-info __pycache__ .coverage .cache .pytest_cache
-	rm -rvf $(TESTDIR) dask-worker-space
+	rm -rvf build dist *.egg-info __pycache__ .coverage .cache .pytest_cache
+	rm -rvf dask-worker-space

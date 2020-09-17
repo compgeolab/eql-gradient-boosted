@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -64,7 +64,7 @@ import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 
-import eql_source_layouts
+import source_layouts
 
 # -
 
@@ -169,7 +169,7 @@ region = vd.get_region(coordinates)
 
 for layout in parameters:
     for depth_type in parameters[layout]:
-        source_distributions[layout][depth_type] = getattr(eql_source_layouts, layout)(
+        source_distributions[layout][depth_type] = getattr(source_layouts, layout)(
             coordinates, **parameters[layout][depth_type]
         )
 
@@ -272,7 +272,7 @@ region = vd.get_region(coordinates)
 
 for layout in parameters:
     for depth_type in parameters[layout]:
-        source_distributions[layout][depth_type] = getattr(eql_source_layouts, layout)(
+        source_distributions[layout][depth_type] = getattr(source_layouts, layout)(
             coordinates, **parameters[layout][depth_type]
         )
 

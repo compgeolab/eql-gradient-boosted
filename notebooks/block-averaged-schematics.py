@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -23,7 +23,7 @@ import numpy as np
 import verde as vd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts import block_averaged_sources
+from source_layouts import block_averaged_sources
 
 # -
 
