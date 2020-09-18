@@ -19,7 +19,7 @@
 
 # +
 from IPython.display import display
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -30,7 +30,7 @@ from source_layouts import source_below_data
 
 # Read a synthetic 1d survey
 
-survey = pd.read_csv(os.path.join("..", "data", "survey_1d.csv"))
+survey = pd.read_csv(Path("..") / "data" / "survey_1d.csv")
 display(survey)
 
 # ## Create source distributions
@@ -75,7 +75,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 # Initialize figure and axes
 width = 6.66
@@ -119,5 +119,5 @@ axes[0].legend(loc=(0.6, 0.32), borderpad=0.2, labelspacing=0.3)
 axes[0].set_ylim(-200, 130)
 
 plt.tight_layout(w_pad=0)
-plt.savefig(os.path.join("..", "manuscript", "figs", "depth_types.pdf"))
+plt.savefig(Path("..") / "manuscript" / "figs" / "depth_types.pdf")
 plt.show()

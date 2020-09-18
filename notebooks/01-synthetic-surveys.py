@@ -19,7 +19,7 @@
 
 # +
 from IPython.display import display
-import os
+from pathlib import Path
 import pyproj
 import numpy as np
 import xarray as xr
@@ -39,9 +39,9 @@ from source_layouts import (
 
 # +
 # Define results directories
-results_dir = os.path.join("..", "results")
-ground_results_dir = os.path.join(results_dir, "ground_survey")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
+airborne_results_dir = results_dir / "airborne_survey"
 
 # Define a survey region of 1 x 1 degrees (~ 100km x 100km)
 region_degrees = (-0.5, 0.5, -0.5, 0.5)
@@ -183,7 +183,7 @@ plt.show()
 
 # Save ground survey for future usage
 
-survey.to_csv(os.path.join(ground_results_dir, "survey.csv"), index=False)
+survey.to_csv(ground_results_dir / "survey.csv", index=False)
 
 # Save ground survey quantities to LaTeX file
 
@@ -257,7 +257,7 @@ plt.show()
 
 # Save ground survey for future usage
 
-survey.to_csv(os.path.join(airborne_results_dir, "survey.csv"), index=False)
+survey.to_csv(airborne_results_dir / "survey.csv", index=False)
 
 # Save airborne survey quantities to LaTeX file
 
@@ -299,7 +299,7 @@ target = xr.DataArray(
 
 # Save target grid to disk for future usage
 
-target.to_netcdf(os.path.join(results_dir, "target.nc"))
+target.to_netcdf(results_dir / "target.nc")
 
 # Save target grid quantities to LaTeX file
 
@@ -324,5 +324,5 @@ plt.show()
 for i in latex_lines:
     print(i)
 
-with open(os.path.join("..", "manuscript", "synthetic_model_surveys.tex"), "w") as f:
+with open(Path("..") / "manuscript" / "synthetic_model_surveys.tex", "w") as f:
     f.write("\n".join(latex_lines))

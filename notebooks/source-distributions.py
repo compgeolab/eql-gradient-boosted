@@ -56,7 +56,7 @@
 
 # +
 from IPython.display import display
-import os
+from pathlib import Path
 import pyproj
 import numpy as np
 import pandas as pd
@@ -71,8 +71,8 @@ import source_layouts
 
 # +
 # Define results directory to read synthetic ground survey
-ground_results_dir = os.path.join("..", "results", "ground_survey")
-airborne_results_dir = os.path.join("..", "results", "airborne_survey")
+ground_results_dir = Path("..") / "results" / "ground_survey"
+airborne_results_dir = Path("..") / "results" / "airborne_survey"
 
 # Define dictionaries where the source distributions will be stored
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
@@ -148,7 +148,7 @@ parameters[layout][depth_type] = {
 
 # Get coordinates of observation points from a synthetic ground survey
 
-survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 
 # Plot the survey points
 
@@ -233,7 +233,7 @@ plt.show()
 
 # Get coordinates of observation points from a synthetic airborne survey
 
-survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
+survey = pd.read_csv(airborne_results_dir / "survey.csv")
 
 # Project survey points into Cartesian coordinates
 

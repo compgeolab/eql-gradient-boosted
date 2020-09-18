@@ -18,7 +18,7 @@
 # **Import useful packages**
 
 # +
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -48,8 +48,8 @@ from source_layouts import (
 
 # +
 # Define results directory
-results_dir = os.path.join("..", "results")
-ground_results_dir = os.path.join(results_dir, "ground_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
 
 # Define which field will be meassured
 field = "g_z"
@@ -151,7 +151,7 @@ parameters[layout][depth_type] = dict(
 
 # ### Save parameters to LaTeX variables file
 
-with open(os.path.join("..", "manuscript", "parameters_ground_survey.tex"), "w") as f:
+with open(Path("..") / "manuscript" / "parameters_ground_survey.tex", "w") as f:
     f.write("\n".join(latex_parameters(parameters, "ground")))
 
 # ### Combine parameter values for each source distribution
@@ -172,12 +172,12 @@ for layout in parameters:
 
 # Read ground survey
 
-survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 survey
 
 # Read target grid
 
-target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+target = xr.open_dataarray(results_dir / "target.nc")
 target
 
 # Define coordiantes tuple with the location of the survey points
@@ -219,18 +219,14 @@ for layout in parameters_combined:
 datasets = predictions_to_datasets(best_predictions)
 for dataset in datasets:
     dataset.to_netcdf(
-        os.path.join(
-            ground_results_dir, "best_predictions-{}.nc".format(dataset.layout)
-        )
+        ground_results_dir / "best_predictions-{}.nc".format(dataset.layout)
     )
 
 for layout in scores:
     for depth_type in scores[layout]:
         score = scores[layout][depth_type]
         score.to_csv(
-            os.path.join(
-                ground_results_dir, "scores-{}-{}.nc".format(depth_type, layout)
-            ),
+            ground_results_dir / "scores-{}-{}.nc".format(depth_type, layout),
             index=False,
         )
 # -
@@ -240,9 +236,7 @@ for layout in scores:
 best_predictions = []
 for layout in layouts:
     best_predictions.append(
-        xr.open_dataset(
-            os.path.join(ground_results_dir, "best_predictions-{}.nc".format(layout))
-        )
+        xr.open_dataset(ground_results_dir / "best_predictions-{}.nc".format(layout))
     )
 
 # ## Plot best predictions
@@ -350,9 +344,7 @@ for dataset in best_predictions:
         )
 
 
-with open(
-    os.path.join("..", "manuscript", "best_parameters_ground_survey.tex"), "w"
-) as f:
+with open(Path("..") / "manuscript" / "best_parameters_ground_survey.tex", "w") as f:
     f.write(
         "\n".join(
             tex_lines,

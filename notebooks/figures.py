@@ -15,7 +15,7 @@
 
 # # Generate manuscript figures
 
-import os
+from pathlib import Path
 import xarray as xr
 import pandas as pd
 import verde as vd
@@ -23,17 +23,17 @@ import matplotlib.pyplot as plt
 
 # ## Load matplotlib configuration
 
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 # ## Define results directory
 
-results_dir = os.path.join("..", "results")
-ground_results_dir = os.path.join(results_dir, "ground_survey")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
+airborne_results_dir = results_dir / "airborne_survey"
 
 # ## Ground survey
 
-survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 
 # +
 # Define useful parameters
@@ -102,7 +102,7 @@ ax2.set_title("Observed gravity acceleration", pad=3)
 
 plt.tight_layout(h_pad=0.2)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "ground-survey.pdf"),
+    Path("..") / "manuscript" / "figs" / "ground-survey.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -110,7 +110,7 @@ plt.savefig(
 
 # ## Airborne survey
 
-survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
+survey = pd.read_csv(airborne_results_dir / "survey.csv")
 
 # +
 # Define useful parameters
@@ -167,7 +167,7 @@ ax2.set_title("Observed gravity acceleration", pad=3)
 
 plt.tight_layout(h_pad=0.2)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "airborne-survey.pdf"),
+    Path("..") / "manuscript" / "figs" / "airborne-survey.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -175,11 +175,11 @@ plt.savefig(
 
 # ## Target grid
 
-target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+target = xr.open_dataarray(results_dir / "target.nc")
 
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 width = 3.33
 figsize = (width, width * 0.85)
@@ -198,7 +198,7 @@ clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
 ax.set_title("Target grid")
 plt.tight_layout()
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "target-grid.pdf"),
+    Path("..") / "manuscript" / "figs" / "target-grid.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -214,14 +214,12 @@ field_units = "mGal"
 best_predictions = []
 for layout in layouts:
     best_predictions.append(
-        xr.open_dataset(
-            os.path.join(ground_results_dir, "best_predictions-{}.nc".format(layout))
-        )
+        xr.open_dataset(ground_results_dir / "best_predictions-{}.nc".format(layout))
     )
 
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
@@ -306,7 +304,7 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "ground_survey_differences.pdf"), dpi=300
+    Path("..") / "manuscript" / "figs" / "ground_survey_differences.pdf", dpi=300
 )
 plt.show()
 # -
@@ -320,9 +318,7 @@ field_units = "mGal"
 best_predictions = []
 for layout in layouts:
     best_predictions.append(
-        xr.open_dataset(
-            os.path.join(airborne_results_dir, "best_predictions-{}.nc".format(layout))
-        )
+        xr.open_dataset(airborne_results_dir / "best_predictions-{}.nc".format(layout))
     )
 
 # +
@@ -409,6 +405,6 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "airborne_survey_differences.pdf"), dpi=300
+    Path("..") / "manuscript" / "figs" / "airborne_survey_differences.pdf", dpi=300
 )
 plt.show()

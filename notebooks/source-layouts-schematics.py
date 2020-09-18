@@ -15,7 +15,7 @@
 
 # +
 from IPython.display import display  # noqa: F401  # ignore used but not imported
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import verde as vd
@@ -29,14 +29,14 @@ from source_layouts import latex_variables, format_variable_name
 # ## Define parameters for building the source distributions
 
 # Define results directory to read synthetic ground survey
-ground_results_dir = os.path.join("..", "results", "ground_survey")
+ground_results_dir = Path("..") / "results" / "ground_survey"
 
 # ## Read synthetic ground survey
 #
 
 # Get coordinates of observation points from a synthetic ground survey
 
-survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 
 inside = np.logical_and(
     np.logical_and(
@@ -105,7 +105,7 @@ for nodes in grid_lines:
 
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(6.66, 1.65), dpi=300)
 size = 3
@@ -156,7 +156,7 @@ for y in grid_lines[1]:
 
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "source-layouts-schematics.pdf"), dpi=300
+    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf", dpi=300
 )
 plt.show()
 # -
@@ -178,5 +178,5 @@ for layout in layouts:
     )
 # -
 
-with open(os.path.join("..", "manuscript", "source_layouts_schematics.tex"), "w") as f:
+with open(Path("..") / "manuscript" / "source_layouts_schematics.tex", "w") as f:
     f.write("\n".join(tex_lines))
