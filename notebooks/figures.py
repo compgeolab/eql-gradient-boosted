@@ -16,7 +16,6 @@
 # # Generate manuscript figures
 
 import os
-import numpy as np
 import xarray as xr
 import pandas as pd
 import verde as vd

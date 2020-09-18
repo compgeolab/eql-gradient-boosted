@@ -61,7 +61,6 @@ import pyproj
 import numpy as np
 import pandas as pd
 import verde as vd
-import harmonica as hm
 import matplotlib.pyplot as plt
 
 import source_layouts

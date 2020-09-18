@@ -88,7 +88,7 @@ titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
 labels = "a b c".split()
 
 # Plot
-for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, labels)):
+for ax, depth_type, title, label in zip(axes, points, titles, labels):
     ax.scatter(coordinates[0], coordinates[2], s=size, label="stations", marker="^")
     ax.scatter(points[depth_type][0], points[depth_type][2], s=size, label="sources")
     ax.axhline(y=0, color="grey", linestyle="--", linewidth=0.5)
