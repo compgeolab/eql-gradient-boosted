@@ -6,14 +6,20 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.2
+#       jupytext_version: 1.3.2
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
 #     name: conda-env-eql_source_layouts-py
 # ---
 
-import os
+# # Create figures for the EGU2020 presentation
+#
+# The results were generated with from the paper results at the time of the presentation. 
+#
+# **WARNING**: The figures may not be reproduced exactly if run based on results generated after the presentation.
+
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -34,9 +40,9 @@ matplotlib.rcParams["ytick.color"] = light_blue
 matplotlib.rcParams["xtick.color"] = light_blue
 
 # +
-results_dir = os.path.join("..", "results")
-ground_results_dir = os.path.join(results_dir, "ground_survey")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / ".." / "results"
+ground_results_dir = results_dir / "ground_survey"
+airborne_results_dir = results_dir / "airborne_survey"
 
 # Define which field will be meassured
 field = "g_z"
@@ -50,22 +56,18 @@ cbar_kwargs = dict(shrink=0.82, pad=0.04)
 cbar_label_kwargs = dict(label="mGal", rotation=0, labelpad=-25, y=1.06)
 # -
 
-egu2020 = os.path.join("..", "egu2020")
-if not os.path.isdir(egu2020):
-    os.makedirs(egu2020)
+ground_survey = pd.read_csv(ground_results_dir / "survey.csv")
+airborne_survey = pd.read_csv(airborne_results_dir / "survey.csv")
 
-ground_survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
-airborne_survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
-
-target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+target = xr.open_dataarray(results_dir / "target.nc")
 
 # +
 ground_prediction = xr.open_dataset(
-    os.path.join(ground_results_dir, "best_predictions-{}.nc".format(layout))
+    ground_results_dir / f"best_predictions-{layout}.nc"
 ).variable_depth
 
 airborne_prediction = xr.open_dataset(
-    os.path.join(airborne_results_dir, "best_predictions-{}.nc".format(layout))
+    airborne_results_dir / f"best_predictions-{layout}.nc".format()
 ).variable_depth
 # -
 
@@ -77,7 +79,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "target_grid.svg"))
+plt.savefig("target_grid.svg")
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -90,7 +92,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "ground_survey.svg"))
+plt.savefig("ground_survey.svg")
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -103,7 +105,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "airborne_survey.svg"))
+plt.savefig("airborne_survey.svg")
 plt.show()
 
 # +
@@ -130,7 +132,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "ground_prediction.svg"))
+plt.savefig("ground_prediction.svg")
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -149,7 +151,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "ground_difference.svg"))
+plt.savefig("ground_difference.svg")
 plt.show()
 
 # +
@@ -168,7 +170,7 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "airborne_prediction.svg"))
+plt.savefig("airborne_prediction.svg")
 plt.show()
 
 fig, ax = plt.subplots(figsize=figsize)
@@ -187,5 +189,5 @@ ax.set_xticks([])
 clb = plt.colorbar(tmp, ax=ax, **cbar_kwargs)
 clb.set_label(**cbar_label_kwargs)
 plt.tight_layout()
-plt.savefig(os.path.join(egu2020, "airborne_difference.svg"))
+plt.savefig("airborne_difference.svg")
 plt.show()
