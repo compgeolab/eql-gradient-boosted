@@ -19,6 +19,7 @@
 
 # +
 from pathlib import Path
+import json
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -30,8 +31,6 @@ from source_layouts import (
     plot_prediction,
     get_best_prediction,
     predictions_to_datasets,
-    latex_parameters,
-    latex_best_parameters,
 )
 
 # -
@@ -59,21 +58,21 @@ field_units = "mGal"
 # Define a list of source layouts
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = np.logspace(-4, 2, 7)
+dampings = np.logspace(-4, 2, 7).tolist()
 # Define depht values
-depths = np.arange(1e3, 18e3, 2e3)
+depths = np.arange(1e3, 18e3, 2e3).tolist()
 # Define parameters for the grid sources:
 #    spacing, depth and damping
 grid_sources_spacings = [1e3, 2e3, 3e3]
-grid_sources_depths = np.arange(3e3, 15e3, 2e3)
-grid_sources_dampings = np.logspace(1, 4, 4)
+grid_sources_depths = np.arange(3e3, 15e3, 2e3).tolist()
+grid_sources_dampings = np.logspace(1, 4, 4).tolist()
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
 depth_factors = [1, 2, 3, 4, 5, 6]
-variable_depths = np.arange(50, 1500, 200)
+variable_depths = np.arange(50, 1500, 200).tolist()
 k_values = [1, 5, 10, 15]
 # Define block spacing for block averaged sources
-block_spacings = np.arange(1e3, 5e3, 1e3)
+block_spacings = np.arange(1e3, 5e3, 1e3).tolist()
 # -
 
 # ## Create dictionary with the parameter values for each source distribution
@@ -141,10 +140,11 @@ parameters[layout][depth_type] = dict(
 )
 # -
 
-# ### Save parameters to LaTeX variables file
+# ### Dump parameters to a JSON file
 
-with open(Path("..") / "manuscript" / "parameters_airborne_survey.tex", "w") as f:
-    f.write("\n".join(latex_parameters(parameters, "airborne")))
+json_file = results_dir / "parameters-airborne-survey.json"
+with open(json_file, "w") as f:
+    json.dump(parameters, f)
 
 # ### Combine parameter values for each source distribution
 #
@@ -207,31 +207,14 @@ for layout in parameters_combined:
 
 best_predictions
 
-# ### Save best predictions and scores
+# ### Save best predictions
 
-# +
 datasets = predictions_to_datasets(best_predictions)
 for dataset in datasets:
     dataset.to_netcdf(
         airborne_results_dir / "best_predictions-{}.nc".format(dataset.layout)
     )
 
-for layout in scores:
-    for depth_type in scores[layout]:
-        score = scores[layout][depth_type]
-        score.to_csv(
-            airborne_results_dir / "scores-{}-{}.nc".format(depth_type, layout),
-            index=False,
-        )
-# -
-
-# ### Read best predictions from saved files
-
-best_predictions = []
-for layout in layouts:
-    best_predictions.append(
-        xr.open_dataset(airborne_results_dir / "best_predictions-{}.nc".format(layout))
-    )
 
 # ## Plot best predictions
 
@@ -322,25 +305,3 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 # plt.tight_layout()
 plt.show()
-# -
-
-# ## Save best predictions parameters
-#
-# Save best predictions parameters as LaTeX variables
-
-tex_lines = []
-for dataset in best_predictions:
-    for depth_type in dataset:
-        parameters = dataset[depth_type].attrs
-        layout = parameters["layout"]
-        tex_lines.extend(
-            latex_best_parameters(parameters, "airborne", layout, depth_type)
-        )
-
-
-with open(Path("..") / "manuscript" / "best_parameters_airborne_survey.tex", "w") as f:
-    f.write(
-        "\n".join(
-            tex_lines,
-        )
-    )

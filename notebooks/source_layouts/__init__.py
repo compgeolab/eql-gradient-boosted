@@ -4,10 +4,10 @@ from .layouts import source_below_data, block_averaged_sources, grid_sources
 from .synthetic_model import synthetic_model
 from .plot import plot_prediction
 from .latex_variables import (
-    latex_variables,
-    latex_parameters,
+    create_latex_variable,
+    create_loglist,
+    list_to_latex,
     format_variable_name,
-    latex_best_parameters,
 )
 from .utils import (
     combine_parameters,

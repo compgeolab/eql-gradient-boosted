@@ -4,65 +4,32 @@ Function to define LaTeX variables
 import numpy as np
 
 
-def latex_variables(variable, number, unit=None, fmt=None):
+def create_latex_variable(variable_name, value, unit=None, fmt="5g"):
     """
     Create string to define a new LaTeX variable
     """
+    variable_name = format_variable_name(variable_name)
     if fmt is not None:
-        number = "{number:>{fmt}}".format(number=number, fmt=fmt)
+        value = value_to_string(value, fmt)
     if unit:
-        tex_line = r"\newcommand{{\{variable}}}{{\SI{{{number}}}{{{unit}}}}}".format(
-            variable=variable, number=number, unit=unit
+        unit = format_unit(unit)
+        tex_string = (
+            r"\newcommand{{\{variable_name}}}{{\SI{{{value}}}{{{unit}}}}}".format(
+                variable_name=variable_name, value=value, unit=unit
+            )
         )
     else:
-        tex_line = r"\newcommand{{\{variable}}}{{{number}}}".format(
-            variable=variable, number=number
+        tex_string = r"\newcommand{{\{variable_name}}}{{{value}}}".format(
+            variable_name=variable_name, value=value
         )
-    return tex_line
+    return tex_string
 
 
-def latex_best_parameters(best_parameters, survey, layout, depth_type):
+def value_to_string(value, fmt):
     """
-    Create LaTeX variables for best parameters
+    Convert numerical value to string with a specific format
     """
-    tex_lines = []
-    for parameter, value in best_parameters.items():
-        if parameter in ("depth_type", "layout", "height", "metadata"):
-            continue
-        variable_name = format_variable_name(
-            "_".join(["best", survey, layout, depth_type, parameter])
-        )
-        if parameter == "damping":
-            value = r"\num{{e{:.0f}}}".format(np.log10(value))
-            fmt = None
-        elif parameter == "score":
-            fmt = ".3f"
-        else:
-            fmt = _determine_fmt(value)
-        tex_lines.append(latex_variables(variable_name, value, fmt=fmt))
-    return tex_lines
-
-
-def latex_parameters(parameters, survey):
-    """
-    Create list or ranges of parameters for each source distribution as LaTeX variables
-    """
-    tex_variables = []
-    for layout in parameters:
-        for depth_type in parameters[layout]:
-            for parameter in parameters[layout][depth_type]:
-                if parameter != "depth_type":
-                    values, increment = format_parameters(
-                        parameters[layout][depth_type][parameter], parameter
-                    )
-                    variable_name = format_variable_name(
-                        "_".join([survey, layout, depth_type, parameter])
-                    )
-                    tex_variables.append(latex_variables(variable_name, values))
-                    tex_variables.append(
-                        latex_variables(variable_name + "Increment", increment)
-                    )
-    return tex_variables
+    return "{value:>{fmt}}".format(value=value, fmt=fmt).strip()
 
 
 def format_variable_name(name):
@@ -74,89 +41,66 @@ def format_variable_name(name):
     return name.replace("_", " ").title().replace(" ", "")
 
 
-def format_parameters(parameters, parameter_name):
+def format_unit(unit):
     """
-    Format a list or range of parameters to appear on the table
+    Format unit string to work well with SIunits LaTeX packcage
     """
-    parameters = np.array(parameters, dtype=float)
+    return " ".join(["\\" + u for u in unit.strip().split()])
 
-    # Format damping
-    if parameter_name == "damping":
-        return _format_damping(parameters)
 
-    # Check if parameters are given in ranges and create numrages if # parameter > 4
-    differences = parameters[1:] - parameters[:-1]
-    if np.allclose(differences, differences[0]) and len(parameters) > 4:
-        values, increment = _create_numrange(parameters)
+def list_to_latex(values, max_list_items=4, fmt="5g"):
+    """
+    Generate a numrange or numlist from a list of values
+    """
+    # Convert list to np.array
+    values = np.array(values)
+    # Sort values
+    values.sort()
+    # Check if we must create a numrange or numlist
+    diffs = values[1:] - values[:-1]
+    if np.allclose(diffs, diffs[0]) and values.size > max_list_items:
+        return create_numrange(values, fmt)
     else:
-        values, increment = _create_numlist(parameters)
-    return values, increment
+        return create_numlist(values, fmt)
 
 
-def _create_numrange(parameters):
+def create_numrange(values, fmt):
     """
-    Create range of values using LaTeX numrange
+    Create a numrange out of a list of values
+
+    Intended to represent a linspace.
     """
-    increment = parameters[1] - parameters[0]
-    # Set format
-    params_min_max = []
-    for value in (parameters.min(), parameters.max()):
-        fmt = _determine_fmt(value)
-        params_min_max.append("{v:>{fmt}}".format(v=value, fmt=fmt))
-    values = r"\numrange{{{min}}}{{{max}}}".format(
-        min=params_min_max[0], max=params_min_max[1]
-    )
-    fmt = _determine_fmt(increment)
-    increment = r", step size \num{{{increment:>{fmt}}}}".format(
-        increment=increment, fmt=fmt
-    )
-    return values, increment
+    increment = value_to_string(values[1] - values[0], fmt=fmt)
+    vmin = value_to_string(values.min(), fmt=fmt)
+    vmax = value_to_string(values.max(), fmt=fmt)
+    numrange = r"\numrange{{{min}}}{{{max}}}".format(min=vmin, max=vmax)
+    numrange += r", step size \num{{{increment}}}".format(increment=increment)
+    return numrange
 
 
-def _determine_fmt(value, decimal_digits=1):
+def create_loglist(values):
     """
-    Determine the proper format for float numbers
-
-    We assume that value is > 0.
+    Create a list or a range out of a set of logscaled values
     """
-    if value == 0:
-        fmt = ".0f"
-    else:
-        if value < 1:
-            fmt = ".{:d}f".format(decimal_digits)
-        else:
-            fmt = ".0f"
-    return fmt
-
-
-def _create_numlist(parameters):
-    """
-    Create list of values using LaTeX numlist
-    """
-    values = []
-    for value in parameters:
-        fmt = _determine_fmt(value)
-        values.append("{v:>{fmt}}".format(v=value, fmt=fmt))
-    values = ";".join(values)
-    values = r"\numlist{{{values}}}".format(values=values)
-    increment = ""
-    return values, increment
-
-
-def _format_damping(parameters):
-    """
-    Create range of values for damping parameters
-    """
-    parameters = np.log10(parameters)
-    differences = parameters[1:] - parameters[:-1]
-    increment = differences[1] - differences[0]
+    values = np.log10(values)
+    differences = values[1:] - values[:-1]
     assert np.allclose(differences[0], differences)
-    values = ["e{:.0f}".format(p) for p in parameters]
+    values = ["e{:.0f}".format(v) for v in values]
     if len(values) > 4:
         values = [r"\num{{{v}}}".format(v=v) for v in values]
         values = r"{}, {},$\dots$, {}".format(values[0], values[1], values[-1])
     else:
         values = ";".join(values)
         values = r"\numlist{{{values}}}".format(values=values)
-    increment = ""
-    return values, increment
+    return values
+
+
+def create_numlist(values, fmt):
+    """
+    Create a numlist out of a list of values
+
+    Intended to represent a list of random values.
+    """
+    numlist = ";".join([value_to_string(v, fmt) for v in values])
+    numlist = r"\numlist{{{v}}}".format(v=numlist)
+    return numlist

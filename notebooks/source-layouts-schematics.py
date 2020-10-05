@@ -15,6 +15,7 @@
 
 # +
 from IPython.display import display  # noqa: F401  # ignore used but not imported
+import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -29,7 +30,8 @@ from source_layouts import latex_variables, format_variable_name
 # ## Define parameters for building the source distributions
 
 # Define results directory to read synthetic ground survey
-ground_results_dir = Path("..") / "results" / "ground_survey"
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
 
 # ## Read synthetic ground survey
 #
@@ -161,22 +163,17 @@ plt.savefig(
 plt.show()
 # -
 
-# ## Save number of observation points and sources to LaTeX variables
+# ## Dump number of observation points and sources to JSON file
 
 # +
-tex_lines = []
-
-tex_lines.append(
-    latex_variables("SourceLayoutsSchematicsObservations", survey.easting.size),
-)
+variables = {
+    "source_layouts_schematics_observations": survey.easting.size,
+}
 for layout in layouts:
-    tex_lines.append(
-        latex_variables(
-            "SourceLayoutsSchematics{}".format(format_variable_name(layout)),
-            source_distributions[layout][0].size,
-        )
-    )
-# -
+    variables["source_layouts_schematics_{}".format(layout)] = source_distributions[
+        layout
+    ][0].size
 
-with open(Path("..") / "manuscript" / "source_layouts_schematics.tex", "w") as f:
-    f.write("\n".join(tex_lines))
+json_file = results_dir / "source-layouts-schematics.json"
+with open(json_file, "w") as f:
+    json.dump(variables, f)
