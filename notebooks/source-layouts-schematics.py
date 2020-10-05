@@ -23,7 +23,6 @@ import verde as vd
 import matplotlib.pyplot as plt
 
 import source_layouts
-from source_layouts import latex_variables, format_variable_name
 
 # -
 

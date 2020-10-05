@@ -31,7 +31,6 @@ from matplotlib.collections import PatchCollection
 
 from source_layouts import (
     synthetic_model,
-    latex_variables,
 )
 
 # -
