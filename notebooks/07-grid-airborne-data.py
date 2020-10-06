@@ -203,14 +203,16 @@ for layout in parameters_combined:
         )
         best_predictions.append(best_prediction)
         scores[layout][depth_type] = params_and_scores
+
+# Group best predictions into datasets
+best_predictions = predictions_to_datasets(best_predictions)
 # -
 
 best_predictions
 
 # ### Save best predictions
 
-datasets = predictions_to_datasets(best_predictions)
-for dataset in datasets:
+for dataset in best_predictions:
     dataset.to_netcdf(
         airborne_results_dir / "best_predictions-{}.nc".format(dataset.layout)
     )

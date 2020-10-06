@@ -195,7 +195,7 @@ coordinates = (survey.easting.values, survey.northing.values, survey.height.valu
 
 # ## Score each interpolation
 
-# +
+# + jupyter={"outputs_hidden": true}
 scores = {layout: {} for layout in layouts}
 best_predictions = []
 
@@ -211,12 +211,16 @@ for layout in parameters_combined:
         )
         best_predictions.append(best_prediction)
         scores[layout][depth_type] = params_and_scores
+
+# Group best predictions into datasets
+best_predictions = predictions_to_datasets(best_predictions)
 # -
+
+best_predictions
 
 # ### Save best predictions
 
-datasets = predictions_to_datasets(best_predictions)
-for dataset in datasets:
+for dataset in best_predictions:
     dataset.to_netcdf(
         ground_results_dir / "best_predictions-{}.nc".format(dataset.layout)
     )
@@ -310,3 +314,4 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 # plt.tight_layout()
 plt.show()
+# -
