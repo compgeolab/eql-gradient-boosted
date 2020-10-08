@@ -7,8 +7,8 @@ import verde as vd
 import harmonica as hm
 from sklearn.metrics import mean_squared_error
 
-from ..eql_iterative import EQLIterative
-from .. import block_averaged_sources
+from .eql_iterative import EQLIterative
+from .layouts import block_averaged_sources
 
 
 def test_eql_iterative_single_window():

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -18,12 +18,12 @@
 # Import packages
 
 # +
-import os
+from pathlib import Path
 import numpy as np
 import verde as vd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts import block_averaged_sources
+from source_layouts import block_averaged_sources
 
 # -
 
@@ -65,7 +65,7 @@ for nodes in grid_lines:
 
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 # Boundaries of the grid
 xmin, xmax, ymin, ymax = vd.get_region(coordinates)
@@ -144,6 +144,6 @@ for ax, label in zip(axes, labels):
 
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "block-averaged-sources-schematics.pdf")
+    Path("..") / "manuscript" / "figs" / "block-averaged-sources-schematics.pdf"
 )
 plt.show()

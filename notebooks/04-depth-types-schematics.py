@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.5
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -19,18 +19,18 @@
 
 # +
 from IPython.display import display
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts.layouts import source_below_data
+from source_layouts import source_below_data
 
 # -
 
 # Read a synthetic 1d survey
 
-survey = pd.read_csv(os.path.join("..", "data", "survey_1d.csv"))
+survey = pd.read_csv(Path("..") / "data" / "survey_1d.csv")
 display(survey)
 
 # ## Create source distributions
@@ -75,7 +75,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 # Initialize figure and axes
 width = 6.66
@@ -88,7 +88,7 @@ titles = ["Constant Depth", "Relative Depth", "Variable Depth"]
 labels = "a b c".split()
 
 # Plot
-for i, (ax, depth_type, title, label) in enumerate(zip(axes, points, titles, labels)):
+for ax, depth_type, title, label in zip(axes, points, titles, labels):
     ax.scatter(coordinates[0], coordinates[2], s=size, label="stations", marker="^")
     ax.scatter(points[depth_type][0], points[depth_type][2], s=size, label="sources")
     ax.axhline(y=0, color="grey", linestyle="--", linewidth=0.5)
@@ -119,5 +119,5 @@ axes[0].legend(loc=(0.6, 0.32), borderpad=0.2, labelspacing=0.3)
 axes[0].set_ylim(-200, 130)
 
 plt.tight_layout(w_pad=0)
-plt.savefig(os.path.join("..", "manuscript", "figs", "depth_types.pdf"))
+plt.savefig(Path("..") / "manuscript" / "figs" / "depth_types.pdf")
 plt.show()

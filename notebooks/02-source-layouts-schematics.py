@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.3.4
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -14,31 +14,30 @@
 # ---
 
 # +
-from IPython.display import display
-import os
-import pyproj
+from IPython.display import display  # noqa: F401  # ignore used but not imported
+import json
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import verde as vd
-import harmonica as hm
 import matplotlib.pyplot as plt
 
-import eql_source_layouts
-from eql_source_layouts import latex_variables, format_variable_name
+import source_layouts
 
 # -
 
 # ## Define parameters for building the source distributions
 
 # Define results directory to read synthetic ground survey
-ground_results_dir = os.path.join("..", "results", "ground_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
 
 # ## Read synthetic ground survey
 #
 
 # Get coordinates of observation points from a synthetic ground survey
 
-survey = pd.read_csv(os.path.join(ground_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 
 inside = np.logical_and(
     np.logical_and(
@@ -88,7 +87,7 @@ parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=grid_spacing
 
 source_distributions = {}
 for layout in parameters:
-    source_distributions[layout] = getattr(eql_source_layouts, layout)(
+    source_distributions[layout] = getattr(source_layouts, layout)(
         coordinates, **parameters[layout]
     )
 
@@ -107,7 +106,7 @@ for nodes in grid_lines:
 
 # +
 # Load matplotlib configuration
-plt.style.use(os.path.join("..", "matplotlib.rc"))
+plt.style.use(Path("..") / "matplotlib.rc")
 
 fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(6.66, 1.65), dpi=300)
 size = 3
@@ -158,27 +157,22 @@ for y in grid_lines[1]:
 
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    os.path.join("..", "manuscript", "figs", "source-layouts-schematics.pdf"), dpi=300
+    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf", dpi=300
 )
 plt.show()
 # -
 
-# ## Save number of observation points and sources to LaTeX variables
+# ## Dump number of observation points and sources to JSON file
 
 # +
-tex_lines = []
-
-tex_lines.append(
-    latex_variables("SourceLayoutsSchematicsObservations", survey.easting.size),
-)
+variables = {
+    "source_layouts_schematics_observations": survey.easting.size,
+}
 for layout in layouts:
-    tex_lines.append(
-        latex_variables(
-            "SourceLayoutsSchematics{}".format(format_variable_name(layout)),
-            source_distributions[layout][0].size,
-        )
-    )
-# -
+    variables["source_layouts_schematics_{}".format(layout)] = source_distributions[
+        layout
+    ][0].size
 
-with open(os.path.join("..", "manuscript", "source_layouts_schematics.tex"), "w") as f:
-    f.write("\n".join(tex_lines))
+json_file = results_dir / "source-layouts-schematics.json"
+with open(json_file, "w") as f:
+    json.dump(variables, f)

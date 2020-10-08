@@ -6,7 +6,7 @@ import numpy as np
 import numpy.testing as npt
 import verde as vd
 
-from ..layouts import (
+from .layouts import (
     constant_depth,
     relative_depth,
     variable_depth,

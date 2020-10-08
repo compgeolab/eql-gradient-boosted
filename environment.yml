@@ -20,6 +20,4 @@ dependencies:
     - black
     - pylint
     - flake8
-    # Install our package in editable mode
-    - pip:
-      - -e .
+    - flake8-bugbear

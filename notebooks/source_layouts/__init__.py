@@ -1,14 +1,13 @@
 # pylint: disable=missing-docstring
 # Import functions/classes to make the public API
-from ._version import get_versions
 from .layouts import source_below_data, block_averaged_sources, grid_sources
 from .synthetic_model import synthetic_model
 from .plot import plot_prediction
 from .latex_variables import (
-    latex_variables,
-    latex_parameters,
+    create_latex_variable,
+    create_loglist,
+    list_to_latex,
     format_variable_name,
-    latex_best_parameters,
 )
 from .utils import (
     combine_parameters,
@@ -17,7 +16,3 @@ from .utils import (
     predictions_to_datasets,
 )
 from .eql_iterative import EQLIterative
-
-# Get the version number through versioneer
-__version__ = get_versions()["version"]
-del get_versions

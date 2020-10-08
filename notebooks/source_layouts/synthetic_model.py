@@ -80,6 +80,10 @@ def synthetic_model(region):
     prisms += dike["prisms"]
     densities += dike["densities"]
 
+    # Convert prisms and densities to numpy arrays
+    prisms = np.array(prisms, dtype="float64")
+    densities = np.array(densities, dtype="float64")
+
     # Scale prisms to the passed region
     prisms = _scale_model(prisms, region)
     # Create a collection of Rectangle from the prisms

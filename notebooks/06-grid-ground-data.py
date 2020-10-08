@@ -6,32 +6,31 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.0
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
 #     name: conda-env-eql_source_layouts-py
 # ---
 
-# # Grid airborne survey data using different source distributions
+# # Grid ground survey data using different source distributions
 
 # **Import useful packages**
 
 # +
-import os
+from pathlib import Path
+import json
 import numpy as np
 import pandas as pd
 import xarray as xr
 import verde as vd
 import matplotlib.pyplot as plt
 
-from eql_source_layouts import (
+from source_layouts import (
     combine_parameters,
     plot_prediction,
     get_best_prediction,
     predictions_to_datasets,
-    latex_parameters,
-    latex_best_parameters,
 )
 
 # -
@@ -40,15 +39,16 @@ from eql_source_layouts import (
 #
 # Let's define all the parameters that will be used on this notebook in the following
 # cells. These control the results that will be obtain on the rest of the notebook. If
-# you want to change something (like the interpolation parameters), you can just do it here.
+# you want to change something (like the interpolation parameters), you can just do it
+# here.
 #
 # We will avoid hardcoding parameters outside of these few cells in order to facilitate
 # reproducibility and keep things more organized.
 
 # +
 # Define results directory
-results_dir = os.path.join("..", "results")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
 
 # Define which field will be meassured
 field = "g_z"
@@ -59,27 +59,34 @@ field_units = "mGal"
 # Define a list of source layouts
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = np.logspace(-4, 2, 7)
+dampings = np.logspace(-4, 2, 7).tolist()
 # Define depht values
-depths = np.arange(1e3, 18e3, 2e3)
+depths = np.arange(1e3, 18e3, 2e3).tolist()
 # Define parameters for the grid sources:
 #    spacing, depth and damping
-grid_sources_spacings = [1e3, 2e3, 3e3]
-grid_sources_depths = np.arange(3e3, 15e3, 2e3)
-grid_sources_dampings = np.logspace(1, 4, 4)
+grid_sources_spacings = np.arange(1e3, 5e3, 1e3).tolist()
+grid_sources_depths = np.arange(3e3, 15e3, 2e3).tolist()
+grid_sources_dampings = np.logspace(1, 4, 4).tolist()
 # Define parameters for variable relative depth layouts:
-#    depth factor, depth shift and k_values
-depth_factors = [1, 2, 3, 4, 5, 6]
-variable_depths = np.arange(50, 1500, 200)
+#    depth_factor, depth and k_nearest
+depth_factors = [0.1, 0.5, 1, 2, 3, 4, 5, 6]
+variable_depths = np.arange(0, 1500, 200).tolist()
 k_values = [1, 5, 10, 15]
 # Define block spacing for block averaged sources
-block_spacings = np.arange(1e3, 5e3, 1e3)
+block_spacings = np.arange(1e3, 5e3, 1e3).tolist()
 # -
 
 # ## Create dictionary with the parameter values for each source distribution
 
 # +
 parameters = {layout: {} for layout in layouts}
+
+# Source below data
+layout = "source_below_data"
+depth_type = "constant_depth"
+parameters[layout][depth_type] = dict(
+    depth_type=depth_type, damping=dampings, depth=depths
+)
 
 # Source below data
 layout = "source_below_data"
@@ -141,10 +148,11 @@ parameters[layout][depth_type] = dict(
 )
 # -
 
-# ### Save parameters to LaTeX variables file
+# ### Dump parameters to a JSON file
 
-with open(os.path.join("..", "manuscript", "parameters_airborne_survey.tex"), "w") as f:
-    f.write("\n".join(latex_parameters(parameters, "airborne")))
+json_file = results_dir / "parameters-ground-survey.json"
+with open(json_file, "w") as f:
+    json.dump(parameters, f)
 
 # ### Combine parameter values for each source distribution
 #
@@ -160,16 +168,16 @@ for layout in parameters:
         )
 # -
 
-# ## Read synthetic airborne survey and target grid
+# ## Read synthetic ground survey and target grid
 
-# Read airborne survey
+# Read ground survey
 
-survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
+survey = pd.read_csv(ground_results_dir / "survey.csv")
 survey
 
 # Read target grid
 
-target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+target = xr.open_dataarray(results_dir / "target.nc")
 target
 
 # Define coordiantes tuple with the location of the survey points
@@ -187,8 +195,8 @@ coordinates = (survey.easting.values, survey.northing.values, survey.height.valu
 
 # ## Score each interpolation
 
-# +
-scores = {layout: {} for layout in layouts if layouts != "grid_sources"}
+# + jupyter={"outputs_hidden": true}
+scores = {layout: {} for layout in layouts}
 best_predictions = []
 
 for layout in parameters_combined:
@@ -203,40 +211,18 @@ for layout in parameters_combined:
         )
         best_predictions.append(best_prediction)
         scores[layout][depth_type] = params_and_scores
+
+# Group best predictions into datasets
+best_predictions = predictions_to_datasets(best_predictions)
 # -
 
 best_predictions
 
-# ### Save best predictions and scores
+# ### Save best predictions
 
-# +
-datasets = predictions_to_datasets(best_predictions)
-for dataset in datasets:
+for dataset in best_predictions:
     dataset.to_netcdf(
-        os.path.join(
-            airborne_results_dir, "best_predictions-{}.nc".format(dataset.layout)
-        )
-    )
-
-for layout in scores:
-    for depth_type in scores[layout]:
-        score = scores[layout][depth_type]
-        score.to_csv(
-            os.path.join(
-                airborne_results_dir, "scores-{}-{}.nc".format(depth_type, layout)
-            ),
-            index=False,
-        )
-# -
-
-# ### Read best predictions from saved files
-
-best_predictions = []
-for layout in layouts:
-    best_predictions.append(
-        xr.open_dataset(
-            os.path.join(airborne_results_dir, "best_predictions-{}.nc".format(layout))
-        )
+        ground_results_dir / "best_predictions-{}.nc".format(dataset.layout)
     )
 
 # ## Plot best predictions
@@ -329,26 +315,3 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 # plt.tight_layout()
 plt.show()
 # -
-
-# ## Save best predictions parameters
-#
-# Save best predictions parameters as LaTeX variables
-
-tex_lines = []
-for dataset in best_predictions:
-    for depth_type in dataset:
-        parameters = dataset[depth_type].attrs
-        layout = parameters["layout"]
-        tex_lines.extend(
-            latex_best_parameters(parameters, "airborne", layout, depth_type)
-        )
-
-
-with open(
-    os.path.join("..", "manuscript", "best_parameters_airborne_survey.tex"), "w"
-) as f:
-    f.write(
-        "\n".join(
-            tex_lines,
-        )
-    )

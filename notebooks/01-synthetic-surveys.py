@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.0
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -19,7 +19,8 @@
 
 # +
 from IPython.display import display
-import os
+from pathlib import Path
+import json
 import pyproj
 import numpy as np
 import xarray as xr
@@ -28,9 +29,8 @@ import harmonica as hm
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 
-from eql_source_layouts import (
+from source_layouts import (
     synthetic_model,
-    latex_variables,
 )
 
 # -
@@ -39,9 +39,9 @@ from eql_source_layouts import (
 
 # +
 # Define results directories
-results_dir = os.path.join("..", "results")
-ground_results_dir = os.path.join(results_dir, "ground_survey")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / "results"
+ground_results_dir = results_dir / "ground_survey"
+airborne_results_dir = results_dir / "airborne_survey"
 
 # Define a survey region of 1 x 1 degrees (~ 100km x 100km)
 region_degrees = (-0.5, 0.5, -0.5, 0.5)
@@ -65,12 +65,6 @@ np.random.seed(12345)
 target_grid_spacing = 2e3
 target_grid_height = 2000
 # -
-
-# **Initialize latex_lines list**
-#
-# On this list we will store all the variables we want to mention on the LaTeX manuscript.
-
-latex_lines = []
 
 # ## Synthetic model made out of prisms
 
@@ -97,36 +91,18 @@ ax.set_xlim(region[:2])
 ax.set_ylim(region[2:4])
 plt.show()
 
-# **Save model related quantities to LaTeX file**
+# **Save model related quantities on dictionary**
 
-# +
-assert model_region[5] == 0
+np.min(model["densities"])
 
-latex_lines.extend(
-    [
-        latex_variables("NPrisms", len(model["densities"])),
-        latex_variables(
-            "ModelEasting",
-            (model_region[1] - model_region[0]) * 1e-3,
-            r"\km",
-            fmt=".0f",
-        ),
-        latex_variables(
-            "ModelNorthing",
-            (model_region[1] - model_region[0]) * 1e-3,
-            r"\km",
-            fmt=".0f",
-        ),
-        latex_variables("ModelDepth", abs(model_region[4]) * 1e-3, r"\km", fmt=".0f"),
-        latex_variables(
-            "ModelMinDensity", np.min(model["densities"]), r"\kg\per\cubic\m", fmt=".0f"
-        ),
-        latex_variables(
-            "ModelMaxDensity", np.max(model["densities"]), r"kg\per\cubic\m", fmt=".0f"
-        ),
-    ]
-)
-# -
+variables = {
+    "n_prisms": len(model["densities"]),
+    "model_easting": (model_region[1] - model_region[0]),
+    "model_northing": (model_region[1] - model_region[0]),
+    "model_depth": abs(model_region[4]),
+    "model_min_density": np.min(model["densities"]),
+    "model_max_density": np.max(model["densities"]),
+}
 
 # ## Synthetic ground survey
 
@@ -183,24 +159,16 @@ plt.show()
 
 # Save ground survey for future usage
 
-survey.to_csv(os.path.join(ground_results_dir, "survey.csv"), index=False)
+survey.to_csv(ground_results_dir / "survey.csv", index=False)
 
 # Save ground survey quantities to LaTeX file
 
-latex_lines.extend(
-    [
-        latex_variables(
-            "SurveyEasting", (region[1] - region[0]) * 1e-3, r"\km", fmt=".0f"
-        ),
-        latex_variables(
-            "SurveyNorthing", (region[1] - region[0]) * 1e-3, r"\km", fmt=".0f"
-        ),
-        latex_variables("SurveyNoise", noise_std, r"\milli Gal", fmt=".0f"),
-        latex_variables("GroundSurveyPoints", int(survey.height.size)),
-        latex_variables("GroundSurveyMinHeight", survey.height.min(), r"\m", fmt=".0f"),
-        latex_variables("GroundSurveyMaxHeight", survey.height.max(), r"\m", fmt=".0f"),
-    ]
-)
+variables["survey_easting"] = region[1] - region[0]
+variables["survey_northing"] = region[3] - region[2]
+variables["survey_noise"] = noise_std
+variables["ground_survey_points"] = int(survey.height.size)
+variables["ground_survey_min_height"] = survey.height.min()
+variables["ground_survey_max_height"] = survey.height.max()
 
 # ## Synthetic airborne survey
 
@@ -257,21 +225,13 @@ plt.show()
 
 # Save ground survey for future usage
 
-survey.to_csv(os.path.join(airborne_results_dir, "survey.csv"), index=False)
+survey.to_csv(airborne_results_dir / "survey.csv", index=False)
 
-# Save airborne survey quantities to LaTeX file
+# Save airborne survey quantities to variables dictionary
 
-latex_lines.extend(
-    [
-        latex_variables("AirborneSurveyPoints", int(survey.height.size)),
-        latex_variables(
-            "AirborneSurveyMinHeight", survey.height.min(), r"\m", fmt=".0f"
-        ),
-        latex_variables(
-            "AirborneSurveyMaxHeight", survey.height.max(), r"\m", fmt=".0f"
-        ),
-    ]
-)
+variables["airborne_survey_points"] = int(survey.height.size)
+variables["airborne_survey_min_height"] = survey.height.min()
+variables["airborne_survey_max_height"] = survey.height.max()
 
 # ## Compute gravity field on target grid
 
@@ -299,18 +259,14 @@ target = xr.DataArray(
 
 # Save target grid to disk for future usage
 
-target.to_netcdf(os.path.join(results_dir, "target.nc"))
+target.to_netcdf(results_dir / "target.nc")
 
-# Save target grid quantities to LaTeX file
+# Save target grid quantities to variables dictionary
 
-latex_lines.extend(
-    [
-        latex_variables("TargetHeight", target_grid_height, r"\m", fmt=".0f"),
-        latex_variables("TargetSpacing", target_grid_spacing * 1e-3, r"\km", fmt=".0f"),
-        latex_variables("TargetEastingSize", target.easting.size),
-        latex_variables("TargetNorthingSize", target.northing.size),
-    ]
-)
+variables["target_height"] = target_grid_height
+variables["target_spacing"] = target_grid_spacing * 1e-3
+variables["target_easting_size"] = target.easting.size
+variables["target_northing_size"] = target.northing.size
 
 # Plot target grid
 
@@ -319,10 +275,8 @@ plt.gca().set_aspect("equal")
 plt.title("Target grid")
 plt.show()
 
-# ## Dump LaTeX variables to file
+# ## Dump variables dictionary to a JSON file
 
-for i in latex_lines:
-    print(i)
-
-with open(os.path.join("..", "manuscript", "synthetic_model_surveys.tex"), "w") as f:
-    f.write("\n".join(latex_lines))
+json_file = results_dir / "synthetic-surveys.json"
+with open(json_file, "w") as f:
+    json.dump(variables, f)
