@@ -150,7 +150,7 @@ parameters[layout][depth_type] = dict(
 
 # ### Dump parameters to a JSON file
 
-json_file = results_dir / "parameters-ground-survey.json"
+json_file = ground_results_dir / "parameters.json"
 with open(json_file, "w") as f:
     json.dump(parameters, f)
 
@@ -314,4 +314,3 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 # plt.tight_layout()
 plt.show()
-# -

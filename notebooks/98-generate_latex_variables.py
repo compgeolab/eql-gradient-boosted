@@ -168,7 +168,7 @@ with open(tex_file, "w") as f:
 # ## Gridding ground survey
 
 # +
-json_file = results_dir / "parameters-ground-survey.json"
+json_file = results_dir / "ground_survey" / "parameters.json"
 tex_file = manuscript_dir / "parameters-ground-survey.tex"
 
 with open(json_file, "r") as f:
@@ -205,7 +205,7 @@ with open(tex_file, "w") as f:
 # ## Gridding airborne survey
 
 # +
-json_file = results_dir / "parameters-airborne-survey.json"
+json_file = results_dir / "airborne_survey" / "parameters.json"
 tex_file = manuscript_dir / "parameters-airborne-survey.tex"
 
 with open(json_file, "r") as f:

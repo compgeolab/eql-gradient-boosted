@@ -142,7 +142,7 @@ parameters[layout][depth_type] = dict(
 
 # ### Dump parameters to a JSON file
 
-json_file = results_dir / "parameters-airborne-survey.json"
+json_file = airborne_results_dir / "parameters.json"
 with open(json_file, "w") as f:
     json.dump(parameters, f)
 
