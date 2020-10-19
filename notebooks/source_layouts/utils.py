@@ -1,3 +1,5 @@
+import datetime
+import json
 import itertools
 import numpy as np
 import pandas as pd
@@ -19,6 +21,30 @@ def combine_parameters(**kwargs):
         for combo in itertools.product(*values)
     ]
     return parameters
+
+
+def save_to_json(dictionary, json_file):
+    """
+    Save dictionary to json file
+    """
+    with open(json_file, "w") as f:
+        json.dump(dictionary, f, default=_convert_numpy_types)
+
+
+def _convert_numpy_types(obj):
+    """
+    Convert numpy variables to Python variables
+
+    This prevents invalid types errors being raised by json
+    """
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime.datetime):
+        return obj.__str__()
 
 
 def grid_data(coordinates, data, region, shape, height, layout, parameters):

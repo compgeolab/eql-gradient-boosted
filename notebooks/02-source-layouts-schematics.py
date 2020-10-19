@@ -15,7 +15,6 @@
 
 # +
 from IPython.display import display  # noqa: F401  # ignore used but not imported
-import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -23,6 +22,7 @@ import verde as vd
 import matplotlib.pyplot as plt
 
 import source_layouts
+from source_layouts import save_to_json
 
 # -
 
@@ -174,5 +174,4 @@ for layout in layouts:
     ][0].size
 
 json_file = results_dir / "source-layouts-schematics.json"
-with open(json_file, "w") as f:
-    json.dump(variables, f)
+save_to_json(variables, json_file)
