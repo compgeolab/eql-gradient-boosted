@@ -1,7 +1,7 @@
 # The name of the main .tex file to build.
 PROJECT = manuscript
 # List other .tex needed files
-TEX_FILES= synthetic_model_surveys.tex parameters_ground_survey.tex parameters_airborne_survey.tex best_parameters_ground_survey.tex best_parameters_airborne_survey.tex
+TEX-FILES= synthetic-surveys.tex parameters-ground-survey.tex parameters-airborne-survey.tex best-parameters-ground-survey.tex best-parameters-airborne-survey.tex
 # Folder where output will be placed
 OUTDIR = _output
 # Name of the output file
