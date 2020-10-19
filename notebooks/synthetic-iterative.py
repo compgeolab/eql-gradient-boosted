@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.2
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -16,7 +16,8 @@
 # **Import useful packages**
 
 # +
-import os
+from pathlib import Path
+import json
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -24,18 +25,19 @@ import verde as vd
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
 
-from eql_source_layouts import (
+from source_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLIterative,
+    save_to_json,
 )
-
 # -
 
 # **Define results directory**
 
-results_dir = os.path.join("..", "results")
-airborne_results_dir = os.path.join(results_dir, "airborne_survey")
+results_dir = Path("..") / "results"
+airborne_results_dir = results_dir / "airborne_survey"
+iterative_results_dir = results_dir / "iterative"
 
 # **Define which field will be meassured**
 
@@ -46,12 +48,12 @@ field_units = "mGal"
 
 # Read airborne survey
 
-survey = pd.read_csv(os.path.join(airborne_results_dir, "survey.csv"))
+survey = pd.read_csv(airborne_results_dir / "survey.csv")
 survey
 
 # Read target grid
 
-target = xr.open_dataarray(os.path.join(results_dir, "target.nc"))
+target = xr.open_dataarray(results_dir / "target.nc")
 target
 
 # Define coordiantes tuple with the location of the survey points
@@ -75,7 +77,7 @@ region = (
 # Define gridding parameters
 
 depth_type = "relative_depth"
-random_state = 0
+random_state = int(0)
 block_spacing = 2e3
 dampings = np.logspace(-6, 1, 8)
 depths = np.arange(1e3, 20e3, 2e3)
@@ -93,6 +95,11 @@ parameters = combine_parameters(
         random_state=random_state,
     )
 )
+
+# Dump parameters to a JSON file
+
+json_file = iterative_results_dir / "parameters-20km.json"
+save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
 
@@ -150,7 +157,7 @@ plt.show()
 
 # Save grid
 
-grid.to_netcdf(os.path.join(results_dir, "gravity_grid_iterative_20km.nc"))
+grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_20km.nc")
 
 # ### Use a window size of 50km
 
@@ -171,6 +178,11 @@ parameters = combine_parameters(
     )
 )
 
+# Dump parameters to a JSON file
+
+json_file = iterative_results_dir / "parameters-50km.json"
+save_to_json(parameters, json_file)
+
 # Grid and score the prediction with each set of parameters
 
 scores = []
@@ -226,4 +238,4 @@ plt.show()
 # -
 # Save grid
 
-grid.to_netcdf(os.path.join(results_dir, "gravity_grid_iterative_50km.nc"))
+grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_50km.nc")
