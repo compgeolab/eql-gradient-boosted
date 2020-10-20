@@ -10,6 +10,7 @@ from .latex_variables import (
     format_variable_name,
 )
 from .utils import (
+    save_to_json,
     combine_parameters,
     get_best_prediction,
     grid_data,
