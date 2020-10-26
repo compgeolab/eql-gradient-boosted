@@ -20,7 +20,6 @@
 # +
 from IPython.display import display
 from pathlib import Path
-import json
 import pyproj
 import numpy as np
 import xarray as xr
@@ -31,6 +30,7 @@ from matplotlib.collections import PatchCollection
 
 from source_layouts import (
     synthetic_model,
+    save_to_json,
 )
 
 # -
@@ -92,8 +92,6 @@ ax.set_ylim(region[2:4])
 plt.show()
 
 # **Save model related quantities on dictionary**
-
-np.min(model["densities"])
 
 variables = {
     "n_prisms": len(model["densities"]),
@@ -278,5 +276,4 @@ plt.show()
 # ## Dump variables dictionary to a JSON file
 
 json_file = results_dir / "synthetic-surveys.json"
-with open(json_file, "w") as f:
-    json.dump(variables, f)
+save_to_json(variables, json_file)
