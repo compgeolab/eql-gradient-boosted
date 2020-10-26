@@ -1,0 +1,8 @@
+[flake8]
+ignore = E203, E266, E501, W503, E741
+max-line-length = 88
+exclude = notebooks/.ipynb_checkpoints
+per-file-ignores =
+    # imported but unused
+    __init__.py: F401
+
