@@ -19,7 +19,6 @@
 
 # +
 from pathlib import Path
-import json
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -27,6 +26,7 @@ import verde as vd
 import matplotlib.pyplot as plt
 
 from source_layouts import (
+    save_to_json,
     combine_parameters,
     plot_prediction,
     get_best_prediction,
@@ -59,21 +59,21 @@ field_units = "mGal"
 # Define a list of source layouts
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
 # Define dampings used on every fitting of the gridder
-dampings = np.logspace(-4, 2, 7).tolist()
+dampings = np.logspace(-4, 2, 7)
 # Define depht values
-depths = np.arange(1e3, 18e3, 2e3).tolist()
+depths = np.arange(1e3, 18e3, 2e3)
 # Define parameters for the grid sources:
 #    spacing, depth and damping
-grid_sources_spacings = np.arange(1e3, 5e3, 1e3).tolist()
-grid_sources_depths = np.arange(3e3, 15e3, 2e3).tolist()
-grid_sources_dampings = np.logspace(1, 4, 4).tolist()
+grid_sources_spacings = np.arange(1e3, 5e3, 1e3)
+grid_sources_depths = np.arange(3e3, 15e3, 2e3)
+grid_sources_dampings = np.logspace(1, 4, 4)
 # Define parameters for variable relative depth layouts:
 #    depth_factor, depth and k_nearest
 depth_factors = [0.1, 0.5, 1, 2, 3, 4, 5, 6]
-variable_depths = np.arange(0, 1500, 200).tolist()
+variable_depths = np.arange(0, 1500, 200)
 k_values = [1, 5, 10, 15]
 # Define block spacing for block averaged sources
-block_spacings = np.arange(1e3, 5e3, 1e3).tolist()
+block_spacings = np.arange(1e3, 5e3, 1e3)
 # -
 
 # ## Create dictionary with the parameter values for each source distribution
@@ -151,8 +151,7 @@ parameters[layout][depth_type] = dict(
 # ### Dump parameters to a JSON file
 
 json_file = results_dir / "parameters-ground-survey.json"
-with open(json_file, "w") as f:
-    json.dump(parameters, f)
+save_to_json(parameters, json_file)
 
 # ### Combine parameter values for each source distribution
 #
@@ -314,4 +313,3 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 # plt.tight_layout()
 plt.show()
-# -
