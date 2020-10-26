@@ -17,7 +17,6 @@
 
 # +
 from pathlib import Path
-import json
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -31,6 +30,7 @@ from source_layouts import (
     EQLIterative,
     save_to_json,
 )
+
 # -
 
 # **Define results directory**
