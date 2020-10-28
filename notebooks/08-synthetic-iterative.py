@@ -13,6 +13,8 @@
 #     name: conda-env-eql_source_layouts-py
 # ---
 
+# # Grid synthetic airborne survey with iterative equivalent layer
+
 # **Import useful packages**
 
 # +
