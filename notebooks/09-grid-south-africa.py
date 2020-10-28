@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.5.2
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python [conda env:eql_source_layouts]
 #     language: python
@@ -17,34 +17,29 @@
 
 # +
 from IPython.display import display
-import os
-import itertools
+from pathlib import Path
+import warnings
 import pyproj
 import dask
 import numpy as np
-import pandas as pd
 import boule as bl
 import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
-from eql_source_layouts import (
+from source_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLIterative,
+    save_to_json,
 )
 
 # -
 
 # Define results directory
 
-# +
-results_dir = os.path.join("..", "results", "south_africa")
-
-if not os.path.isdir(results_dir):
-    os.makedirs(results_dir)
-# -
+results_dir = Path("..") / "results" / "south_africa"
 
 # Fetch South Africa gravity data
 
@@ -131,9 +126,9 @@ plt.show()
 depth_type = "variable_depth"
 spacing = 15e3
 k_nearest = 10
-depth_factors = [0.1, 0.5, 1]
-dampings = [1e1, 1e2, 1e3, 1e4, 1e5]
-depths = [1e3, 2e3, 5e3, 7e3, 10e3]
+depth_factors = [0.05, 0.1, 0.5]
+dampings = [1e2, 1e3, 1e4]
+depths = [2e3, 5e3, 7e3, 10e3]
 
 # Combine these parameters
 parameter_sets = combine_parameters(
@@ -155,9 +150,15 @@ points = block_averaged_sources(coordinates, **parameter_sets[0])
 print("Number of data points: {}".format(coordinates[0].size))
 print("Number of sources: {}".format(points[0].size))
 
+# Dump parameters to a JSON file
+
+json_file = results_dir / "parameters-eqlharmonic.json"
+save_to_json(parameter_sets, json_file)
+
 # Score the prediction made by each set of parameters through cross-validation
 
 # +
+# %%time
 cv = vd.BlockKFold(spacing=100e3, shuffle=True, random_state=0)
 
 scores_delayed = []
@@ -185,6 +186,7 @@ print(best_parameters)
 # Grid the data using the best set of parameters
 
 # +
+# %%time
 points = block_averaged_sources(coordinates, **best_parameters)
 eql = hm.EQLHarmonic(damping=best_parameters["damping"], points=points)
 eql.fit(coordinates, gravity_disturbance)
@@ -255,7 +257,7 @@ plt.show()
 
 # Save grid to disk
 
-grid.to_netcdf(os.path.join(results_dir, "south_africa_gravity_grid.nc"))
+grid.to_netcdf(results_dir / "south_africa_gravity_grid.nc")
 
 # ## Grid gravity disturbance with EQLIterative
 
@@ -265,9 +267,9 @@ grid.to_netcdf(os.path.join(results_dir, "south_africa_gravity_grid.nc"))
 depth_type = "variable_depth"
 spacing = 15e3
 k_nearest = 10
-depth_factors = [0.1, 0.5, 1]
-dampings = [1e1, 1e2, 1e3, 1e4, 1e5]
-depths = [1e3, 2e3, 5e3, 7e3, 10e3]
+depth_factors = [0.05, 0.1, 0.5]
+dampings = [1e2, 1e3, 1e4]
+depths = [5e3, 7e3, 10e3, 15e3]
 window_size = 500e3
 random_state = 0
 
@@ -293,26 +295,38 @@ points = block_averaged_sources(coordinates, **parameter_sets[0])
 print("Number of data points: {}".format(coordinates[0].size))
 print("Number of sources: {}".format(points[0].size))
 
+# Dump parameters to a JSON file
+
+json_file = results_dir / "parameters-eqliterative.json"
+save_to_json(parameter_sets, json_file)
+
 # Score the prediction made by each set of parameters through cross-validation
 
-# + jupyter={"outputs_hidden": true}
+# +
+# %%time
 cv = vd.BlockKFold(spacing=100e3, shuffle=True, random_state=0)
 
 scores_delayed = []
-for parameters in parameter_sets:
-    points = block_averaged_sources(coordinates, **parameters)
-    eql = EQLIterative(
-        points=points,
-        window_size=parameters["window_size"],
-        damping=parameters["damping"],
-        random_state=parameters["random_state"],
-    )
-    score = np.mean(
-        vd.cross_val_score(eql, coordinates, gravity_disturbance, cv=cv, delayed=True)
-    )
-    scores_delayed.append(score)
+with warnings.catch_warnings():
+    # Disable warnings
+    # (we expect some warnings during CV due to underdetermined problems)
+    warnings.simplefilter("ignore")
+    for parameters in parameter_sets:
+        points = block_averaged_sources(coordinates, **parameters)
+        eql = EQLIterative(
+            points=points,
+            window_size=parameters["window_size"],
+            damping=parameters["damping"],
+            random_state=parameters["random_state"],
+        )
+        score = np.mean(
+            vd.cross_val_score(
+                eql, coordinates, gravity_disturbance, cv=cv, delayed=True
+            )
+        )
+        scores_delayed.append(score)
 
-scores = dask.compute(*scores_delayed)
+    scores = dask.compute(*scores_delayed)
 # -
 
 # Get the set of parameters that achieve the best score
@@ -328,12 +342,21 @@ print(best_parameters)
 # Grid the data using the best set of parameters
 
 # +
+# %%time
 points = block_averaged_sources(coordinates, **best_parameters)
-eql = hm.EQLHarmonic(damping=best_parameters["damping"], points=points)
-eql.fit(coordinates, gravity_disturbance)
+eql = EQLIterative(
+    points=points,
+    damping=best_parameters["damping"],
+    window_size=best_parameters["window_size"],
+    random_state=best_parameters["random_state"],
+    warm_start=True,
+)
+
+for _ in range(3):
+    eql.fit(coordinates, gravity_disturbance)
 
 eql.extra_coords_name = "upward"
-grid = eql.grid(
+grid_iterative = eql.grid(
     region=vd.get_region((data.longitude, data.latitude)),
     spacing=0.05,
     extra_coords=3000,
@@ -350,7 +373,7 @@ fig.set_size_inches(6.66, 6.66)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
 
-tmp = grid.gravity_disturbance.plot.pcolormesh(
+tmp = grid_iterative.gravity_disturbance.plot.pcolormesh(
     ax=ax,
     vmin=-maxabs,  # use the same colorscale used for the data
     vmax=maxabs,
@@ -365,10 +388,10 @@ plt.show()
 
 # Mask values outside the convex hull
 
-grid = vd.distance_mask(
+grid_iterative = vd.distance_mask(
     data_coordinates=(data.longitude, data.latitude),
     maxdist=50e3,
-    grid=grid,
+    grid=grid_iterative,
     projection=projection,
 )
 
@@ -383,7 +406,7 @@ fig.set_size_inches(6.66, 6.66)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
 
-tmp = grid.gravity_disturbance.plot.pcolormesh(
+tmp = grid_iterative.gravity_disturbance.plot.pcolormesh(
     ax=ax,
     vmin=-maxabs,  # use the same colorscale used for the data
     vmax=maxabs,
@@ -398,4 +421,32 @@ plt.show()
 
 # Save grid to disk
 
-grid.to_netcdf(os.path.join(results_dir, "south_africa_gravity_grid_iterative.nc"))
+grid_iterative.to_netcdf(results_dir / "south_africa_gravity_grid_iterative.nc")
+
+# ## Compare both grids
+
+# +
+# Compute the difference between the two grids
+difference = grid.gravity_disturbance - grid_iterative.gravity_disturbance
+
+# Plot histogram of differences
+plt.hist(difference.values.ravel())
+plt.show()
+
+# Calculate Root mean square of the difference
+print("RMS:", np.sqrt(np.nanmean(difference.values ** 2)))
+
+# Plot pcolormesh of differences
+ax = plt.axes(projection=ccrs.Mercator())
+fig = plt.gcf()
+fig.set_size_inches(6.66, 6.66)
+ax.coastlines()
+ax.gridlines(draw_labels=True)
+tmp = difference.plot.pcolormesh(
+    ax=ax,
+    cmap="seismic",
+    add_colorbar=False,
+    transform=ccrs.PlateCarree(),
+)
+plt.colorbar(tmp, ax=ax, pad=0.11, shrink=0.75)
+plt.show()
