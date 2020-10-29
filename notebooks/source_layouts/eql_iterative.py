@@ -7,6 +7,8 @@ import verde.base as vdb
 from sklearn.utils import shuffle
 from harmonica import EQLHarmonic
 
+from harmonica.equivalent_layer.harmonic import predict_numba
+
 
 class EQLIterative(EQLHarmonic):
     r"""
@@ -181,20 +183,21 @@ class EQLIterative(EQLHarmonic):
             # Choose weights for data points inside the window (if not None)
             if weights is not None:
                 weights_chunk = weights[data_window]
-            # Compute jacobian (for sources in windows and all data points)
-            jacobian = self.jacobian(coordinates, points_chunk)
+            # Compute jacobian (for sources and data points in current window)
+            jacobian = self.jacobian(coords_chunk, points_chunk)
             # Fit coefficients of sources with data points inside window
             # (we need to copy the jacobian so it doesn't get overwritten)
             coeffs_chunk = vdb.least_squares(
-                jacobian[data_window, :],
+                jacobian,
                 residue[data_window],
                 weights_chunk,
                 self.damping,
                 copy_jacobian=True,
             )
             self.coefs_[point_window] += coeffs_chunk
-            # Update residue (on every point)
-            residue -= np.dot(jacobian, coeffs_chunk)
+            # Update residue on every point (use negative coeffs so the sources
+            # effect is removed from the residue)
+            predict_numba(coordinates, points_chunk, -coeffs_chunk, residue)
             self.errors_[window_i] = np.sqrt(np.mean(residue ** 2))
 
     def _create_rolling_windows(self, coordinates):
