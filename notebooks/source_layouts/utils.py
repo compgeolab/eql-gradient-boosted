@@ -6,7 +6,7 @@ import pandas as pd
 import xarray as xr
 import verde as vd
 import harmonica as hm
-from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
 
 from . import layouts
 
@@ -84,34 +84,34 @@ def get_best_prediction(coordinates, data, target, layout, parameters_set):
     Score interpolations with different parameters and get the best prediction
 
     Performs several predictions using the same source layout (but with different
-    parameters) and score each of them agains the target grid.
+    parameters) and score each of them against the target grid through RMS.
     """
     # Get shape, region and height of the target grid
     region = vd.get_region((target.easting.values, target.northing.values))
     shape = target.shape
     height = target.height
-    # Score the predictions
-    scores = []
+    # Score the predictions (with RMS)
+    rms = []
     for parameters in parameters_set:
         prediction, _ = grid_data(
             coordinates, data, region, shape, height, layout, parameters
         )
         # Score the prediction against target data
-        scores.append(r2_score(target.values, prediction.values))
+        rms.append(np.sqrt(mean_squared_error(target.values, prediction.values)))
     # Get best prediction
-    best = np.nanargmax(scores)
+    best = np.nanargmin(rms)
     best_parameters = parameters_set[best]
-    best_score = scores[best]
+    best_rms = rms[best]
     best_prediction, points = grid_data(
         coordinates, data, region, shape, height, layout, best_parameters
     )
-    # Convert parameters and scores to a pandas.DataFrame
-    parameters_and_scores = pd.DataFrame.from_dict(parameters_set)
-    parameters_and_scores["score"] = scores
-    # Add score and number of sources to the grid attributes
-    best_prediction.attrs["score"] = best_score
+    # Convert parameters and RMS to a pandas.DataFrame
+    parameters_and_rms = pd.DataFrame.from_dict(parameters_set)
+    parameters_and_rms["rms"] = rms
+    # Add RMS and number of sources to the grid attributes
+    best_prediction.attrs["rms"] = best_rms
     best_prediction.attrs["n_points"] = points[0].size
-    return best_prediction, parameters_and_scores
+    return best_prediction, parameters_and_rms
 
 
 def predictions_to_datasets(predictions):
@@ -122,8 +122,11 @@ def predictions_to_datasets(predictions):
     for each depth type.
     """
     datasets = []
-    layouts_ = list(set([prediction.layout for prediction in predictions]))
-    for layout in layouts_:
+    layouts = []
+    for prediction in predictions:
+        if prediction.layout not in layouts:
+            layouts.append(prediction.layout)
+    for layout in layouts:
         predictions_same_layout = [p for p in predictions if p.layout == layout]
         for p in predictions_same_layout:
             p.name = p.depth_type

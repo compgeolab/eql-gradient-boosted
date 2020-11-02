@@ -24,7 +24,7 @@ import pandas as pd
 import xarray as xr
 import verde as vd
 import matplotlib.pyplot as plt
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import mean_squared_error
 
 from source_layouts import (
     block_averaged_sources,
@@ -105,7 +105,7 @@ save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
 
-scores = []
+rms = []
 for params in parameters:
     points = block_averaged_sources(coordinates, **params)
     eql = EQLIterative(
@@ -118,15 +118,15 @@ for params in parameters:
     grid = eql.grid(
         region=region, shape=target.shape, extra_coords=target.height
     ).scalars
-    scores.append(r2_score(grid.values, target.values))
+    rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
 # Get maximum score and the corresponding set of parameters
 
 # +
-max_score = np.max(scores)
-best_params = parameters[np.argmax(scores)]
+best_rms = np.min(rms)
+best_params = parameters[np.argmin(rms)]
 
-print("Max R2 score: {}".format(max_score))
+print("Best RMS score: {}".format(best_rms))
 print("Best parameters: {}".format(best_params))
 # -
 
@@ -144,8 +144,7 @@ eql = EQLIterative(
 eql.fit(coordinates, getattr(survey, field).values)
 grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
 
-print("R2 Score: {}".format(r2_score(grid.values, target.values)))
-print("RMS: {}".format(mean_squared_error(grid.values, target.values)))
+print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
 plt.gca().set_aspect("equal")
 plt.show()
@@ -187,7 +186,7 @@ save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
 
-scores = []
+rms = []
 for params in parameters:
     points = block_averaged_sources(coordinates, **params)
     eql = EQLIterative(
@@ -200,15 +199,15 @@ for params in parameters:
     grid = eql.grid(
         region=region, shape=target.shape, extra_coords=target.height
     ).scalars
-    scores.append(r2_score(grid.values, target.values))
+    rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
 # Get maximum score and the corresponding set of parameters
 
 # +
-max_score = np.max(scores)
-best_params = parameters[np.argmax(scores)]
+best_rms = np.min(rms)
+best_params = parameters[np.argmin(rms)]
 
-print("Max R2 score: {}".format(max_score))
+print("Best RMS score: {}".format(best_rms))
 print("Best parameters: {}".format(best_params))
 # -
 
@@ -226,8 +225,7 @@ eql = EQLIterative(
 eql.fit(coordinates, getattr(survey, field).values)
 grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
 
-print("R2 Score: {}".format(r2_score(grid.values, target.values)))
-print("RMS: {}".format(mean_squared_error(grid.values, target.values)))
+print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
 plt.gca().set_aspect("equal")
 plt.show()
