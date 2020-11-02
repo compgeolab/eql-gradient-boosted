@@ -256,10 +256,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.yaxis.offsetText.set_x(-0.13)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
-        # Set title with r2 score and number of points
+        # Set title with RMS and number of points
         ax.set_title(
-            r"R$^2$: {:.3f}, \#sources: {}".format(
-                prediction.score, prediction.n_points
+            r"RMS: {:.2f}, \#sources: {}".format(
+                prediction.rms, prediction.n_points
             ),
             fontsize="small",
             horizontalalignment="center",
@@ -357,10 +357,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.yaxis.offsetText.set_x(-0.13)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
-        # Set title with r2 score and number of points
+        # Set title with RMS and number of points
         ax.set_title(
-            r"R$^2$: {:.3f}, \#sources: {}".format(
-                prediction.score, prediction.n_points
+            r"RMS: {:.2f}, \#sources: {}".format(
+                prediction.rms, prediction.n_points
             ),
             fontsize="small",
             horizontalalignment="center",
