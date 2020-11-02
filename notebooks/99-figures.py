@@ -258,9 +258,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(
-                prediction.rms, prediction.n_points
-            ),
+            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -359,9 +357,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(
-                prediction.rms, prediction.n_points
-            ),
+            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
             fontsize="small",
             horizontalalignment="center",
         )
