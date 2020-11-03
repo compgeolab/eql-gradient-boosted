@@ -483,6 +483,120 @@ $\hat{\mathbf{c}}_\text{est}$:
 \end{equation}
 
 
+\subsection{Gradient boosted equivalent sources}
+
+Reducing the number of sources helps, but it's not enough if we want to grid
+a very large dataset.
+Even if we can reduce the number of sources by one order of magnitude, having
+too many data points would still increase the size of the Jacobian matrix until
+the point of not being able to store it in memory.
+This problem was already faced by other authors.
+
+Here we propose an iterative algorithm for fitting the source coefficients
+using a gradient boosting \citep{friedman2002} strategy and overlapping moving
+windows.
+
+Lets assume we have $N$ measurements of a harmonic field on observations points
+$\{\mathbf{p}_i\}_{i=1}^{N}$ stored in the vector $\mathbf{d} = (d_1, d_2,
+\ldots, d_N)^T$. We have defined a set of $M$ point sources located on
+$\{\mathbf{q}_j\}_{j=1}^{M}$. Instead of trying to fit the entire set of
+coefficients $\mathbf{c}$ at once, we can reduce the problem to fitting $K$
+different sets of equivalent sources: we define $K$ overlapping windows of
+equal size that cover the whole observation area, and then we create one set of
+equivalent sources per window formed by the $\{\mathbf{q}_m\}_{m=1}^{M_k}$
+sources that fall inside the $k$-th window.
+The observed data should be equal to the superposition of the
+effect of every set of equivalent sources:
+
+\begin{equation}
+    \mathbf{d} = \sum_{k=1}^K \mathbf{A}_k \mathbf{c}_k,
+\end{equation}
+
+\noindent where $\mathbf{c}_k$ is the vector of coefficients for the $k$-th
+set of equivalent sources and $\mathbf{A}_k$ is the Jacobian matrix between
+those sources and every data point.
+
+By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
+iteratively: on each iteration a residue vector $\mathbf{r}_k$ (initialized
+with the observed data) is used to fit the $\mathbf{c}_k$
+coefficients and then updated by removing the effect of the same sources, as
+follows:
+
+\begin{equation}
+    \mathbf{r}_0 = \mathbf{d},
+\end{equation}
+
+\begin{equation}
+    \mathbf{r}_k = \mathbf{r}_{k-1} - \mathbf{A}_k\mathbf{c}_k.
+    \label{eq:residue}
+\end{equation}
+
+\noindent On each iteration the $\mathbf{c}_k$ vectors can be fitted so they
+minimize following misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \mathbf{r}_{k-1} - \mathbf{A}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent following the same method described on Section
+\ref{sec:eql-implementation}.
+Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
+adjusting the size of the overlapping windows can help in reducing the computer
+memory needed to fit the source coefficients and ultimately to interpolate the
+observed data.
+
+Nevertheless, in case our observed data is too large that even the
+$\mathbf{A}_k$ matrices cannot be stored into memory, we can apply one more
+simplification on the fitting process: ignore the effect of any observation
+point outside the $k$-th window while fitting the sources that fall under the
+same window.
+
+Assuming that there are $N_k$ observation points that fall under the $k$-th
+window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
+misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \tilde{\mathbf{r}}_{k-1} - \tilde{\mathbf{A}}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
+only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
+observation points that fall under the $k$-th window, and
+$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between the observation points
+and sources that fall under the same window.
+Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
+elements, the computer memory needed for fitting the $\mathbf{c}_k$
+coefficients is greatly reduced.
+
+Once the $\mathbf{c}_k$ coefficients are fitted, equation \ref{eq:residue} is
+applied to update the residue, i.e. the effect of the sources belonging to the
+$k$-th window is computed on every observation point. Worth noting that while
+calculating the effect of the sources we don't need to pre-compute the entire
+Jacobian matrix: the effect of the sources on each observation point can be
+carried by a simple addition of terms, computing each Jacobian element at once
+when needed.
+
+Because the number of windows is fixed before starting the iteration process,
+its number of steps are also fixed to $K$. Moreover, the windows are randomly
+shuffled before starting the process to prevent that any particular
+sets of equivalent sources are prioritized over the rest.
+
+After all $\mathbf{c}_k$ coefficients vectors are fitted, we can predict the
+effect of every equivalent source on any point as follows:
+
+\begin{equation}
+    V(\mathbf{p}) =
+    \sum\limits_{k=1}^K \sum\limits_{m=1}^{M_k}
+    \frac{{c_k}_m}{|\mathbf{p} - \mathbf{q}_m|}.
+\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -709,186 +823,6 @@ scheme.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Gradient boosted equivalent sources}
-
-Reducing the number of sources helps, but it's not enough if we want to grid
-a very large dataset.
-Even if we can reduce the number of sources by one order of magnitude, having
-too many data points would still increase the size of the Jacobian matrix until
-the point of not being able to store it in memory.
-This problem was already faced by other authors.
-
-Here we propose an iterative algorithm for fitting the source coefficients
-using a gradient boosting \citep{friedman2002} strategy and overlapping moving
-windows.
-
-Following equation \ref{eq:linear-problem} lets assume we have $N$ measurements
-of a harmonic field on observations points $\{\mathbf{p}_i\}_{i=1}^{N}$ stored in
-the vector $\mathbf{d} = (d_1, d_2, \ldots, d_N)^T$. We have defined a set of
-$M$ point sources located on $\{\mathbf{q}_j\}_{j=1}^{M}$, whose coefficients
-$\mathbf{c} = (c_1, c_2, \ldots, c_M)^T$ must be fitted so they can minimize
-the misfit function defined on \ref{eq:misfit-unscaled}.
-
-By defining a set of $K$ overlapping windows we can simplify the linear problem:
-
-\begin{equation}
-    \mathbf{d}
-    = \mathbf{A} \mathbf{c}
-    = \mathbf{A} \left( \sum_{k=1}^K \mathbf{c}_k \right)
-    = \sum_{k=1}^K \mathbf{A} \mathbf{c}_k,
-\end{equation}
-
-\noindent where $\mathbf{c}_k$ are vectors full of zeros except those $m_k$
-elements corresponding to the sources $\mathbf{q}_j$ that fall inside the
-window $k$.
-
-By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
-independently and iteratively by defining a residue vector $\mathbf{r}_k$ that
-it's initialized with the observed data and updated on each iteration:
-
-\begin{equation}
-    \mathbf{r}_0 = \mathbf{d},
-\end{equation}
-
-\begin{equation}
-    \mathbf{r}_k = \mathbf{r}_{k-1} - \mathbf{A}\mathbf{c}_k.
-    \label{eq:residue}
-\end{equation}
-
-\noindent On each iteration the $\mathbf{c}_k$ vectors can be fitted so they
-minimize the misfit function:
-
-\begin{equation}
-    \phi(\mathbf{c}_k) =
-        \left\lVert
-            \mathbf{d} - \mathbf{A}\mathbf{c}_k
-        \right\rVert ^ 2
-        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
-\end{equation}
-
-Because the $\mathbf{c}_k$ vector has only $m_k$ non-zero elements, the linear
-system can be greatly simplified:
-
-
-\begin{equation}
-    \begin{split}
-        \mathbf{A}\mathbf{c}_k = &
-        \overbrace{
-            \begin{bmatrix}
-                a_{11} & a_{12} & a_{13} & \cdots & a_{1M} \\
-                a_{21} & a_{22} & a_{23} & \cdots & a_{2M} \\
-                a_{31} & a_{32} & a_{33} & \cdots & a_{3M} \\
-                \vdots  & \vdots  & \vdots  & \cdots & \vdots \\
-                a_{N1} & a_{N2} & a_{N3} & \cdots & a_{NM}
-            \end{bmatrix}
-        }^\text{$N \times M$ elements}
-        \cdot
-        \overbrace{
-            \begin{bmatrix}
-                0 \\
-                {c_k}_2 \\
-                0 \\
-                \vdots  \\
-                {c_k}_M \\
-            \end{bmatrix}
-        }^\text{$M$ elements}
-        = \\ = &
-        \underbrace{
-            \begin{bmatrix}
-                a_{12} & \cdots & a_{1M} \\
-                a_{22} & \cdots & a_{2M} \\
-                a_{32} & \cdots & a_{3M} \\
-                \vdots  & \cdots & \vdots \\
-                a_{N2} & \cdots & a_{NM}
-            \end{bmatrix}
-        }_\text{$N \times m_k$ elements}
-        \cdot
-        \underbrace{
-            \begin{bmatrix}
-                {c_k}_2 \\
-                \vdots  \\
-                {c_k}_M \\
-            \end{bmatrix}
-        }_\text{$m_k$ elements}
-        = \tilde{\mathbf{A}} \tilde{\mathbf{c}}_k
-        .
-    \end{split}
-\end{equation}
-
-By removing the columns of the $\mathbf{A}$ matrix that are not needed in the
-$k$-th iteration we greatly reduce the memory consumption to solve the linear
-problem. Nevertheless, if the number of observation points ($N$) is too large,
-the $\tilde{\mathbf{A}}$ matrix might be large enough for the available memory.
-
-One more simplification can be carried out by ignoring the effect of the $m_k$
-sources on the observation points that fall outside the $k$ window. This means
-that the coefficients $\mathbf{c}_k$ will be fitted only taking into account
-the data values on the $n_k$ observation points that fall inside the same
-$k$-th window.
-This allows to reduce the $\tilde{\mathbf{A}}$ matrix to a $\mathbf{B}$ matrix
-with $n_k \times m_k$ elements:
-
-\begin{equation}
-    \mathbf{B} \tilde{\mathbf{c}}_k
-    =
-    \underbrace{
-        \begin{bmatrix}
-            a_{32} & \cdots & a_{3M} \\
-            \vdots  & \cdots & \vdots \\
-            a_{N2} & \cdots & a_{NM}
-        \end{bmatrix}
-    }_\text{$n_k \times m_k$ elements}
-    \cdot
-    \underbrace{
-        \begin{bmatrix}
-            {c_k}_2 \\
-            \vdots  \\
-            {c_k}_M \\
-        \end{bmatrix}
-    }_\text{$m_k$ elements}
-    .
-\end{equation}
-
-These two simplifications help to greatly reduce the size of the linear
-problem, reducing it to:
-
-\begin{equation}
-    \mathbf{d}_k = \mathbf{B} \tilde{\mathbf{c}}_k,
-\end{equation}
-
-\noindent where $\mathbf{d}_k$ is a vector containing only the measured data
-values corresponding to the observation points that fall inside the $k$-th
-window.
-This linear problem can be solved using the same method described on Section
-\ref{sec:eql-implementation}, obtaining values for the $\mathbf{c}_k$
-coefficients and updating the residual through equation \ref{eq:residue}, i.e.
-taking into account the effect of the fitted coefficients on every observation
-point.
-Worth noting that for updating the residue there's no need of computing the
-entire Jacobian matrix.
-
-After passing through every $K$ window, the residue $r_K$ should be
-sufficiently small obtaining a set of source coefficients as the sum of the
-$\mathbf{c}_k$ vectors:
-
-\begin{equation}
-    \mathbf{c} = \sum_{k=1}^K \mathbf{c}_k
-\end{equation}
-
-Shuffle the windows.
-
-First we define a set of equivalent sources following one of the
-source distributions described on the previous sections, e.g. the block-reduced
-sources at variable depth. Secondly we define a set of overlapping moving
-windows that cover the entire area of the data. Then we start the iterative
-process: on each iteration we choose one window and select every data points
-and sources that fall inside it, compute the Jacobian elements corresponding to
-these subsets of data points and sources, fit the coefficients of the chosen
-sources and finally remove the effect of these sources from the entire data,
-obtaining a \emph{residue}. On the following iterations the same process is
-carried out, but now the coefficients are fitted using the residue instead of
-the original data.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Comparison of source distributions}
 
