@@ -156,6 +156,13 @@ plt.gca().set_aspect("equal")
 plt.show()
 # -
 
+# Plot misfit through the iterations
+
+plt.plot(eql.errors_)
+plt.xlabel("Iterations")
+plt.ylabel("RMS of the residue")
+plt.show()
+
 # Save grid
 
 grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_20km.nc")
@@ -236,6 +243,13 @@ maxabs = vd.maxabs(grid - target)
 plt.gca().set_aspect("equal")
 plt.show()
 # -
+# Plot misfit through the iterations
+
+plt.plot(eql.errors_)
+plt.xlabel("Iterations")
+plt.ylabel("RMS of the residue")
+plt.show()
+
 # Save grid
 
 grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_50km.nc")
