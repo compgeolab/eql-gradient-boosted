@@ -869,11 +869,10 @@ parameters}.
 We use each set of parameters to create the sources, fit their coefficients
 through least-squares and predict the field on the same points of the
 \emph{target} grid.
-We then \emph{score} the prediction by computing the coefficient of
-determination (R$^2$ score) between the prediction and the true values of the
-\emph{target} grid.
+We then \emph{score} the prediction by computing the root mean square (RMS)
+between the prediction and the true values of the \emph{target} grid.
 Finally, we obtain the \emph{best prediction} for each source distribution as
-the one that achieves the highest score.
+the one that achieves the lowest RMS.
 See Figure~\ref{fig:flowchart} for a graphical illustration of this process.
 This process is carried out on both ground and airborne synthetic surveys.
 
@@ -897,7 +896,7 @@ This process is carried out on both ground and airborne synthetic surveys.
 Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey} also show the parameter combination
 that produces the best prediction for each source distribution and its
-corresponding R$^2$ score, for both ground and synthetic surveys, respectively.
+corresponding RMS score, for both ground and synthetic surveys, respectively.
 Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution, for
@@ -1113,7 +1112,7 @@ the original data.
 Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show that all source distributions
 produce accurate predictions, both for the ground and airborne survey.
-The R$^2$ scores don't show significant difference, so we can only conclude
+The RMS scores don't show significant difference, so we can only conclude
 that all the source distributions are able to produce comparable predictions.
 Nevertheless, the \emph{block averaged sources} make use of less sources to
 produce this predictions, what would reduce the computational load needed to
@@ -1147,7 +1146,7 @@ All rights reserved.
         Parameters used with each source distribution when gridding the
         synthetic ground survey. The table also contains the set of parameters
         that generates the best prediction for each source distribution and its
-        corresponding R$^2$ score.
+        corresponding RMS score (in mGal).
     }
     \label{tab:parameters-ground-survey}
     \begin{tabular}{c c l c c c}
@@ -1156,7 +1155,7 @@ All rights reserved.
             & \multicolumn{1}{c}{\textbf{Parameters}}
             & \textbf{Values}
             & \textbf{Best}
-            & \textbf{R$^2$ score} \\
+            & \textbf{RMS (mGal)} \\
         \toprule
 
         \multirow{8}{*}{Source Below Data}
@@ -1165,7 +1164,7 @@ All rights reserved.
                 & \GroundSourceBelowDataConstantDepthDepth
                 & \BestGroundSourceBelowDataConstantDepthDepth
                 & \multirow{2}{*}{
-                    \BestGroundSourceBelowDataConstantDepthScore
+                    \BestGroundSourceBelowDataConstantDepthRms
                   } \\
             &
                 & Damping
@@ -1178,7 +1177,7 @@ All rights reserved.
                 & \GroundSourceBelowDataRelativeDepthDepth
                 & \BestGroundSourceBelowDataRelativeDepthDepth
                 & \multirow{2}{*}{
-                    \BestGroundSourceBelowDataRelativeDepthScore
+                    \BestGroundSourceBelowDataRelativeDepthRms
                   } \\
             &
                 & Damping
@@ -1191,7 +1190,7 @@ All rights reserved.
                 & \GroundSourceBelowDataVariableDepthDepth
                 & \BestGroundSourceBelowDataVariableDepthDepth
                 & \multirow{4}{*}{
-                    \BestGroundSourceBelowDataVariableDepthScore
+                    \BestGroundSourceBelowDataVariableDepthRms
                   } \\
             &
                 & Depth factor
@@ -1216,7 +1215,7 @@ All rights reserved.
                 & \GroundBlockAveragedSourcesConstantDepthDepth
                 & \BestGroundBlockAveragedSourcesConstantDepthDepth
                 & \multirow{3}{*}{
-                    \BestGroundBlockAveragedSourcesConstantDepthScore
+                    \BestGroundBlockAveragedSourcesConstantDepthRms
                   } \\
             &
                 & Spacing (m)
@@ -1234,7 +1233,7 @@ All rights reserved.
                 & \GroundBlockAveragedSourcesRelativeDepthDepth
                 & \BestGroundBlockAveragedSourcesRelativeDepthDepth
                 & \multirow{3}{*}{
-                    \BestGroundBlockAveragedSourcesRelativeDepthScore
+                    \BestGroundBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
                 & Spacing (m)
@@ -1252,7 +1251,7 @@ All rights reserved.
                 & \GroundBlockAveragedSourcesVariableDepthDepth
                 & \BestGroundBlockAveragedSourcesVariableDepthDepth
                 & \multirow{5}{*}{
-                    \BestGroundBlockAveragedSourcesVariableDepthScore
+                    \BestGroundBlockAveragedSourcesVariableDepthRms
                   } \\
             &
                 & Depth factor
@@ -1282,7 +1281,7 @@ All rights reserved.
                 & \GroundGridSourcesConstantDepthDepth
                 & \BestGroundGridSourcesConstantDepthDepth
                 & \multirow{4}{*}{
-                    \BestGroundGridSourcesConstantDepthScore
+                    \BestGroundGridSourcesConstantDepthRms
                   } \\
             &
                 & Spacing (m)
@@ -1303,7 +1302,7 @@ All rights reserved.
         Parameters used with each source distribution when gridding the
         synthetic airborne survey. The table also contains the set of
         parameters that generates the best prediction for each source
-        distribution and its corresponding R$^2$ score.
+        distribution and its corresponding RMS score (in mGal).
     }
     \label{tab:parameters-airborne-survey}
     \begin{tabular}{c c l c c c}
@@ -1312,7 +1311,7 @@ All rights reserved.
             & \multicolumn{1}{c}{\textbf{Parameters}}
             & \textbf{Values}
             & \textbf{Best}
-            & \textbf{R$^2$ score} \\
+            & \textbf{RMS (mGal)} \\
         \toprule
 
         \multirow{8}{*}{Source Below Data}
@@ -1321,7 +1320,7 @@ All rights reserved.
                 & \AirborneSourceBelowDataConstantDepthDepth
                 & \BestAirborneSourceBelowDataConstantDepthDepth
                 & \multirow{2}{*}{
-                    \BestAirborneSourceBelowDataConstantDepthScore
+                    \BestAirborneSourceBelowDataConstantDepthRms
                   } \\
             &
                 & Damping
@@ -1334,7 +1333,7 @@ All rights reserved.
                 & \AirborneSourceBelowDataRelativeDepthDepth
                 & \BestAirborneSourceBelowDataRelativeDepthDepth
                 & \multirow{2}{*}{
-                    \BestAirborneSourceBelowDataRelativeDepthScore
+                    \BestAirborneSourceBelowDataRelativeDepthRms
                   } \\
             &
                 & Damping
@@ -1347,7 +1346,7 @@ All rights reserved.
                 & \AirborneSourceBelowDataVariableDepthDepth
                 & \BestAirborneSourceBelowDataVariableDepthDepth
                 & \multirow{4}{*}{
-                    \BestAirborneSourceBelowDataVariableDepthScore
+                    \BestAirborneSourceBelowDataVariableDepthRms
                   } \\
             &
                 & Depth factor
@@ -1372,7 +1371,7 @@ All rights reserved.
                 & \AirborneBlockAveragedSourcesConstantDepthDepth
                 & \BestAirborneBlockAveragedSourcesConstantDepthDepth
                 & \multirow{3}{*}{
-                    \BestAirborneBlockAveragedSourcesConstantDepthScore
+                    \BestAirborneBlockAveragedSourcesConstantDepthRms
                   } \\
             &
                 & Spacing (m)
@@ -1390,7 +1389,7 @@ All rights reserved.
                 & \AirborneBlockAveragedSourcesRelativeDepthDepth
                 & \BestAirborneBlockAveragedSourcesRelativeDepthDepth
                 & \multirow{3}{*}{
-                    \BestAirborneBlockAveragedSourcesRelativeDepthScore
+                    \BestAirborneBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
                 & Spacing (m)
@@ -1408,7 +1407,7 @@ All rights reserved.
                 & \AirborneBlockAveragedSourcesVariableDepthDepth
                 & \BestAirborneBlockAveragedSourcesVariableDepthDepth
                 & \multirow{5}{*}{
-                    \BestAirborneBlockAveragedSourcesVariableDepthScore
+                    \BestAirborneBlockAveragedSourcesVariableDepthRms
                   } \\
             &
                 & Depth factor
@@ -1438,7 +1437,7 @@ All rights reserved.
                 & \AirborneGridSourcesConstantDepthDepth
                 & \BestAirborneGridSourcesConstantDepthDepth
                 & \multirow{4}{*}{
-                    \BestAirborneGridSourcesConstantDepthScore
+                    \BestAirborneGridSourcesConstantDepthRms
                   } \\
             &
                 & Spacing (m)

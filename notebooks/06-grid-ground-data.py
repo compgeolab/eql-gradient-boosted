@@ -18,7 +18,9 @@
 # **Import useful packages**
 
 # +
+from IPython.display import display
 from pathlib import Path
+import warnings
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -194,28 +196,34 @@ coordinates = (survey.easting.values, survey.northing.values, survey.height.valu
 
 # ## Score each interpolation
 
-# + jupyter={"outputs_hidden": true}
-scores = {layout: {} for layout in layouts}
+# +
+rms = {layout: {} for layout in layouts}
 best_predictions = []
 
-for layout in parameters_combined:
+for layout in layouts:
     for depth_type in parameters_combined[layout]:
         print("Processing: {} with {}".format(layout, depth_type))
-        best_prediction, params_and_scores = get_best_prediction(
-            coordinates,
-            getattr(survey, field).values,
-            target,
-            layout,
-            parameters_combined[layout][depth_type],
-        )
-        best_predictions.append(best_prediction)
-        scores[layout][depth_type] = params_and_scores
+        with warnings.catch_warnings():
+            # Disable warnings
+            # (we expect some warnings due to
+            # underdetermined problems on grid layouts)
+            warnings.simplefilter("ignore")
+            best_prediction, params_and_rms = get_best_prediction(
+                coordinates,
+                getattr(survey, field).values,
+                target,
+                layout,
+                parameters_combined[layout][depth_type],
+            )
+            best_predictions.append(best_prediction)
+            rms[layout][depth_type] = params_and_rms
 
 # Group best predictions into datasets
 best_predictions = predictions_to_datasets(best_predictions)
 # -
 
-best_predictions
+for prediction in best_predictions:
+    display(prediction)
 
 # ### Save best predictions
 
@@ -231,7 +239,7 @@ for dataset in best_predictions:
         layout = dataset.layout
         prediction = dataset[depth_type]
         print("{} with {}".format(layout, depth_type))
-        print("Score: {}".format(prediction.score))
+        print("RMS: {}".format(prediction.rms))
         print("Number of sources: {}".format(prediction.n_points))
         print("Parameters: {}".format(prediction.attrs))
         plot_prediction(prediction, target, units=field_units)
@@ -266,11 +274,9 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        # Set title with r2 score and number of points
+        # Set title with RMS and number of points
         ax.set_title(
-            r"R$^2$: {:.3f}, #sources: {}".format(
-                prediction.score, prediction.n_points
-            ),
+            "RMS: {:.3f}, #sources: {}".format(prediction.rms, prediction.n_points),
             horizontalalignment="center",
         )
 
@@ -311,5 +317,4 @@ axes[-1][-2].set_visible(False)
 cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
-# plt.tight_layout()
 plt.show()

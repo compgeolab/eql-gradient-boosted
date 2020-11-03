@@ -90,8 +90,8 @@ def best_parameters_to_latex(parameters, survey):
         variable_name = "_".join(["best", survey, layout, depth_type, key])
         if key == "damping":
             variable = format_damping(variable_name, value)
-        elif key == "score":
-            variable = create_latex_variable(variable_name, value, fmt=".3f")
+        elif key == "rms":
+            variable = create_latex_variable(variable_name, value, fmt=".2f")
         else:
             variable = create_latex_variable(variable_name, value)
         latex_variables.append(variable)
