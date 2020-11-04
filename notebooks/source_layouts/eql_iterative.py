@@ -5,9 +5,11 @@ import numpy as np
 import verde as vd
 import verde.base as vdb
 from sklearn.utils import shuffle
+from sklearn.utils.validation import check_is_fitted
+from numba import jit, prange
 from harmonica import EQLHarmonic
 
-from harmonica.equivalent_layer.harmonic import predict_numba
+from harmonica.equivalent_layer.harmonic import greens_func
 
 
 class EQLIterative(EQLHarmonic):
@@ -236,3 +238,58 @@ class EQLIterative(EQLHarmonic):
                 source_windows, data_windows, random_state=self.random_state
             )
         return source_windows, data_windows
+
+    def predict(self, coordinates):
+        """
+        Evaluate the estimated equivalent layer on the given set of points.
+
+        Requires a fitted estimator (see :meth:`~harmonica.HarmonicEQL.fit`).
+
+        I'm overriding the original method just to implement parallelization on
+        predictions.
+
+        Parameters
+        ----------
+        coordinates : tuple of arrays
+            Arrays with the coordinates of each data point. Should be in the
+            following order: (``easting``, ``northing``, ``upward``, ...). Only
+            ``easting``, ``northing`` and ``upward`` will be used, all
+            subsequent coordinates will be ignored.
+        Returns
+        -------
+        data : array
+            The data values evaluated on the given points.
+        """
+        # We know the gridder has been fitted if it has the coefs_
+        check_is_fitted(self, ["coefs_"])
+        shape = np.broadcast(*coordinates[:3]).shape
+        size = np.broadcast(*coordinates[:3]).size
+        dtype = coordinates[0].dtype
+        coordinates = tuple(np.atleast_1d(i).ravel() for i in coordinates[:3])
+        data = np.zeros(size, dtype=dtype)
+        predict_numba(coordinates, self.points_, self.coefs_, data)
+        return data.reshape(shape)
+
+
+@jit(nopython=True, parallel=True)
+def predict_numba(
+    coordinates, points, coeffs, result
+):  # pylint: disable=not-an-iterable
+    """
+    Calculate the predicted data using numba for speeding things up.
+
+    I'm overriding the original function just to implement parallelization on
+    predictions.
+    """
+    east, north, upward = coordinates[:]
+    point_east, point_north, point_upward = points[:]
+    for i in prange(east.size):
+        for j in prange(point_east.size):
+            result[i] += coeffs[j] * greens_func(
+                east[i],
+                north[i],
+                upward[i],
+                point_east[j],
+                point_north[j],
+                point_upward[j],
+            )

@@ -138,4 +138,5 @@ grid_masked.scalars.plot()
 plt.gca().set_aspect("equal")
 plt.show()
 
-
+plt.plot(eql.errors_)
+plt.show()
