@@ -116,7 +116,7 @@ for params in parameters:
     )
     eql.fit(coordinates, getattr(survey, field).values)
     grid = eql.grid(
-        region=region, shape=target.shape, extra_coords=target.height
+        upward=target.height, region=region, shape=target.shape
     ).scalars
     rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
@@ -142,7 +142,7 @@ eql = EQLIterative(
 
 # +
 eql.fit(coordinates, getattr(survey, field).values)
-grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
+grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 
 print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
@@ -204,7 +204,7 @@ for params in parameters:
     )
     eql.fit(coordinates, getattr(survey, field).values)
     grid = eql.grid(
-        region=region, shape=target.shape, extra_coords=target.height
+        upward=target.height, region=region, shape=target.shape
     ).scalars
     rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
@@ -230,7 +230,7 @@ eql = EQLIterative(
 
 # +
 eql.fit(coordinates, getattr(survey, field).values)
-grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
+grid = eql.grid(pward=target.height, region=region, shape=target.shape).scalars
 
 print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
