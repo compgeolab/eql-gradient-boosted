@@ -40,14 +40,8 @@ ground_results_dir = results_dir / "ground_survey"
 survey = pd.read_csv(ground_results_dir / "survey.csv")
 
 inside = np.logical_and(
-    np.logical_and(
-        survey.easting > 0,
-        survey.easting < 40e3,
-    ),
-    np.logical_and(
-        survey.northing > -60e3,
-        survey.northing < -20e3,
-    ),
+    np.logical_and(survey.easting > 0, survey.easting < 40e3,),
+    np.logical_and(survey.northing > -60e3, survey.northing < -20e3,),
 )
 survey = survey.loc[inside]
 
@@ -73,10 +67,7 @@ depth_type = "constant_depth"
 parameters = {}
 
 layout = "source_below_data"
-parameters[layout] = dict(
-    depth_type=depth_type,
-    depth=500,
-)
+parameters[layout] = dict(depth_type=depth_type, depth=500,)
 
 layout = "block_averaged_sources"
 parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=block_spacing)
@@ -115,18 +106,10 @@ labels = "a b c d".split()
 for ax, label in zip(axes, labels):
     ax.set_aspect("equal")
     ax.tick_params(
-        axis="y",
-        which="both",
-        left=False,
-        right=False,
-        labelleft=False,
+        axis="y", which="both", left=False, right=False, labelleft=False,
     )
     ax.tick_params(
-        axis="x",
-        which="both",
-        bottom=False,
-        top=False,
-        labelbottom=False,
+        axis="x", which="both", bottom=False, top=False, labelbottom=False,
     )
     ax.annotate(
         label,
