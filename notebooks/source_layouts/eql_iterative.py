@@ -5,7 +5,6 @@ import numpy as np
 import verde as vd
 import verde.base as vdb
 from sklearn.utils import shuffle
-from sklearn.utils.validation import check_is_fitted
 from harmonica import EQLHarmonic
 
 from harmonica.equivalent_layer.harmonic import greens_func_cartesian
@@ -240,34 +239,3 @@ class EQLIterative(EQLHarmonic):
                 source_windows, data_windows, random_state=self.random_state
             )
         return source_windows, data_windows
-
-    def predict(self, coordinates):
-        """
-        Evaluate the estimated equivalent layer on the given set of points.
-
-        Requires a fitted estimator (see :meth:`~harmonica.HarmonicEQL.fit`).
-
-        I'm overriding the original method just to implement parallelization on
-        predictions.
-
-        Parameters
-        ----------
-        coordinates : tuple of arrays
-            Arrays with the coordinates of each data point. Should be in the
-            following order: (``easting``, ``northing``, ``upward``, ...). Only
-            ``easting``, ``northing`` and ``upward`` will be used, all
-            subsequent coordinates will be ignored.
-        Returns
-        -------
-        data : array
-            The data values evaluated on the given points.
-        """
-        # We know the gridder has been fitted if it has the coefs_
-        check_is_fitted(self, ["coefs_"])
-        shape = np.broadcast(*coordinates[:3]).shape
-        size = np.broadcast(*coordinates[:3]).size
-        dtype = coordinates[0].dtype
-        coordinates = tuple(np.atleast_1d(i).ravel() for i in coordinates[:3])
-        data = np.zeros(size, dtype=dtype)
-        predict_numba(coordinates, self.points_, self.coefs_, data)
-        return data.reshape(shape)
