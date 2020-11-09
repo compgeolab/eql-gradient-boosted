@@ -447,5 +447,3 @@ tmp = difference.plot.pcolormesh(
 plt.colorbar(tmp, ax=ax, pad=0.11, shrink=0.75)
 plt.show()
 # -
-
-
