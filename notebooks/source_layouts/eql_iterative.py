@@ -7,7 +7,8 @@ import verde.base as vdb
 from sklearn.utils import shuffle
 from harmonica import EQLHarmonic
 
-from harmonica.equivalent_layer.harmonic import predict_numba, greens_func_cartesian
+from harmonica.equivalent_layer.harmonic import greens_func_cartesian
+from harmonica.equivalent_layer.utils import predict_numba
 
 
 class EQLIterative(EQLHarmonic):
