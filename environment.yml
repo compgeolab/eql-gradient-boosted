@@ -6,11 +6,11 @@ dependencies:
   - pip
   - numpy
   - verde=1.5.0
-  - harmonica=0.1.0
   - boule=0.2.0
+  - pyproj
+  # Other dependencies
   - matplotlib
   - cartopy
-  - pyproj
   # Jupyter related dependencies
   - ipython
   - jupyter
@@ -23,3 +23,6 @@ dependencies:
   - pylint
   - flake8
   - flake8-bugbear
+  - pip:
+      - git+https://github.com/fatiando/harmonica@master
+

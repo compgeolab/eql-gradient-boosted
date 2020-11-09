@@ -115,9 +115,7 @@ for params in parameters:
         random_state=params["random_state"],
     )
     eql.fit(coordinates, getattr(survey, field).values)
-    grid = eql.grid(
-        region=region, shape=target.shape, extra_coords=target.height
-    ).scalars
+    grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
     rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
 # Get maximum score and the corresponding set of parameters
@@ -142,7 +140,7 @@ eql = EQLIterative(
 
 # +
 eql.fit(coordinates, getattr(survey, field).values)
-grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
+grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 
 print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
@@ -203,9 +201,7 @@ for params in parameters:
         random_state=params["random_state"],
     )
     eql.fit(coordinates, getattr(survey, field).values)
-    grid = eql.grid(
-        region=region, shape=target.shape, extra_coords=target.height
-    ).scalars
+    grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
     rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
 # Get maximum score and the corresponding set of parameters
@@ -230,7 +226,7 @@ eql = EQLIterative(
 
 # +
 eql.fit(coordinates, getattr(survey, field).values)
-grid = eql.grid(region=region, shape=target.shape, extra_coords=target.height).scalars
+grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 
 print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
