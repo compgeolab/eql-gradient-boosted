@@ -6,11 +6,14 @@ dependencies:
   - pip
   - numpy
   - verde=1.5.0
+  - boule=0.2.0
+  - pyproj
   # Other dependencies
   - matplotlib
+  - cartopy
+  # Jupyter related dependencies
   - ipython
   - jupyter
-  - pyproj
   - jupytext
   # Development dependencies
   - pytest
@@ -22,3 +25,4 @@ dependencies:
   - flake8-bugbear
   - pip:
       - git+https://github.com/fatiando/harmonica@master
+
