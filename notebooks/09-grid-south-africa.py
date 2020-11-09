@@ -348,11 +348,9 @@ eql = EQLIterative(
     damping=best_parameters["damping"],
     window_size=best_parameters["window_size"],
     random_state=best_parameters["random_state"],
-    warm_start=True,
 )
 
-for _ in range(3):
-    eql.fit(coordinates, gravity_disturbance)
+eql.fit(coordinates, gravity_disturbance)
 
 grid_iterative = eql.grid(
     upward=3000,
@@ -448,3 +446,6 @@ tmp = difference.plot.pcolormesh(
 )
 plt.colorbar(tmp, ax=ax, pad=0.11, shrink=0.75)
 plt.show()
+# -
+
+
