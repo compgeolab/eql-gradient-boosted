@@ -23,6 +23,7 @@ import verde as vd
 import matplotlib.pyplot as plt
 
 from source_layouts import EQLIterative, block_averaged_sources
+
 # -
 
 # ## Download Australia gravity data
@@ -31,7 +32,7 @@ from source_layouts import EQLIterative, block_averaged_sources
 fname = pooch.retrieve(
     url="https://github.com/compgeolab/australia-gravity-data/releases/download/v1.0/australia-ground-gravity.nc",
     known_hash="sha256:50f2fa53c5dc2c66dd3358b8e50024d21074fcc77c96191c549a10a37075bc7e",
-    downloader=pooch.HTTPDownloader(progressbar=True)
+    downloader=pooch.HTTPDownloader(progressbar=True),
 )
 
 # Load the data with xarray
@@ -109,7 +110,9 @@ damping = 1e-1
 depth = 2e3
 window_size = 500e3
 
-points = block_averaged_sources(proj_coordinates, depth_type=depth_type, spacing=block_spacing, depth=depth)
+points = block_averaged_sources(
+    proj_coordinates, depth_type=depth_type, spacing=block_spacing, depth=depth
+)
 
 # +
 memory_gb = proj_coordinates[0].size * points[0].size * (64 / 8) / 1024 ** 3
@@ -120,18 +123,27 @@ print("Memory needed to store the full Jacobian matrix: {:.2f} GB".format(memory
 # -
 
 # %%time
-eql = EQLIterative(damping=damping, points=points, window_size=window_size, random_state=random_state)
+eql = EQLIterative(
+    damping=damping, points=points, window_size=window_size, random_state=random_state
+)
 eql.fit(proj_coordinates, disturbance)
 
 # %%time
 # Get region of longitude, latitude coordinates (in degrees)
 region = vd.get_region(coordinates)
 # Interpolate on a regular grid on geographic coordinates
-grid = eql.grid(region=region, spacing=0.02, extra_coords=data.height.values.max(), projection=projection)
+grid = eql.grid(
+    region=region,
+    spacing=0.02,
+    extra_coords=data.height.values.max(),
+    projection=projection,
+)
 
 grid
 
-grid_masked = vd.distance_mask(coordinates, maxdist=80e3, grid=grid, projection=projection)
+grid_masked = vd.distance_mask(
+    coordinates, maxdist=80e3, grid=grid, projection=projection
+)
 
 plt.figure(figsize=(12, 12))
 grid_masked.scalars.plot()
