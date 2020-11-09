@@ -70,7 +70,7 @@ def grid_data(coordinates, data, region, shape, height, layout, parameters):
     eql.fit(coordinates, data)
     # Predict the field on the regular grid
     eql.extra_coords_name = "upward"
-    grid = eql.grid(region=region, shape=shape, extra_coords=height)
+    grid = eql.grid(upward=height, region=region, shape=shape)
     # Transform the xr.Dataset to xr.DataArray
     grid = grid.scalars
     # Append parameters to the attrs

@@ -9,7 +9,8 @@ from sklearn.utils.validation import check_is_fitted
 from numba import jit, prange
 from harmonica import EQLHarmonic
 
-from harmonica.equivalent_layer.harmonic import greens_func
+from harmonica.equivalent_layer.harmonic import greens_func_cartesian
+from harmonica.equivalent_layer.utils import predict_numba
 
 
 class EQLIterative(EQLHarmonic):
@@ -199,7 +200,9 @@ class EQLIterative(EQLHarmonic):
             self.coefs_[point_window] += coeffs_chunk
             # Update residue on every point (use negative coeffs so the sources
             # effect is removed from the residue)
-            predict_numba(coordinates, points_chunk, -coeffs_chunk, residue)
+            predict_numba(
+                coordinates, points_chunk, -coeffs_chunk, residue, greens_func_cartesian
+            )
             self.errors_[window_i] = np.sqrt(np.mean(residue ** 2))
 
     def _create_rolling_windows(self, coordinates):
@@ -220,9 +223,9 @@ class EQLIterative(EQLHarmonic):
         # The windows for sources and data points are the same, but the
         # verde.rolling_window function creates indices for the given
         # coordinates. That's why we need to create two set of window indices:
-        # one for the sources and one for the data points
+        # one for the sources and one for the data points.
         # We pass the same region, size and spacing to be sure that both set of
-        # windows are the same
+        # windows are the same.
         _, source_windows = vd.rolling_window(
             self.points_, region=region, size=self.window_size, spacing=window_spacing
         )
