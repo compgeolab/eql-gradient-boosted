@@ -13,8 +13,10 @@ def create_latex_variable(variable_name, value, unit=None, fmt="5g"):
         value = value_to_string(value, fmt)
     if unit:
         unit = format_unit(unit)
-        tex_string = r"\newcommand{{\{variable_name}}}{{\SI{{{value}}}{{{unit}}}}}".format(
-            variable_name=variable_name, value=value, unit=unit
+        tex_string = (
+            r"\newcommand{{\{variable_name}}}{{\SI{{{value}}}{{{unit}}}}}".format(
+                variable_name=variable_name, value=value, unit=unit
+            )
         )
     else:
         tex_string = r"\newcommand{{\{variable_name}}}{{{value}}}".format(
