@@ -191,11 +191,10 @@ points = block_averaged_sources(coordinates, **best_parameters)
 eql = hm.EQLHarmonic(damping=best_parameters["damping"], points=points)
 eql.fit(coordinates, gravity_disturbance)
 
-eql.extra_coords_name = "upward"
 grid = eql.grid(
+    upward=3000,
     region=vd.get_region((data.longitude, data.latitude)),
     spacing=0.05,
-    extra_coords=3000,
     data_names=["gravity_disturbance"],
     projection=projection,
 )
@@ -355,11 +354,10 @@ eql = EQLIterative(
 for _ in range(3):
     eql.fit(coordinates, gravity_disturbance)
 
-eql.extra_coords_name = "upward"
 grid_iterative = eql.grid(
+    upward=3000,
     region=vd.get_region((data.longitude, data.latitude)),
     spacing=0.05,
-    extra_coords=3000,
     data_names=["gravity_disturbance"],
     projection=projection,
 )
