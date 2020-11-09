@@ -116,10 +116,18 @@ for ax, label in zip(axes, labels):
     )
     ax.set_aspect("equal")
     ax.tick_params(
-        axis="y", which="both", left=False, right=False, labelleft=False,
+        axis="y",
+        which="both",
+        left=False,
+        right=False,
+        labelleft=False,
     )
     ax.tick_params(
-        axis="x", which="both", bottom=False, top=False, labelbottom=False,
+        axis="x",
+        which="both",
+        bottom=False,
+        top=False,
+        labelbottom=False,
     )
     ax.legend(
         loc="lower left",
