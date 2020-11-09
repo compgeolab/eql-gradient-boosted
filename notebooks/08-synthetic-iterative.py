@@ -230,7 +230,7 @@ eql = EQLIterative(
 
 # +
 eql.fit(coordinates, getattr(survey, field).values)
-grid = eql.grid(pward=target.height, region=region, shape=target.shape).scalars
+grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 
 print("RMS: {}".format(np.sqrt(mean_squared_error(grid.values, target.values))))
 grid.plot(center=False)
