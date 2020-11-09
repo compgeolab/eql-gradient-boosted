@@ -6,7 +6,6 @@ import verde as vd
 import verde.base as vdb
 from sklearn.utils import shuffle
 from sklearn.utils.validation import check_is_fitted
-from numba import jit, prange
 from harmonica import EQLHarmonic
 
 from harmonica.equivalent_layer.harmonic import greens_func_cartesian
@@ -272,27 +271,3 @@ class EQLIterative(EQLHarmonic):
         data = np.zeros(size, dtype=dtype)
         predict_numba(coordinates, self.points_, self.coefs_, data)
         return data.reshape(shape)
-
-
-@jit(nopython=True, parallel=True)
-def predict_numba(
-    coordinates, points, coeffs, result
-):  # pylint: disable=not-an-iterable
-    """
-    Calculate the predicted data using numba for speeding things up.
-
-    I'm overriding the original function just to implement parallelization on
-    predictions.
-    """
-    east, north, upward = coordinates[:]
-    point_east, point_north, point_upward = points[:]
-    for i in prange(east.size):
-        for j in prange(point_east.size):
-            result[i] += coeffs[j] * greens_func(
-                east[i],
-                north[i],
-                upward[i],
-                point_east[j],
-                point_north[j],
-                point_upward[j],
-            )
