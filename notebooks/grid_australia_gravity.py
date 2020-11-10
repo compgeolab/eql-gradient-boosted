@@ -61,18 +61,14 @@ plt.gca().set_aspect("equal")
 plt.colorbar(tmp, label="mGal")
 plt.show()
 
-# ## Block reduce the data
-
-reducer = vd.BlockReduce(np.median, spacing=0.02, drop_coords=False)
-coordinates, disturbance = reducer.filter(
-    (data.longitude.values, data.latitude.values, data.height.values),
-    data=data.disturbance.values,
-)
-coordinates[0].size
-
 # ## Keep only points close to the continent
 
+# +
+coordinates = (data.longitude.values, data.latitude.values, data.height.values)
+disturbance = data.disturbance.values
+
 vd.get_region(coordinates)
+# -
 
 inside = vd.inside(coordinates, region=(111, 154, -44, -7))
 coordinates = tuple(c[inside] for c in coordinates)
@@ -124,7 +120,11 @@ print("Memory needed to store the full Jacobian matrix: {:.2f} GB".format(memory
 
 # %%time
 eql = EQLIterative(
-    damping=damping, points=points, window_size=window_size, random_state=random_state
+    damping=damping,
+    points=points,
+    window_size=window_size,
+    random_state=random_state,
+    line_search=True,
 )
 eql.fit(proj_coordinates, disturbance)
 
@@ -133,9 +133,9 @@ eql.fit(proj_coordinates, disturbance)
 region = vd.get_region(coordinates)
 # Interpolate on a regular grid on geographic coordinates
 grid = eql.grid(
+    upward=data.height.values.max(),
     region=region,
     spacing=0.02,
-    extra_coords=data.height.values.max(),
     projection=projection,
 )
 
@@ -152,3 +152,5 @@ plt.show()
 
 plt.plot(eql.errors_)
 plt.show()
+
+
