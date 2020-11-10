@@ -152,5 +152,3 @@ plt.show()
 
 plt.plot(eql.errors_)
 plt.show()
-
-
