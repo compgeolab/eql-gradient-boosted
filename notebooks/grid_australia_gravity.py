@@ -16,7 +16,6 @@
 # +
 import pooch
 import pyproj
-import numpy as np
 import xarray as xr
 import boule as bl
 import verde as vd
