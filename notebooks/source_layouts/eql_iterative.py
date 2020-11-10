@@ -197,7 +197,11 @@ class EQLIterative(EQLHarmonic):
             )
             predicted[:] = 0
             predict_numba(
-                coordinates, points_chunk, coeffs_chunk, predicted, greens_func_cartesian
+                coordinates,
+                points_chunk,
+                coeffs_chunk,
+                predicted,
+                greens_func_cartesian,
             )
             if self.line_search:
                 step = np.sum(residue * predicted) / np.sum(predicted ** 2)
