@@ -748,12 +748,11 @@ parameter can be fitted so they minimize the misfit function:
 \ref{sec:eql-inversion}.
 Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
 adjusting the size of the overlapping windows can help in reducing the computer
-memory needed to fit the source coefficients and ultimately to interpolate the
-observed data.
+memory needed to fit the source coefficients.
 Nevertheless, in case we have too many data points that make the $\mathbf{A}_k$
 matrices large enough that they cannot be stored in memory, we can apply one
-more simplification on the fitting process: ignore the effect of the sources on
-the $k$-th window on any observation point that falls outside it.
+more simplification on the fitting process: ignore the effect of the $k$-th
+sources on any observation point that falls outside the $k$-th window.
 
 Assuming that there are $N_k$ observation points that fall under the $k$-th
 window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
@@ -770,18 +769,18 @@ misfit function:
 \noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
 only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
 observation points that fall under the $k$-th window; and
-$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between the observation points
-and sources that fall under the same window.
+$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between these observation points
+and the $k$-th sources.
 Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
 elements, the computer memory needed for fitting the $\mathbf{c}_k$
 coefficients is greatly reduced.
 
 Once the $\mathbf{c}_k$ coefficients are fitted following the same method
-described on Section \ref{sec:eql-inversion}, , we need to obtain the value
+described on Section \ref{sec:eql-inversion}, we need to obtain the value
 of the step-size parameter $\alpha_k$.
 This can be achieved by minimizing the norm of the difference between the
-previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th set of
-equivalent sources on every observation point:
+previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th sources on
+every observation point:
 
 \begin{equation}
     \alpha_k = \underset{\alpha}{\mathrm{argmin}}
@@ -810,7 +809,7 @@ Once both the $\alpha_k$ parameter and the $\mathbf{c}_k$ coefficients are
 fitted, equation \ref{eq:residue} is applied to update the residue: compute the
 effect of the sources belonging to the $k$-th window on every observation
 point. Worth noting that when calculating the effect of any number of sources
-we don't need to pre-compute the entire Jacobian matrix: we can compute the
+we don't need to pre-compute the entire Jacobian matrix: we can calculate the
 effect of the sources on each observation point by a simple addition of terms,
 what means computing each Jacobian element at once when needed.
 
