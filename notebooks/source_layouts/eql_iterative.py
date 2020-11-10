@@ -7,7 +7,8 @@ import verde.base as vdb
 from sklearn.utils import shuffle
 from harmonica import EQLHarmonic
 
-from harmonica.equivalent_layer.harmonic import predict_numba
+from harmonica.equivalent_layer.harmonic import greens_func_cartesian
+from harmonica.equivalent_layer.utils import predict_numba
 
 
 class EQLIterative(EQLHarmonic):
@@ -84,12 +85,14 @@ class EQLIterative(EQLHarmonic):
         warm_start=False,
         shuffle=True,
         random_state=None,
+        line_search=False,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
         self.window_size = window_size
         self.warm_start = warm_start
         self.shuffle = shuffle
         self.random_state = random_state
+        self.line_search = line_search
 
     def fit(self, coordinates, data, weights=None):
         """
@@ -167,9 +170,10 @@ class EQLIterative(EQLHarmonic):
         # Get number of windows
         n_windows = len(point_windows)
         # Initialize errors array
-        self.errors_ = np.zeros(n_windows)
+        errors = [np.sqrt(np.mean(residue ** 2))]
         # Set weights_chunk to None (will be changed unless weights is None)
         weights_chunk = None
+        predicted = np.empty_like(residue)
         # Iterate over the windows
         for window_i in range(n_windows):
             # Get source and data points indices for current window
@@ -177,9 +181,6 @@ class EQLIterative(EQLHarmonic):
             # Choose source and data points that fall inside the window
             points_chunk = tuple(p[point_window] for p in self.points_)
             coords_chunk = tuple(c[data_window] for c in coordinates)
-            # Skip the window if no sources or data points fall inside it
-            if points_chunk[0].size == 0 or coords_chunk[0].size == 0:
-                continue
             # Choose weights for data points inside the window (if not None)
             if weights is not None:
                 weights_chunk = weights[data_window]
@@ -194,11 +195,22 @@ class EQLIterative(EQLHarmonic):
                 self.damping,
                 copy_jacobian=True,
             )
+            predicted[:] = 0
+            predict_numba(
+                coordinates,
+                points_chunk,
+                coeffs_chunk,
+                predicted,
+                greens_func_cartesian,
+            )
+            if self.line_search:
+                step = np.sum(residue * predicted) / np.sum(predicted ** 2)
+                predicted *= step
+                coeffs_chunk *= step
+            residue -= predicted
+            errors.append(np.sqrt(np.mean(residue ** 2)))
             self.coefs_[point_window] += coeffs_chunk
-            # Update residue on every point (use negative coeffs so the sources
-            # effect is removed from the residue)
-            predict_numba(coordinates, points_chunk, -coeffs_chunk, residue)
-            self.errors_[window_i] = np.sqrt(np.mean(residue ** 2))
+        self.errors_ = np.array(errors)
 
     def _create_rolling_windows(self, coordinates):
         """
@@ -218,9 +230,9 @@ class EQLIterative(EQLHarmonic):
         # The windows for sources and data points are the same, but the
         # verde.rolling_window function creates indices for the given
         # coordinates. That's why we need to create two set of window indices:
-        # one for the sources and one for the data points
+        # one for the sources and one for the data points.
         # We pass the same region, size and spacing to be sure that both set of
-        # windows are the same
+        # windows are the same.
         _, source_windows = vd.rolling_window(
             self.points_, region=region, size=self.window_size, spacing=window_spacing
         )
@@ -235,4 +247,11 @@ class EQLIterative(EQLHarmonic):
             source_windows, data_windows = shuffle(
                 source_windows, data_windows, random_state=self.random_state
             )
-        return source_windows, data_windows
+        # Remove empty windows
+        source_windows_nonempty = []
+        data_windows_nonempty = []
+        for src, data in zip(source_windows, data_windows):
+            if src.size > 0 and data.size > 0:
+                source_windows_nonempty.append(src)
+                data_windows_nonempty.append(data)
+        return source_windows_nonempty, data_windows_nonempty
