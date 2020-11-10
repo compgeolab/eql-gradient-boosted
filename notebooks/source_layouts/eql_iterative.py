@@ -178,9 +178,6 @@ class EQLIterative(EQLHarmonic):
             # Choose source and data points that fall inside the window
             points_chunk = tuple(p[point_window] for p in self.points_)
             coords_chunk = tuple(c[data_window] for c in coordinates)
-            # Skip the window if no sources or data points fall inside it
-            if points_chunk[0].size == 0 or coords_chunk[0].size == 0:
-                continue
             # Choose weights for data points inside the window (if not None)
             if weights is not None:
                 weights_chunk = weights[data_window]
@@ -238,4 +235,11 @@ class EQLIterative(EQLHarmonic):
             source_windows, data_windows = shuffle(
                 source_windows, data_windows, random_state=self.random_state
             )
-        return source_windows, data_windows
+        # Remove empty windows
+        source_windows_nonempty = []
+        data_windows_nonempty = []
+        for src, data in zip(source_windows, data_windows):
+            if src.size > 0 and data.size > 0:
+                source_windows_nonempty.append(src)
+                data_windows_nonempty.append(data)
+        return source_windows_nonempty, data_windows_nonempty
