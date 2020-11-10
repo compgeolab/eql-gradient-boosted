@@ -85,12 +85,14 @@ class EQLIterative(EQLHarmonic):
         warm_start=False,
         shuffle=True,
         random_state=None,
+        line_search=False,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
         self.window_size = window_size
         self.warm_start = warm_start
         self.shuffle = shuffle
         self.random_state = random_state
+        self.line_search = line_search
 
     def fit(self, coordinates, data, weights=None):
         """
@@ -168,9 +170,10 @@ class EQLIterative(EQLHarmonic):
         # Get number of windows
         n_windows = len(point_windows)
         # Initialize errors array
-        self.errors_ = np.zeros(n_windows)
+        errors = [np.sqrt(np.mean(residue ** 2))]
         # Set weights_chunk to None (will be changed unless weights is None)
         weights_chunk = None
+        predicted = np.empty_like(residue)
         # Iterate over the windows
         for window_i in range(n_windows):
             # Get source and data points indices for current window
@@ -192,13 +195,18 @@ class EQLIterative(EQLHarmonic):
                 self.damping,
                 copy_jacobian=True,
             )
-            self.coefs_[point_window] += coeffs_chunk
-            # Update residue on every point (use negative coeffs so the sources
-            # effect is removed from the residue)
+            predicted[:] = 0
             predict_numba(
-                coordinates, points_chunk, -coeffs_chunk, residue, greens_func_cartesian
+                coordinates, points_chunk, coeffs_chunk, predicted, greens_func_cartesian
             )
-            self.errors_[window_i] = np.sqrt(np.mean(residue ** 2))
+            if self.line_search:
+                step = np.sum(residue * predicted) / np.sum(predicted ** 2)
+                predicted *= step
+                coeffs_chunk *= step
+            residue -= predicted
+            errors.append(np.sqrt(np.mean(residue ** 2)))
+            self.coefs_[point_window] += coeffs_chunk
+        self.errors_ = np.array(errors)
 
     def _create_rolling_windows(self, coordinates):
         """
