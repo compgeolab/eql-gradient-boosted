@@ -701,21 +701,15 @@ Even if we can greatly reduce the number of sources, having too many data
 points would still produce a Jacobian matrix large enough that cannot fit in
 memory.
 This problem was already faced by other authors
-\citep{
-    mendonca1994,
-    leao1989,
-    li2010,
-    barnes2011,
-    oliveira2013,
-    siqueira2017,
-    jirigalatu2019
-}.
+\citep{mendonca1994, leao1989, li2010, barnes2011, oliveira2013, siqueira2017,
+jirigalatu2019}.
 The iterative method proposed by \citet{siqueira2017} needs equivalent sources
 to be located beneath each observation point, so it cannot take advantage of
 the block-averaged sources.
 \citet{leao1989} perform the fitting simultaneously with the prediction, what
 prevents us to use already fitted equivalent sources to make future
 predictions. Besides the method is limited to interpolations on regular grids.
+% Add more discussion on why we won't apply any of the following methods
 \citet{mendonca1994}
 \citet{li2010}
 \citet{barnes2011}
