@@ -159,13 +159,13 @@ class EQLHarmonicBoost(EQLHarmonic):
         else:
             self.coefs_ = np.zeros(self.points_[0].size)
             residue = data.copy()
-        # Fit coefficients iteratively
-        self._fit_iteratively(coordinates, residue, weights)
+        # Fit coefficients through gradient boosting
+        self._gradient_boosting(coordinates, residue, weights)
         return self
 
-    def _fit_iteratively(self, coordinates, residue, weights):
+    def _gradient_boosting(self, coordinates, residue, weights):
         """
-        Iteratively fit the coefficients of the sources
+        Fit source coefficients through gradient boosting
         """
         # Create rolling windows
         point_windows, data_windows = self._create_rolling_windows(coordinates)

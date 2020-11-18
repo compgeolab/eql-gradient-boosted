@@ -39,7 +39,7 @@ from source_layouts import (
 
 results_dir = Path("..") / "results"
 airborne_results_dir = results_dir / "airborne_survey"
-iterative_results_dir = results_dir / "iterative"
+eql_boost_results_dir = results_dir / "eql-boost"
 
 # **Define which field will be meassured**
 
@@ -100,7 +100,7 @@ parameters = combine_parameters(
 
 # Dump parameters to a JSON file
 
-json_file = iterative_results_dir / "parameters-20km.json"
+json_file = eql_boost_results_dir / "parameters-20km.json"
 save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
@@ -163,7 +163,7 @@ plt.show()
 
 # Save grid
 
-grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_20km.nc")
+grid.to_netcdf(eql_boost_results_dir / "airborne_grid_boost_20km.nc")
 
 # ### Use a window size of 50km
 
@@ -186,7 +186,7 @@ parameters = combine_parameters(
 
 # Dump parameters to a JSON file
 
-json_file = iterative_results_dir / "parameters-50km.json"
+json_file = eql_boost_results_dir / "parameters-50km.json"
 save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
@@ -248,4 +248,4 @@ plt.show()
 
 # Save grid
 
-grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_50km.nc")
+grid.to_netcdf(eql_boost_results_dir / "airborne_grid_boost_50km.nc")
