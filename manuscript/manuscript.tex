@@ -32,7 +32,7 @@
 % Define title, authors, affiliations and DOI
 % ===========================================
 \newcommand{\Title}{
-    A better strategy for interpolating gravity and magnetic data
+    Gradient boosted equivalent sources
 }
 \newcommand{\Author}{
     S.R. Soler,
@@ -177,20 +177,27 @@ Most existing methods solve under-determined problems, requiring a much larger
 number of equivalent sources than the number of data points.
 Furthermore, many of the optimizations proposed are also complex to implement
 in a computer program, limiting their wider adoption.
-
 In the present study,
-we propose a simple method for reducing the number of equivalent sources.
-The survey area is divided into horizontal blocks and one source is assigned
+we propose a two-way method for reducing the computational load needed to apply
+the equivalent sources technique: first by reducing the number of equivalent
+sources through a \emph{block-averaging} strategy and then simplifying the
+fitting process through a \emph{gradient boosting} algorithm.
+The first strategy consists in
+dividing the survey area into horizontal blocks and assign one source
 to each block at the median horizontal location of the data points.
 For airborne surveys, which are oversampled along tracks, this can greatly
 reduce the size of the inverse problem while retaining the quality of
 interpolation.
-We experiment with the existing strategies of assigning sources at
-a uniform depth, a depth relative to the data height, or a depth proportional
-to the median distance to adjacent data points.
-Through tests on synthetic data, we show that non-uniform depths perform better
-at interpolation and that our method is able to achieve the same accuracy as a
-traditional equivalent layer while using a fraction of the number of sources.
+The second algorithm simplifies the process of fitting a very large number of
+equivalent sources by defining sets of fewer sources, whose coefficients are
+fitted iteratively while minimizing a given residue.
+Through tests on synthetic data, we show that: (i) the \emph{block-averaged}
+sources achieve the same accuracy as a traditional equivalent layer while using
+a fraction of the number of sources, and (ii) the \emph{gradient boosting}
+algorithm greatly reduces the computational memory required to fit very large
+datasets without scarifying predictions' accuracy.
+Finally these methods are used to interpolate a 1.7 million gravity data
+measurements around Australia onto a regular grid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -693,9 +700,35 @@ a very large set of observation points.
 Even if we can greatly reduce the number of sources, having too many data
 points would still produce a Jacobian matrix large enough that cannot fit in
 memory.
-This problem was already faced by other authors (CITE PEOPLE).
+This problem was already faced by other authors
+\citep{
+    mendonca1994,
+    leao1989,
+    li2010,
+    barnes2011,
+    oliveira2013,
+    siqueira2017,
+    jirigalatu2019
+}.
+The iterative method proposed by \citet{siqueira2017} needs equivalent sources
+to be located beneath each observation point, so it cannot take advantage of
+the block-averaged sources.
+\citet{leao1989} perform the fitting simultaneously with the prediction, what
+prevents us to use already fitted equivalent sources to make future
+predictions. Besides the method is limited to interpolations on regular grids.
+\citet{mendonca1994}
+\citet{li2010}
+\citet{barnes2011}
+\citet{jirigalatu2019}
+
 Here we propose an iterative algorithm for fitting the source coefficients
-using a gradient boosting \citep{friedman2001, friedman2002} strategy.
+using a gradient boosting \citep{friedman2001, friedman2002} strategy:
+(i) define a collection of overlapping windows of equal size that cover the
+survey area,
+(ii) define one set of equivalent sources per window,
+(iii) iteratively fit the coefficients of each set of sources.
+Once every set of sources is fitted, we can predict the value of the field on
+any observation point as the effect of every set of equivalent sources.
 
 Lets assume we have $N$ measurements of a harmonic field on observations points
 $\{\mathbf{p}_i\}_{i=1}^{N}$ stored in the vector $\mathbf{d} = (d_1, d_2,
@@ -834,25 +867,9 @@ follows:
 
 \section{Comparison of source distributions}
 
-%Compare the accuracy of the predictions made by each source distribution.
-%Need an objective way to compare them.
-%Propose a synthetic gravity model made out of prisms of different sizes and
-%density contrasts.
-%Create a regular grid of observation points where the gravitational effect of
-%the synthetic model will be computed.
-%Call it the \emph{target grid}.
-%Generate synthetic surveys above the same synthetic model and compute the
-%gravitational effect of the model on each survey.
-%Use each source distribution to predict values based on the ones obtained on
-%each survey onto the same grid points of the \emph{target grid}.
-%Score each interpolation by comparing the predicted values with the
-%\emph{target grid}.
-%Finally compare the accuracy of the predictions made by each source
-%distribution.
-
 Our first goal is to to compare the performance of all source distributions
 from Table~\ref{tab:source-distributions} when predicting harmonic field data
-using the equivalent layer technique.
+using the equivalent sources technique.
 To do so we have created a synthetic model made out of prisms of different
 shape and density contrasts.
 The gravitational effect of this synthetic model have been computed on
@@ -860,7 +877,7 @@ a regular grid (\emph{target} grid) at a constant height and on two different
 set of observation points that we will call \emph{synthetic surveys}: a ground
 and an airborne survey.
 The data from each synthetic survey is interpolated on the points of the
-\emph{target} grid and then scored against the \emph{target} grid.
+\emph{target} grid and then scored against its values.
 We can then quantitatively compare how accurate is each source distribution at
 predicting unobserved data on each synthetic survey and quantify the
 computational load needed to do it.
@@ -875,14 +892,14 @@ The synthetic model is made out of \NPrisms{} prisms distributed on a region of
 height plane.
 Density contrast of prisms range from \ModelMinDensity{} and
 \ModelMaxDensity{}.
-We created deep big and thin shallow prisms for creating gravity anomalies with
+We built deep big and thin shallow prisms for creating gravity anomalies with
 long and short wavelengths, respectively.
 
 The vertical component of the gravity acceleration generated by the synthetic
 model has been computed on a regular grid of
 \TargetEastingSize{}$\times$\TargetNorthingSize{} points with a spacing of
 \TargetSpacing{} located \TargetHeight{} above the zero height plane
-(Fig.~\ref{fig:target-grid}).
+(Fig.~\ref{fig:target-grid}), using \citet{nagy2000} and \citet{nagy2002}.
 We will refer to this grid as the \emph{target} grid in the future.
 
 \begin{figure}
