@@ -16,4 +16,4 @@ from .utils import (
     grid_data,
     predictions_to_datasets,
 )
-from .eql_iterative import EQLIterative
+from .eql_boost import EQLHarmonicBoost

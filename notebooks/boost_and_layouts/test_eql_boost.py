@@ -1,5 +1,5 @@
 """
-Test EQLIterative class
+Test EQLHarmonicBoost class
 """
 import numpy as np
 import numpy.testing as npt
@@ -7,13 +7,13 @@ import verde as vd
 import harmonica as hm
 from sklearn.metrics import mean_squared_error
 
-from .eql_iterative import EQLIterative
+from .eql_boost import EQLHarmonicBoost
 from .layouts import block_averaged_sources
 
 
-def test_eql_iterative_single_window():
+def test_eql_boost_single_window():
     """
-    Check if EQLIterative works with a single window that covers the whole region
+    Check if EQLHarmonicBoost works with a single window that covers the whole region
     """
     # Define a squared region
     region = (-3e3, -1e3, 5e3, 7e3)
@@ -26,7 +26,7 @@ def test_eql_iterative_single_window():
     data = hm.point_mass_gravity(coordinates, points, masses, field="g_z")
 
     # The interpolation should be perfect on the data points
-    eql = EQLIterative(window_size=region[1] - region[0])
+    eql = EQLHarmonicBoost(window_size=region[1] - region[0])
     eql.fit(coordinates, data)
     npt.assert_allclose(data, eql.predict(coordinates), rtol=1e-5)
 
@@ -37,9 +37,9 @@ def test_eql_iterative_single_window():
     npt.assert_allclose(true, eql.predict(grid), rtol=1e-3)
 
 
-def test_eql_iterative_large_region():
+def test_eql_boost_large_region():
     """
-    Check if EQLIterative works on a large region
+    Check if EQLHarmonicBoost works on a large region
 
     The iterative process ignores the effect of sources on far observation
     points. If the region is very large, this error should be diminished.
@@ -55,7 +55,7 @@ def test_eql_iterative_large_region():
     data = hm.point_mass_gravity(coordinates, points, masses, field="g_z")
 
     # The interpolation should be sufficiently accurate on the data points
-    eql = EQLIterative(window_size=100e3)
+    eql = EQLHarmonicBoost(window_size=100e3)
     eql.fit(coordinates, data)
     assert mean_squared_error(data, eql.predict(coordinates)) < 1e-5 * vd.maxabs(data)
 
@@ -66,9 +66,9 @@ def test_eql_iterative_large_region():
     assert mean_squared_error(true, eql.predict(grid)) < 1e-3 * vd.maxabs(data)
 
 
-def test_eql_iterative_random_state():
+def test_eql_boost_random_state():
     """
-    Check if EQLIterative produces same result by setting random_state
+    Check if EQLHarmonicBoost produces same result by setting random_state
     """
     region = (-3e3, -1e3, 5e3, 7e3)
     # Build synthetic point masses
@@ -79,10 +79,10 @@ def test_eql_iterative_random_state():
     # Get synthetic data
     data = hm.point_mass_gravity(coordinates, points, masses, field="g_z")
 
-    # Initialize two EQLIterative with the same random_state
-    eql_a = EQLIterative(window_size=500, random_state=0)
+    # Initialize two EQLHarmonicBoost with the same random_state
+    eql_a = EQLHarmonicBoost(window_size=500, random_state=0)
     eql_a.fit(coordinates, data)
-    eql_b = EQLIterative(window_size=500, random_state=0)
+    eql_b = EQLHarmonicBoost(window_size=500, random_state=0)
     eql_b.fit(coordinates, data)
 
     # Check if fitted coefficients are the same
@@ -102,8 +102,8 @@ def test_same_number_of_windows_data_and_sources():
     points = vd.grid_coordinates(
         region=sources_region, spacing=spacing, extra_coords=-10
     )
-    # Create EQLIterative
-    eql = EQLIterative(window_size=spacing)
+    # Create EQLHarmonicBoost
+    eql = EQLHarmonicBoost(window_size=spacing)
     # Make EQL believe that it has already created the points
     eql.points_ = points
     # Create windows for data points and sources
@@ -125,9 +125,9 @@ def test_same_windows_data_and_sources():
     points = vd.grid_coordinates(
         region=sources_region, spacing=spacing, extra_coords=-10
     )
-    # Create EQLIterative
+    # Create EQLHarmonicBoost
     # I use no shuffle so I can compare the windows with expected values
-    eql = EQLIterative(window_size=spacing, shuffle=False)
+    eql = EQLHarmonicBoost(window_size=spacing, shuffle=False)
     # Make EQL believe that it has already created the points
     eql.points_ = points
     # Create windows for data points and sources
@@ -145,9 +145,9 @@ def test_same_windows_data_and_sources():
         assert len(window) == expected_source_windows[i]
 
 
-def test_eql_iterative_warm_start():
+def test_eql_boost_warm_start():
     """
-    Check if EQLIterative can be fitted with warm_start
+    Check if EQLHarmonicBoost can be fitted with warm_start
     """
     region = (-3e3, -1e3, 5e3, 7e3)
     # Build synthetic point masses
@@ -159,7 +159,7 @@ def test_eql_iterative_warm_start():
     data = hm.point_mass_gravity(coordinates, points, masses, field="g_z")
 
     # Check if refitting with warm_start=True changes its coefficients
-    eql = EQLIterative(window_size=500, warm_start=True)
+    eql = EQLHarmonicBoost(window_size=500, warm_start=True)
     eql.fit(coordinates, data)
     coefs = eql.coefs_.copy()
     eql.fit(coordinates, data)
@@ -168,14 +168,14 @@ def test_eql_iterative_warm_start():
     # Check if refitting with warm_start=False doesn't change its coefficients
     # (need to set random_state, otherwise coefficients might be different due
     # to another random shuffling of the windows).
-    eql = EQLIterative(window_size=500, warm_start=False, random_state=0)
+    eql = EQLHarmonicBoost(window_size=500, warm_start=False, random_state=0)
     eql.fit(coordinates, data)
     coefs = eql.coefs_.copy()
     eql.fit(coordinates, data)
     npt.assert_allclose(coefs, eql.coefs_)
 
 
-def test_eql_iterative_warm_start_new_coords():
+def test_eql_boost_warm_start_new_coords():
     """
     Check if sources are not changed when warm_start is True
 
@@ -192,8 +192,8 @@ def test_eql_iterative_warm_start_new_coords():
     # Get synthetic data
     data = hm.point_mass_gravity(coordinates, points, masses, field="g_z")
 
-    # Capture the location of sources created by EQLIterative on the first fit
-    eql = EQLIterative(window_size=500, warm_start=True)
+    # Capture the location of sources created by EQLHarmonicBoost on the first fit
+    eql = EQLHarmonicBoost(window_size=500, warm_start=True)
     eql.fit(coordinates, data)
     sources = tuple(c.copy() for c in eql.points_)
 
@@ -206,9 +206,9 @@ def test_eql_iterative_warm_start_new_coords():
         npt.assert_allclose(sources[i], eql.points_[i])
 
 
-def test_eql_iterative_custom_points():
+def test_eql_boost_custom_points():
     """
-    Check EQLIterative with custom points
+    Check EQLHarmonicBoost with custom points
 
     Check if the iterative gridder works well with a custom set of sources.
     By default, the gridder puts one source beneath each data point, therefore
@@ -229,8 +229,8 @@ def test_eql_iterative_custom_points():
         coordinates, 100, depth_type="relative_depth", depth=500
     )
 
-    # Fit EQLIterative with the block-averaged sources
-    eql = EQLIterative(window_size=500, points=sources)
+    # Fit EQLHarmonicBoost with the block-averaged sources
+    eql = EQLHarmonicBoost(window_size=500, points=sources)
     eql.fit(coordinates, data)
 
     # Check if sources are located on the same points

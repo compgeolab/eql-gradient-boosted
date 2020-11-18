@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.6.0
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Grid South Africa Gravity Survey
@@ -31,7 +31,7 @@ import cartopy.crs as ccrs
 from source_layouts import (
     block_averaged_sources,
     combine_parameters,
-    EQLIterative,
+    EQLHarmonicBoost,
     save_to_json,
 )
 
@@ -258,7 +258,7 @@ plt.show()
 
 grid.to_netcdf(results_dir / "south_africa_gravity_grid.nc")
 
-# ## Grid gravity disturbance with EQLIterative
+# ## Grid gravity disturbance with EQLHarmonicBoost
 
 # Define sets of parameters for the equivalent layer
 
@@ -312,7 +312,7 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     for parameters in parameter_sets:
         points = block_averaged_sources(coordinates, **parameters)
-        eql = EQLIterative(
+        eql = EQLHarmonicBoost(
             points=points,
             window_size=parameters["window_size"],
             damping=parameters["damping"],
@@ -343,7 +343,7 @@ print(best_parameters)
 # +
 # %%time
 points = block_averaged_sources(coordinates, **best_parameters)
-eql = EQLIterative(
+eql = EQLHarmonicBoost(
     points=points,
     damping=best_parameters["damping"],
     window_size=best_parameters["window_size"],

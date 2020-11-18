@@ -1,5 +1,5 @@
 """
-Iterative equivalent layer for generic harmonic functions
+Gradient boosted equivalent layer for generic harmonic functions
 """
 import numpy as np
 import verde as vd
@@ -11,13 +11,15 @@ from harmonica.equivalent_layer.harmonic import greens_func_cartesian
 from harmonica.equivalent_layer.utils import predict_numba
 
 
-class EQLIterative(EQLHarmonic):
+class EQLHarmonicBoost(EQLHarmonic):
     r"""
-    Iterative equivalent-layer for generic harmonic functions
+    Gradient boosted equivalent-layer for generic harmonic functions
 
-    This equivalent layer fits the sources coefficients through an iterative
-    strategy. On each iteration, it fits the coefficients of the sources that
-    fall inside one window out of a set of overlapping windows.
+    This equivalent layer fits the sources coefficients through a gradient
+    boosting strategy: generates one set of equivalent sources per rolling
+    window. On each iteration, the coefficients of each set of equivalent
+    sources are fitted. A single equivalent-layer is generated at the end as
+    a superposition of every set of equivalent sources.
 
     Parameters
     ----------
