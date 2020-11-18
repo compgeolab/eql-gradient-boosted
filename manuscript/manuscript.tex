@@ -32,7 +32,7 @@
 % Define title, authors, affiliations and DOI
 % ===========================================
 \newcommand{\Title}{
-    A better strategy for interpolating gravity and magnetic data
+    Gradient boosted equivalent sources
 }
 \newcommand{\Author}{
     S.R. Soler,
@@ -177,20 +177,27 @@ Most existing methods solve under-determined problems, requiring a much larger
 number of equivalent sources than the number of data points.
 Furthermore, many of the optimizations proposed are also complex to implement
 in a computer program, limiting their wider adoption.
-
 In the present study,
-we propose a simple method for reducing the number of equivalent sources.
-The survey area is divided into horizontal blocks and one source is assigned
+we propose a two-way method for reducing the computational load needed to apply
+the equivalent sources technique: first by reducing the number of equivalent
+sources through a \emph{block-averaging} strategy and then simplifying the
+fitting process through a \emph{gradient boosting} algorithm.
+The first strategy consists in
+dividing the survey area into horizontal blocks and assign one source
 to each block at the median horizontal location of the data points.
 For airborne surveys, which are oversampled along tracks, this can greatly
 reduce the size of the inverse problem while retaining the quality of
 interpolation.
-We experiment with the existing strategies of assigning sources at
-a uniform depth, a depth relative to the data height, or a depth proportional
-to the median distance to adjacent data points.
-Through tests on synthetic data, we show that non-uniform depths perform better
-at interpolation and that our method is able to achieve the same accuracy as a
-traditional equivalent layer while using a fraction of the number of sources.
+The second algorithm simplifies the process of fitting a very large number of
+equivalent sources by defining sets of fewer sources, whose coefficients are
+fitted iteratively while minimizing a given residue.
+Through tests on synthetic data, we show that: (i) the \emph{block-averaged}
+sources achieve the same accuracy as a traditional equivalent layer while using
+a fraction of the number of sources, and (ii) the \emph{gradient boosting}
+algorithm greatly reduces the computational memory required to fit very large
+datasets without scarifying predictions' accuracy.
+Finally these methods are used to interpolate a 1.7 million gravity data
+measurements around Australia onto a regular grid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -237,8 +244,10 @@ acceleration measured on $\mathbf{p}$ due to the point mass on $\mathbf{q}$:
     a_{ij} = G \frac{(z_i - z_j)}{|\mathbf{p}_i - \mathbf{q}_j|^3},
 \end{equation}
 
-\noindent where $z_i$ and $z_j$ are the vertical components of the
-$\mathbf{p}_i$ and $\mathbf{q}_j$ points, respectively.
+\noindent where
+$G = \SI{6.674e-11}{\cubic\meter\per\kilogram\per\second\squared}$ is the
+universal gravitational constant, $z_i$ and $z_j$ are the vertical components
+of the $\mathbf{p}_i$ and $\mathbf{q}_j$ points, respectively.
 
 By solving equation~\ref{eq:linear-problem-g} we can obtain the values of
 $\mathbf{m}$ that better reproduce the measured field.
@@ -246,7 +255,7 @@ This source distribution along with the fitted masses can be used to predict
 gravity values on any point where the potential field has not been measured.
 
 
-\subsection{Generalization of equivalent sources}
+\subsection{Generalized equivalent sources}
 
 It's possible to generalize the equivalent sources technique to any harmonic
 field through a Green's function problem, regardless the nature of the field.
@@ -356,29 +365,20 @@ Then they can be used to predict the value of the harmonic field on any other
 point where no measurement has been taken by evaluating
 equation~\ref{eq:eql-field}.
 
-Worth noting that solving equations~\ref{eq:linear-problem-g}
-and~\ref{eq:linear-problem} is equivalent to performing an inversion and thus
-solving an ill-posed problem by nature due to the non-uniqueness and the
-instability of the possible solutions.
+
+\subsection{Fitting source coefficients}
+\label{sec:eql-inversion}
+
+Solving equations~\ref{eq:linear-problem-g} and~\ref{eq:linear-problem} is
+equivalent to performing an inversion and thus solving an ill-posed problem by
+nature due to the non-uniqueness and the instability of the possible solutions.
 Therefore is usually needed to add regularization functions in order to obtain
 stable solutions
 (\citealp[p.~52]{menke1989}; \citealp{cooper2000}; \citealp{oliveira2013}).
-Worth noting that the number of sources can either be equal, greater or lower
-than the number of observation points, leading to well, under or overdetermined
-linear problem, respectively.
 
-% Add other possible applications to the EQL like RTP or upward continuation.
-
-\subsection{Equivalent sources implementation}
-
-The subsequent comparisons between strategies for interpolating data through
-equivalent sources are carried out by the equivalent sources implementation in
-Harmonica (v0.1.0) \citep{uieda2020}.
-
-It solves equation~\ref{eq:linear-problem} through least squares with
-a zeroth-order Tikhonov \citep{tikhonov1977} regularization in order to
-stabilize the solution.
-It consists in minimizing the misfit function:
+We can obtain the values of the source coefficients $\mathbf{c}$ that better
+reproduce the measured field by minimizing an objective or misfit function
+$\phi(\mathbf{c})$ through a least squares method:
 
 \begin{equation}
     \phi(\mathbf{c}) =
@@ -392,9 +392,11 @@ It consists in minimizing the misfit function:
 \noindent where $\left\lVert \cdot \right\rVert ^ 2$ symbolizes the L$_2$ norm
 and $\lambda_d$ is a \emph{damping} parameter with the same units as the
 Jacobian matrix elements.
+The second term of the equation applies a zeroth-order Tikhonov
+\citep{tikhonov1977} regularization to stabilize the solution.
 
-In order to simplify the choice of this parameter we scale the Jacobian matrix
-so each column has unit variance.
+In order to simplify the choice of the \emph{damping} parameter we scale the
+Jacobian matrix so each column has unit variance.
 We define a diagonal matrix $\mathbf{S}$, whose elements corresponds to the
 standard deviation of each column of the Jacobian matrix $\mathbf{A}$:
 
@@ -449,7 +451,7 @@ well- or over-determined, respectively. Therefore, the scaled coefficients that
 minimize the misfit function can be obtained through \citep{menke1989}:
 
 \begin{equation}
-    \hat{\mathbf{c}}_\text{est} =
+    \hat{\mathbf{c}} =
         \left[
             \hat{\mathbf{A}}^\text{T} \hat{\mathbf{A}}
             + \lambda^2 \mathbf{I}
@@ -463,7 +465,7 @@ problem is under-determined and the scaled coefficients can be obtained as
 \citep{menke1989}:
 
 \begin{equation}
-    \hat{\mathbf{c}}_\text{est} =
+    \hat{\mathbf{c}} =
     \hat{\mathbf{A}}^\text{T}
         \left[
             \hat{\mathbf{A}} \hat{\mathbf{A}}^\text{T}
@@ -472,23 +474,16 @@ problem is under-determined and the scaled coefficients can be obtained as
         \mathbf{d}.
 \end{equation}
 
-
 Once the scaled coefficients are obtained, the sources' coefficients
-$\mathbf{c}_\text{est}$ can be obtained by rescaling
-$\hat{\mathbf{c}}_\text{est}$:
+$\mathbf{c}$ can be obtained by rescaling
+$\hat{\mathbf{c}}$:
 
 \begin{equation}
-    \mathbf{c}_\text{est} = \mathbf{S}\inv \hat{\mathbf{c}}_\text{est}.
+    \mathbf{c} = \mathbf{S}\inv \hat{\mathbf{c}}.
 \end{equation}
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Source distributions}
-
-% Describe the proposed source distributions as combination of layouts and
-% depths strategies.
+\subsection{Source distributions}
 
 How to choose how many sources to use and where to locate them are not
 trivial decisions that play an important role on the accuracy of the
@@ -572,14 +567,6 @@ grid} with the same spacing.
 Moreover, the sources are only located beneath populated blocks, so sources
 will be concentrated on regions where data has been gathered and no anisotropic
 distribution of sources will be generated.
-
-% Worth noting that the \emph{source below data} generates a number of sources
-% equal to the data points, obtaining a well determined linear problem.
-% The \emph{block averaged sources} layouts can generate a number of point
-% sources equal or lower than the number of data points, well or
-% overdetermined.
-% The \emph{grid sources} is the only layout that can generate either a well,
-% over or under determined problem.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/block-averaged-sources-schematics.pdf}
@@ -688,7 +675,7 @@ The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
 Table~\ref{tab:source-distributions}).
 The \emph{grid sources} is only compatible with the \emph{constant depth}
-scheme.
+scheme if no further information is provided.
 
 \begin{table*}
     \centering
@@ -705,30 +692,178 @@ scheme.
     \end{tabular}
 \end{table*}
 
+\subsection{Gradient boosted equivalent sources}
+
+Reducing the number of sources might help to lower the amount of computer
+memory needed to fit their coefficients, although it may be not enough for
+a very large set of observation points.
+Even if we can greatly reduce the number of sources, having too many data
+points would still produce a Jacobian matrix large enough that cannot fit in
+memory.
+This problem was already faced by other authors
+\citep{mendonca1994, leao1989, li2010, barnes2011, oliveira2013, siqueira2017,
+jirigalatu2019}.
+The iterative method proposed by \citet{siqueira2017} needs equivalent sources
+to be located beneath each observation point, so it cannot take advantage of
+the block-averaged sources.
+\citet{leao1989} perform the fitting simultaneously with the prediction, what
+prevents us to use already fitted equivalent sources to make future
+predictions. Besides the method is limited to interpolations on regular grids.
+% Add more discussion on why we won't apply any of the following methods
+\citet{mendonca1994}
+\citet{li2010}
+\citet{barnes2011}
+\citet{jirigalatu2019}
+
+Here we propose an iterative algorithm for fitting the source coefficients
+using a gradient boosting \citep{friedman2001, friedman2002} strategy:
+(i) define a collection of overlapping windows of equal size that cover the
+survey area,
+(ii) define one set of equivalent sources per window,
+(iii) iteratively fit the coefficients of each set of sources.
+Once every set of sources is fitted, we can predict the value of the field on
+any observation point as the effect of every set of equivalent sources.
+
+Lets assume we have $N$ measurements of a harmonic field on observations points
+$\{\mathbf{p}_i\}_{i=1}^{N}$ stored in the vector $\mathbf{d} = (d_1, d_2,
+\ldots, d_N)^T$. We have defined a set of $M$ point sources located on
+$\{\mathbf{q}_j\}_{j=1}^{M}$. Instead of trying to fit the entire set of
+coefficients $\mathbf{c}$ at once, we can reduce the problem to fitting $K$
+different sets of equivalent sources: we define $K$ overlapping windows of
+equal size that cover the whole observation area, and then we create one set of
+equivalent sources per window formed by the $\{\mathbf{q}_m\}_{m=1}^{M_k}$
+sources that fall inside the $k$-th window.
+The observed data should be equal to the superposition of the
+effect of every set of equivalent sources:
+
+\begin{equation}
+    \mathbf{d} = \sum_{k=1}^K \alpha_k \mathbf{A}_k \mathbf{c}_k,
+\end{equation}
+
+\noindent where $\mathbf{c}_k$ is the vector of coefficients for the $k$-th
+set of equivalent sources; $\mathbf{A}_k$ is the Jacobian matrix between
+those sources and every data point; and each $\alpha_k$ is a constant called
+\emph{step-size parameter}.
+
+By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
+iteratively: on each iteration a residue vector $\mathbf{r}_k$ (initialized
+with the observed data) is used to fit the $\mathbf{c}_k$
+coefficients and $\alpha_k$ step-size parameter, and then updated by removing
+the effect of the same sources, as follows:
+
+\begin{equation}
+    \mathbf{r}_0 = \mathbf{d},
+\end{equation}
+
+\begin{equation}
+    \mathbf{r}_k = \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k.
+    \label{eq:residue}
+\end{equation}
+
+\noindent On each iteration the $\mathbf{c}_k$ vector and the $\alpha_k$
+parameter can be fitted so they minimize the misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent following the same method described on Section
+\ref{sec:eql-inversion}.
+Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
+adjusting the size of the overlapping windows can help in reducing the computer
+memory needed to fit the source coefficients.
+Nevertheless, in case we have too many data points that make the $\mathbf{A}_k$
+matrices large enough that they cannot be stored in memory, we can apply one
+more simplification on the fitting process: ignore the effect of the $k$-th
+sources on any observation point that falls outside the $k$-th window.
+
+Assuming that there are $N_k$ observation points that fall under the $k$-th
+window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
+misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \tilde{\mathbf{r}}_{k-1} - \tilde{\mathbf{A}}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
+only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
+observation points that fall under the $k$-th window; and
+$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between these observation points
+and the $k$-th sources.
+Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
+elements, the computer memory needed for fitting the $\mathbf{c}_k$
+coefficients is greatly reduced.
+
+Once the $\mathbf{c}_k$ coefficients are fitted following the same method
+described on Section \ref{sec:eql-inversion}, we need to obtain the value
+of the step-size parameter $\alpha_k$.
+This can be achieved by minimizing the norm of the difference between the
+previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th sources on
+every observation point:
+
+\begin{equation}
+    \alpha_k = \underset{\alpha}{\mathrm{argmin}}
+    \left(
+        \left\lVert
+            \mathbf{r}_{k-1} - \alpha \mathbf{A}_k \mathbf{c}_k
+        \right\rVert ^ 2
+    \right),
+\end{equation}
+
+\noindent which leads to:
+
+\begin{equation}
+    \alpha_k = \frac{
+        \mathbf{r}_{k-1}^T \mathbf{A}_k \mathbf{c}_k
+    }{
+        \left(\mathbf{A}_k \mathbf{c}_k\right)^T \mathbf{A}_k \mathbf{c}_k
+    }.
+\end{equation}
+
+This step will improve the convergence of the iterative algorithm and also will
+introduce at some extent the effect of the $k$-th sources on every data point,
+which was neglected on the fitting of the $\mathbf{c}_k$ coefficients.
+
+Once both the $\alpha_k$ parameter and the $\mathbf{c}_k$ coefficients are
+fitted, equation \ref{eq:residue} is applied to update the residue: compute the
+effect of the sources belonging to the $k$-th window on every observation
+point. Worth noting that when calculating the effect of any number of sources
+we don't need to pre-compute the entire Jacobian matrix: we can calculate the
+effect of the sources on each observation point by a simple addition of terms,
+what means computing each Jacobian element at once when needed.
+
+Because the number of windows is fixed before starting the iteration process,
+its number of steps are also fixed to $K$. Moreover, the windows are randomly
+shuffled before starting the process to prevent the prioritization of clustered
+sets of equivalent sources.
+
+After all $\alpha_k$ parameters and $\mathbf{c}_k$ coefficients vectors are
+fitted, we can predict the effect of every equivalent source on any point as
+follows:
+
+\begin{equation}
+    V(\mathbf{p}) =
+    \sum\limits_{k=1}^K \sum\limits_{m=1}^{M_k}
+    \frac{\alpha_k {c_k}_m}{|\mathbf{p} - \mathbf{q}_m|}.
+\end{equation}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \section{Comparison of source distributions}
 
-%Compare the accuracy of the predictions made by each source distribution.
-%Need an objective way to compare them.
-%Propose a synthetic gravity model made out of prisms of different sizes and
-%density contrasts.
-%Create a regular grid of observation points where the gravitational effect of
-%the synthetic model will be computed.
-%Call it the \emph{target grid}.
-%Generate synthetic surveys above the same synthetic model and compute the
-%gravitational effect of the model on each survey.
-%Use each source distribution to predict values based on the ones obtained on
-%each survey onto the same grid points of the \emph{target grid}.
-%Score each interpolation by comparing the predicted values with the
-%\emph{target grid}.
-%Finally compare the accuracy of the predictions made by each source
-%distribution.
-
-Our goal is to to compare the performance of all source distributions from
-Table~\ref{tab:source-distributions} when predicting harmonic field data using
-the equivalent layer technique.
+Our first goal is to to compare the performance of all source distributions
+from Table~\ref{tab:source-distributions} when predicting harmonic field data
+using the equivalent sources technique.
 To do so we have created a synthetic model made out of prisms of different
 shape and density contrasts.
 The gravitational effect of this synthetic model have been computed on
@@ -736,7 +871,7 @@ a regular grid (\emph{target} grid) at a constant height and on two different
 set of observation points that we will call \emph{synthetic surveys}: a ground
 and an airborne survey.
 The data from each synthetic survey is interpolated on the points of the
-\emph{target} grid and then scored against the \emph{target} grid.
+\emph{target} grid and then scored against its values.
 We can then quantitatively compare how accurate is each source distribution at
 predicting unobserved data on each synthetic survey and quantify the
 computational load needed to do it.
@@ -751,14 +886,14 @@ The synthetic model is made out of \NPrisms{} prisms distributed on a region of
 height plane.
 Density contrast of prisms range from \ModelMinDensity{} and
 \ModelMaxDensity{}.
-We created deep big and thin shallow prisms for creating gravity anomalies with
+We built deep big and thin shallow prisms for creating gravity anomalies with
 long and short wavelengths, respectively.
 
 The vertical component of the gravity acceleration generated by the synthetic
 model has been computed on a regular grid of
 \TargetEastingSize{}$\times$\TargetNorthingSize{} points with a spacing of
 \TargetSpacing{} located \TargetHeight{} above the zero height plane
-(Fig.~\ref{fig:target-grid}).
+(Fig.~\ref{fig:target-grid}), using \citet{nagy2000} and \citet{nagy2002}.
 We will refer to this grid as the \emph{target} grid in the future.
 
 \begin{figure}
@@ -920,6 +1055,7 @@ both ground and synthetic surveys, respectively.
     }
     \label{fig:airborne-survey-differences}
 \end{figure*}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
