@@ -23,7 +23,7 @@ import numpy as np
 import verde as vd
 import matplotlib.pyplot as plt
 
-from source_layouts import block_averaged_sources
+from boost_and_layouts import block_averaged_sources
 
 # -
 
