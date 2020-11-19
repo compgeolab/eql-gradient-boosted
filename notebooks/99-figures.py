@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.0
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -19,11 +19,16 @@ from pathlib import Path
 import xarray as xr
 import pandas as pd
 import verde as vd
+import matplotlib
 import matplotlib.pyplot as plt
 
-# ## Load matplotlib configuration
+# ## Set custom matplotlib configuration
 
-plt.style.use(Path("..") / "matplotlib.rc")
+matplotlib.rcParams["font.family"] = "serif"
+matplotlib.rcParams["font.serif"] = "Computer Modern Roman"
+matplotlib.rcParams["font.size"] = 8.0
+matplotlib.rcParams["text.usetex"] = True
+matplotlib.rcParams["figure.dpi"] = 300
 
 # ## Define results directory
 
@@ -178,9 +183,6 @@ plt.savefig(
 target = xr.open_dataarray(results_dir / "target.nc")
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 width = 3.33
 figsize = (width, width * 0.85)
 fig, ax = plt.subplots(figsize=figsize)
@@ -218,9 +220,6 @@ for layout in layouts:
     )
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
 vmax = vd.maxabs(
