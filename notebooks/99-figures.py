@@ -19,7 +19,6 @@ from pathlib import Path
 import xarray as xr
 import pandas as pd
 import verde as vd
-import matplotlib
 import matplotlib.pyplot as plt
 
 # ## Load custom matplotlib configuration

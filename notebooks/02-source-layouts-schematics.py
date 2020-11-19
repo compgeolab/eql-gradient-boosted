@@ -19,7 +19,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import verde as vd
-import matplotlib
 import matplotlib.pyplot as plt
 
 import boost_and_layouts
