@@ -28,7 +28,7 @@ import harmonica as hm
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
-from source_layouts import (
+from boost_and_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLHarmonicBoost,

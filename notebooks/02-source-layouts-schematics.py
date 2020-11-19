@@ -22,7 +22,7 @@ import verde as vd
 import matplotlib.pyplot as plt
 
 import source_layouts
-from source_layouts import save_to_json
+from boost_and_layouts import save_to_json
 
 # -
 

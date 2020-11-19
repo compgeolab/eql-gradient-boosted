@@ -22,7 +22,7 @@ import json
 import numpy as np
 import xarray as xr
 
-from source_layouts import (
+from boost_and_layouts import (
     create_latex_variable,
     create_loglist,
     list_to_latex,
