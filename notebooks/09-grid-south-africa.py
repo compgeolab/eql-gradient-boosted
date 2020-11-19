@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.6.0
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Grid South Africa Gravity Survey
@@ -31,7 +31,7 @@ import cartopy.crs as ccrs
 from source_layouts import (
     block_averaged_sources,
     combine_parameters,
-    EQLIterative,
+    EQLHarmonicBoost,
     save_to_json,
 )
 
@@ -258,7 +258,7 @@ plt.show()
 
 grid.to_netcdf(results_dir / "south_africa_gravity_grid.nc")
 
-# ## Grid gravity disturbance with EQLIterative
+# ## Grid gravity disturbance with EQLHarmonicBoost
 
 # Define sets of parameters for the equivalent layer
 
@@ -296,7 +296,7 @@ print("Number of sources: {}".format(points[0].size))
 
 # Dump parameters to a JSON file
 
-json_file = results_dir / "parameters-eqliterative.json"
+json_file = results_dir / "parameters-eql-boost.json"
 save_to_json(parameter_sets, json_file)
 
 # Score the prediction made by each set of parameters through cross-validation
@@ -312,7 +312,7 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     for parameters in parameter_sets:
         points = block_averaged_sources(coordinates, **parameters)
-        eql = EQLIterative(
+        eql = EQLHarmonicBoost(
             points=points,
             window_size=parameters["window_size"],
             damping=parameters["damping"],
@@ -343,7 +343,7 @@ print(best_parameters)
 # +
 # %%time
 points = block_averaged_sources(coordinates, **best_parameters)
-eql = EQLIterative(
+eql = EQLHarmonicBoost(
     points=points,
     damping=best_parameters["damping"],
     window_size=best_parameters["window_size"],
@@ -352,7 +352,7 @@ eql = EQLIterative(
 
 eql.fit(coordinates, gravity_disturbance)
 
-grid_iterative = eql.grid(
+grid_boost = eql.grid(
     upward=3000,
     region=vd.get_region((data.longitude, data.latitude)),
     spacing=0.05,
@@ -369,7 +369,7 @@ fig.set_size_inches(6.66, 6.66)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
 
-tmp = grid_iterative.gravity_disturbance.plot.pcolormesh(
+tmp = grid_boost.gravity_disturbance.plot.pcolormesh(
     ax=ax,
     vmin=-maxabs,  # use the same colorscale used for the data
     vmax=maxabs,
@@ -384,10 +384,10 @@ plt.show()
 
 # Mask values outside the convex hull
 
-grid_iterative = vd.distance_mask(
+grid_boost = vd.distance_mask(
     data_coordinates=(data.longitude, data.latitude),
     maxdist=50e3,
-    grid=grid_iterative,
+    grid=grid_boost,
     projection=projection,
 )
 
@@ -402,7 +402,7 @@ fig.set_size_inches(6.66, 6.66)
 ax.coastlines()
 ax.gridlines(draw_labels=True)
 
-tmp = grid_iterative.gravity_disturbance.plot.pcolormesh(
+tmp = grid_boost.gravity_disturbance.plot.pcolormesh(
     ax=ax,
     vmin=-maxabs,  # use the same colorscale used for the data
     vmax=maxabs,
@@ -417,13 +417,13 @@ plt.show()
 
 # Save grid to disk
 
-grid_iterative.to_netcdf(results_dir / "south_africa_gravity_grid_iterative.nc")
+grid_boost.to_netcdf(results_dir / "south_africa_gravity_grid_boost.nc")
 
 # ## Compare both grids
 
 # +
 # Compute the difference between the two grids
-difference = grid.gravity_disturbance - grid_iterative.gravity_disturbance
+difference = grid.gravity_disturbance - grid_boost.gravity_disturbance
 
 # Plot histogram of differences
 plt.hist(difference.values.ravel())

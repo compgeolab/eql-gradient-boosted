@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.6.0
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Grid synthetic airborne survey with iterative equivalent layer
@@ -29,7 +29,7 @@ from sklearn.metrics import mean_squared_error
 from source_layouts import (
     block_averaged_sources,
     combine_parameters,
-    EQLIterative,
+    EQLHarmonicBoost,
     save_to_json,
 )
 
@@ -39,7 +39,7 @@ from source_layouts import (
 
 results_dir = Path("..") / "results"
 airborne_results_dir = results_dir / "airborne_survey"
-iterative_results_dir = results_dir / "iterative"
+eql_boost_results_dir = results_dir / "eql-boost"
 
 # **Define which field will be meassured**
 
@@ -71,7 +71,7 @@ region = (
     target.northing.max().values,
 )
 
-# ## Grid data with EQLIterative
+# ## Grid data with EQLHarmonicBoost
 #
 #
 # ### Use a window size of 20km
@@ -100,7 +100,7 @@ parameters = combine_parameters(
 
 # Dump parameters to a JSON file
 
-json_file = iterative_results_dir / "parameters-20km.json"
+json_file = eql_boost_results_dir / "parameters-20km.json"
 save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
@@ -108,7 +108,7 @@ save_to_json(parameters, json_file)
 rms = []
 for params in parameters:
     points = block_averaged_sources(coordinates, **params)
-    eql = EQLIterative(
+    eql = EQLHarmonicBoost(
         points=points,
         damping=params["damping"],
         window_size=params["window_size"],
@@ -131,7 +131,7 @@ print("Best parameters: {}".format(best_params))
 # Obtain grid with the best set of parameters
 
 points = block_averaged_sources(coordinates, **best_params)
-eql = EQLIterative(
+eql = EQLHarmonicBoost(
     points=points,
     damping=best_params["damping"],
     window_size=best_params["window_size"],
@@ -163,7 +163,7 @@ plt.show()
 
 # Save grid
 
-grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_20km.nc")
+grid.to_netcdf(eql_boost_results_dir / "airborne_grid_boost_20km.nc")
 
 # ### Use a window size of 50km
 
@@ -186,7 +186,7 @@ parameters = combine_parameters(
 
 # Dump parameters to a JSON file
 
-json_file = iterative_results_dir / "parameters-50km.json"
+json_file = eql_boost_results_dir / "parameters-50km.json"
 save_to_json(parameters, json_file)
 
 # Grid and score the prediction with each set of parameters
@@ -194,7 +194,7 @@ save_to_json(parameters, json_file)
 rms = []
 for params in parameters:
     points = block_averaged_sources(coordinates, **params)
-    eql = EQLIterative(
+    eql = EQLHarmonicBoost(
         points=points,
         damping=params["damping"],
         window_size=params["window_size"],
@@ -217,7 +217,7 @@ print("Best parameters: {}".format(best_params))
 # Obtain grid with the best set of parameters
 
 points = block_averaged_sources(coordinates, **best_params)
-eql = EQLIterative(
+eql = EQLHarmonicBoost(
     points=points,
     damping=best_params["damping"],
     window_size=best_params["window_size"],
@@ -248,4 +248,4 @@ plt.show()
 
 # Save grid
 
-grid.to_netcdf(iterative_results_dir / "airborne_grid_iterative_50km.nc")
+grid.to_netcdf(eql_boost_results_dir / "airborne_grid_boost_50km.nc")

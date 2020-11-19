@@ -1,4 +1,4 @@
-name: eql_source_layouts
+name: eql-gradient-boosted
 channels:
   - conda-forge
 dependencies:
