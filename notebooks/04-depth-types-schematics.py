@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -75,7 +75,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 # Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
+plt.style.use(Path(".") / "matplotlib.rc")
 
 # Initialize figure and axes
 width = 6.66

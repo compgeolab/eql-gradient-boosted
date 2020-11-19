@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -22,13 +22,9 @@ import verde as vd
 import matplotlib
 import matplotlib.pyplot as plt
 
-# ## Set custom matplotlib configuration
+# ## Load custom matplotlib configuration
 
-matplotlib.rcParams["font.family"] = "serif"
-matplotlib.rcParams["font.serif"] = "Computer Modern Roman"
-matplotlib.rcParams["font.size"] = 8.0
-matplotlib.rcParams["text.usetex"] = True
-matplotlib.rcParams["figure.dpi"] = 300
+plt.style.use(Path(".") / "matplotlib.rc")
 
 # ## Define results directory
 
