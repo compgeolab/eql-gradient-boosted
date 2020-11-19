@@ -183,9 +183,6 @@ plt.savefig(
 target = xr.open_dataarray(results_dir / "target.nc")
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 width = 3.33
 figsize = (width, width * 0.85)
 fig, ax = plt.subplots(figsize=figsize)
@@ -223,9 +220,6 @@ for layout in layouts:
     )
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
 vmax = vd.maxabs(
