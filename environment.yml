@@ -8,7 +8,7 @@ dependencies:
   - verde=1.5.0
   - boule=0.2.0
   - pyproj
-  # Other dependencies
+  - netcdf4
   - matplotlib
   - cartopy
   # Jupyter related dependencies
