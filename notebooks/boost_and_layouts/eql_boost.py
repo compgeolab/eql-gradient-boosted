@@ -119,8 +119,8 @@ class EQLHarmonicBoost(EQLHarmonic):
         residue.
 
         The data region is captured and used as default for the
-        :meth:`~harmonica.HarmonicEQL.grid` and
-        :meth:`~harmonica.HarmonicEQL.scatter` methods.
+        :meth:`~harmonica.EQLHarmonic.grid` and
+        :meth:`~harmonica.EQLHarmonic.scatter` methods.
 
         All input arrays must have the same shape.
 
