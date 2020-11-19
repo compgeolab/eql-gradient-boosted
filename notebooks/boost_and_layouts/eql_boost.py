@@ -61,6 +61,14 @@ class EQLHarmonicBoost(EQLHarmonic):
         number generator. If None, the random number generator is the
         ``RandomState`` instance used by `np.random`. Ignored if ``shuffle`` is
         False. Default None.
+    line_search : bool
+        If True, the gradient boosting method fits the step-size parameter on
+        each iteration in order to minimize the misfit between the effect of
+        the fitted coefficients on that iteration on every observation point
+        and the previous residue. This helps to stabilize the convergence and
+        to take into account, to some extent, the effect of the fitted
+        coefficients on observation points outside the current window. If
+        False, only the source coefficients are fitted. Default to True.
 
     Attributes
     ----------
@@ -87,7 +95,7 @@ class EQLHarmonicBoost(EQLHarmonic):
         warm_start=False,
         shuffle=True,
         random_state=None,
-        line_search=False,
+        line_search=True,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
         self.window_size = window_size
