@@ -27,7 +27,7 @@ import xarray as xr
 import verde as vd
 import matplotlib.pyplot as plt
 
-from source_layouts import (
+from boost_and_layouts import (
     save_to_json,
     combine_parameters,
     plot_prediction,

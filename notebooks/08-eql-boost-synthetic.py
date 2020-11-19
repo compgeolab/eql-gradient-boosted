@@ -26,7 +26,7 @@ import verde as vd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
-from source_layouts import (
+from boost_and_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLHarmonicBoost,
