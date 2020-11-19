@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -446,4 +446,3 @@ tmp = difference.plot.pcolormesh(
 )
 plt.colorbar(tmp, ax=ax, pad=0.11, shrink=0.75)
 plt.show()
-# -
