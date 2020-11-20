@@ -23,7 +23,6 @@ import time
 import numpy as np
 import pandas as pd
 import xarray as xr
-import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -32,7 +31,6 @@ from boost_and_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLHarmonicBoost,
-    save_to_json,
 )
 
 # -
