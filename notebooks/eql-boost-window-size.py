@@ -161,7 +161,7 @@ window_sizes = (2e3, 5e3, 10e3, 20e3, 30e3, 40e3, 50e3, 60e3, 70e3)
 
 best_parameters = {}
 for window_size in window_sizes:
-    
+
     # Grid and score the gridders for each combination of parameters
     rms = []
     for params in parameters:
@@ -175,7 +175,7 @@ for window_size in window_sizes:
         eql.fit(coordinates, getattr(survey, field).values)
         grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
         rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
-    
+
     # Keep only the set of parameters that achieve the best score
     best_rms = np.min(rms)
     best_params = parameters[np.argmin(rms)]
@@ -187,7 +187,7 @@ best_parameters
 # +
 rms = [best_parameters[w]["rms"] for w in window_sizes]
 
-plt.plot(window_sizes, rms, 'o', label="RMS of EQLHarmonicBoost")
+plt.plot(window_sizes, rms, "o", label="RMS of EQLHarmonicBoost")
 plt.axhline(eql_rms, linestyle="--", color="C1", label="RMS of EQLHarmonic")
 plt.xlabel("Window size [m]")
 plt.ylabel("RMS [mGal]")
@@ -214,12 +214,17 @@ for window_size in window_sizes:
 
 fitting_times
 
-plt.plot(fitting_times.keys(), fitting_times.values(), 'o', label="Fitting time of EQLHarmonicBoost")
-plt.axhline(eql_fitting_time, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
+plt.plot(
+    fitting_times.keys(),
+    fitting_times.values(),
+    "o",
+    label="Fitting time of EQLHarmonicBoost",
+)
+plt.axhline(
+    eql_fitting_time, linestyle="--", color="C1", label="Fitting time of EQLHarmonic"
+)
 plt.xlabel("Window size [m]")
 plt.ylabel("Fitting time [s]")
 plt.yscale("log")
 plt.legend()
 plt.show()
-
-
