@@ -23,6 +23,7 @@ import time
 import numpy as np
 import pandas as pd
 import xarray as xr
+import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -39,6 +40,7 @@ from boost_and_layouts import (
 
 results_dir = Path("..") / "results"
 airborne_results_dir = results_dir / "airborne_survey"
+eql_boost_results_dir = results_dir / "eql-boost"
 
 # **Define which field will be meassured**
 
@@ -72,61 +74,39 @@ region = (
 
 # # Grid data with EQLHarmonic for reference on performance
 #
-# Define gridding parameters
+# Use the best of parameters for block-averaged sources with relative depth, which was obtained on a previous notebook.
 
 depth_type = "relative_depth"
 block_spacing = 2e3
-dampings = np.logspace(-6, 1, 8)
-depths = np.arange(1e3, 20e3, 2e3)
+damping = 1e-3
+depth = 9e3
 
-# Combine parameters values
+# Grid the data using `hm.EQLHarmonic` and track time of the fitting process
 
-parameters = combine_parameters(
-    **dict(
-        depth_type=depth_type,
-        depth=depths,
-        damping=dampings,
-        spacing=block_spacing,
-    )
+# +
+points = block_averaged_sources(
+    coordinates, depth_type=depth_type, spacing=block_spacing, depth=depth
 )
-
-# Grid and score the gridder with each set of parameters
-
-rms = []
-for params in parameters:
-    points = block_averaged_sources(coordinates, **params)
-    eql = hm.EQLHarmonic(
-        points=points,
-        damping=params["damping"],
-    )
-    eql.fit(coordinates, getattr(survey, field).values)
-    grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
-    rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
-
-# Get maximum score and the corresponding set of parameters
-
-# +
-eql_rms = np.min(rms)
-best_params = parameters[np.argmin(rms)]
-
-print("Best RMS score: {}".format(eql_rms))
-print("Best parameters: {}".format(best_params))
-# -
-
-# Track time of the fitting process
-
-# +
-points = block_averaged_sources(coordinates, **best_params)
 eql = hm.EQLHarmonic(
     points=points,
-    damping=best_params["damping"],
+    damping=damping,
 )
 
 start = time.time()
 eql.fit(coordinates, getattr(survey, field).values)
 end = time.time()
-
 eql_fitting_time = end - start
+
+grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
+# -
+
+# Compute RMS of the grid against the target grid
+
+# +
+eql_rms = np.sqrt(mean_squared_error(grid.values, target.values))
+
+print("RMS score: {} mGal".format(eql_rms))
+print("Fitting time: {} s".format(eql_fitting_time))
 # -
 
 # ## Grid data with EQLHarmonicBoost using different window sizes
@@ -193,9 +173,16 @@ plt.legend()
 plt.show()
 # -
 
-# Register fitting time for each window size
+# Grid data with the best set of parameters per window size and register the fitting time for each one.
 
-fitting_times = {}
+# +
+# Define how many times each gridder will be fitted to get a statistic of fitting times
+n_runs = 10
+times = np.empty(n_runs)
+
+grids = []
+fitting_times = []
+fitting_times_std = []
 for window_size in window_sizes:
     params = best_parameters[window_size]["params"]
     points = block_averaged_sources(coordinates, **params)
@@ -205,17 +192,38 @@ for window_size in window_sizes:
         window_size=window_size,
         random_state=params["random_state"],
     )
-    start = time.time()
-    eql.fit(coordinates, getattr(survey, field).values)
-    end = time.time()
-    fitting_times[window_size] = end - start
+
+    # Register mean fitting time and its std
+    for i in range(n_runs):
+        start = time.time()
+        eql.fit(coordinates, getattr(survey, field).values)
+        end = time.time()
+        times[i] = end - start
+
+    fitting_times.append(times.mean())
+    fitting_times_std.append(times.std())
+
+    # Grid data
+    grids.append(
+        eql.grid(
+            upward=target.height,
+            region=region,
+            shape=target.shape,
+            data_names=["{:.0f}".format(window_size)],
+        )
+    )
+# -
 
 fitting_times
 
-plt.plot(
-    fitting_times.keys(),
-    fitting_times.values(),
-    "o",
+fitting_times_std
+
+plt.errorbar(
+    window_sizes,
+    fitting_times,
+    yerr=fitting_times_std,
+    fmt="o",
+    capsize=3,
     label="Fitting time of EQLHarmonicBoost",
 )
 plt.axhline(
@@ -226,3 +234,29 @@ plt.ylabel("Fitting time [s]")
 plt.yscale("log")
 plt.legend()
 plt.show()
+
+ds = xr.merge(grids)
+
+ds
+
+# +
+maxabs = max([vd.maxabs(ds[grid] - target) for grid in ds])
+
+fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(12, 12), sharex=True, sharey=True)
+axes = axes.ravel()
+
+for grid, ax in zip(ds, axes):
+    diff = ds[grid] - target
+    tmp = diff.plot(
+        ax=ax, vmin=-maxabs, vmax=maxabs, cmap="seismic", add_colorbar=False
+    )
+    ax.set_aspect("equal")
+    ax.set_title(f"Window size: {grid} m")
+
+
+cbar_ax = fig.add_axes([0.15, 0.06, 0.73, 0.02])
+fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label="mGal")
+plt.show()
+# -
+
+ds.to_netcdf(eql_boost_results_dir / "airborne_grid_boost_grids.nc")
