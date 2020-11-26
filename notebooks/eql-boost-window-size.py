@@ -220,19 +220,16 @@ fitting_times_std
 
 plt.errorbar(
     window_sizes,
-    fitting_times,
-    yerr=fitting_times_std,
+    np.array(fitting_times) / eql_fitting_time,
+    yerr=np.array(fitting_times_std) / eql_fitting_time,
     fmt="o",
     capsize=3,
-    label="Fitting time of EQLHarmonicBoost",
 )
-plt.axhline(
-    eql_fitting_time, linestyle="--", color="C1", label="Fitting time of EQLHarmonic"
-)
+plt.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
 plt.xlabel("Window size [m]")
-plt.ylabel("Fitting time [s]")
+plt.ylabel("Fitting time ratio")
 plt.yscale("log")
-plt.legend()
+plt.title("Fitting time of gradient boosted eqls over fitting time of regular eql")
 plt.show()
 
 ds = xr.merge(grids)
