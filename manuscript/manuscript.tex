@@ -1089,6 +1089,24 @@ some computation time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Performance of gradient boosted equivalent sources}
+
+Our second goal is to assess the accuracy of the predictions achieved by the
+gradient boosting algorithm while registering its performance by comparison
+with the more classical approach described on Section~\ref{sec:eql-inversion}.
+
+We applied the gradient boosted equivalent sources to interpolate the synthetic
+airborne survey on the same points of the target grid.
+We selected several window sizes to assess how accuracy and performance depend
+on that variable.
+For each window size we gridded the synthetic data with different sets of
+parameters. Then we compared each prediction to the target grid in order to get
+the best prediction for each window size.
+On every interpolation, block-averaged sources with relative depth are used
+with a spacing of PUT-BLOCK-SPACING-HERE.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
