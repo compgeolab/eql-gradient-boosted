@@ -94,6 +94,7 @@ eql = hm.EQLHarmonic(
 
 n_runs = 10
 times = np.empty(n_runs)
+eql.fit(coordinates, getattr(survey, field).values)  # fit to compile Numba functions
 for i in range(n_runs):
     start = time.time()
     eql.fit(coordinates, getattr(survey, field).values)
@@ -102,7 +103,6 @@ for i in range(n_runs):
 
 eql_fitting_time = times.mean()
 
-    
 grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 # -
 
@@ -246,20 +246,10 @@ rms_relative = rms / eql_rms
 time_relative = np.array(fitting_times) / eql_fitting_time
 
 # +
-
-
-plt.plot(overlaps, rms_relative, 'o', label="Relative RMS")
-plt.plot(overlaps, time_relative, 'o', label="Relative fitting time")
-plt.legend()
-# plt.yscale("log")
-plt.ylim(-1, 5)
-plt.show()
-
-# +
 fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=(6, 6))
 
-ax1.plot(overlaps, rms_relative, 'o', label="Relative RMS", c="C0")
-ax2.plot(overlaps, time_relative, 'o', label="Relative fitting time", c="C1")
+ax1.plot(overlaps, rms_relative, "o", label="Relative RMS", c="C0")
+ax2.plot(overlaps, time_relative, "o", label="Relative fitting time", c="C1")
 ax1.legend()
 ax2.legend()
 ax2.set_ylim(-0.5, 2)
@@ -273,11 +263,9 @@ plt.show()
 # +
 objective = rms_relative + time_relative
 
-plt.plot(overlaps, objective, 'o')
+plt.plot(overlaps, objective, "o")
 plt.grid()
 plt.ylim(1, 5)
 plt.title("Relative fitting time + relative RMS")
 plt.show()
 # -
-
-
