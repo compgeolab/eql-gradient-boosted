@@ -92,10 +92,16 @@ eql = hm.EQLHarmonic(
     damping=damping,
 )
 
-start = time.time()
-eql.fit(coordinates, getattr(survey, field).values)
-end = time.time()
-eql_fitting_time = end - start
+n_runs = 10
+times = np.empty(n_runs)
+eql.fit(coordinates, getattr(survey, field).values)  # fit to compile Numba functions
+for i in range(n_runs):
+    start = time.time()
+    eql.fit(coordinates, getattr(survey, field).values)
+    end = time.time()
+    times[i] = end - start
+
+eql_fitting_time = times.mean()
 
 grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 # -
@@ -106,7 +112,7 @@ grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 eql_rms = np.sqrt(mean_squared_error(grid.values, target.values))
 
 print("RMS score: {} mGal".format(eql_rms))
-print("Fitting time: {} s".format(eql_fitting_time))
+print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
 # -
 
 # ## Grid data with EQLHarmonicBoost using different window sizes
