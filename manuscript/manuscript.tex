@@ -1095,6 +1095,28 @@ Our second goal is to assess the accuracy of the predictions achieved by the
 gradient boosting algorithm while registering its performance by comparison
 with the non-boosted equivalent sources.
 
+
+\subsection{Window size}
+
+One factor that plays an important role on the gradient boosted equivalent
+layers is the size of the overlapping windows used to create each set of
+equivalent sources.
+Smaller windows will reduce the amount of computer memory needed to fit the
+source coefficients: smaller windows will reduce the size of Jacobian matrices
+$\tilde{\mathbf{A}_k}$.
+Nevertheless, the usage of smaller windows may produce less accurate
+predictions: the equivalent sources cannot achieve the global minimum of the
+misfit $\varphi(\mathbf{c})$ of equation~\ref{eq:misfit-unscaled}.
+Moreover, the size of the overlapping windows might also impact on the
+computation time needed to fit the source coefficients: smaller windows will
+generate simpler least-square problems which are easier to solve, but they will
+also create more iterations.
+
+We want to assess how the size of the overlapping windows impacts both the
+accuracy of the predictions and the computation time needed to fit the source
+coefficients in comparison with the performance of the non-boosted equivalent
+sources.
+
 We applied the gradient boosted equivalent sources to interpolate the synthetic
 airborne survey on the same points of the target grid.
 We selected several window sizes to assess how accuracy and performance depend
