@@ -1093,7 +1093,7 @@ some computation time.
 
 Our second goal is to assess the accuracy of the predictions achieved by the
 gradient boosting algorithm while registering its performance by comparison
-with the more classical approach described on Section~\ref{sec:eql-inversion}.
+with the non-boosted equivalent sources.
 
 We applied the gradient boosted equivalent sources to interpolate the synthetic
 airborne survey on the same points of the target grid.
@@ -1103,7 +1103,44 @@ For each window size we gridded the synthetic data with different sets of
 parameters. Then we compared each prediction to the target grid in order to get
 the best prediction for each window size.
 On every interpolation, block-averaged sources with relative depth are used
-with a spacing of PUT-BLOCK-SPACING-HERE.
+with a spacing of
+\SI{\BestAirborneBlockAveragedSourcesConstantDepthSpacing}{\meter}, and an
+overlap of 50\% between adjacent windows.
+
+Using the best set of parameters for each window size, we registered the
+achieved RMS against the values of the target grid and the time needed to fit
+the sources coefficients.
+
+Compare RMS with the one achieved by the best prediction carried out by the
+non-boosted equivalent sources with block-averaged sources (see
+Table~\ref{tab:parameters-airborne-survey}).
+Calculated the fitting time relative to the time needed by non-boosted
+equivalent sources.
+
+\subsection{Overlapping}
+
+Another factor that plays an important role on the accuracy of the predictions
+and impacts the computation time needed to fit the source coefficients is the
+amount of overlap between adjacent windows.
+The previous choice of 50\% showed to be sufficiently good to achieve
+acceptable accuracy, although a deeper study should be carried out to assess
+how the amount of overlap impacts both accuracy and fitting time.
+
+We interpolated the synthetic airborne survey using the gradient boosted
+equivalent sources on the same points of the target grid.
+The interpolations were carried out using different amount of overlap, from
+0\% to 0.95\% with a step size of 0.05\%.
+For each overlap, we gridded the synthetic data with different sets of
+parameters, fixing the window size to INSERT-WINDOW-SIZE and using
+block-averaged sources with relative depth and a spacing of
+\SI{\BestAirborneBlockAveragedSourcesConstantDepthSpacing}{\meter}.
+We registered the RMS achieved by the best prediction for each overlap and the
+computation time needed to fit the source coefficients.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Gridding Australia gravity data}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
