@@ -66,7 +66,7 @@ depths = np.arange(1e3, 18e3, 2e3)
 # Define parameters for the grid sources:
 #    spacing, depth and damping
 grid_sources_spacings = [1e3, 2e3, 3e3]
-grid_sources_depths = np.arange(3e3, 15e3, 2e3)
+grid_sources_depths = np.arange(1e3, 11e3, 2e3)
 grid_sources_dampings = np.logspace(1, 4, 4)
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values
