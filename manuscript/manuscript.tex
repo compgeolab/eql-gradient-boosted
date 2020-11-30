@@ -1007,8 +1007,8 @@ We then \emph{score} the prediction by computing the root mean square (RMS)
 between the prediction and the true values of the \emph{target} grid.
 Finally, we obtain the \emph{best prediction} for each source distribution as
 the one that achieves the lowest RMS.
-See Figure~\ref{fig:flowchart} for a graphical illustration of this process.
 This process is carried out on both ground and airborne synthetic surveys.
+See Figure~\ref{fig:flowchart} for a graphical illustration of it.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/flowchart.pdf}
@@ -1030,11 +1030,12 @@ This process is carried out on both ground and airborne synthetic surveys.
 Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey} also show the parameter combination
 that produces the best prediction for each source distribution and its
-corresponding RMS score, for both ground and synthetic surveys, respectively.
+corresponding RMS score, for both ground and airborne synthetic surveys,
+respectively.
 Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution, for
-both ground and synthetic surveys, respectively.
+both ground and airborne synthetic surveys, respectively.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
@@ -1058,9 +1059,7 @@ both ground and synthetic surveys, respectively.
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Discussion}
+\subsection{Discussion}
 
 Figures~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show that all source distributions
@@ -1070,6 +1069,23 @@ that all the source distributions are able to produce comparable predictions.
 Nevertheless, the \emph{block averaged sources} make use of less sources to
 produce this predictions, what would reduce the computational load needed to
 fit the sources coefficients and finally compute the actual prediction.
+
+The RMS doesn't seem to depend on the choice of the depth strategy used to
+locate the equivalent sources.
+At first glance, the choice of a depth strategy doesn't seem to impact the
+computational needs.
+Nevertheless, when trying to find the set of parameters that produce the most
+accurate predictions through a method like cross-validation, we need to fit the
+source coefficients one time per every possible combination of parameters.
+A depth strategy like the \emph{variable depth} needs a higher number of
+parameters (depth, depth factor, K nearest) than \emph{constant depth} or
+\emph{relative depth} (which takes only a depth parameter).
+The addition of these new parameters makes the search of the best set more
+computationally expensive: more parameters means increasing the dimensions of
+the parameters space and thus increasing the number of possible combinations.
+Therefore we would be more prone to choose a \emph{constant depth} or
+a \emph{relative depth} when dealing with very large datasets in order to save
+some computation time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
