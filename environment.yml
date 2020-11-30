@@ -10,6 +10,7 @@ dependencies:
   - netcdf4
   - matplotlib
   - cartopy
+  - dask
   # Jupyter related dependencies
   - ipython
   - jupyter
@@ -24,5 +25,6 @@ dependencies:
   - flake8-bugbear
   - pip:
       - git+https://github.com/fatiando/harmonica@master
+  - pip:
       - git+https://github.com/fatiando/verde@master
 
