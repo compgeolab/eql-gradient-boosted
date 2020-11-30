@@ -150,6 +150,7 @@ for overlapping in overlaps:
 
     # Grid and score the gridders for each combination of parameters
     rms = []
+    residual_rms = []
     for params in parameters:
         points = block_averaged_sources(coordinates, **params)
         eql = EQLHarmonicBoost(
@@ -160,13 +161,17 @@ for overlapping in overlaps:
         )
         eql.overlapping = overlapping
         eql.fit(coordinates, getattr(survey, field).values)
+        residual_rms.append(eql.errors_[-1])
         grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
         rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
     # Keep only the set of parameters that achieve the best score
     best_rms = np.min(rms)
     best_params = parameters[np.argmin(rms)]
-    best_parameters[overlapping] = {"params": best_params, "rms": best_rms}
+    residual_rms = residual_rms[np.argmin(rms)]
+    best_parameters[overlapping] = {
+        "params": best_params, "rms": best_rms, "residual_rms": residual_rms
+    }
 # -
 
 best_parameters
@@ -178,6 +183,15 @@ plt.plot(overlaps, rms, "o", label="RMS of EQLHarmonicBoost")
 plt.axhline(eql_rms, linestyle="--", color="C1", label="RMS of EQLHarmonic")
 plt.xlabel("Overlapping")
 plt.ylabel("RMS [mGal]")
+plt.legend()
+plt.show()
+
+# +
+residuals = [best_parameters[o]["residual_rms"] for o in overlaps]
+
+plt.plot(overlaps, residuals, "o", label="RMS residuals")
+plt.xlabel("Window size [m]")
+plt.ylabel("RMS of residuals [mGal]")
 plt.legend()
 plt.show()
 # -
@@ -224,10 +238,6 @@ for overlapping in overlaps:
     )
 # -
 
-fitting_times
-
-fitting_times_std
-
 plt.errorbar(
     overlaps,
     np.array(fitting_times) / eql_fitting_time,
@@ -261,11 +271,10 @@ plt.tight_layout()
 plt.show()
 
 # +
-objective = rms_relative + time_relative
+objective = (rms_relative + time_relative) / 2
 
 plt.plot(overlaps, objective, "o")
 plt.grid()
-plt.ylim(1, 5)
-plt.title("Relative fitting time + relative RMS")
+plt.ylim(0.5, 3)
+plt.title("0.5 (Relative fitting time + relative RMS)")
 plt.show()
-# -

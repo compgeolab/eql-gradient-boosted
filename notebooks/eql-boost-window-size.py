@@ -148,6 +148,7 @@ for window_size in window_sizes:
 
     # Grid and score the gridders for each combination of parameters
     rms = []
+    residual_rms = []
     for params in parameters:
         points = block_averaged_sources(coordinates, **params)
         eql = EQLHarmonicBoost(
@@ -157,13 +158,17 @@ for window_size in window_sizes:
             random_state=params["random_state"],
         )
         eql.fit(coordinates, getattr(survey, field).values)
+        residual_rms.append(eql.errors_[-1])
         grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
         rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
 
     # Keep only the set of parameters that achieve the best score
     best_rms = np.min(rms)
     best_params = parameters[np.argmin(rms)]
-    best_parameters[window_size] = {"params": best_params, "rms": best_rms}
+    residual_rms = residual_rms[np.argmin(rms)]
+    best_parameters[window_size] = {
+        "params": best_params, "rms": best_rms, "residual_rms": residual_rms
+    }
 # -
 
 best_parameters
@@ -176,6 +181,15 @@ plt.axhline(eql_rms, linestyle="--", color="C1", label="RMS of EQLHarmonic")
 plt.xlabel("Window size [m]")
 plt.ylabel("RMS [mGal]")
 plt.legend()
+plt.show()
+
+# +
+residuals = [best_parameters[w]["residual_rms"] for w in window_sizes]
+
+plt.plot(window_sizes, residuals, "o")
+plt.xlabel("Window size [m]")
+plt.ylabel("RMS of residuals [mGal]")
+plt.grid()
 plt.show()
 # -
 
