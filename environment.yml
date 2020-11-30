@@ -5,12 +5,12 @@ dependencies:
   - python=3.7
   - pip
   - numpy
-  - verde=1.5.0
   - boule=0.2.0
   - pyproj
   - netcdf4
   - matplotlib
   - cartopy
+  - dask
   # Jupyter related dependencies
   - ipython
   - jupyter
@@ -25,4 +25,6 @@ dependencies:
   - flake8-bugbear
   - pip:
       - git+https://github.com/fatiando/harmonica@master
+  - pip:
+      - git+https://github.com/fatiando/verde@master
 
