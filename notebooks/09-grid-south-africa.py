@@ -166,7 +166,14 @@ for parameters in parameter_sets:
     points = block_averaged_sources(coordinates, **parameters)
     eql = hm.EQLHarmonic(damping=parameters["damping"], points=points)
     score = np.mean(
-        vd.cross_val_score(eql, coordinates, gravity_disturbance, cv=cv, delayed=True)
+        vd.cross_val_score(
+            eql,
+            coordinates,
+            gravity_disturbance,
+            cv=cv,
+            scoring="neg_root_mean_squared_error",
+            delayed=True,
+        )
     )
     scores_delayed.append(score)
 
@@ -320,7 +327,12 @@ with warnings.catch_warnings():
         )
         score = np.mean(
             vd.cross_val_score(
-                eql, coordinates, gravity_disturbance, cv=cv, delayed=True
+                eql,
+                coordinates,
+                gravity_disturbance,
+                cv=cv,
+                scoring="neg_root_mean_squared_error",
+                delayed=True,
             )
         )
         scores_delayed.append(score)
