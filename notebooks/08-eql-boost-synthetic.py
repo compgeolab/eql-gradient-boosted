@@ -155,7 +155,7 @@ plt.show()
 
 # Plot misfit through the iterations
 
-plt.plot(eql.errors_, '.-')
+plt.plot(eql.errors_, ".-")
 plt.xlabel("Iterations")
 plt.ylabel("RMS of the residue [mGal]")
 plt.grid()

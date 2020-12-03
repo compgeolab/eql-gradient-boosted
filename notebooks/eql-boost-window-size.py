@@ -167,7 +167,9 @@ for window_size in window_sizes:
     best_params = parameters[np.argmin(rms)]
     residual_rms = residual_rms[np.argmin(rms)]
     best_parameters[window_size] = {
-        "params": best_params, "rms": best_rms, "residual_rms": residual_rms
+        "params": best_params,
+        "rms": best_rms,
+        "residual_rms": residual_rms,
     }
 # -
 
