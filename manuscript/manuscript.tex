@@ -366,39 +366,37 @@ point where no measurement has been taken by evaluating
 equation~\ref{eq:eql-field}.
 
 
-\subsection{Fitting source coefficients}
+\subsection{Damped least-squares solution}
 \label{sec:eql-inversion}
 
-Solving equations~\ref{eq:linear-problem-g} and~\ref{eq:linear-problem} is
-equivalent to performing an inversion and thus solving an ill-posed problem by
-nature due to the non-uniqueness and the instability of the possible solutions.
-Therefore is usually needed to add regularization functions in order to obtain
-stable solutions
-(\citealp[p.~52]{menke1989}; \citealp{cooper2000}; \citealp{oliveira2013}).
-
-We can obtain the values of the source coefficients $\mathbf{c}$ that better
-reproduce the measured field by minimizing an objective or misfit function
-$\phi(\mathbf{c})$ through a least squares method:
+We can obtain the values of the source coefficients $\mathbf{c}$ that best
+fit the observed field values $\mathbf{d}^o$ by minimizing the goal function
 
 \begin{equation}
     \phi(\mathbf{c}) =
         \left\lVert
-            \mathbf{d} - \mathbf{A}\mathbf{c}
+            \mathbf{d}^o - \mathbf{A}\mathbf{c}
         \right\rVert ^ 2
         + \lambda_d \left\lVert \mathbf{c} \right\rVert ^2,
     \label{eq:misfit-unscaled}
 \end{equation}
 
-\noindent where $\left\lVert \cdot \right\rVert ^ 2$ symbolizes the L$_2$ norm
-and $\lambda_d$ is a \emph{damping} parameter with the same units as the
+\noindent where $\left\lVert \cdot \right\rVert$ symbolizes the L$_2$ norm and
+$\lambda_d$ is a positive \emph{damping} parameter with the same units as the
 Jacobian matrix elements.
-The second term of the equation applies a zeroth-order Tikhonov
-\citep{tikhonov1977} regularization to stabilize the solution.
+The second term on the right-hand side of the equation is a zeroth-order
+Tikhonov regularization \citep{tikhonov1977} (also known as a damping
+regularization or ridge regression) that is used to stabilize the solution.
 
-In order to simplify the choice of the \emph{damping} parameter we scale the
-Jacobian matrix so each column has unit variance.
+The range of acceptable values for the damping parameter $\lambda_d$ will
+depend on the values of the Jacobian matrix $\mathbf{A}$ and the coefficients.
+Consequently, this range will vary (often dramatically) between datasets,
+making it difficult to choose an appropriate value for $\lambda_d$ in practice.
+
+To solve this issue, we first scale the Jacobian matrix so that its elements
+are unitless and each column has unit variance.
 We define a diagonal matrix $\mathbf{S}$, whose elements corresponds to the
-standard deviation of each column of the Jacobian matrix $\mathbf{A}$:
+standard deviation of each column of $\mathbf{A}$:
 
 \begin{equation}
     \mathbf{S} =
@@ -407,10 +405,10 @@ standard deviation of each column of the Jacobian matrix $\mathbf{A}$:
         \vdots & \ddots & \vdots \\
         0 & \cdots & \sigma_M
     \end{bmatrix}
-    ,
+    .
 \end{equation}
 
-\noindent so equation~\ref{eq:linear-problem} can be written as:
+We then write the forward problem in equation~\ref{eq:linear-problem} as
 
 \begin{equation}
     \mathbf{d}
@@ -424,40 +422,41 @@ standard deviation of each column of the Jacobian matrix $\mathbf{A}$:
         \mathbf{S} \mathbf{c}
     \right]
     =
-    \hat{\mathbf{A}} \hat{\mathbf{c}}
+    \mathbf{B} \mathbf{m}
 \end{equation}
 
-\noindent where $\hat{\mathbf{A}}$ is the scaled Jacobian matrix and
-$\hat{\mathbf{c}}$ is a vector containing scaled coefficients.
+\noindent where $\mathbf{B}$ is the scaled and unitless Jacobian matrix and
+$\mathbf{m}$ is a vector containing scaled coefficients with the same units as
+the data.
 
-The misfit function defined on equation~\ref{eq:misfit-unscaled} can be then
-rewritten as follows:
+The misfit function defined on equation~\ref{eq:misfit-unscaled} can be
+rewritten as
 
 \begin{equation}
-    \phi(\hat{\mathbf{c}}) =
-        \left\lVert \mathbf{d}
-        - \hat{\mathbf{A}}\hat{\mathbf{c}} \right\rVert ^ 2
-        + \lambda \left\lVert \hat{\mathbf{c}} \right\rVert ^2,
+    \phi(\mathbf{m}) =
+        \left\lVert \mathbf{d}^o
+        - \mathbf{B}\mathbf{m} \right\rVert ^ 2
+        + \lambda \left\lVert \mathbf{m} \right\rVert ^2,
     \label{eq:misfit}
 \end{equation}
 
-\noindent where now $\lambda$ is a \emph{dimensionless} damping parameter.
+\noindent where $\lambda$ is a \emph{dimensionless} damping parameter and
+regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
+$\mathbf{c}$.
 
-Misfit function from equation~\ref{eq:misfit} is minimized through Cholesky
-decomposition.
 If the number of observation points is equal or larger to the number of
 sources, then the linear problem defined on equation~\ref{eq:linear-problem} is
 well- or over-determined, respectively. Therefore, the scaled coefficients that
 minimize the misfit function can be obtained through \citep{menke1989}:
 
 \begin{equation}
-    \hat{\mathbf{c}} =
+    \hat{\mathbf{m}} =
         \left[
-            \hat{\mathbf{A}}^\text{T} \hat{\mathbf{A}}
-            + \lambda^2 \mathbf{I}
+            \mathbf{B}^\text{T} \mathbf{B}
+            + \lambda \mathbf{I}
         \right]\inv
-        \hat{\mathbf{A}}^\text{T}
-        \mathbf{d}.
+        \mathbf{B}^\text{T}
+        \mathbf{d}^o.
 \end{equation}
 
 On the other hand, if there are more sources than observation points, the
@@ -465,21 +464,20 @@ problem is under-determined and the scaled coefficients can be obtained as
 \citep{menke1989}:
 
 \begin{equation}
-    \hat{\mathbf{c}} =
-    \hat{\mathbf{A}}^\text{T}
+    \hat{\mathbf{m}} =
+    \mathbf{B}^\text{T}
         \left[
-            \hat{\mathbf{A}} \hat{\mathbf{A}}^\text{T}
-            + \lambda^2 \mathbf{I}
+            \mathbf{B} \mathbf{B}^\text{T}
+            + \lambda \mathbf{I}
         \right]\inv
-        \mathbf{d}.
+        \mathbf{d}^o.
 \end{equation}
 
-Once the scaled coefficients are obtained, the sources' coefficients
-$\mathbf{c}$ can be obtained by rescaling
-$\hat{\mathbf{c}}$:
+Once the scaled coefficients are obtained, the coefficients
+$\mathbf{c}$ can be obtained by
 
 \begin{equation}
-    \mathbf{c} = \mathbf{S}\inv \hat{\mathbf{c}}.
+    \mathbf{c} = \mathbf{S}\inv \hat{\mathbf{m}}.
 \end{equation}
 
 
