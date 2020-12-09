@@ -72,7 +72,7 @@ jobs:
           force_orphan: true
 
       - name: Comment on the PR with a preview link
-        if: ${{ github.event_name == 'pull_request' }} && ${{ github.event.action == "opened" }}
+        if: ${{ github.event_name == 'pull_request' }} && ${{ github.event.action == 'opened' }}
         # Don't use tags: https://julienrenaux.fr/2019/12/20/github-actions-security-risk/
         uses: peter-evans/create-or-update-comment@41f3207a84f33bd70388036109082784d059dcaa
         with:
