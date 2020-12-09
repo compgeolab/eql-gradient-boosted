@@ -173,31 +173,49 @@ matrix is transformed into a diagonal matrix with constant terms through the
 \citet{jirigalatu2019} applied the Gauss-FFT method to speed up the forward
 modelling operations and solved the least-squares problem using steepest
 descent to avoid calculating the Hessian matrix and solving linear systems.
-Most existing methods solve under-determined problems, requiring a much larger
-number of equivalent sources than the number of data points.
+
+Many of the existing methods solve under-determined problems, requiring a much
+larger number of equivalent sources than the number of data points.
+Some achieve greater efficiency by restricting their applications
+specific data types \citep{siqueira2017},
+interpolating only on regular grids \citep{leao1989},
+or requiring already gridded data (CITE PINGA NEW PAPER),
+to name a few.
 Furthermore, many of the optimizations proposed are also complex to implement
 in a computer program, limiting their wider adoption.
+
 In the present study,
-we propose a two-way method for reducing the computational load needed to apply
-the equivalent sources technique: first by reducing the number of equivalent
-sources through a \emph{block-averaging} strategy and then simplifying the
-fitting process through a \emph{gradient boosting} algorithm.
-The first strategy consists in
-dividing the survey area into horizontal blocks and assign one source
-to each block at the median horizontal location of the data points.
-For airborne surveys, which are oversampled along tracks, this can greatly
-reduce the size of the inverse problem while retaining the quality of
-interpolation.
-The second algorithm simplifies the process of fitting a very large number of
-equivalent sources by defining sets of fewer sources, whose coefficients are
-fitted iteratively while minimizing a given residue.
+we propose a two strategies for reducing the computational load of
+the equivalent sources technique:
+
+\begin{enumerate}
+    \item Reduce the number of equivalent sources for oversampled surveys
+      through a \emph{block-averaging} strategy while maintaining the quality
+      of the solution.
+    \item Fit the equivalent source model iteratively along overlapping windows
+      using a \emph{gradient boosting} algorithm \citep{friedman2001}.
+\end{enumerate}
+
+The first strategy consists in dividing the survey area into horizontal blocks
+and assign one source to each block, located at the median horizontal location
+of the data points. For airborne, shipborne, and satellite surveys, which are
+oversampled along tracks, this can greatly reduce the size of the inverse
+problem while retaining the same quality of interpolation.
+
+The gradient boosting algorithm allows us to fit the equivalent source model
+iteratively by operating on individual overlapping windows.
+Thus, our method solves several much smaller least-squares problems instead of
+a large one.
+This has some similarities with the strategy used by \citet{leao1989} but
+without the requirement for sources and predictions to be on regular grids.
+
 Through tests on synthetic data, we show that: (i) the \emph{block-averaged}
-sources achieve the same accuracy as a traditional equivalent layer while using
-a fraction of the number of sources, and (ii) the \emph{gradient boosting}
-algorithm greatly reduces the computational memory required to fit very large
-datasets without scarifying predictions' accuracy.
-Finally these methods are used to interpolate a 1.7 million gravity data
-measurements around Australia onto a regular grid.
+sources are able to achieve the same accuracy as other traditional equivalent
+source layouts while using a fraction of the number of sources, and (ii) the
+\emph{gradient boosting} algorithm greatly reduces the computational memory
+required to fit very large datasets without sacrificing prediction accuracy.
+Finally, a combination of both strategies are used to process a collection of
+around 1.7 million ground gravity data measurements from Australia.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -483,6 +501,151 @@ $\hat{\mathbf{c}}$:
 \end{equation}
 
 
+\subsection{Gradient boosting}
+
+Here we propose an iterative algorithm for fitting the source coefficients
+using a gradient boosting \citep{friedman2001, friedman2002} strategy:
+(i) define a collection of overlapping windows of equal size that cover the
+survey area,
+(ii) define one set of equivalent sources per window,
+(iii) iteratively fit the coefficients of each set of sources.
+Once every set of sources is fitted, we can predict the value of the field on
+any observation point as the effect of every set of equivalent sources.
+
+Lets assume we have $N$ measurements of a harmonic field on observations points
+$\{\mathbf{p}_i\}_{i=1}^{N}$ stored in the vector $\mathbf{d} = (d_1, d_2,
+\ldots, d_N)^T$. We have defined a set of $M$ point sources located on
+$\{\mathbf{q}_j\}_{j=1}^{M}$. Instead of trying to fit the entire set of
+coefficients $\mathbf{c}$ at once, we can reduce the problem to fitting $K$
+different sets of equivalent sources: we define $K$ overlapping windows of
+equal size that cover the whole observation area, and then we create one set of
+equivalent sources per window formed by the $\{\mathbf{q}_m\}_{m=1}^{M_k}$
+sources that fall inside the $k$-th window.
+The observed data should be equal to the superposition of the
+effect of every set of equivalent sources:
+
+\begin{equation}
+    \mathbf{d} = \sum_{k=1}^K \alpha_k \mathbf{A}_k \mathbf{c}_k,
+\end{equation}
+
+\noindent where $\mathbf{c}_k$ is the vector of coefficients for the $k$-th
+set of equivalent sources; $\mathbf{A}_k$ is the Jacobian matrix between
+those sources and every data point; and each $\alpha_k$ is a constant called
+\emph{step-size parameter}.
+
+By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
+iteratively: on each iteration a residue vector $\mathbf{r}_k$ (initialized
+with the observed data) is used to fit the $\mathbf{c}_k$
+coefficients and $\alpha_k$ step-size parameter, and then updated by removing
+the effect of the same sources, as follows:
+
+\begin{equation}
+    \mathbf{r}_0 = \mathbf{d},
+\end{equation}
+
+\begin{equation}
+    \mathbf{r}_k = \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k.
+    \label{eq:residue}
+\end{equation}
+
+\noindent On each iteration the $\mathbf{c}_k$ vector and the $\alpha_k$
+parameter can be fitted so they minimize the misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent following the same method described on Section
+\ref{sec:eql-inversion}.
+Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
+adjusting the size of the overlapping windows can help in reducing the computer
+memory needed to fit the source coefficients.
+Nevertheless, in case we have too many data points that make the $\mathbf{A}_k$
+matrices large enough that they cannot be stored in memory, we can apply one
+more simplification on the fitting process: ignore the effect of the $k$-th
+sources on any observation point that falls outside the $k$-th window.
+
+Assuming that there are $N_k$ observation points that fall under the $k$-th
+window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
+misfit function:
+
+\begin{equation}
+    \phi(\mathbf{c}_k) =
+        \left\lVert
+            \tilde{\mathbf{r}}_{k-1} - \tilde{\mathbf{A}}_k\mathbf{c}_k
+        \right\rVert ^ 2
+        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
+\end{equation}
+
+\noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
+only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
+observation points that fall under the $k$-th window; and
+$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between these observation points
+and the $k$-th sources.
+Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
+elements, the computer memory needed for fitting the $\mathbf{c}_k$
+coefficients is greatly reduced.
+
+Once the $\mathbf{c}_k$ coefficients are fitted following the same method
+described on Section \ref{sec:eql-inversion}, we need to obtain the value
+of the step-size parameter $\alpha_k$.
+This can be achieved by minimizing the norm of the difference between the
+previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th sources on
+every observation point:
+
+\begin{equation}
+    \alpha_k = \underset{\alpha}{\mathrm{argmin}}
+    \left(
+        \left\lVert
+            \mathbf{r}_{k-1} - \alpha \mathbf{A}_k \mathbf{c}_k
+        \right\rVert ^ 2
+    \right),
+\end{equation}
+
+\noindent which leads to:
+
+\begin{equation}
+    \alpha_k = \frac{
+        \mathbf{r}_{k-1}^T \mathbf{A}_k \mathbf{c}_k
+    }{
+        \left(\mathbf{A}_k \mathbf{c}_k\right)^T \mathbf{A}_k \mathbf{c}_k
+    }.
+\end{equation}
+
+This step will improve the convergence of the iterative algorithm and also will
+introduce at some extent the effect of the $k$-th sources on every data point,
+which was neglected on the fitting of the $\mathbf{c}_k$ coefficients.
+
+Once both the $\alpha_k$ parameter and the $\mathbf{c}_k$ coefficients are
+fitted, equation \ref{eq:residue} is applied to update the residue: compute the
+effect of the sources belonging to the $k$-th window on every observation
+point. Worth noting that when calculating the effect of any number of sources
+we don't need to pre-compute the entire Jacobian matrix: we can calculate the
+effect of the sources on each observation point by a simple addition of terms,
+what means computing each Jacobian element at once when needed.
+
+Because the number of windows is fixed before starting the iteration process,
+its number of steps are also fixed to $K$. Moreover, the windows are randomly
+shuffled before starting the process to prevent the prioritization of clustered
+sets of equivalent sources.
+
+After all $\alpha_k$ parameters and $\mathbf{c}_k$ coefficients vectors are
+fitted, we can predict the effect of every equivalent source on any point as
+follows:
+
+\begin{equation}
+    V(\mathbf{p}) =
+    \sum\limits_{k=1}^K \sum\limits_{m=1}^{M_k}
+    \frac{\alpha_k {c_k}_m}{|\mathbf{p} - \mathbf{q}_m|}.
+\end{equation}
+
+
+
+
 \subsection{Source distributions}
 
 How to choose how many sources to use and where to locate them are not
@@ -691,171 +854,6 @@ scheme if no further information is provided.
         Variable depth & $\checkmark$ & $\checkmark$ & $\times$     \\
     \end{tabular}
 \end{table*}
-
-\subsection{Gradient boosted equivalent sources}
-
-Reducing the number of sources might help to lower the amount of computer
-memory needed to fit their coefficients, although it may be not enough for
-a very large set of observation points.
-Even if we can greatly reduce the number of sources, having too many data
-points would still produce a Jacobian matrix large enough that cannot fit in
-memory.
-This problem was already faced by other authors
-\citep{mendonca1994, leao1989, li2010, barnes2011, oliveira2013, siqueira2017,
-jirigalatu2019}.
-The iterative method proposed by \citet{siqueira2017} needs equivalent sources
-to be located beneath each observation point, so it cannot take advantage of
-the block-averaged sources.
-\citet{leao1989} perform the fitting simultaneously with the prediction, what
-prevents us to use already fitted equivalent sources to make future
-predictions. Besides the method is limited to interpolations on regular grids.
-% Add more discussion on why we won't apply any of the following methods
-\citet{mendonca1994}
-\citet{li2010}
-\citet{barnes2011}
-\citet{jirigalatu2019}
-
-Here we propose an iterative algorithm for fitting the source coefficients
-using a gradient boosting \citep{friedman2001, friedman2002} strategy:
-(i) define a collection of overlapping windows of equal size that cover the
-survey area,
-(ii) define one set of equivalent sources per window,
-(iii) iteratively fit the coefficients of each set of sources.
-Once every set of sources is fitted, we can predict the value of the field on
-any observation point as the effect of every set of equivalent sources.
-
-Lets assume we have $N$ measurements of a harmonic field on observations points
-$\{\mathbf{p}_i\}_{i=1}^{N}$ stored in the vector $\mathbf{d} = (d_1, d_2,
-\ldots, d_N)^T$. We have defined a set of $M$ point sources located on
-$\{\mathbf{q}_j\}_{j=1}^{M}$. Instead of trying to fit the entire set of
-coefficients $\mathbf{c}$ at once, we can reduce the problem to fitting $K$
-different sets of equivalent sources: we define $K$ overlapping windows of
-equal size that cover the whole observation area, and then we create one set of
-equivalent sources per window formed by the $\{\mathbf{q}_m\}_{m=1}^{M_k}$
-sources that fall inside the $k$-th window.
-The observed data should be equal to the superposition of the
-effect of every set of equivalent sources:
-
-\begin{equation}
-    \mathbf{d} = \sum_{k=1}^K \alpha_k \mathbf{A}_k \mathbf{c}_k,
-\end{equation}
-
-\noindent where $\mathbf{c}_k$ is the vector of coefficients for the $k$-th
-set of equivalent sources; $\mathbf{A}_k$ is the Jacobian matrix between
-those sources and every data point; and each $\alpha_k$ is a constant called
-\emph{step-size parameter}.
-
-By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
-iteratively: on each iteration a residue vector $\mathbf{r}_k$ (initialized
-with the observed data) is used to fit the $\mathbf{c}_k$
-coefficients and $\alpha_k$ step-size parameter, and then updated by removing
-the effect of the same sources, as follows:
-
-\begin{equation}
-    \mathbf{r}_0 = \mathbf{d},
-\end{equation}
-
-\begin{equation}
-    \mathbf{r}_k = \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k.
-    \label{eq:residue}
-\end{equation}
-
-\noindent On each iteration the $\mathbf{c}_k$ vector and the $\alpha_k$
-parameter can be fitted so they minimize the misfit function:
-
-\begin{equation}
-    \phi(\mathbf{c}_k) =
-        \left\lVert
-            \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k
-        \right\rVert ^ 2
-        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
-\end{equation}
-
-\noindent following the same method described on Section
-\ref{sec:eql-inversion}.
-Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
-adjusting the size of the overlapping windows can help in reducing the computer
-memory needed to fit the source coefficients.
-Nevertheless, in case we have too many data points that make the $\mathbf{A}_k$
-matrices large enough that they cannot be stored in memory, we can apply one
-more simplification on the fitting process: ignore the effect of the $k$-th
-sources on any observation point that falls outside the $k$-th window.
-
-Assuming that there are $N_k$ observation points that fall under the $k$-th
-window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
-misfit function:
-
-\begin{equation}
-    \phi(\mathbf{c}_k) =
-        \left\lVert
-            \tilde{\mathbf{r}}_{k-1} - \tilde{\mathbf{A}}_k\mathbf{c}_k
-        \right\rVert ^ 2
-        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
-\end{equation}
-
-\noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
-only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
-observation points that fall under the $k$-th window; and
-$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between these observation points
-and the $k$-th sources.
-Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
-elements, the computer memory needed for fitting the $\mathbf{c}_k$
-coefficients is greatly reduced.
-
-Once the $\mathbf{c}_k$ coefficients are fitted following the same method
-described on Section \ref{sec:eql-inversion}, we need to obtain the value
-of the step-size parameter $\alpha_k$.
-This can be achieved by minimizing the norm of the difference between the
-previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th sources on
-every observation point:
-
-\begin{equation}
-    \alpha_k = \underset{\alpha}{\mathrm{argmin}}
-    \left(
-        \left\lVert
-            \mathbf{r}_{k-1} - \alpha \mathbf{A}_k \mathbf{c}_k
-        \right\rVert ^ 2
-    \right),
-\end{equation}
-
-\noindent which leads to:
-
-\begin{equation}
-    \alpha_k = \frac{
-        \mathbf{r}_{k-1}^T \mathbf{A}_k \mathbf{c}_k
-    }{
-        \left(\mathbf{A}_k \mathbf{c}_k\right)^T \mathbf{A}_k \mathbf{c}_k
-    }.
-\end{equation}
-
-This step will improve the convergence of the iterative algorithm and also will
-introduce at some extent the effect of the $k$-th sources on every data point,
-which was neglected on the fitting of the $\mathbf{c}_k$ coefficients.
-
-Once both the $\alpha_k$ parameter and the $\mathbf{c}_k$ coefficients are
-fitted, equation \ref{eq:residue} is applied to update the residue: compute the
-effect of the sources belonging to the $k$-th window on every observation
-point. Worth noting that when calculating the effect of any number of sources
-we don't need to pre-compute the entire Jacobian matrix: we can calculate the
-effect of the sources on each observation point by a simple addition of terms,
-what means computing each Jacobian element at once when needed.
-
-Because the number of windows is fixed before starting the iteration process,
-its number of steps are also fixed to $K$. Moreover, the windows are randomly
-shuffled before starting the process to prevent the prioritization of clustered
-sets of equivalent sources.
-
-After all $\alpha_k$ parameters and $\mathbf{c}_k$ coefficients vectors are
-fitted, we can predict the effect of every equivalent source on any point as
-follows:
-
-\begin{equation}
-    V(\mathbf{p}) =
-    \sum\limits_{k=1}^K \sum\limits_{m=1}^{M_k}
-    \frac{\alpha_k {c_k}_m}{|\mathbf{p} - \mathbf{q}_m|}.
-\end{equation}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
