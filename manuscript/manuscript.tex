@@ -398,19 +398,21 @@ making it difficult to choose an appropriate value for $\lambda_d$ in practice.
 
 To solve this issue, we first scale the Jacobian matrix so that its elements
 are unitless and each column has unit variance.
-We define a diagonal matrix $\mathbf{S}$, whose elements corresponds to the
-standard deviation of each column of $\mathbf{A}$:
+We define a diagonal matrix $\mathbf{S}$
 
 \begin{equation}
     \mathbf{S} =
     \begin{bmatrix}
-        \sigma_1 & \cdots &0 \\
-        \vdots & \ddots & \vdots \\
-        0 & \cdots & \sigma_M
-    \end{bmatrix}
-    .
+      \sigma_1 & 0 & \cdots &0 \\
+      0 & \sigma_2 & \cdots &0 \\
+      \vdots & \vdots & \ddots & \vdots \\
+      0  & 0 & \cdots & \sigma_M
+    \end{bmatrix}_{M \times M}
+    ,
 \end{equation}
 
+\noindent in which $\sigma_j$ is the standard deviation of the $j$-th column of
+$\mathbf{A}$.
 We then write the forward problem in equation~\ref{eq:linear-problem} as
 
 \begin{equation}
@@ -432,7 +434,7 @@ We then write the forward problem in equation~\ref{eq:linear-problem} as
 $\mathbf{m}$ is a vector containing scaled coefficients with the same units as
 the data.
 
-The goal function defined on equation~\ref{eq:misfit-unscaled} can be
+The goal function defined in equation~\ref{eq:misfit-unscaled} can be
 rewritten as
 
 \begin{equation}
@@ -449,26 +451,29 @@ rewritten as
 regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
 $\mathbf{c}$.
 
-If the number of observation points is equal or larger to the number of
-sources, then the linear problem defined on equation~\ref{eq:linear-problem} is
-well- or over-determined, respectively. Therefore, the scaled coefficients that
-minimize the misfit function can be obtained through \citep{menke1989}:
+The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
+function can be found by solving the \emph{normal equation system}
+\citep{menke1989}
 
 \begin{equation}
-    \hat{\mathbf{m}} =
     \left[
       \mathbf{B}\trans \mathbf{W} \mathbf{B} + \lambda \mathbf{I}
-    \right]\inv
+    \right]
+    \hat{\mathbf{m}} =
     \mathbf{B}\trans\mathbf{W}
     \mathbf{d}^o.
 \end{equation}
 
-Once the scaled coefficients are obtained, the coefficients
-$\mathbf{c}$ can be obtained by
+Once the scaled coefficients are obtained, the estimated unscaled coefficients
+$\hat{\mathbf{c}}$ can be calculated by removing the scaling factor
 
 \begin{equation}
-    \mathbf{c} = \mathbf{S}\inv \hat{\mathbf{m}}.
+    \hat{\mathbf{c}} = \mathbf{S}\inv \hat{\mathbf{m}} \ .
 \end{equation}
+
+\noindent The forward modeling operations used to perform predictions
+(e.g., for interpolation and upward continuation) are left unchanged by
+using vector $\hat{\mathbf{c}}$ instead of $\hat{\mathbf{m}}$.
 
 
 \subsection{Source distributions}
