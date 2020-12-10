@@ -633,8 +633,18 @@ model on any point through the summation
     \ .
 \end{equation}
 
-SOMETHING ABOUT THE VON FRESE 88 PAPER (BOOTSTRAP INVERSION) AND HOW THIS IS
-DIFFERENT.
+Our gradient boosting algorithm for overlapping windows is similar to the
+``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
+fits portions of an equivalent source model to the data residuals.
+The key differences are:
+(1) the sources in the overlapping portions of the windows are fit more than
+once, allowing the algorithm to self-correct for poor solutions to any given
+window;
+(2) using only data points within the window when fitting the data enables the
+use of larger datasets;
+(3) experience shows that the step size parameter improves the convergence of
+the solution, particularly when using only the data inside the windows for
+fitting.
 
 
 \subsection{Source distributions}
