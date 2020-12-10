@@ -533,22 +533,35 @@ those sources and every data point.
 Thus, the predicted data are a superposition of the
 effects of the $K$ sets of equivalent sources.
 
-The gradient boosting algorithm for finding the damped least-squares solutions
-for the $K$ parameters vectors $\mathbf{c}_k$ in
-equation~\ref{eq:gb-linear-model} can be modified from \citep{friedman2001}
+The gradient boosting algorithm above works by fitting each component of the
+additive model, one at a time, to the residuals of the previous component.
+\citet{friedman2001} demonstrates that this corresponds to a steepest-descent
+optimization in the so-called ``function space'', with $\alpha_k$ corresponding
+to step sizes in steepest descent.
+We can modify the gradient boosting algorithm of \citet{friedman2001} to
+find the damped least-squares solutions for the $K$ parameters vectors
+$\mathbf{c}_k$ and step sizes $\alpha_k$ in equation~\ref{eq:gb-linear-model}:
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
   \setstretch{1.5}
   define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
+
+    \nllabel{alg:scale}
     $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$ \;
+
+    \nllabel{alg:fit}
     $
      \hat{\mathbf{m}}_k = \left[\mathbf{B}_k\trans \mathbf{W}_k \mathbf{B}_k +
      \lambda \mathbf{I} \right]\inv \mathbf{B}_k\trans \mathbf{W}_k
      \mathbf{r}_{k-1}
     $ \;
+
+    \nllabel{alg:unscale}
     $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$ \;
+
+    \nllabel{alg:stepsize}
     $
       \alpha_k = \underset{\alpha}{\mathrm{argmin}}
       \left(
@@ -557,6 +570,8 @@ equation~\ref{eq:gb-linear-model} can be modified from \citep{friedman2001}
         \right\rVert ^ 2
       \right)
     $ \;
+
+    \nllabel{alg:residual}
     $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{A}_k \hat{\mathbf{c}}_k$ \;
   }
   \BlankLine
@@ -564,84 +579,40 @@ equation~\ref{eq:gb-linear-model} can be modified from \citep{friedman2001}
   \caption{Gradient boosting solution for damped least-squares regression.}
 \end{algorithm}
 
-The algorithm above works by fitting each component of the additive model, one
-at a time, to the residuals of the previous component.
+\citet{friedman2002} suggests that introducing randomness into the fitting
+process can improve convergence of the solution. To achieve this, we randomize
+the order in which the $K$ windows are used in the gradient boosting algorithm.
 
+The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements, which can be
+considerably smaller than the $N \times M$ elements of $\mathbf{A}$.
+Therefore, the gradient boosting method allows us to fit
+equivalent sources models that would produce Jacobian matrices that are larger
+than the available computer memory.
+Furthermore, we can increase or decrease the size of the overlapping windows as
+needed depending on the number of sources in the model and the available
+computer memory.
 
-By applying gradient boosting we can fit each $\mathbf{c}_k$ vector
-iteratively: on each iteration a residue vector $\mathbf{r}_k$ (initialized
-with the observed data) is used to fit the $\mathbf{c}_k$
-coefficients and $\alpha_k$ step-size parameter, and then updated by removing
-the effect of the same sources, as follows:
+We can improve the efficiency of the algorithm further by using only data
+points that fall within the $k$-th window for fitting the sources
+(steps \ref{alg:scale} and \ref{alg:fit}),
+while using all available data when calculating the step size and residuals
+(steps \ref{alg:stepsize} and \ref{alg:residual}).
+By doing so, we reduce the Jacobian matrix further to $N_k \times M_k$
+elements.
+The forward modeling operations performed in steps \ref{alg:stepsize} and
+\ref{alg:residual} can be done by a summation
+(TODO: ADD EQUATION)
+instead of a matrix-vector product, which allows us to avoid storing the larger
+$N \times M_k$ Jacobian.
+The influence of distance sources on the solution is maintained by using the
+entire set of data points when updating the residuals vector.
 
-\begin{equation}
-    \mathbf{r}_0 = \mathbf{d},
-\end{equation}
-
-\begin{equation}
-    \mathbf{r}_k = \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k.
-    \label{eq:residue}
-\end{equation}
-
-\noindent On each iteration the $\mathbf{c}_k$ vector and the $\alpha_k$
-parameter can be fitted so they minimize the misfit function:
-
-\begin{equation}
-    \phi(\mathbf{c}_k) =
-        \left\lVert
-            \mathbf{r}_{k-1} - \alpha_k \mathbf{A}_k\mathbf{c}_k
-        \right\rVert ^ 2
-        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
-\end{equation}
-
-\noindent following the same method described on Section
-\ref{sec:eql-inversion}.
-Because the $\mathbf{A}_k$ matrices have only $N \times M_k$ elements,
-adjusting the size of the overlapping windows can help in reducing the computer
-memory needed to fit the source coefficients.
-Nevertheless, in case we have too many data points that make the $\mathbf{A}_k$
-matrices large enough that they cannot be stored in memory, we can apply one
-more simplification on the fitting process: ignore the effect of the $k$-th
-sources on any observation point that falls outside the $k$-th window.
-
-Assuming that there are $N_k$ observation points that fall under the $k$-th
-window, we can fit the $\mathbf{c}_k$ coefficients by minimizing the following
-misfit function:
-
-\begin{equation}
-    \phi(\mathbf{c}_k) =
-        \left\lVert
-            \tilde{\mathbf{r}}_{k-1} - \tilde{\mathbf{A}}_k\mathbf{c}_k
-        \right\rVert ^ 2
-        + \lambda_d \left\lVert \mathbf{c}_k \right\rVert ^2,
-\end{equation}
-
-\noindent where $\tilde{\mathbf{r}}_{k-1}$ is the residue vector containing
-only the elements that correspond to the $\{\mathbf{p}_n\}_{n=1}^{N_k}$
-observation points that fall under the $k$-th window; and
-$\tilde{\mathbf{A}}_k$ is the Jacobian matrix between these observation points
-and the $k$-th sources.
-Because the $\tilde{\mathbf{A}}_k$ matrices will have $N_k \times M_k$
-elements, the computer memory needed for fitting the $\mathbf{c}_k$
-coefficients is greatly reduced.
-
-Once the $\mathbf{c}_k$ coefficients are fitted following the same method
-described on Section \ref{sec:eql-inversion}, we need to obtain the value
-of the step-size parameter $\alpha_k$.
-This can be achieved by minimizing the norm of the difference between the
-previous residue $\mathbf{r}_{k-1}$ and the effect of the $k$-th sources on
-every observation point:
-
-\begin{equation}
-    \alpha_k = \underset{\alpha}{\mathrm{argmin}}
-    \left(
-        \left\lVert
-            \mathbf{r}_{k-1} - \alpha \mathbf{A}_k \mathbf{c}_k
-        \right\rVert ^ 2
-    \right),
-\end{equation}
-
-\noindent which leads to:
+The step size parameter functions as scaling factor that prevents the algorithm
+from worsening the fit to data points outside of the current window.
+As such, it improves the converge of the solution and ensures that the
+overall misfit decreases with iteration.
+The step size that minimizes the misfit function in step \ref{alg:stepsize} of
+the algorithm is
 
 \begin{equation}
     \alpha_k = \frac{
@@ -651,34 +622,19 @@ every observation point:
     }.
 \end{equation}
 
-This step will improve the convergence of the iterative algorithm and also will
-introduce at some extent the effect of the $k$-th sources on every data point,
-which was neglected on the fitting of the $\mathbf{c}_k$ coefficients.
-
-Once both the $\alpha_k$ parameter and the $\mathbf{c}_k$ coefficients are
-fitted, equation \ref{eq:residue} is applied to update the residue: compute the
-effect of the sources belonging to the $k$-th window on every observation
-point. Worth noting that when calculating the effect of any number of sources
-we don't need to pre-compute the entire Jacobian matrix: we can calculate the
-effect of the sources on each observation point by a simple addition of terms,
-what means computing each Jacobian element at once when needed.
-
-Because the number of windows is fixed before starting the iteration process,
-its number of steps are also fixed to $K$. Moreover, the windows are randomly
-shuffled before starting the process to prevent the prioritization of clustered
-sets of equivalent sources.
-
-After all $\alpha_k$ parameters and $\mathbf{c}_k$ coefficients vectors are
-fitted, we can predict the effect of every equivalent source on any point as
-follows:
+After all $\alpha_k$ step sizes and $\hat{\mathbf{c}}_k$ coefficients vectors
+are estimated, we can predict the effect of the additive equivalent source
+model on any point through the summation
 
 \begin{equation}
-    V(\mathbf{p}) =
-    \sum\limits_{k=1}^K \sum\limits_{m=1}^{M_k}
-    \frac{\alpha_k {c_k}_m}{|\mathbf{p} - \mathbf{q}_m|}.
+    d(\mathbf{p}) =
+    \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
+    \alpha_k \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
+    \ .
 \end{equation}
 
-
+SOMETHING ABOUT THE VON FRESE 88 PAPER (BOOTSTRAP INVERSION) AND HOW THIS IS
+DIFFERENT.
 
 
 \subsection{Source distributions}
