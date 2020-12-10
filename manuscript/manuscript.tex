@@ -602,8 +602,8 @@ elements.
 The forward modeling operations performed in steps \ref{alg:stepsize} and
 \ref{alg:residual} can be done by a summation
 (TODO: ADD EQUATION)
-instead of a matrix-vector product, which allows us to avoid storing the larger
-$N \times M_k$ Jacobian.
+instead of a matrix-vector product, which allows us to avoid computing and
+storing the larger $N \times M_k$ Jacobian at any point.
 The influence of distance sources on the solution is maintained by using the
 entire set of data points when updating the residuals vector.
 
