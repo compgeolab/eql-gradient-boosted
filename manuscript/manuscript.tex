@@ -526,7 +526,7 @@ matrix equation
 We can transform our equivalent source problem in
 equation~\ref{eq:linear-problem} into an additive model by
 (1) defining a set of $K$ overlapping windows of equal size that cover the
-survey area and (2) defining separate sets of equivalent sources, one per
+survey area and (2) defining one set of equivalent sources per
 window. Then, the coefficients $\mathbf{c}_k$ relate to the equivalent sources
 of the $k$-th window and $\mathbf{A}_k$ is the Jacobian matrix between
 those sources and every data point.
@@ -583,7 +583,8 @@ $\mathbf{c}_k$ and step sizes $\alpha_k$ in equation~\ref{eq:gb-linear-model}:
 process can improve convergence of the solution. To achieve this, we randomize
 the order in which the $K$ windows are used in the gradient boosting algorithm.
 
-The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements, which can be
+The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
+(where $M_k$ is the number sources on the $k-$th window), which can be
 considerably smaller than the $N \times M$ elements of $\mathbf{A}$.
 Therefore, the gradient boosting method allows us to fit
 equivalent sources models that would produce Jacobian matrices that are larger
@@ -592,7 +593,7 @@ Furthermore, we can increase or decrease the size of the overlapping windows as
 needed depending on the number of sources in the model and the available
 computer memory.
 
-We can improve the efficiency of the algorithm further by using only data
+We can improve the efficiency of the algorithm further by using only the $N_k$ data
 points that fall within the $k$-th window for fitting the sources
 (steps \ref{alg:scale} and \ref{alg:fit}),
 while using all available data when calculating the step size and residuals
