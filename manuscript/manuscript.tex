@@ -255,10 +255,11 @@ we can write a set of $N$ equations of the form
     \right\rVert}
     \quad \forall i=1,2,\ldots,N
     \ ,
+    \label{eq:forward-sum}
 \end{equation}
 
 \noindent where $d_i$ is the value of the potential field at the observation point $\mathbf{p}_i$.
-These equations can also be expressed as 
+These equations can also be expressed as
 
 \begin{equation}
     \mathbf{d} = \mathbf{A} \mathbf{c} \ ,
@@ -493,7 +494,7 @@ By doing so, we reduce the Jacobian matrix further to $N_k \times M_k$
 elements.
 The forward modeling operations performed in steps \ref{alg:stepsize} and
 \ref{alg:residual} can be done by a summation
-(TODO: ADD EQUATION)
+(equation~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 The influence of distance sources on the solution is maintained by using the
