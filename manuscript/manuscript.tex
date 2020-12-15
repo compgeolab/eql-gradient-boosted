@@ -222,7 +222,7 @@ be approximated by a sum of $M$ discrete point source effects
 $\mathbf{p}$ and $\mathbf{q}_j$ are position vectors in a 3D Cartesian space,
 $c_j$ is a scalar coefficient related to the point source located at
 $\mathbf{q}_j$,
-and $\lVert \cdot \rVert$ is the vector norm.
+and $\lVert \cdot \rVert$ represents the $\text{L}_2$ norm.
 
 In case we have measured the value of the harmonic field on $N$ points
 $\{\mathbf{p}_1\ \mathbf{p}_2\ \ldots\ \mathbf{p}_N\}$,
@@ -237,7 +237,8 @@ we can write a set of $N$ equations of the form
     \ ,
 \end{equation}
 
-\noindent which can also be expressed as the following matrix equation
+\noindent where $d_i$ is the value of the potential field at the observation point $\mathbf{p}_i$.
+These equations can also be expressed as 
 
 \begin{equation}
     \mathbf{d} = \mathbf{A} \mathbf{c} \ ,
@@ -245,7 +246,7 @@ we can write a set of $N$ equations of the form
 \end{equation}
 
 \noindent where $\mathbf{d}$ is a column vector containing the $N$ predicted
-values of the field $d_i$ on the observation points $\mathbf{p}_i$,
+values of the observed field at the observation points ${\mathbf{p}_i}_{i=1}^N$,
 $\mathbf{c}$ is a column vector containing the $M$ coefficients $c_j$,
 and $\mathbf{A}$ is the $N \times M$ Jacobian matrix,
 whose elements are
@@ -262,7 +263,7 @@ $\mathbf{c}$ that best fit the observations.
 These values can, in turn, be used to predict the value of the harmonic field
 at any other point outside of the sources by evaluating
 equation~\ref{eq:eql-forward}.
-Griding and upward continuation can thus be achieved by predicting values on
+Gridding and upward continuation can thus be achieved by predicting values on
 points that fall on a regular grid or at different heights.
 
 
