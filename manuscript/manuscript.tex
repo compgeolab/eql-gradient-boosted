@@ -529,9 +529,8 @@ while using all available data when calculating the step size and residuals
 (steps \ref{alg:predicted}, \ref{alg:stepsize}, and \ref{alg:residual}).
 By doing so, we reduce the Jacobian matrix further to $N_k \times M_k$
 elements.
-The forward modeling operations performed in steps \ref{alg:stepsize} and
-\ref{alg:residual} can be done by a summation
-(equation~\ref{eq:forward-sum})
+The forward modeling operation performed in step \ref{alg:predicted} can be
+done by a summation (equation~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 The influence of distance sources on the solution is maintained by using the
