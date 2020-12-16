@@ -424,9 +424,10 @@ steps:
     survey area (see section \ref{sec:source-distribution} for details).
   \item Define a set of $K$ overlapping windows of equal size that cover the
     survey area.
-  \item Create $K$ separate sets of equivalent sources, one for each window, by
-    taking from the original set of $M$ sources the ones that fall within the
-    respective windows. Since the windows overlap, the total number of sources
+  \item Create $K$ separate sets of equivalent sources, one for each window.
+    Each set will be formed by the portion of the original $M$ sources that fall inside
+    the respective window.
+    Since the windows overlap, the total number of sources
     from all sets will be greater than $M$.
   \item Define the vector $\mathbf{c}_k$ as the coefficients of the equivalent
     sources of the $k$-th window and matrix $\mathbf{A}_k$ as the Jacobian
@@ -505,8 +506,10 @@ model on any point through the summation
     d(\mathbf{p}) =
     \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
     \alpha_k \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
-    \ .
+    \ ,
 \end{equation}
+
+\noindent where ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector.
 
 To improve the convergence of the algorithm, \citet{friedman2002} suggests that
 introducing randomness into the fitting process. We achieve this by randomizing
@@ -538,7 +541,7 @@ entire set of data points when calculating
 the step size $\alpha_k$ and updating the residuals vector.
 In this case, the step size prevents the algorithm from worsening the fit to
 data points that fall outside of the current window.
-As such, it improves the converge of the solution and ensures that the
+As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
 
 
