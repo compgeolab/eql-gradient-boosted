@@ -447,41 +447,66 @@ Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
-  \setstretch{1.5}
+  \setstretch{1.75}
   define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
 
+    $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$
     \nllabel{alg:scale}
-    $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$ \;
+    \;
 
-    \nllabel{alg:fit}
     $
      \hat{\mathbf{m}}_k = \left[\mathbf{B}_k\trans \mathbf{W}_k \mathbf{B}_k +
      \lambda \mathbf{I} \right]\inv \mathbf{B}_k\trans \mathbf{W}_k
      \mathbf{r}_{k-1}
-    $ \;
+    $
+    \nllabel{alg:fit}
+    \;
 
+    $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
     \nllabel{alg:unscale}
-    $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$ \;
+    \;
 
-    \nllabel{alg:stepsize}
+    $\mathbf{d}_k = \mathbf{A}_k \hat{\mathbf{c}}_k$
+    \nllabel{alg:predicted}
+    \;
+
     $
       \alpha_k = \underset{\alpha}{\mathrm{argmin}}
       \left(
         \left\lVert
-          \mathbf{r}_{k - 1} - \alpha \mathbf{A}_k \hat{\mathbf{c}}_k
+          \mathbf{r}_{k - 1} - \alpha \mathbf{d}_k
         \right\rVert ^ 2
       \right)
-    $ \;
+      = \dfrac{
+        \mathbf{r}_{k-1}\trans \mathbf{d}_k
+      }{
+        \mathbf{d}_k\trans \mathbf{d}_k
+      }
+    $
+    \nllabel{alg:stepsize}
+    \;
 
+    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{d}_k$
     \nllabel{alg:residual}
-    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{A}_k \hat{\mathbf{c}}_k$ \;
+    \;
   }
   \BlankLine
   \setstretch{1}
   \caption{Gradient boosting solution for damped least-squares regression.}
   \label{alg:gradient_boosting}
 \end{algorithm}
+
+After all $\alpha_k$ step sizes and $\mathbf{c}_k$ coefficients vectors
+are estimated, we can predict the effect of the additive equivalent source
+model on any point through the summation
+
+\begin{equation}
+    d(\mathbf{p}) =
+    \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
+    \alpha_k \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
+    \ .
+\end{equation}
 
 To improve the convergence of the algorithm, \citet{friedman2002} suggests that
 introducing randomness into the fitting process. We achieve this by randomizing
@@ -501,7 +526,7 @@ We can improve the efficiency of the algorithm further by using only the $N_k$ d
 points that fall within the $k$-th window for fitting the sources
 (steps \ref{alg:scale} and \ref{alg:fit}),
 while using all available data when calculating the step size and residuals
-(steps \ref{alg:stepsize} and \ref{alg:residual}).
+(steps \ref{alg:predicted}, \ref{alg:stepsize}, and \ref{alg:residual}).
 By doing so, we reduce the Jacobian matrix further to $N_k \times M_k$
 elements.
 The forward modeling operations performed in steps \ref{alg:stepsize} and
@@ -510,36 +535,15 @@ The forward modeling operations performed in steps \ref{alg:stepsize} and
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 The influence of distance sources on the solution is maintained by using the
-entire set of data points when updating the residuals vector.
-
-The step size parameter functions as scaling factor that prevents the algorithm
-from worsening the fit to data points outside of the current window.
+entire set of data points when calculating
+the step size $\alpha_k$ and updating the residuals vector.
+In this case, the step size prevents the algorithm from worsening the fit to
+data points that fall outside of the current window.
 As such, it improves the converge of the solution and ensures that the
 overall misfit decreases with iteration.
-The step size that minimizes the misfit function in step \ref{alg:stepsize} of
-the algorithm is
-
-\begin{equation}
-    \alpha_k = \frac{
-      \mathbf{r}_{k-1}\trans \mathbf{A}_k \hat{\mathbf{c}}_k
-    }{
-      \hat{\mathbf{c}}_k\trans\mathbf{A}_k\trans \mathbf{A}_k \hat{\mathbf{c}}_k
-    }.
-\end{equation}
-
-After all $\alpha_k$ step sizes and $\hat{\mathbf{c}}_k$ coefficients vectors
-are estimated, we can predict the effect of the additive equivalent source
-model on any point through the summation
-
-\begin{equation}
-    d(\mathbf{p}) =
-    \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
-    \alpha_k \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
-    \ .
-\end{equation}
 
 
-NOTE: This paragraph might be better in the Discussion section.
+\textbf{NOTE: This paragraph might be better in the Discussion section.}
 
 Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
