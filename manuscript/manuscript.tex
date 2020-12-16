@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage[longend,linesnumbered]{algorithm2e}
+\usepackage[longend,linesnumbered,ruled]{algorithm2e}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage[round,authoryear,sort]{natbib}
@@ -448,9 +448,13 @@ Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
-  \setstretch{1.75}
+  \setstretch{1.5}
   define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
+
+
+    calculate $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
+    \;
 
     $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$
     \nllabel{alg:scale}
@@ -527,15 +531,83 @@ computer memory.
 
 We can improve the efficiency of the algorithm further by using only the $N_k$ data
 points that fall within the $k$-th window for fitting the sources
-(steps \ref{alg:scale} and \ref{alg:fit}),
+(steps \ref{alg:scale} and \ref{alg:fit} of
+algorithm~\ref{alg:gradient_boosting}),
 while using all available data when calculating the step size and residuals
-(steps \ref{alg:predicted}, \ref{alg:stepsize}, and \ref{alg:residual}).
-By doing so, we reduce the Jacobian matrix further to $N_k \times M_k$
-elements.
+(steps \ref{alg:predicted}, \ref{alg:stepsize}, and \ref{alg:residual}
+of algorithm~\ref{alg:gradient_boosting}).
+By doing so, we can reduce the size of the Jacobian matrix further to $N_k
+\times M_k$ elements.
 The forward modeling operation performed in step \ref{alg:predicted} can be
 done by a summation (equation~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
+Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
+the final \textit{gradient boosted equivalent source algorithm}.
+
+\begin{algorithm}[!h]
+  \DontPrintSemicolon
+  \setstretch{1.5}
+  define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
+  \For{ $k = 1$ \KwTo $K$ }{
+
+    select weights $\tilde{\mathbf{W}}_k$ and residuals
+    $\tilde{\mathbf{r}}_{k - 1}$ for data points inside the $k$-th window only
+    \;
+
+    calculate $N_k \times M_k$ Jacobian matrix $\tilde{\mathbf{A}}_k$
+    with data points and sources inside the $k$-th window only
+    \;
+
+    $\mathbf{B}_k = \tilde{\mathbf{A}}_k \mathbf{S}_k\inv$
+    \;
+
+    $
+     \hat{\mathbf{m}}_k = \left[
+     \mathbf{B}_k\trans \tilde{\mathbf{W}}_k \mathbf{B}_k +
+     \lambda \mathbf{I} \right]\inv \mathbf{B}_k\trans \tilde{\mathbf{W}}_k
+     \tilde{\mathbf{r}}_{k-1}
+    $
+    \;
+
+    $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
+    \;
+
+    $
+    \mathbf{d}_k \Rightarrow
+    {d_k}_i
+    =
+    \sum\limits_{j=1}^{M_k} \dfrac{{c_k}_j}{\left\lVert \mathbf{p}_i -
+        {\mathbf{q}_k}_j
+    \right\rVert}
+    \ \forall i=1\ \text{to}\ N
+    $
+    \;
+
+    $
+      \alpha_k = \underset{\alpha}{\mathrm{argmin}}
+      \left(
+        \left\lVert
+          \mathbf{r}_{k - 1} - \alpha \mathbf{d}_k
+        \right\rVert ^ 2
+      \right)
+      = \dfrac{
+        \mathbf{r}_{k-1}\trans \mathbf{d}_k
+      }{
+        \mathbf{d}_k\trans \mathbf{d}_k
+      }
+    $
+    \;
+
+    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{d}_k$
+    \;
+  }
+  \BlankLine
+  \setstretch{1}
+  \caption{ Gradient boosted equivalent source algorithm. }
+  \label{alg:gradient_boosting_window}
+\end{algorithm}
+
 The influence of distance sources on the solution is maintained by using the
 entire set of data points when calculating
 the step size $\alpha_k$ and updating the residuals vector.
@@ -543,7 +615,6 @@ In this case, the step size prevents the algorithm from worsening the fit to
 data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
-
 
 \textbf{NOTE: This paragraph might be better in the Discussion section.}
 
