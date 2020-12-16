@@ -416,23 +416,34 @@ matrix equation
 \end{equation}
 
 We can transform our equivalent source problem in
-equation~\ref{eq:linear-problem} into an additive model by
-(1) defining a set of $K$ overlapping windows of equal size that cover the
-survey area and (2) defining one set of equivalent sources per
-window. Then, the coefficients $\mathbf{c}_k$ relate to the equivalent sources
-of the $k$-th window and $\mathbf{A}_k$ is the Jacobian matrix between
-those sources and every data point.
-Thus, the predicted data are a superposition of the
-effects of the $K$ sets of equivalent sources.
+equation~\ref{eq:linear-problem} into an additive model by following these
+steps:
 
-The gradient boosting algorithm above works by fitting each component of the
+\begin{enumerate}
+  \item Define a set of $M$ equivalent sources distributed throughout the
+    survey area (see section \ref{sec:source-distribution} for details).
+  \item Define a set of $K$ overlapping windows of equal size that cover the
+    survey area.
+  \item Create $K$ separate sets of equivalent sources, one for each window, by
+    taking from the original set of $M$ sources the ones that fall within the
+    respective windows. Since the windows overlap, the total number of sources
+    from all sets will be greater than $M$.
+  \item Define the vector $\mathbf{c}_k$ as the coefficients of the equivalent
+    sources of the $k$-th window and matrix $\mathbf{A}_k$ as the Jacobian
+    matrix between those sources and every data point of the survey.
+  \item Model the predicted data as a superposition of the effects of the $K$
+    separate sets of equivalent sources.
+\end{enumerate}
+
+The gradient boosting algorithm works by fitting each component of the
 additive model, one at a time, to the residuals of the previous component.
 \citet{friedman2001} demonstrates that this corresponds to a steepest-descent
 optimization in the so-called ``function space'', with $\alpha_k$ corresponding
 to step sizes in steepest descent.
-We can modify the gradient boosting algorithm of \citet{friedman2001} to
-find the damped least-squares solutions for the $K$ parameters vectors
-$\mathbf{c}_k$ and step sizes $\alpha_k$ in equation~\ref{eq:gb-linear-model}:
+The adaptation of the gradient boosting method to find the damped least-squares
+solutions for the $K$ parameters vectors $\mathbf{c}_k$ and step sizes
+$\alpha_k$ in equation~\ref{eq:gb-linear-model} is presented in
+Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
@@ -469,10 +480,11 @@ $\mathbf{c}_k$ and step sizes $\alpha_k$ in equation~\ref{eq:gb-linear-model}:
   \BlankLine
   \setstretch{1}
   \caption{Gradient boosting solution for damped least-squares regression.}
+  \label{alg:gradient_boosting}
 \end{algorithm}
 
-\citet{friedman2002} suggests that introducing randomness into the fitting
-process can improve convergence of the solution. To achieve this, we randomize
+To improve the convergence of the algorithm, \citet{friedman2002} suggests that
+introducing randomness into the fitting process. We achieve this by randomizing
 the order in which the $K$ windows are used in the gradient boosting algorithm.
 
 The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
@@ -544,6 +556,7 @@ fitting.
 
 
 \subsection{Source distributions}
+\label{sec:source-distribution}
 
 How to choose how many sources to use and where to locate them are not
 trivial decisions that play an important role on the accuracy of the
