@@ -106,96 +106,131 @@ eql_fitting_time = times.mean()
 grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 # -
 
-# Compute RMS of the grid against the target grid
+# Compute RMS of the grid against the target grid and the residue of the gridder (difference between data and predictions on the same observation points)
 
 # +
 eql_rms = np.sqrt(mean_squared_error(grid.values, target.values))
+diff = survey.g_z - eql.predict((survey.easting, survey.northing, survey.height))
+eql_residue = np.sqrt(np.mean(diff ** 2))
 
 print("RMS score: {} mGal".format(eql_rms))
+print("Residue: {} mGal".format(eql_residue))
 print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
 # -
 
 # ## Grid data with EQLHarmonicBoost using different window sizes
-#
-# Define gridding parameters
 
-depth_type = "relative_depth"
-random_state = int(0)
-block_spacing = 2e3
-dampings = np.logspace(-6, 1, 8)
-depths = np.arange(1e3, 20e3, 2e3)
+# Define gridding parameters. Use the same depth obtained for EQLHarmonic. The damping might be changed to produce similar quality results.
 
-# Combine parameters values
+# +
+dampings = np.logspace(-3, 1, 5)
 
 parameters = combine_parameters(
     **dict(
         depth_type=depth_type,
-        depth=depths,
+        depth=depth,
         damping=dampings,
         spacing=block_spacing,
-        random_state=random_state,
     )
 )
-
-# Find the best set of parameters for each window size
-
-# +
-# Define window sizes
-window_sizes = (2e3, 5e3, 10e3, 20e3, 30e3, 40e3, 50e3, 60e3, 70e3)
-
-best_parameters = {}
-for window_size in window_sizes:
-
-    # Grid and score the gridders for each combination of parameters
-    rms = []
-    residual_rms = []
-    for params in parameters:
-        points = block_averaged_sources(coordinates, **params)
-        eql = EQLHarmonicBoost(
-            points=points,
-            damping=params["damping"],
-            window_size=window_size,
-            random_state=params["random_state"],
-        )
-        eql.fit(coordinates, getattr(survey, field).values)
-        residual_rms.append(eql.errors_[-1])
-        grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
-        rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
-
-    # Keep only the set of parameters that achieve the best score
-    best_rms = np.min(rms)
-    best_params = parameters[np.argmin(rms)]
-    residual_rms = residual_rms[np.argmin(rms)]
-    best_parameters[window_size] = {
-        "params": best_params,
-        "rms": best_rms,
-        "residual_rms": residual_rms,
-    }
 # -
 
-best_parameters
+# Define window sizes and different random states
+
+window_sizes = (2e3, 5e3, 10e3, 20e3, 30e3, 40e3, 50e3, 60e3, 70e3)
+random_states = np.arange(10)
+
+# Get the best set of parameters for each window size. Use different random states for determining the RMS of each set of parameters to reduce the effects of random shuffling of the windows.
 
 # +
-rms = [best_parameters[w]["rms"] for w in window_sizes]
+best_parameters = {}
 
-plt.plot(window_sizes, rms, "o", label="RMS of EQLHarmonicBoost")
+for window_size in window_sizes:
+   
+    rms_mean, rms_std = [], []
+    residue_mean, residue_std = [], []
+    for params in parameters:
+        rms = []
+        residue = []
+        for random_state in random_states:
+            points = block_averaged_sources(coordinates, **params)
+            eql = EQLHarmonicBoost(
+                points=points,
+                damping=params["damping"],
+                window_size=window_size,
+                random_state=random_state,
+            )
+            eql.fit(coordinates, getattr(survey, field).values)
+            grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
+            rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
+            residue.append(eql.errors_[-1])
+        
+        # Compute mean RMS and its std for the current set of parameters
+        rms_mean.append(np.mean(rms))
+        rms_std.append(np.std(rms))
+        
+        # Compute mean residue and its std for the current set of parameters
+        residue_mean.append(np.mean(residue))
+        residue_std.append(np.std(residue))
+    
+    # Get best set of parameters for each window size
+    best_rms = np.min(rms_mean)
+    argmin = np.argmin(rms_mean)
+    best_rms_std = rms_std[argmin]
+    best_residue = residue_mean[argmin]
+    best_residue_std = residue_std[argmin]
+    best_params = parameters[argmin]
+    best_parameters[window_size] = {
+        "params": best_params,
+        "rms_mean": best_rms,
+        "rms_std": best_rms_std,
+        "residue_mean": best_residue,
+        "residue_std": best_residue_std,
+    }
+
+
+# +
+rms_mean = [best_parameters[w]["rms_mean"] for w in window_sizes]
+rms_std = [best_parameters[w]["rms_std"] for w in window_sizes]
+
+# Get window sizes as fractions of the survey area
+region_size = region[1] - region[0]
+window_sizes_ratio = window_sizes / region_size
+
+plt.errorbar(
+    window_sizes_ratio,
+    rms_mean,
+    yerr=rms_std,
+    fmt="o",
+    capsize=3,
+    label="RMS of EQLHarmonicBoost",
+)
 plt.axhline(eql_rms, linestyle="--", color="C1", label="RMS of EQLHarmonic")
-plt.xlabel("Window size [m]")
+plt.xlabel("Window size as a fraction of the survey area")
 plt.ylabel("RMS [mGal]")
 plt.legend()
 plt.show()
 
 # +
-residuals = [best_parameters[w]["residual_rms"] for w in window_sizes]
+residue_mean = [best_parameters[w]["residue_mean"] for w in window_sizes]
+residue_std = [best_parameters[w]["residue_std"] for w in window_sizes]
 
-plt.plot(window_sizes, residuals, "o")
-plt.xlabel("Window size [m]")
-plt.ylabel("RMS of residuals [mGal]")
-plt.grid()
+plt.errorbar(
+    window_sizes_ratio,
+    residue_mean,
+    yerr=residue_std,
+    fmt="o",
+    capsize=3,
+    label="Residue of EQLHarmonicBoost",
+)
+plt.axhline(eql_residue, linestyle="--", color="C1", label="Residue of EQLHarmonic")
+plt.xlabel("Window size as a fraction of the survey area")
+plt.ylabel("Residue [mGal]")
+plt.legend()
 plt.show()
 # -
 
-# Grid data with the best set of parameters per window size and register the fitting time for each one.
+# Register fitting time for each window size
 
 # +
 # Define how many times each gridder will be fitted to get a statistic of fitting times
@@ -212,7 +247,7 @@ for window_size in window_sizes:
         points=points,
         damping=params["damping"],
         window_size=window_size,
-        random_state=params["random_state"],
+        random_state=0,
     )
 
     # Register mean fitting time and its std
@@ -236,26 +271,21 @@ for window_size in window_sizes:
     )
 # -
 
-fitting_times
-
-fitting_times_std
-
 plt.errorbar(
-    window_sizes,
+    window_sizes_ratio,
     np.array(fitting_times) / eql_fitting_time,
     yerr=np.array(fitting_times_std) / eql_fitting_time,
     fmt="o",
     capsize=3,
 )
 plt.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
-plt.xlabel("Window size [m]")
+plt.xlabel("Window size as a fraction of the survey area")
 plt.ylabel("Fitting time ratio")
 plt.yscale("log")
 plt.title("Fitting time of gradient boosted eqls over fitting time of regular eql")
 plt.show()
 
 ds = xr.merge(grids)
-
 ds
 
 # +
