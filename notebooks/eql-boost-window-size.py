@@ -146,7 +146,7 @@ random_states = np.arange(10)
 best_parameters = {}
 
 for window_size in window_sizes:
-   
+
     rms_mean, rms_std = [], []
     residue_mean, residue_std = [], []
     for params in parameters:
@@ -161,18 +161,20 @@ for window_size in window_sizes:
                 random_state=random_state,
             )
             eql.fit(coordinates, getattr(survey, field).values)
-            grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
+            grid = eql.grid(
+                upward=target.height, region=region, shape=target.shape
+            ).scalars
             rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
             residue.append(eql.errors_[-1])
-        
+
         # Compute mean RMS and its std for the current set of parameters
         rms_mean.append(np.mean(rms))
         rms_std.append(np.std(rms))
-        
+
         # Compute mean residue and its std for the current set of parameters
         residue_mean.append(np.mean(residue))
         residue_std.append(np.std(residue))
-    
+
     # Get best set of parameters for each window size
     best_rms = np.min(rms_mean)
     argmin = np.argmin(rms_mean)
