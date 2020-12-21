@@ -23,7 +23,6 @@ import time
 import numpy as np
 import pandas as pd
 import xarray as xr
-import verde as vd
 import harmonica as hm
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -106,82 +105,106 @@ eql_fitting_time = times.mean()
 grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
 # -
 
-# Compute RMS of the grid against the target grid
+# Compute RMS of the grid against the target grid and the residue of the gridder (difference between data and predictions on the same observation points)
 
 # +
 eql_rms = np.sqrt(mean_squared_error(grid.values, target.values))
+diff = survey.g_z - eql.predict((survey.easting, survey.northing, survey.height))
+eql_residue = np.sqrt(np.mean(diff ** 2))
 
 print("RMS score: {} mGal".format(eql_rms))
+print("Residue: {} mGal".format(eql_residue))
 print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
 # -
 
 # ## Grid data with EQLHarmonicBoost using different overlappings
-#
-# Define gridding parameters
 
-depth_type = "relative_depth"
-random_state = int(0)
-block_spacing = 2e3
+# Define gridding parameters. Use the same depth obtained for EQLHarmonic and a window size of 30km. The damping might be changed to produce similar quality results.
+
+# +
+dampings = np.logspace(-3, 1, 5)
 window_size = 30e3
-dampings = np.logspace(-6, 1, 8)
-depths = np.arange(1e3, 20e3, 2e3)
-
-# Combine parameters values
 
 parameters = combine_parameters(
     **dict(
         depth_type=depth_type,
-        depth=depths,
+        depth=depth,
         damping=dampings,
         spacing=block_spacing,
         window_size=window_size,
-        random_state=random_state,
     )
 )
+# -
+
+# Define overlappings and different random states
+
+overlaps = np.arange(0, 1, 0.05)
+random_states = np.arange(10)
 
 # Find the best set of parameters for each window size
 
 # +
-# Define overlappings
-overlaps = np.arange(0, 1, 0.05)
-
 best_parameters = {}
+
 for overlapping in overlaps:
 
     # Grid and score the gridders for each combination of parameters
-    rms = []
-    residual_rms = []
+    rms_mean, rms_std = [], []
+    residue_mean, residue_std = [], []
     for params in parameters:
-        points = block_averaged_sources(coordinates, **params)
-        eql = EQLHarmonicBoost(
-            points=points,
-            damping=params["damping"],
-            window_size=params["window_size"],
-            random_state=params["random_state"],
-        )
-        eql.overlapping = overlapping
-        eql.fit(coordinates, getattr(survey, field).values)
-        residual_rms.append(eql.errors_[-1])
-        grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
-        rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
+        rms = []
+        residue = []
+        for random_state in random_states:
+            points = block_averaged_sources(coordinates, **params)
+            eql = EQLHarmonicBoost(
+                points=points,
+                damping=params["damping"],
+                window_size=params["window_size"],
+                random_state=random_state,
+            )
+            eql.overlapping = overlapping
+            eql.fit(coordinates, getattr(survey, field).values)
+            grid = eql.grid(
+                upward=target.height, region=region, shape=target.shape
+            ).scalars
+            rms.append(np.sqrt(mean_squared_error(grid.values, target.values)))
+            residue.append(eql.errors_[-1])
 
-    # Keep only the set of parameters that achieve the best score
-    best_rms = np.min(rms)
-    best_params = parameters[np.argmin(rms)]
-    residual_rms = residual_rms[np.argmin(rms)]
+        # Compute mean RMS and its std for the current set of parameters
+        rms_mean.append(np.mean(rms))
+        rms_std.append(np.std(rms))
+
+        # Compute mean residue and its std for the current set of parameters
+        residue_mean.append(np.mean(residue))
+        residue_std.append(np.std(residue))
+
+    # Get best set of parameters for each window size
+    best_rms = np.min(rms_mean)
+    argmin = np.argmin(rms_mean)
+    best_rms_std = rms_std[argmin]
+    best_residue = residue_mean[argmin]
+    best_residue_std = residue_std[argmin]
+    best_params = parameters[argmin]
     best_parameters[overlapping] = {
         "params": best_params,
-        "rms": best_rms,
-        "residual_rms": residual_rms,
+        "rms_mean": best_rms,
+        "rms_std": best_rms_std,
+        "residue_mean": best_residue,
+        "residue_std": best_residue_std,
     }
-# -
-
-best_parameters
 
 # +
-rms = [best_parameters[o]["rms"] for o in overlaps]
+rms_mean = [best_parameters[o]["rms_mean"] for o in overlaps]
+rms_std = [best_parameters[o]["rms_std"] for o in overlaps]
 
-plt.plot(overlaps, rms, "o", label="RMS of EQLHarmonicBoost")
+plt.errorbar(
+    overlaps,
+    rms_mean,
+    yerr=rms_std,
+    fmt="o",
+    capsize=3,
+    label="RMS of EQLHarmonicBoost",
+)
 plt.axhline(eql_rms, linestyle="--", color="C1", label="RMS of EQLHarmonic")
 plt.xlabel("Overlapping")
 plt.ylabel("RMS [mGal]")
@@ -189,11 +212,20 @@ plt.legend()
 plt.show()
 
 # +
-residuals = [best_parameters[o]["residual_rms"] for o in overlaps]
+residue_mean = [best_parameters[o]["residue_mean"] for o in overlaps]
+residue_std = [best_parameters[o]["residue_std"] for o in overlaps]
 
-plt.plot(overlaps, residuals, "o", label="RMS residuals")
-plt.xlabel("Window size [m]")
-plt.ylabel("RMS of residuals [mGal]")
+plt.errorbar(
+    overlaps,
+    residue_mean,
+    yerr=residue_std,
+    fmt="o",
+    capsize=3,
+    label="Residue of EQLHarmonicBoost",
+)
+plt.axhline(eql_residue, linestyle="--", color="C1", label="Residue of EQLHarmonic")
+plt.xlabel("Overlapping")
+plt.ylabel("Residue [mGal]")
 plt.legend()
 plt.show()
 # -
@@ -215,7 +247,7 @@ for overlapping in overlaps:
         points=points,
         damping=params["damping"],
         window_size=params["window_size"],
-        random_state=params["random_state"],
+        random_state=0,
     )
     eql.overlapping = overlapping
 
@@ -254,7 +286,7 @@ plt.yscale("log")
 plt.title("Fitting time of gradient boosted eqls over fitting time of regular eql")
 plt.show()
 
-rms_relative = rms / eql_rms
+rms_relative = rms_mean / eql_rms
 time_relative = np.array(fitting_times) / eql_fitting_time
 
 # +
@@ -264,11 +296,11 @@ ax1.plot(overlaps, rms_relative, "o", label="Relative RMS", c="C0")
 ax2.plot(overlaps, time_relative, "o", label="Relative fitting time", c="C1")
 ax1.legend()
 ax2.legend()
-ax2.set_ylim(-0.5, 2)
+# ax2.set_ylim(-0.5, 2)
 for ax in (ax1, ax2):
     ax.axhline(1, linestyle="--", color="black")
     ax.grid()
-# plt.yscale("log")
+ax2.set_yscale("log")
 plt.tight_layout()
 plt.show()
 
@@ -279,4 +311,42 @@ plt.plot(overlaps, objective, "o")
 plt.grid()
 plt.ylim(0.5, 3)
 plt.title("0.5 (Relative fitting time + relative RMS)")
+plt.show()
+# -
+
+tmp = plt.scatter(rms_relative, time_relative, c=overlaps, s=50)
+plt.grid()
+plt.xlabel("RMS Relative")
+plt.ylabel("Relative fitting time")
+plt.colorbar(tmp, label="Overlapping")
+for rms_i, fitting_i, overlapping_i in zip(rms_relative, time_relative, overlaps):
+    plt.annotate(
+        "{:.2f}".format(overlapping_i),
+        (rms_i, fitting_i),
+        xytext=(3, 3),
+        xycoords="data",
+        textcoords="offset points",
+    )
+plt.show()
+
+# +
+xlim = (1, 2)
+ylim = (0, 10)
+
+tmp = plt.scatter(rms_relative, time_relative, c=overlaps, s=50)
+plt.grid()
+plt.xlabel("RMS Relative")
+plt.ylabel("Relative fitting time")
+plt.colorbar(tmp, label="Overlapping")
+plt.xlim(xlim)
+plt.ylim(ylim)
+for rms_i, fitting_i, overlapping_i in zip(rms_relative, time_relative, overlaps):
+    if rms_i < xlim[1] and fitting_i < ylim[1]:
+        plt.annotate(
+            "{:.2f}".format(overlapping_i),
+            (rms_i, fitting_i),
+            xytext=(3, 3),
+            xycoords="data",
+            textcoords="offset points",
+        )
 plt.show()
