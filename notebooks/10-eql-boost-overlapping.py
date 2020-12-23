@@ -358,5 +358,5 @@ plt.show()
 
 # ## Dump variables dictionary to a JSON file
 
-json_file = results_dir / "boost_overlapping.json"
+json_file = results_dir / "boost-overlapping.json"
 save_to_json(variables, json_file)
