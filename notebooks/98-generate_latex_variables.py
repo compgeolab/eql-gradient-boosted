@@ -237,3 +237,25 @@ for dataset in best_predictions:
 tex_file = manuscript_dir / "best-parameters-airborne-survey.tex"
 with open(tex_file, "w") as f:
     f.write("\n".join(latex_variables))
+# -
+
+# ## Gradient boosted sources
+
+# +
+json_file = results_dir / "boost-overlapping.json"
+tex_file = manuscript_dir / "boost-overlapping.tex"
+
+with open(json_file, "r") as f:
+    variables = json.loads(f.read())
+
+units["boost_overlapping_window_size"] = "meter"
+# -
+
+latex_variables = [
+    create_latex_variable(key, value, unit=units[key])
+    for key, value in variables.items()
+]
+display(latex_variables)
+
+with open(tex_file, "w") as f:
+    f.write("\n".join(latex_variables))
