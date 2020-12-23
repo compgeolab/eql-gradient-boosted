@@ -31,6 +31,7 @@ from boost_and_layouts import (
     block_averaged_sources,
     combine_parameters,
     EQLHarmonicBoost,
+    save_to_json,
 )
 
 # -
@@ -124,6 +125,9 @@ print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
 # +
 dampings = np.logspace(-3, 1, 5)
 window_size = 30e3
+
+# Save window size on a dictionary to save its value to JSON file
+variables = {"boost_overlapping_window_size": window_size}
 
 parameters = combine_parameters(
     **dict(
@@ -350,3 +354,9 @@ for rms_i, fitting_i, overlapping_i in zip(rms_relative, time_relative, overlaps
             textcoords="offset points",
         )
 plt.show()
+# -
+
+# ## Dump variables dictionary to a JSON file
+
+json_file = results_dir / "boost_overlapping.json"
+save_to_json(variables, json_file)
