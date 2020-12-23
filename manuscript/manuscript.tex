@@ -30,6 +30,7 @@
 \input{best-parameters-ground-survey.tex}
 \input{best-parameters-airborne-survey.tex}
 \input{source-layouts-schematics.tex}
+\input{boost-overlapping.tex}
 
 
 % Define title, authors, affiliations and DOI
@@ -1082,20 +1083,21 @@ with the non-boosted equivalent sources.
 
 
 \subsection{Window size}
+\label{sec:window-size}
 
-One factor that plays an important role on the gradient boosted equivalent
-layers is the size of the overlapping windows used to create each set of
-equivalent sources.
-Smaller windows will reduce the amount of computer memory needed to fit the
-source coefficients: smaller windows will reduce the size of Jacobian matrices
-$\tilde{\mathbf{A}_k}$.
-Nevertheless, the usage of smaller windows may produce less accurate
-predictions: the equivalent sources cannot achieve the global minimum of the
-misfit $\varphi(\mathbf{c})$ of equation~\ref{eq:misfit-unscaled}.
-Moreover, the size of the overlapping windows might also impact on the
-computation time needed to fit the source coefficients: smaller windows will
-generate simpler least-square problems which are easier to solve, but they will
-also create more iterations.
+One factor that plays an important role on the performance of the gradient
+boosted equivalent sources is the size of the overlapping windows used to create
+each set of equivalent sources.
+The size of the windows controls the size of the Jacobian matrices
+$\tilde{\mathbf{A}_k}$: smaller windows create smaller Jacobian matrices.
+Thus, using smaller windows will reduce the amount of computer memory needed to
+fit the source coefficients.
+Nevertheless, smaller windows may produce less accurate predictions because
+their inability to achieve the global minimum of the misfit from
+equation~\ref{eq:misfit-unscaled}.
+Besides, the window size might also impact on the computation time needed to
+fit the source coefficients: smaller windows will generate simpler least-square
+problems which are easier to solve, but they will also create more iterations.
 
 We want to assess how the size of the overlapping windows impacts both the
 accuracy of the predictions and the computation time needed to fit the source
@@ -1106,29 +1108,28 @@ We applied the gradient boosted equivalent sources to interpolate the synthetic
 airborne survey on the same points of the target grid.
 We selected several window sizes to assess how accuracy and performance depend
 on that variable.
-For each window size we gridded the synthetic data with different sets of
-parameters. Then we compared each prediction to the target grid in order to get
-the best prediction for each window size.
-On every interpolation, block-averaged sources with relative depth are used
+For each window size we gridded the synthetic data using block-averaged sources
 with a spacing of
-\SI{\BestAirborneBlockAveragedSourcesConstantDepthSpacing}{\meter}, and an
-overlap of 50\% between adjacent windows.
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthSpacing}{\meter},
+a relative depth of
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthDepth}{\meter}, an overlap
+of 50\%, and with different values of damping.
+Then we compared the resulting interpolations with the target grid in order to
+get the best prediction for each window size and the damping value used to
+obtain it.
 
 Using the best set of parameters for each window size, we registered the
 achieved RMS against the values of the target grid and the time needed to fit
 the sources coefficients.
+In order to avoid any errors introduced by the way windows are shuffled, the
+RMS for each window size was obtained as the mean RMS achieved by using
+different random seeds.
 
-Compare RMS with the one achieved by the best prediction carried out by the
-non-boosted equivalent sources with block-averaged sources (see
-Table~\ref{tab:parameters-airborne-survey}).
-Calculated the fitting time relative to the time needed by non-boosted
-equivalent sources.
 
 \subsection{Overlapping}
 
-Another factor that plays an important role on the accuracy of the predictions
-and impacts the computation time needed to fit the source coefficients is the
-amount of overlap between adjacent windows.
+Another factor that plays an important role on the performance of the gradient
+boosted equivalent sources is the amount of overlap between adjacent windows.
 The previous choice of 50\% showed to be sufficiently good to achieve
 acceptable accuracy, although a deeper study should be carried out to assess
 how the amount of overlap impacts both accuracy and fitting time.
@@ -1137,12 +1138,22 @@ We interpolated the synthetic airborne survey using the gradient boosted
 equivalent sources on the same points of the target grid.
 The interpolations were carried out using different amount of overlap, from
 0\% to 0.95\% with a step size of 0.05\%.
-For each overlap, we gridded the synthetic data with different sets of
-parameters, fixing the window size to INSERT-WINDOW-SIZE and using
-block-averaged sources with relative depth and a spacing of
-\SI{\BestAirborneBlockAveragedSourcesConstantDepthSpacing}{\meter}.
-We registered the RMS achieved by the best prediction for each overlap and the
-computation time needed to fit the source coefficients.
+For each overlap we gridded the synthetic data using block-averaged sources
+with a spacing of
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthSpacing}{\meter},
+a relative depth of
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthDepth}{\meter},
+a window size of \BoostOverlappingWindowSize, and with different
+values of damping.
+Then we compared the resulting interpolations with the target grid in order to
+get the best prediction for each overlap and the damping value used to
+obtain it.
+
+Using the best set of parameters for each overlap, we registered the achieved
+RMS against the values of the target grid and the time needed to fit the
+sources coefficients.
+The RMS was obtained as the mean RMS achieved by using different random seeds
+as we did on~\ref{sec:window-size}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1186,11 +1197,11 @@ All rights reserved.
             & \multicolumn{1}{c}{\textbf{Parameters}}
             & \textbf{Values}
             & \textbf{Best}
-            & \textbf{RMS (mGal)} \\
+            & \textbf{RMS} \\
         \toprule
 
         \multirow{8}{*}{Source Below Data}
-            & \multirow{2}{*}{Constant Depth}
+            & \multirow{2}{*}{Constant}
                 & Depth (m)
                 & \GroundSourceBelowDataConstantDepthDepth
                 & \BestGroundSourceBelowDataConstantDepthDepth
@@ -1203,7 +1214,7 @@ All rights reserved.
                 & \BestGroundSourceBelowDataConstantDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{2}{*}{Relative Depth}
+            & \multirow{2}{*}{Relative}
                 & Depth (m)
                 & \GroundSourceBelowDataRelativeDepthDepth
                 & \BestGroundSourceBelowDataRelativeDepthDepth
@@ -1216,7 +1227,7 @@ All rights reserved.
                 & \BestGroundSourceBelowDataRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{4}{*}{Variable Depth}
+            & \multirow{4}{*}{Variable}
                 & Depth (m)
                 & \GroundSourceBelowDataVariableDepthDepth
                 & \BestGroundSourceBelowDataVariableDepthDepth
@@ -1241,7 +1252,7 @@ All rights reserved.
         \midrule
 
         \multirow{11}{*}{Block Averaged Sources}
-            & \multirow{3}{*}{Constant Depth}
+            & \multirow{3}{*}{Constant}
                 & Depth (m)
                 & \GroundBlockAveragedSourcesConstantDepthDepth
                 & \BestGroundBlockAveragedSourcesConstantDepthDepth
@@ -1259,7 +1270,7 @@ All rights reserved.
                 & \BestGroundBlockAveragedSourcesConstantDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{3}{*}{Relative Depth}
+            & \multirow{3}{*}{Relative}
                 & Depth (m)
                 & \GroundBlockAveragedSourcesRelativeDepthDepth
                 & \BestGroundBlockAveragedSourcesRelativeDepthDepth
@@ -1277,7 +1288,7 @@ All rights reserved.
                 & \BestGroundBlockAveragedSourcesRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{5}{*}{Variable Depth}
+            & \multirow{5}{*}{Variable}
                 & Depth (m)
                 & \GroundBlockAveragedSourcesVariableDepthDepth
                 & \BestGroundBlockAveragedSourcesVariableDepthDepth
@@ -1307,7 +1318,7 @@ All rights reserved.
         \midrule
 
         \multirow{4}{*}{Grid Sources}
-            & \multirow{4}{*}{Constant Depth}
+            & \multirow{4}{*}{Constant}
                 & Depth (m)
                 & \GroundGridSourcesConstantDepthDepth
                 & \BestGroundGridSourcesConstantDepthDepth
@@ -1342,11 +1353,11 @@ All rights reserved.
             & \multicolumn{1}{c}{\textbf{Parameters}}
             & \textbf{Values}
             & \textbf{Best}
-            & \textbf{RMS (mGal)} \\
+            & \textbf{RMS} \\
         \toprule
 
         \multirow{8}{*}{Source Below Data}
-            & \multirow{2}{*}{Constant Depth}
+            & \multirow{2}{*}{Constant}
                 & Depth (m)
                 & \AirborneSourceBelowDataConstantDepthDepth
                 & \BestAirborneSourceBelowDataConstantDepthDepth
@@ -1359,7 +1370,7 @@ All rights reserved.
                 & \BestAirborneSourceBelowDataConstantDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{2}{*}{Relative Depth}
+            & \multirow{2}{*}{Relative}
                 & Depth (m)
                 & \AirborneSourceBelowDataRelativeDepthDepth
                 & \BestAirborneSourceBelowDataRelativeDepthDepth
@@ -1372,7 +1383,7 @@ All rights reserved.
                 & \BestAirborneSourceBelowDataRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{4}{*}{Variable Depth}
+            & \multirow{4}{*}{Variable}
                 & Depth (m)
                 & \AirborneSourceBelowDataVariableDepthDepth
                 & \BestAirborneSourceBelowDataVariableDepthDepth
@@ -1397,7 +1408,7 @@ All rights reserved.
         \midrule
 
         \multirow{11}{*}{Block Averaged Sources}
-            & \multirow{3}{*}{Constant Depth}
+            & \multirow{3}{*}{Constant}
                 & Depth (m)
                 & \AirborneBlockAveragedSourcesConstantDepthDepth
                 & \BestAirborneBlockAveragedSourcesConstantDepthDepth
@@ -1415,7 +1426,7 @@ All rights reserved.
                 & \BestAirborneBlockAveragedSourcesConstantDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{3}{*}{Relative Depth}
+            & \multirow{3}{*}{Relative}
                 & Depth (m)
                 & \AirborneBlockAveragedSourcesRelativeDepthDepth
                 & \BestAirborneBlockAveragedSourcesRelativeDepthDepth
@@ -1433,7 +1444,7 @@ All rights reserved.
                 & \BestAirborneBlockAveragedSourcesRelativeDepthDamping
                 & \\
             \cmidrule{2-6}
-            & \multirow{5}{*}{Variable Depth}
+            & \multirow{5}{*}{Variable}
                 & Depth (m)
                 & \AirborneBlockAveragedSourcesVariableDepthDepth
                 & \BestAirborneBlockAveragedSourcesVariableDepthDepth
@@ -1463,7 +1474,7 @@ All rights reserved.
         \midrule
 
         \multirow{4}{*}{Grid Sources}
-            & \multirow{4}{*}{Constant Depth}
+            & \multirow{4}{*}{Constant}
                 & Depth (m)
                 & \AirborneGridSourcesConstantDepthDepth
                 & \BestAirborneGridSourcesConstantDepthDepth
