@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Convert variables stored in JSON files to LaTeX variables
@@ -22,7 +22,7 @@ import json
 import numpy as np
 import xarray as xr
 
-from source_layouts import (
+from boost_and_layouts import (
     create_latex_variable,
     create_loglist,
     list_to_latex,
@@ -235,5 +235,27 @@ for dataset in best_predictions:
         )
 
 tex_file = manuscript_dir / "best-parameters-airborne-survey.tex"
+with open(tex_file, "w") as f:
+    f.write("\n".join(latex_variables))
+# -
+
+# ## Gradient boosted sources
+
+# +
+json_file = results_dir / "boost-overlapping.json"
+tex_file = manuscript_dir / "boost-overlapping.tex"
+
+with open(json_file, "r") as f:
+    variables = json.loads(f.read())
+
+units["boost_overlapping_window_size"] = "meter"
+# -
+
+latex_variables = [
+    create_latex_variable(key, value, unit=units[key])
+    for key, value in variables.items()
+]
+display(latex_variables)
+
 with open(tex_file, "w") as f:
     f.write("\n".join(latex_variables))

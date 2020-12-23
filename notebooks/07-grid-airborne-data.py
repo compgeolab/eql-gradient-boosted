@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Grid airborne survey data using different source distributions
@@ -27,7 +27,7 @@ import xarray as xr
 import verde as vd
 import matplotlib.pyplot as plt
 
-from source_layouts import (
+from boost_and_layouts import (
     combine_parameters,
     save_to_json,
     plot_prediction,
@@ -66,7 +66,7 @@ depths = np.arange(1e3, 18e3, 2e3)
 # Define parameters for the grid sources:
 #    spacing, depth and damping
 grid_sources_spacings = [1e3, 2e3, 3e3]
-grid_sources_depths = np.arange(3e3, 15e3, 2e3)
+grid_sources_depths = np.arange(1e3, 11e3, 2e3)
 grid_sources_dampings = np.logspace(1, 4, 4)
 # Define parameters for variable relative depth layouts:
 #    depth factor, depth shift and k_values

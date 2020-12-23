@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Schematic figure of block-averaged sources
@@ -23,7 +23,7 @@ import numpy as np
 import verde as vd
 import matplotlib.pyplot as plt
 
-from source_layouts import block_averaged_sources
+from boost_and_layouts import block_averaged_sources
 
 # -
 
@@ -65,7 +65,7 @@ for nodes in grid_lines:
 
 # +
 # Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
+plt.style.use(Path(".") / "matplotlib.rc")
 
 # Boundaries of the grid
 xmin, xmax, ymin, ymax = vd.get_region(coordinates)

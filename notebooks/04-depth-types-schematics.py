@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Schematic figure of depth types
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from source_layouts import source_below_data
+from boost_and_layouts import source_below_data
 
 # -
 
@@ -75,7 +75,7 @@ plt.scatter(points[depth_type][0], points[depth_type][2])
 plt.show()
 # +
 # Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
+plt.style.use(Path(".") / "matplotlib.rc")
 
 # Initialize figure and axes
 width = 6.66

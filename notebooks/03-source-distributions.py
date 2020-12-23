@@ -7,11 +7,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Source Distributions
@@ -63,7 +63,7 @@ import pandas as pd
 import verde as vd
 import matplotlib.pyplot as plt
 
-import source_layouts
+import boost_and_layouts
 
 # -
 
@@ -168,7 +168,7 @@ region = vd.get_region(coordinates)
 
 for layout in parameters:
     for depth_type in parameters[layout]:
-        source_distributions[layout][depth_type] = getattr(source_layouts, layout)(
+        source_distributions[layout][depth_type] = getattr(boost_and_layouts, layout)(
             coordinates, **parameters[layout][depth_type]
         )
 
@@ -271,7 +271,7 @@ region = vd.get_region(coordinates)
 
 for layout in parameters:
     for depth_type in parameters[layout]:
-        source_distributions[layout][depth_type] = getattr(source_layouts, layout)(
+        source_distributions[layout][depth_type] = getattr(boost_and_layouts, layout)(
             coordinates, **parameters[layout][depth_type]
         )
 

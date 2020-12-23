@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Create synthetic ground and airborne surveys from a synthetic model
@@ -28,7 +28,7 @@ import harmonica as hm
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 
-from source_layouts import (
+from boost_and_layouts import (
     synthetic_model,
     save_to_json,
 )

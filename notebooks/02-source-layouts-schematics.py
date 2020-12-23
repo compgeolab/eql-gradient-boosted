@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # +
@@ -21,8 +21,8 @@ import pandas as pd
 import verde as vd
 import matplotlib.pyplot as plt
 
-import source_layouts
-from source_layouts import save_to_json
+import boost_and_layouts
+from boost_and_layouts import save_to_json
 
 # -
 
@@ -87,7 +87,7 @@ parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=grid_spacing
 
 source_distributions = {}
 for layout in parameters:
-    source_distributions[layout] = getattr(source_layouts, layout)(
+    source_distributions[layout] = getattr(boost_and_layouts, layout)(
         coordinates, **parameters[layout]
     )
 
@@ -106,7 +106,7 @@ for nodes in grid_lines:
 
 # +
 # Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
+plt.style.use(Path(".") / "matplotlib.rc")
 
 fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(6.66, 1.65), dpi=300)
 size = 3

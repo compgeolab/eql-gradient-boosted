@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Generate manuscript figures
@@ -21,9 +21,9 @@ import pandas as pd
 import verde as vd
 import matplotlib.pyplot as plt
 
-# ## Load matplotlib configuration
+# ## Load custom matplotlib configuration
 
-plt.style.use(Path("..") / "matplotlib.rc")
+plt.style.use(Path(".") / "matplotlib.rc")
 
 # ## Define results directory
 
@@ -178,9 +178,6 @@ plt.savefig(
 target = xr.open_dataarray(results_dir / "target.nc")
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 width = 3.33
 figsize = (width, width * 0.85)
 fig, ax = plt.subplots(figsize=figsize)
@@ -218,9 +215,6 @@ for layout in layouts:
     )
 
 # +
-# Load matplotlib configuration
-plt.style.use(Path("..") / "matplotlib.rc")
-
 # We will use the same boundary value for each plot in order to
 # show them with the same color scale.
 vmax = vd.maxabs(
