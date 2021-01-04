@@ -6,22 +6,28 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
-#     display_name: Python [conda env:eql_source_layouts]
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: conda-env-eql_source_layouts-py
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # +
+import time
 import pooch
 import pyproj
+import numpy as np
 import xarray as xr
 import boule as bl
 import verde as vd
 import matplotlib.pyplot as plt
 
-from source_layouts import EQLIterative, block_averaged_sources
+from boost_and_layouts import (
+    EQLHarmonicBoost,
+    block_averaged_sources,
+    combine_parameters,
+)
 
 # -
 
@@ -43,7 +49,7 @@ data
 plt.figure(figsize=(12, 12))
 tmp = plt.scatter(data.longitude, data.latitude, c=data.gravity, s=0.01)
 plt.gca().set_aspect("equal")
-plt.colorbar(tmp, label="mGal")
+plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
 
 # ## Compute gravity disturbance
@@ -57,7 +63,7 @@ data
 plt.figure(figsize=(12, 12))
 tmp = plt.scatter(data.longitude, data.latitude, c=data.disturbance, s=0.01)
 plt.gca().set_aspect("equal")
-plt.colorbar(tmp, label="mGal")
+plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
 
 # ## Keep only points close to the continent
@@ -78,7 +84,7 @@ vd.get_region(coordinates)
 plt.figure(figsize=(12, 12))
 tmp = plt.scatter(*coordinates[:2], c=disturbance, s=0.01)
 plt.gca().set_aspect("equal")
-plt.colorbar(tmp, label="mGal")
+plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
 
 # ## Project coordinates
@@ -93,21 +99,184 @@ proj_coordinates = (easting, northing, coordinates[-1])
 plt.figure(figsize=(12, 12))
 tmp = plt.scatter(*proj_coordinates[:2], c=disturbance, s=0.01)
 plt.gca().set_aspect("equal")
-plt.colorbar(tmp, label="mGal")
+plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
+
+# ## Estimate parameters: spacing for block-averaged sources and window size for gradient boosting
+
+# Estimate the block spacing that we will use for block-averaged sources
+
+# Get number of data points
+n_data = proj_coordinates[0].size
+print("Number of data points: {}".format(n_data))
+
+# +
+spacings = np.linspace(4e3, 10e3, 7)
+
+n_data_per_sources = []
+for spacing in spacings:
+    sources = block_averaged_sources(
+        proj_coordinates, spacing=spacing, depth_type="relative_depth", depth=0
+    )
+    n_data_per_sources.append(n_data / sources[0].size)
+# -
+
+plt.plot(spacings, n_data_per_sources, "o")
+plt.xlabel("Block spacing [m]")
+plt.ylabel("# data points / # sources")
+plt.title("Number of data points per sources")
+plt.grid()
+plt.show()
+
+# Lets choose a block spacing of 9000m so we obtain ~20 data points per source
+
+spacing = 9000
+
+# Estimate the window size for gradient boosting
+
+# +
+window_sizes = np.linspace(100e3, 1000e3, 10)
+
+# Create sources with the spacing obtained before
+sources = block_averaged_sources(
+    proj_coordinates, spacing=spacing, depth_type="relative_depth", depth=0
+)
+
+memory_gb = []
+for window_size in window_sizes:
+    eql = EQLHarmonicBoost(window_size=window_size)
+    eql.points_ = sources
+    source_windows, data_windows = eql._create_rolling_windows(proj_coordinates)
+    # Get the size of each source and data windows
+    source_sizes = np.array([w.size for w in source_windows])
+    data_sizes = np.array([w.size for w in data_windows])
+    # Compute the size of the Jacobian matrix for each window
+    jacobian_sizes = source_sizes * data_sizes
+    # Register the amount of memory to store the Jacobian matrix (double precision)
+    memory_gb.append(jacobian_sizes.max() * (64 / 8) / 1024 ** 3)
+# -
+
+plt.plot(window_sizes * 1e-3, memory_gb, "o")
+plt.xlabel("Window size [km]")
+plt.ylabel("Memory [GB]")
+plt.title("Memory needed to store the larger Jacobian matrix")
+plt.grid()
+plt.show()
+
+# ### Conclusions:
+#
+# - Choose a spacing of 9000m so we obtain ~20 data points per source
+# - Choose a window size of 600km so we don't exceed 10GB of RAM.
+
+window_size = 600e3
+spacing = 9e3
+
+# ## Cross-validate gridder for estimating parameters
+
+# Choose only a portion of the data to apply CV to speed up things
+
+# +
+easting_0, northing_0 = 13783825.0, -3661038.0
+easting_size, northing_size = 1000e3, 1000e3
+smaller_region = (
+    easting_0,
+    easting_0 + easting_size,
+    northing_0,
+    northing_0 + northing_size,
+)
+
+inside = vd.inside(proj_coordinates, region=smaller_region)
+proj_coords_cv = tuple(c[inside] for c in proj_coordinates)
+disturbance_cv = disturbance[inside]
+
+print(f"Number of data points for CV: {proj_coords_cv[0].size}")
+print(f"Small region: {vd.get_region(proj_coords_cv)}")
+# -
+
+plt.figure(figsize=(12, 12))
+tmp = plt.scatter(*proj_coords_cv[:2], c=disturbance_cv, s=0.01)
+plt.gca().set_aspect("equal")
+plt.colorbar(tmp, label="mGal", shrink=0.8)
+plt.show()
+
+# Define parameters space
+
+# +
+depth_type = "relative_depth"
+random_state = 0
+dampings = np.logspace(-2, 3, 6)
+depths = [1e3, 2e3, 5e3, 10e3, 15e3]
+
+# Combine these parameters
+parameter_sets = combine_parameters(
+    **dict(
+        depth_type=depth_type,
+        depth=depths,
+        damping=dampings,
+        spacing=spacing,
+        window_size=window_size,
+        random_state=random_state,
+    )
+)
+print("Number of combinations:", len(parameter_sets))
+# -
+
+# Apply cross validation
+
+# +
+# %%time
+cv = vd.BlockKFold(spacing=50e3, n_splits=3, shuffle=True, random_state=0)
+
+scores = []
+for parameters in parameter_sets:
+    points = block_averaged_sources(proj_coords_cv, **parameters)
+    eql = EQLHarmonicBoost(
+        points=points,
+        damping=parameters["damping"],
+        window_size=parameters["window_size"],
+        random_state=parameters["random_state"],
+        line_search=True,
+    )
+    start = time.time()
+    score = np.mean(
+        vd.cross_val_score(
+            eql,
+            proj_coords_cv,
+            disturbance_cv,
+            cv=cv,
+            scoring="neg_root_mean_squared_error",
+        )
+    )
+    end = time.time()
+    print("Last CV took: {:.0f}s".format(end - start))
+    scores.append(score)
+
+# +
+best_score = np.max(scores)
+best_parameters = parameter_sets[np.argmax(scores)]
+
+print(best_score)
+print(best_parameters)
+# -
+
+# ## Cross validate using the entire dataset
+
+# %%time
+points = block_averaged_sources(proj_coordinates, **best_parameters)
+eql = EQLHarmonicBoost(
+    points=points,
+    damping=best_parameters["damping"],
+    window_size=window_size,
+    random_state=best_parameters["random_state"],
+    line_search=True,
+)
+scores = vd.cross_val_score(eql, proj_coordinates, disturbance, cv=cv)
+
+np.mean(scores)
 
 # ## Grid gravity disturbance
 
-depth_type = "relative_depth"
-random_state = 0
-block_spacing = 8e3
-damping = 1e-1
-depth = 2e3
-window_size = 500e3
-
-points = block_averaged_sources(
-    proj_coordinates, depth_type=depth_type, spacing=block_spacing, depth=depth
-)
+points = block_averaged_sources(proj_coordinates, **best_parameters)
 
 # +
 memory_gb = proj_coordinates[0].size * points[0].size * (64 / 8) / 1024 ** 3
@@ -118,14 +287,17 @@ print("Memory needed to store the full Jacobian matrix: {:.2f} GB".format(memory
 # -
 
 # %%time
-eql = EQLIterative(
-    damping=damping,
+eql = EQLHarmonicBoost(
     points=points,
-    window_size=window_size,
-    random_state=random_state,
+    damping=best_parameters["damping"],
+    window_size=best_parameters["window_size"],
+    random_state=best_parameters["random_state"],
     line_search=True,
 )
 eql.fit(proj_coordinates, disturbance)
+
+plt.plot(eql.errors_)
+plt.show()
 
 # %%time
 # Get region of longitude, latitude coordinates (in degrees)
@@ -147,7 +319,4 @@ grid_masked = vd.distance_mask(
 plt.figure(figsize=(12, 12))
 grid_masked.scalars.plot()
 plt.gca().set_aspect("equal")
-plt.show()
-
-plt.plot(eql.errors_)
 plt.show()
