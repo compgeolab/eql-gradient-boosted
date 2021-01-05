@@ -270,7 +270,13 @@ eql = EQLHarmonicBoost(
     random_state=best_parameters["random_state"],
     line_search=True,
 )
-scores = vd.cross_val_score(eql, proj_coordinates, disturbance, cv=cv)
+scores = vd.cross_val_score(
+    eql,
+    proj_coordinates,
+    disturbance,
+    cv=cv,
+    scoring="neg_root_mean_squared_error",
+)
 
 np.mean(scores)
 
