@@ -36,7 +36,7 @@
 % Define title, authors, affiliations and DOI
 % ===========================================
 \newcommand{\Title}{
-    Gradient boosted equivalent sources
+    Gradient-boosted equivalent sources
 }
 \newcommand{\Author}{
     S.R. Soler,
@@ -130,7 +130,7 @@ is the underlying assumption behind many processing techniques
 (e.g., upward continuation and vertical derivatives).
 
 A widely used method for interpolating gravity and magnetic data
-is the equivalent source technique (also known as equivalent layer, radial
+is the equivalent sources technique (also known as equivalent layer, radial
 basis functions, or Green's functions interpolation), first introduced by
 \citet{dampney1969}.
 It consists in fitting a model of elementary sources to the data and using this
@@ -143,7 +143,7 @@ data \citep{barnes2011}, modelling the lithospheric magnetic field
 \citep{kother2015}, recovering the magnetic induction vector from
 total-field magnetic anomalies \citep{li2020}, and more.
 
-Many variants of the equivalent source technique have been proposed, often
+Many variants of the equivalent sources technique have been proposed, often
 attempting to obtain faster or more accurate solutions.
 The key factors that vary between them are: (i) the type of source, (ii)
 the location of the sources, and (iii) the solution strategy.
@@ -528,7 +528,7 @@ The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
 (where $M_k$ is the number sources on the $k-$th window), which can be
 considerably smaller than the $N \times M$ elements of $\mathbf{A}$.
 Therefore, the gradient boosting method allows us to fit
-equivalent sources models that would produce Jacobian matrices that are larger
+equivalent source models that would produce Jacobian matrices that are larger
 than the available computer memory.
 Furthermore, we can increase or decrease the size of the overlapping windows as
 needed depending on the number of sources in the model and the available
@@ -548,7 +548,7 @@ done by a summation (equation~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
-the final \textit{gradient boosted equivalent source algorithm}.
+the final \textit{gradient-boosted equivalent source algorithm}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
@@ -609,7 +609,7 @@ the final \textit{gradient boosted equivalent source algorithm}.
   }
   \BlankLine
   \setstretch{1}
-  \caption{ Gradient boosted equivalent source algorithm. }
+  \caption{Gradient-boosted equivalent source algorithm.}
   \label{alg:gradient_boosting_window}
 \end{algorithm}
 
@@ -1094,7 +1094,7 @@ some computation time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Performance of gradient boosted equivalent sources}
+\section{Performance of gradient-boosted equivalent sources}
 
 Our second goal is to assess the accuracy of the predictions achieved by the
 gradient boosting algorithm while registering its performance by comparison
