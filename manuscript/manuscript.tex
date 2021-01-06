@@ -372,6 +372,9 @@ rewritten as
 \noindent where $\lambda$ is a \emph{dimensionless} damping parameter and
 regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
 $\mathbf{c}$.
+In practice, we find that suitable $\lambda$ values fall between $10^{-8}$ and
+$10^{-1}$, irrespective of the dataset, and that results are mostly sensitive
+to order-of-magnitude changes in $\lambda$.
 
 The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
 function can be found by solving the \emph{normal equation system}
@@ -517,7 +520,7 @@ model on any point through the summation
 
 \noindent where ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector.
 
-To improve the convergence of the algorithm, \citet{friedman2002} suggests that
+To improve the convergence of the algorithm, \citet{friedman2002} suggests
 introducing randomness into the fitting process. We achieve this by randomizing
 the order in which the $K$ windows are used in the gradient boosting algorithm.
 
