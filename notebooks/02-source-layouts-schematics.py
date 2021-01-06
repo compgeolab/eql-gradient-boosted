@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 
 import boost_and_layouts
 from boost_and_layouts import save_to_json
+
 # -
 
 # ## Define parameters for building the source distributions
@@ -108,9 +109,9 @@ for nodes in grid_lines:
 plt.style.use(Path(".") / "matplotlib.rc")
 
 titles = {
-    "source_below_data": "Sources below data", 
-    "block_averaged_sources": "Block-averaged sources", 
-    "grid_sources": "Regular grid"
+    "source_below_data": "Sources below data",
+    "block_averaged_sources": "Block-averaged sources",
+    "grid_sources": "Regular grid",
 }
 
 fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(7, 1.7), dpi=300)
@@ -148,7 +149,9 @@ for y in grid_lines[1]:
 
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf", dpi=300, bbox_inches='tight'
+    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf",
+    dpi=300,
+    bbox_inches="tight",
 )
 plt.show()
 # -
