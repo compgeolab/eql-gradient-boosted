@@ -23,7 +23,6 @@ import matplotlib.pyplot as plt
 
 import boost_and_layouts
 from boost_and_layouts import save_to_json
-
 # -
 
 # ## Define parameters for building the source distributions
@@ -64,10 +63,10 @@ coordinates = (survey.easting, survey.northing, survey.height)
 # ### Generate the source distributions
 
 # +
-block_spacing = 4000
-grid_spacing = 4000
+block_spacing = 3000
+grid_spacing = 2000
 
-layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+layouts = ["source_below_data", "grid_sources", "block_averaged_sources"]
 depth_type = "constant_depth"
 
 parameters = {}
@@ -78,11 +77,11 @@ parameters[layout] = dict(
     depth=500,
 )
 
-layout = "block_averaged_sources"
-parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=block_spacing)
-
 layout = "grid_sources"
 parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=grid_spacing)
+
+layout = "block_averaged_sources"
+parameters[layout] = dict(depth_type=depth_type, depth=500, spacing=block_spacing)
 # -
 
 source_distributions = {}
@@ -108,32 +107,25 @@ for nodes in grid_lines:
 # Load matplotlib configuration
 plt.style.use(Path(".") / "matplotlib.rc")
 
-fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(6.66, 1.65), dpi=300)
+titles = {
+    "source_below_data": "Sources below data", 
+    "block_averaged_sources": "Block-averaged sources", 
+    "grid_sources": "Regular grid"
+}
+
+fig, axes = plt.subplots(nrows=1, ncols=4, sharey=True, figsize=(7, 1.7), dpi=300)
 size = 3
 labels = "a b c d".split()
 
 for ax, label in zip(axes, labels):
     ax.set_aspect("equal")
-    ax.tick_params(
-        axis="y",
-        which="both",
-        left=False,
-        right=False,
-        labelleft=False,
-    )
-    ax.tick_params(
-        axis="x",
-        which="both",
-        bottom=False,
-        top=False,
-        labelbottom=False,
-    )
     ax.annotate(
         label,
-        xy=(0.05, 0.9),
+        xy=(0.02, 0.95),
         xycoords="axes fraction",
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
+    ax.axis("off")
 
 # Plot observation points
 ax = axes[0]
@@ -143,21 +135,20 @@ ax.set_title("Observation points")
 # Plot location of sources for each source layout
 for ax, layout in zip(axes[1:], layouts):
     ax.scatter(*source_distributions[layout][:2], s=size, c="C1")
-    ax.set_title(layout.replace("_", " ").title())
+    ax.set_title(titles[layout])
 
 # Add blocks boundaries to Block Averaged Sources plot
-ax = axes[2]
-grid_style = dict(color="grey", linewidth=0.3, linestyle="--")
+ax = axes[3]
+grid_style = dict(color="grey", linewidth=0.5, linestyle="--")
 xmin, xmax, ymin, ymax = region[:]
 for x in grid_lines[0]:
     ax.plot((x, x), (ymin, ymax), **grid_style)
 for y in grid_lines[1]:
     ax.plot((xmin, xmax), (y, y), **grid_style)
 
-
 plt.tight_layout(w_pad=0)
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf", dpi=300
+    Path("..") / "manuscript" / "figs" / "source-layouts-schematics.pdf", dpi=300, bbox_inches='tight'
 )
 plt.show()
 # -
