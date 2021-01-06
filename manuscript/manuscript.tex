@@ -244,6 +244,7 @@ $\mathbf{p}$ and $\mathbf{q}_j$ are position vectors in a 3D Cartesian space,
 $c_j$ is a scalar coefficient related to the point source located at
 $\mathbf{q}_j$,
 and $\lVert \cdot \rVert$ represents the $\text{L}_2$ norm.
+The horizontal and vertical distribution of sources is discussed in section~\ref{sec:source_distribution}.
 
 In case we have measured the value of the harmonic field on $N$ points
 $\{\mathbf{p}_1\ \mathbf{p}_2\ \ldots\ \mathbf{p}_N\}$,
@@ -289,7 +290,7 @@ points that fall on a regular grid or at different heights.
 
 
 \subsection{Damped least-squares solution}
-\label{sec:eql-inversion}
+\label{sec:eql_inversion}
 
 We can obtain the values of the source coefficients $\mathbf{c}$ that best
 fit the observed field values $\mathbf{d}^o$ by minimizing the goal function
@@ -422,7 +423,7 @@ steps:
 
 \begin{enumerate}
   \item Define a set of $M$ equivalent sources distributed throughout the
-    survey area (see section \ref{sec:source-distribution} for details).
+    survey area (see section \ref{sec:source_distribution} for details).
   \item Define a set of $K$ overlapping windows of equal size that cover the
     survey area.
   \item Create $K$ separate sets of equivalent sources, one for each window.
@@ -635,7 +636,7 @@ fitting.
 
 
 \subsection{Location of sources}
-\label{sec:source-distribution}
+\label{sec:source_distribution}
 
 The ideal number of sources and their locations, both horizontally and
 vertically, has been debated since the inception of the equivalent source
@@ -1098,7 +1099,7 @@ with the non-boosted equivalent sources.
 
 
 \subsection{Window size}
-\label{sec:window-size}
+\label{sec:window_size}
 
 One factor that plays an important role on the performance of the gradient
 boosted equivalent sources is the size of the overlapping windows used to create
@@ -1168,7 +1169,7 @@ Using the best set of parameters for each overlap, we registered the achieved
 RMS against the values of the target grid and the time needed to fit the
 sources coefficients.
 The RMS was obtained as the mean RMS achieved by using different random seeds
-as we did on~\ref{sec:window-size}.
+as we did on~\ref{sec:window_size}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
