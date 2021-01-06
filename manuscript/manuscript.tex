@@ -637,58 +637,59 @@ the solution, particularly when using only the data inside the windows for
 fitting.
 
 
-
 \subsection{Location of sources}
 \label{sec:source_distribution}
 
 The ideal number of sources and their locations, both horizontally and
-vertically, has been debated since the inception of the equivalent source
+vertically, has been debated since the inception of the equivalent sources
 technique with \citet{dampney1969}.
 The choices made regarding these parameters can play an important role on the
 accuracy of the predictions and the computational resources needed to estimate
-the coefficients.
+the source coefficients.
 An ideal distribution of sources should simultaneously be able to reproduce the
-measured data on the survey points and also be able to make accurate
-predictions on non-observed locations.
+measured data on the survey points, make accurate predictions on non-surveyed
+locations, and minimize the required computational resources.
 
-A large number of sources evenly distributed along the survey region are
-capable of reproducing the observed data. Nevertheless, the computational load
-can be prohibitive and such underdetermined problems are prone to overfiting
-the data, leading to poor performance when making predictions. On the other
-hand, using very few sources will undoubtedly reduce the computational
-requirements but the equivalent source model could be incapable of reproducing
-the measured data, leading to inaccurate predictions.
+A large number of evenly distributed sources along the survey region are
+capable of reproducing the observed data.
+Nevertheless, the computational load can be prohibitive and such
+underdetermined problems are prone to overfiting the data, leading to poor
+predictive power when interpolating and extrapolating.
+On the other hand, using few sources will reduce the computational requirements
+but the model may be incapable of reproducing the full spectral content of the
+measured data.
 
-Particular survey characteristics also play a role in the choice of source
-distribution.
-In a ground survey, observation points are usually located along irregular
-paths as well as some possible scattered points.
-The coverage of the survey region is usually uneven, often leaving large areas
-without any observation.
+Particular survey characteristics also play a role in the choice of equivalent
+source distribution.
+In a ground survey, observations are usually located along irregular paths and
+scattered points.
+The coverage of the survey region is often uneven, leaving large areas without
+any observation.
 On the other hand, observations from airborne surveys are located along almost
-straight flight lines.
-Measurements are usually taken at
-a high temporal frequency, leading to the observation points along the flight
-lines that are several times closer than the flight line spacing.
-This creates an anisotropy in the sampling, which can cause aliasing artifacts
-in gridded products.
+straight and closely spaced flight lines.
+Measurements are usually taken at a high temporal frequency, leading to the
+observation points along the flight lines that are several times closer to each
+other than the flight line spacing.
+This creates a bias in the sampling, which can cause aliasing artifacts in
+gridded products.
 
-\subsubsection{Horizontal layout}
+\subsubsection{Horizontal source layouts}
 
-The most widely used layouts of equivalent sources are:
+The most widely used layouts for distributing equivalent sources horizontally
+are:
 
-\begin{itemize}
+\begin{enumerate}
   \item
     \emph{Regular grid}: a homogeneous distribution of point sources below the
     survey region at a constant depth. A padding region is often added to help
-    reduce edge effect. In practice, often leads to underdetermined problems
-    ($N<M$).
+    reduce edge effects. In practice, it often leads to underdetermined problems
+    since a large number of sources is required ($N<M$).
   \item
-    \emph{Sources below data}: one equivalent source is placed below each
+    \emph{Sources below data points}: one equivalent source is placed below each
     observation point at a given depth (often dependent on the distance to
     neighboring data points). Therefore, the number of sources is be equal to
     the number of observations ($N=M$).
-\end{itemize}
+\end{enumerate}
 
 For ground surveys, the \emph{regular-grid} layout needs a sufficiently
 small grid spacing to be able to fit the observed data.
@@ -696,8 +697,7 @@ This creates an unnecessarily large number of sources in areas where no
 observations exist.
 In contrast, the \emph{sources-below-data} layout is more likely to accurately
 fit the observed data with many fewer sources, reducing the computational load.
-
-For airborne surveys, the \emph{source-below-data} layout may
+But when applied to airborne surveys, the \emph{source-below-data} layout may
 place an undesirably large number of sources along the flight paths.
 This could lead to aliasing effects on the predicted values, such as the
 stripes parallel to flight lines that are often observed when griding airborne
@@ -706,34 +706,33 @@ In contrast, the \emph{regular-grid} layout can avoid this effect by evenly
 distributing sources and using a continuous source layer (e.g.,
 right-rectangular prisms or tesseroids).
 
-We propose a new source layout that could simultaneously reduce the
-computational load and remove some of the drawbacks of the regular-grid and
-source-below-data layouts:
+We propose a new way of distributing equivalent sources horizontally that could
+simultaneously reduce the computational load and mitigate some of the drawbacks
+of existing layouts.
+In the \emph{block-averaged sources} layout,
+point sources are placed in the average
+position of data points that fall within specified spatial blocks
+(Fig.~\ref{fig:block-averaged-sources}).
+This is done by:
 
-\begin{itemize}
-  \item
-    \emph{Block-averaged sources}: point sources are placed in the average
-    position of data points that fall within specified spatial blocks
-    (Fig.~\ref{fig:block-averaged-sources}). In
-    short, this is done by:
-    \begin{enumerate}
-        \item Dividing the survey region in blocks of equal size
-            (Fig.~\ref{fig:block-averaged-sources}a-b).
-        \item Computing the median position of the observation points that fall
-          inside each block. Blocks without any observation point are ignored.
-        \item Assign one point source to the computed median position, shifted
-          to a specified depth (Fig.~\ref{fig:block-averaged-sources}c).
-    \end{enumerate}
-\end{itemize}
+\begin{enumerate}
+    \item Dividing the survey region into rectangular blocks of equal size.
+    \item Computing the median horizontal position of the observation points
+      that fall inside each block. Blocks without any observation point are
+      omitted.
+    \item Assign one point source to the median horizontal position calculated
+      in step 1.
+\end{enumerate}
 
-The number of sources created by this new layout will be less than or equal to
-(if the blocks contain a single data point)
-the number of observations.
-The overdetermined problems that arise from this layout have a lower
-computational load and are less prone to overfiting since the complexity of the
-model is lower.
+The number of sources created by this new layout will be less than the number
+of observations if the block size is chosen appropriately (i.e., making sure
+that blocks are large enough to contain more than a single data point).
+The overdetermined problem that arises from this layout has a lower
+computational load and is less prone to overfiting the data since the model
+complexity is lower.
 Moreover, the block averaging process can balance the spacing between sources
-along a flight line and between adjacent lines.
+along a flight line and between adjacent lines, helping to reduce aliasing
+effects in generated grids.
 
 Figure~\ref{fig:source-layouts-schematics} shows (a) an arbitrary set of
 observation points that simulates a ground survey, and the possible location of
