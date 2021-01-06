@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.0
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -118,7 +118,21 @@ print("Residue: {} mGal".format(eql_residue))
 print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
 # -
 
-# ## Grid data with EQLHarmonicBoost using different window sizes
+# Dump results to a csv file
+
+eql_harmonic_results = pd.DataFrame(
+    {
+        "rms": [eql_rms],
+        "fitting_time": [eql_fitting_time],
+        "fitting_time_std": [times.std()],
+        "residue": [eql_residue],
+    }
+)
+eql_harmonic_results.to_csv(
+    results_dir / "gradient-boosted" / "eql_harmonic.csv", index=False
+)
+
+# # Grid data with EQLHarmonicBoost using different window sizes
 
 # Define gridding parameters. Use the same depth obtained for EQLHarmonic. The damping might be changed to produce similar quality results.
 
@@ -286,6 +300,23 @@ plt.ylabel("Fitting time ratio")
 plt.yscale("log")
 plt.title("Fitting time of gradient boosted eqls over fitting time of regular eql")
 plt.show()
+
+# Dump results to a csv file
+
+gradient_boosted_results = pd.DataFrame(
+    {
+        "window_size": window_sizes,
+        "window_size_ratio": window_sizes_ratio,
+        "rms": rms_mean,
+        "rms_std": rms_std,
+        "fitting_time": fitting_times,
+        "fitting_time_std": fitting_times_std,
+    }
+)
+gradient_boosted_results.to_csv(
+    results_dir / "gradient-boosted" / "gradient-boosted-window-size.csv",
+    index=False,
+)
 
 ds = xr.merge(grids)
 ds
