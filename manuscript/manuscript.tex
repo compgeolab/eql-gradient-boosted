@@ -372,9 +372,9 @@ rewritten as
 \noindent where $\lambda$ is a \emph{dimensionless} damping parameter and
 regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
 $\mathbf{c}$.
-In practice, we find that suitable $\lambda$ values fall between $10^{-8}$ and
-$10^{-1}$, irrespective of the dataset, and that results are mostly sensitive
-to order-of-magnitude changes in $\lambda$.
+From experience, we recommend searching for suitable $\lambda$ values between
+$10^{-8}$ and $10^{2}$ varying by order-of-magnitude, irrespective of the
+dataset.
 
 The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
 function can be found by solving the \emph{normal equation system}
