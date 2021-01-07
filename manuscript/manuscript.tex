@@ -762,9 +762,15 @@ using a fraction of the equivalent sources.
 
 \subsubsection{Depth of sources}
 
-The depth of the point sources can be chosen following different criteria.
-Deep sources generate low frequencies, while shallow ones generate high
-frequencies (cite).
+It is widely known from potential theory that the depth of a point source
+influences the wavelength of the observed field at the surface.
+This makes the source depth a key parameter affecting the outcome of
+interpolation and other operations done with equivalent sources.
+Several different strategies for assigning the depths of equivalent sources
+have been proposed in the literature.
+
+\begin{enumerate}
+  \item
 The simplest option is to locate all sources at the same depth, which we will
 call \emph{constant depth} in the future (see Fig.~\ref{fig:depth-types}(a)).
 If the measurement were taken at significantly different altitudes, the
@@ -772,7 +778,7 @@ elevated computation points will be more distant to the sources than the lower
 ones.
 This may create problems on reproducing high frequencies on the elevated
 points.
-
+ \item
 One possible solution is to locate each source below its corresponding
 observation (or block averaged) point at a constant \emph{relative depth}
 from it.
@@ -781,7 +787,7 @@ observation (or block averaged) point minus a depth parameter that assumes the
 same value for all sources (see Fig.~\ref{fig:depth-types}(b)).
 The sources won't be all at the same depth, but they will all be at the same
 distance from their corresponding observation (or block averaged) point.
-
+ \item
 In case our survey presents heavily clustered data points on some areas, we may
 want the sources below that region to be shallower in order to reproduce the
 high frequencies measured by these clustered observation points.
@@ -789,6 +795,7 @@ We can propose a \emph{variable depth} approach: it locates each point source
 according to the \emph{relative depth} and then subtracts a term proportional
 to the mean distance to its $k$ nearest neighbour sources
 (see Fig.~\ref{fig:depth-types}(c)).
+
 So, the depth of the sources can be computed as follows:
 
 \begin{equation}
@@ -809,6 +816,7 @@ scattered and distant sources.
 Similar approaches for setting sources at depths that depend
 on the distance to their nearest neighbours were already proposed by
 \citet{cordell1992, guspi2004, guspi2009}.
+\end{enumerate}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/depth_types.pdf}
@@ -827,6 +835,9 @@ on the distance to their nearest neighbours were already proposed by
     }
     \label{fig:depth-types}
 \end{figure*}
+
+We will test each of these strategies on synthetic data to evaluate their
+effectiveness.
 
 The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
