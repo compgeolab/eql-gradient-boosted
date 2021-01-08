@@ -252,7 +252,9 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(
+                prediction.rms, prediction.n_points
+            ),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -351,7 +353,9 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(
+                prediction.rms, prediction.n_points
+            ),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -398,6 +402,3 @@ plt.savefig(
     Path("..") / "manuscript" / "figs" / "airborne_survey_differences.pdf", dpi=300
 )
 plt.show()
-# -
-
-
