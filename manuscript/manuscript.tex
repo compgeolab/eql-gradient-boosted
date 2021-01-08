@@ -800,55 +800,55 @@ Here, we will highlight the following (Fig.~\ref{fig:depth_types}):
     \emph{Constant depth}:
     The simplest option is to locate all sources at the same depth
     (Fig.~\ref{fig:depth_types}a).
-If the measurement were taken at significantly different altitudes, the
-elevated computation points will be more distant to the sources than the lower
-ones.
-This may create problems on reproducing high frequencies on the elevated
-points.
+    If the measurements were taken at significantly different altitudes, some
+    measurements will be more distant to the sources than others,
+    which may create problems for reproducing short wavelengths in high
+    altitude points.
  \item
     \emph{Relative depth}:
-One possible solution is to locate each source below its corresponding
-observation (or block averaged) point at a constant \emph{relative depth}
-from it.
-The depth of each source can be computed as the height of its corresponding
-observation (or block averaged) point minus a depth parameter that assumes the
-same value for all sources (see Fig.~\ref{fig:depth_types}(b)).
-The sources won't be all at the same depth, but they will all be at the same
-distance from their corresponding observation (or block averaged) point.
+    The depths of sources are determined by shifting the vertical coordinate of
+    data points downward by a fixed amount (Fig.~\ref{fig:depth_types}b).
+    The sources will not all be at the same vertical coordinate, but they will
+    all be at the same vertical distance from the observation points.
  \item
     \emph{Variable depth}:
-In case our survey presents heavily clustered data points on some areas, we may
-want the sources below that region to be shallower in order to reproduce the
-high frequencies measured by these clustered observation points.
-We can propose a \emph{variable depth} approach: it locates each point source
-according to the \emph{relative depth} and then subtracts a term proportional
-to the mean distance to its $k$ nearest neighbour sources
-(see Fig.~\ref{fig:depth_types}(c)).
-
-So, the depth of the sources can be computed as follows:
-
-\begin{equation}
-    \begin{split}
-        \textrm{depth} =
-           &\textrm{data point height} - \textrm{relative depth} \\
-           &- \textrm{depth factor} \cdot \textrm{mean distance}
-    \end{split}
-\end{equation}
-
-\noindent where \emph{data point height} is the elevation of the corresponding
-observation (or block averaged) point, \emph{mean distance} is the mean
-distance to the $k$ nearest source neighbours, \emph{depth factor} and
-\emph{relative depth} are parameters.
-The addition of this new term will make clustered sources to be shallower than
-scattered and distant sources.
-
-Similar approaches for setting sources at depths that depend
-on the distance to their nearest neighbours were already proposed by
-\citet{cordell1992, guspi2004, guspi2009}.
+    The depths of sources are proportional to the horizontal distance to the
+    nearest neighbouring data points or sources (Fig.~\ref{fig:depth_types}c).
+    Different variations of this strategy have been proposed before, for
+    example \citet{cordell1992}, \citet{guspi2004}, and \citet{guspi2009}.
+    The rationale for this strategy is that if a survey has data points
+    clustered in some areas, we may
+    want the sources below those areas to be shallower in order to preserve the
+    shorter wavelengths that can be measured.
 \end{enumerate}
 
-We will test each of these strategies on synthetic data to evaluate their
-effectiveness.
+Our approach to the \emph{variable depth} strategy will be:
+
+\begin{equation}
+  z = z_{obs} + \Delta z + \alpha h,
+\end{equation}
+
+\noindent
+in which $z$ is the depth of an equivalent source,
+$\Delta z$ is a relative depth shift that is the same for all sources,
+$\alpha$ is an adimensional depth factor,
+$h$ is the median horizontal distance to the $k$ nearest neighbouring sources,
+and
+$z_{obs}$ is a vertical observation coordinate that will depend on the
+horizontal layout strategy.
+For \emph{sources-below-data}, it is the vertical coordinate of the data point
+corresponding to the given source.
+For \emph{regular-grid}, it can be interpolated from the vertical coordinates
+of all data points.
+Finally, for \emph{block-averaged-sources} it will be the average vertical
+coordinate of data within the corresponding block.
+
+In the following sections, we will test the effectiveness and trade-offs of
+each of these strategies on synthetic data.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Comparison of source distributions}
 
 The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
@@ -870,10 +870,6 @@ scheme if no further information is provided.
         Variable depth & $\checkmark$ & $\checkmark$ & $\times$     \\
     \end{tabular}
 \end{table*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Comparison of source distributions}
 
 Our first goal is to to compare the performance of all source distributions
 from Table~\ref{tab:source-distributions} when predicting harmonic field data
