@@ -762,39 +762,68 @@ using a fraction of the equivalent sources.
 
 \subsubsection{Depth of sources}
 
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/depth_types.pdf}
+    \caption{
+        Examples of different strategies for assigning depths to equivalent
+        sources.
+        Here we assign one source for each
+        observation point, located at the same horizontal coordinates as the
+        data points.
+        Source depths are
+        (a)~a \emph{constant depth} at a chosen vertical coordinate,
+        (b)~a \emph{relative depth} determined by uniformly shifting the
+        vertical coordinate of data points downwards,
+        and
+        (c)~a \emph{variable depth} determined by shifting the vertical
+        coordinates of the observation points by an amount proportional to the
+        average distance to neighbouring sources.
+        The distance between data points and their respective sources (a)
+        depends on observation height, (b) is constant, and (c) is proportional
+        to the horizontal distribution of sources.
+        Notice how the closely spaced sources in the middle of the profile (c)
+        are shallower than their counterparts in (b).
+    }
+    \label{fig:depth_types}
+\end{figure*}
+
 It is widely known from potential theory that the depth of a point source
 influences the wavelength of the observed field at the surface.
 This makes the source depth a key parameter affecting the outcome of
 interpolation and other operations done with equivalent sources.
 Several different strategies for assigning the depths of equivalent sources
 have been proposed in the literature.
+Here, we will highlight the following (Fig.~\ref{fig:depth_types}):
 
 \begin{enumerate}
   \item
-The simplest option is to locate all sources at the same depth, which we will
-call \emph{constant depth} in the future (see Fig.~\ref{fig:depth-types}(a)).
+    \emph{Constant depth}:
+    The simplest option is to locate all sources at the same depth
+    (Fig.~\ref{fig:depth_types}a).
 If the measurement were taken at significantly different altitudes, the
 elevated computation points will be more distant to the sources than the lower
 ones.
 This may create problems on reproducing high frequencies on the elevated
 points.
  \item
+    \emph{Relative depth}:
 One possible solution is to locate each source below its corresponding
 observation (or block averaged) point at a constant \emph{relative depth}
 from it.
 The depth of each source can be computed as the height of its corresponding
 observation (or block averaged) point minus a depth parameter that assumes the
-same value for all sources (see Fig.~\ref{fig:depth-types}(b)).
+same value for all sources (see Fig.~\ref{fig:depth_types}(b)).
 The sources won't be all at the same depth, but they will all be at the same
 distance from their corresponding observation (or block averaged) point.
  \item
+    \emph{Variable depth}:
 In case our survey presents heavily clustered data points on some areas, we may
 want the sources below that region to be shallower in order to reproduce the
 high frequencies measured by these clustered observation points.
 We can propose a \emph{variable depth} approach: it locates each point source
 according to the \emph{relative depth} and then subtracts a term proportional
 to the mean distance to its $k$ nearest neighbour sources
-(see Fig.~\ref{fig:depth-types}(c)).
+(see Fig.~\ref{fig:depth_types}(c)).
 
 So, the depth of the sources can be computed as follows:
 
@@ -817,24 +846,6 @@ Similar approaches for setting sources at depths that depend
 on the distance to their nearest neighbours were already proposed by
 \citet{cordell1992, guspi2004, guspi2009}.
 \end{enumerate}
-
-\begin{figure*}
-    \includegraphics[width=\linewidth]{figs/depth_types.pdf}
-    \caption{
-        Depth types for locating point sources. We put one source beneath each
-        observation point (station) using:
-        (a)~a \emph{constant depth} where all sources are located at the same
-           depth,
-        (b)~a \emph{relative depth} where all sources are located at the same
-           vertical distance from its corresponding observation point, and
-        (c)~a \emph{variable depth} where the depth of the sources is
-           proportional to the average distance to its neighbour sources.
-           Notice how the clustered sources on (c) are relatively shallower
-           than the
-           other ones.
-    }
-    \label{fig:depth-types}
-\end{figure*}
 
 We will test each of these strategies on synthetic data to evaluate their
 effectiveness.
