@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -247,12 +247,12 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        ax.yaxis.offsetText.set_x(-0.13)
+        ax.yaxis.offsetText.set_x(-0.16)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(prediction.rms, prediction.n_points),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -346,12 +346,12 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        ax.yaxis.offsetText.set_x(-0.13)
+        ax.yaxis.offsetText.set_x(-0.16)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(prediction.rms, prediction.n_points),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -398,3 +398,6 @@ plt.savefig(
     Path("..") / "manuscript" / "figs" / "airborne_survey_differences.pdf", dpi=300
 )
 plt.show()
+# -
+
+
