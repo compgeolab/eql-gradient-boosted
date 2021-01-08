@@ -35,14 +35,14 @@
 
 % Define title, authors, affiliations and DOI
 % ===========================================
-\newcommand{\Title}{
-    Gradient boosted equivalent sources
+\newcommand{\Title}{%
+    Gradient-boosted equivalent sources
 }
-\newcommand{\Author}{
+\newcommand{\Author}{%
     S.R. Soler,
     L. Uieda
 }
-\newcommand{\AuthorAffil}{
+\newcommand{\AuthorAffil}{%
     {\large
         Santiago R. Soler$^{1,2}$,
         Leonardo Uieda$^{3}$
@@ -52,10 +52,10 @@
     {\small $^{2}$Instituto Geofísico Sismológico Volponi, UNSJ, Argentina} \\
     {\small $^{3}$Department of Earth, Ocean and Ecological Sciences, School of Environmental Sciences, University of Liverpool, UK} \\
 }
-\newcommand{\DOI}{
+\newcommand{\DOI}{%
     doi:\href{https://doi.org/xxx.xxx/xxxxxx}{xxx.xxx/xxxxxx}
 }
-\newcommand{\DOILink}{
+\newcommand{\DOILink}{%
     \href{https://doi.org/xxx.xxx/xxxxxx}{doi.org/xxx.xxx/xxxxxx}
 }
 
@@ -66,7 +66,7 @@
 \fancyhf{}
 \lhead{
     \fontsize{9pt}{12pt}\selectfont
-    \Author{}, 2019. \DOI{}
+    \Author{} (\the\year{}). \DOI{}
 }
 \rhead{\fontsize{9pt}{12pt}\selectfont \thepage}
 \renewcommand{\headrulewidth}{0pt}
@@ -130,7 +130,7 @@ is the underlying assumption behind many processing techniques
 (e.g., upward continuation and vertical derivatives).
 
 A widely used method for interpolating gravity and magnetic data
-is the equivalent source technique (also known as equivalent layer, radial
+is the equivalent sources technique (also known as equivalent layer, radial
 basis functions, or Green's functions interpolation), first introduced by
 \citet{dampney1969}.
 It consists in fitting a model of elementary sources to the data and using this
@@ -143,7 +143,7 @@ data \citep{barnes2011}, modelling the lithospheric magnetic field
 \citep{kother2015}, recovering the magnetic induction vector from
 total-field magnetic anomalies \citep{li2020}, and more.
 
-Many variants of the equivalent source technique have been proposed, often
+Many variants of the equivalent sources technique have been proposed, often
 attempting to obtain faster or more accurate solutions.
 The key factors that vary between them are: (i) the type of source, (ii)
 the location of the sources, and (iii) the solution strategy.
@@ -244,6 +244,7 @@ $\mathbf{p}$ and $\mathbf{q}_j$ are position vectors in a 3D Cartesian space,
 $c_j$ is a scalar coefficient related to the point source located at
 $\mathbf{q}_j$,
 and $\lVert \cdot \rVert$ represents the $\text{L}_2$ norm.
+The horizontal and vertical distribution of sources is discussed in section~\ref{sec:source_distribution}.
 
 In case we have measured the value of the harmonic field on $N$ points
 $\{\mathbf{p}_1\ \mathbf{p}_2\ \ldots\ \mathbf{p}_N\}$,
@@ -289,7 +290,7 @@ points that fall on a regular grid or at different heights.
 
 
 \subsection{Damped least-squares solution}
-\label{sec:eql-inversion}
+\label{sec:eql_inversion}
 
 We can obtain the values of the source coefficients $\mathbf{c}$ that best
 fit the observed field values $\mathbf{d}^o$ by minimizing the goal function
@@ -371,6 +372,9 @@ rewritten as
 \noindent where $\lambda$ is a \emph{dimensionless} damping parameter and
 regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
 $\mathbf{c}$.
+From experience, we recommend searching for suitable $\lambda$ values between
+$10^{-8}$ and $10^{2}$ varying by order-of-magnitude, irrespective of the
+dataset.
 
 The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
 function can be found by solving the \emph{normal equation system}
@@ -422,7 +426,7 @@ steps:
 
 \begin{enumerate}
   \item Define a set of $M$ equivalent sources distributed throughout the
-    survey area (see section \ref{sec:source-distribution} for details).
+    survey area (see section \ref{sec:source_distribution} for details).
   \item Define a set of $K$ overlapping windows of equal size that cover the
     survey area.
   \item Create $K$ separate sets of equivalent sources, one for each window.
@@ -516,7 +520,7 @@ model on any point through the summation
 
 \noindent where ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector.
 
-To improve the convergence of the algorithm, \citet{friedman2002} suggests that
+To improve the convergence of the algorithm, \citet{friedman2002} suggests
 introducing randomness into the fitting process. We achieve this by randomizing
 the order in which the $K$ windows are used in the gradient boosting algorithm.
 
@@ -524,7 +528,7 @@ The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
 (where $M_k$ is the number sources on the $k-$th window), which can be
 considerably smaller than the $N \times M$ elements of $\mathbf{A}$.
 Therefore, the gradient boosting method allows us to fit
-equivalent sources models that would produce Jacobian matrices that are larger
+equivalent source models that would produce Jacobian matrices that are larger
 than the available computer memory.
 Furthermore, we can increase or decrease the size of the overlapping windows as
 needed depending on the number of sources in the model and the available
@@ -544,7 +548,7 @@ done by a summation (equation~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
-the final \textit{gradient boosted equivalent source algorithm}.
+the final \textit{gradient-boosted equivalent source algorithm}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
@@ -605,7 +609,7 @@ the final \textit{gradient boosted equivalent source algorithm}.
   }
   \BlankLine
   \setstretch{1}
-  \caption{ Gradient boosted equivalent source algorithm. }
+  \caption{Gradient-boosted equivalent source algorithm.}
   \label{alg:gradient_boosting_window}
 \end{algorithm}
 
@@ -633,194 +637,218 @@ the solution, particularly when using only the data inside the windows for
 fitting.
 
 
-\subsection{Source distributions}
-\label{sec:source-distribution}
+\subsection{Location of sources}
+\label{sec:source_distribution}
 
-How to choose how many sources to use and where to locate them are not
-trivial decisions that play an important role on the accuracy of the
-predictions and the computational resources needed to fit the sources'
-coefficients.
+The ideal number of sources and their locations, both horizontally and
+vertically, has been debated since the inception of the equivalent sources
+technique with \citet{dampney1969}.
+The choices made regarding these parameters can play an important role on the
+accuracy of the predictions and the computational resources needed to estimate
+the source coefficients.
+An ideal distribution of sources should simultaneously be able to reproduce the
+measured data on the survey points, make accurate predictions on non-surveyed
+locations, and minimize the required computational resources.
 
-The chosen distribution of sources should simultaneously reproduce the measured
-data on the survey points and be able to make accurate predictions of the
-measured harmonic field on non observed locations.
+A large number of evenly distributed sources along the survey region are
+capable of reproducing the observed data.
+Nevertheless, the computational load can be prohibitive and such
+underdetermined problems are prone to overfiting the data, leading to poor
+predictive power when interpolating and extrapolating.
+On the other hand, using few sources will reduce the computational requirements
+but the model may be incapable of reproducing the full spectral content of the
+measured data.
 
-A high number of sources homogeneously distributed on the survey region are
-capable of reproducing the observed data. Nevertheless, too many sources will
-make the Jacobian matrix too large, what could introduce computational problems
-like the inability of storing the matrix on memory or a high computational time
-needed to fit the sources' coefficients.
-On the other hand, using very few sources will undoubtedly reduce the memory
-needs and lower the computational time when fitting the sources' coefficients.
-Nevertheless, it could be incapable of making accurate predictions or even
-reproducing the measured data if the number of sources is too low.
+Particular survey characteristics also play a role in the choice of equivalent
+source distribution.
+In a ground survey, observations are usually located along irregular paths and
+scattered points.
+The coverage of the survey region is often uneven, leaving large areas without
+any observation.
+On the other hand, observations from airborne surveys are located along almost
+straight and closely spaced flight lines.
+Measurements are usually taken at a high temporal frequency, leading to the
+observation points along the flight lines that are several times closer to each
+other than the flight line spacing.
+This creates a bias in the sampling, which can cause aliasing artifacts in
+gridded products.
 
-The choice of the source distribution could also depend on the characteristic
-of the survey and how the observation points are distributed on the region.
-A ground survey usually consists in observation points located along irregular
-paths plus some possible scattered points.
-The survey region is usually heterogeneously covered, leaving areas without any
-observation.
-On the other hand, an airborne survey consists in observation points located
-along almost straight flight lines. The measurements are usually taken at
-a high frequency, so the observation points along the flight lines are very
-close to each other.
-This creates an anisotropy on the observation points: there are much more
-observation points along the flight lines directions.
-
-The most widely used source distributions are: a regular grid of point sources
-and one point source beneath each observation point.
-
-The \emph{regular grid} creates an homogeneous distribution of point sources
-below the surveyed region.
-The distance between sources is controlled by the grid spacing parameter.
-Keeping the boundaries of the grid constant, reducing the spacing increases the
-number of sources.
-
-The \emph{source below data} layout locates one source below each
-observation point, therefore the number of sources will be equal to the number
-of data points.
-
-When working with ground surveys, the \emph{regular grid} needs the grid
-spacing to be sufficiently small so observed values can be accurately
-reproduced by the source distribution.
-This will create too many sources on areas where no observation has been
-carried out.
-In contrast, the \emph{source below data} layout is more likely to accurately
-fit the observed data with much less sources, reducing the computational load
-to fit the equivalent sources' coefficients.
-
-When working with airborne surveys, the \emph{source below data} may
-generate an anisotropic distribution of sources by locating too many sources
-along the flight paths.
-It could lead to unwanted aliases on the predicted values.
-In contrast, the \emph{regular grid} won't generate aliases by homogeneously
-locating sources.
-
-We propose a new source distribution that could simultaneously reduce the
-computational load and remove the drawbacks of the preceding ones: the
-\emph{block averaged sources}.
-It consist in:
-
-\begin{enumerate}
-    \item Dividing the region in blocks of equal size. The size of the blocks
-        is controlled by a \emph{spacing} parameter.
-        (see Fig.~\ref{fig:block-averaged-sources}(a)-(b)).
-    \item Computing the median location of the observation points that fall
-        inside each block. Blocks without any observation point are ignored.
-    \item Locating one point source below each block averaged coordinate.
-        (see Fig.~\ref{fig:block-averaged-sources}(c)).
-\end{enumerate}
-
-The number of sources created by this new distribution will be less or equal to
-the ones created by the \emph{source below data} and the \emph{regular
-grid} with the same spacing.
-Moreover, the sources are only located beneath populated blocks, so sources
-will be concentrated on regions where data has been gathered and no anisotropic
-distribution of sources will be generated.
-
-\begin{figure*}
-    \includegraphics[width=\linewidth]{figs/block-averaged-sources-schematics.pdf}
-    \caption{
-        Block averaged sources.
-        (a)~Given a set of observation points
-        (b)~we divide the survey region on blocks of equal size and compute the
-            median location of the observation points that fall inside each
-            block.
-        (c)~A source point is located beneath each block averaged coordinate.
-            The number of point sources could be less or equal to the number of
-            observation points. No source is located beneath unpopulated
-            blocks.
-    }
-    \label{fig:block-averaged-sources}
-\end{figure*}
-
-Figure~\ref{fig:source-layouts-schematics} shows (a) an arbitrary set of
-observation points that simulates a ground survey, and the possible location of
-sources generated by (b) the \emph{sources below data}, (c) the new \emph{block
-averaged sources} and (d) the \emph{grid sources} layouts.
+\subsubsection{Horizontal source layouts}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/source-layouts-schematics.pdf}
     \caption{
-        Source layouts.
-        (a) Set of \SourceLayoutsSchematicsObservations{} synthetic observation
-            points that resemble a ground survey.
+        Sketch of different horizontal layouts for equivalent source models.
+        Blue points represent the locations of observations and orange points
+        represent the locations of equivalent sources according to different
+        layout strategies.
+        (a) Set of \SourceLayoutsSchematicsObservations{} observation points
+        that simulate a ground survey.
         (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
-            obtained through the \emph{sources below data} layout.
-        (c) Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
-            sources obtained through the \emph{block averaged sources} layout.
-        (d) Location of the \SourceLayoutsSchematicsGridSources{} sources
-            obtained through the \emph{grid sources} layout.
+        obtained through the \emph{sources-below-data} layout.
+        (c) Location of the \SourceLayoutsSchematicsGridSources{} sources
+        obtained through the \emph{regular-grid} layout.
+        (d) Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
+        sources obtained through the \emph{block-averaged sources} layout.
+        Grey dashed lines represent the spatial blocks within which the median
+        observation location is calculated.
     }
-    \label{fig:source-layouts-schematics}
+    \label{fig:source_layouts}
 \end{figure*}
 
-The depth of the point sources can be chosen following different criteria.
-Deep sources generate low frequencies, while shallow ones generate high
-frequencies (cite).
-The simplest option is to locate all sources at the same depth, which we will
-call \emph{constant depth} in the future (see Fig.~\ref{fig:depth-types}(a)).
-If the measurement were taken at significantly different altitudes, the
-elevated computation points will be more distant to the sources than the lower
-ones.
-This may create problems on reproducing high frequencies on the elevated
-points.
+The most widely used layouts for distributing equivalent sources horizontally
+are:
 
-One possible solution is to locate each source below its corresponding
-observation (or block averaged) point at a constant \emph{relative depth}
-from it.
-The depth of each source can be computed as the height of its corresponding
-observation (or block averaged) point minus a depth parameter that assumes the
-same value for all sources (see Fig.~\ref{fig:depth-types}(b)).
-The sources won't be all at the same depth, but they will all be at the same
-distance from their corresponding observation (or block averaged) point.
+\begin{enumerate}
+  \item
+    \emph{Sources below data points}: one equivalent source is placed at the
+    horizontal location of each data point (Fig.~\ref{fig:source_layouts}b).
+    Therefore, the number of sources is be equal to the number of observations
+    ($N=M$).
+  \item
+    \emph{Regular grid}: a homogeneous distribution of point sources below the
+    survey region (Fig.~\ref{fig:source_layouts}c). A padding region is often
+    added to help reduce edge effects. In practice, it often leads to
+    underdetermined problems since a large number of sources is required
+    ($N<M$).
+\end{enumerate}
 
-In case our survey presents heavily clustered data points on some areas, we may
-want the sources below that region to be shallower in order to reproduce the
-high frequencies measured by these clustered observation points.
-We can propose a \emph{variable depth} approach: it locates each point source
-according to the \emph{relative depth} and then subtracts a term proportional
-to the mean distance to its $k$ nearest neighbour sources
-(see Fig.~\ref{fig:depth-types}(c)).
-So, the depth of the sources can be computed as follows:
+For ground surveys, the \emph{regular-grid} layout needs a sufficiently
+small grid spacing to be able to fit the observed data.
+This creates an unnecessarily large number of sources in areas where no
+observations exist.
+In contrast, the \emph{sources-below-data} layout is more likely to accurately
+fit the observed data with many fewer sources, reducing the computational load.
+But when applied to airborne surveys, the \emph{sources-below-data} layout may
+place an undesirably large number of sources along the flight paths.
+This could lead to aliasing effects on the predicted values, such as the
+stripes parallel to flight lines that are often observed when griding airborne
+magnetic data.
+The \emph{regular-grid} layout can avoid this effect by evenly
+distributing sources and using a continuous source layer (e.g.,
+right-rectangular prisms or tesseroids).
 
-\begin{equation}
-    \begin{split}
-        \textrm{depth} =
-           &\textrm{data point height} - \textrm{relative depth} \\
-           &- \textrm{depth factor} \cdot \textrm{mean distance}
-    \end{split}
-\end{equation}
+We propose a new way of distributing equivalent sources horizontally that could
+simultaneously reduce the computational load and mitigate some of the drawbacks
+of existing layouts.
+In the \emph{block-averaged sources} layout,
+point sources are placed in the average
+position of data points that fall within specified spatial blocks
+(Fig.~\ref{fig:source_layouts}d).
+This is done by:
 
-\noindent where \emph{data point height} is the elevation of the corresponding
-observation (or block averaged) point, \emph{mean distance} is the mean
-distance to the $k$ nearest source neighbours, \emph{depth factor} and
-\emph{relative depth} are parameters.
-The addition of this new term will make clustered sources to be shallower than
-scattered and distant sources.
+\begin{enumerate}
+    \item Dividing the survey region into rectangular blocks of equal size.
+    \item Computing the median horizontal position of the observation points
+      that fall inside each block. Blocks without any observation point are
+      omitted.
+    \item Assign one point source to the median horizontal position calculated
+      in step 1.
+\end{enumerate}
 
-Similar approaches for setting sources at depths that depend
-on the distance to their nearest neighbours were already proposed by
-\citet{cordell1992, guspi2004, guspi2009}.
+The number of sources created by this new layout will be less than the number
+of observations if the block size is chosen appropriately (i.e., making sure
+that blocks are large enough to contain more than a single data point).
+The overdetermined problem that arises from this layout has a lower
+computational load and is less prone to overfiting the data since the model
+complexity is lower.
+Moreover, the block averaging process can balance the spacing between sources
+along a flight line and between adjacent lines, helping to reduce aliasing
+effects in generated grids.
+We will demonstrate through tests on synthetic data that the block-averaged sources
+layout is able to interpolate with comparable accuracy to other layouts while
+using a fraction of the equivalent sources.
+
+
+\subsubsection{Depth of sources}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/depth_types.pdf}
     \caption{
-        Depth types for locating point sources. We put one source beneath each
-        observation point (station) using:
-        (a)~a \emph{constant depth} where all sources are located at the same
-           depth,
-        (b)~a \emph{relative depth} where all sources are located at the same
-           vertical distance from its corresponding observation point, and
-        (c)~a \emph{variable depth} where the depth of the sources is
-           proportional to the average distance to its neighbour sources.
-           Notice how the clustered sources on (c) are relatively shallower
-           than the
-           other ones.
+        Examples of different strategies for assigning depths to equivalent
+        sources.
+        Here we assign one source for each
+        observation point, located at the same horizontal coordinates as the
+        data points.
+        Source depths are
+        (a)~a \emph{constant depth} at a chosen vertical coordinate,
+        (b)~a \emph{relative depth} determined by uniformly shifting the
+        vertical coordinate of data points downwards,
+        and
+        (c)~a \emph{variable depth} determined by shifting the vertical
+        coordinates of the observation points by an amount proportional to the
+        average distance to neighbouring sources.
+        The distance between data points and their respective sources (a)
+        depends on observation height, (b) is constant, and (c) is proportional
+        to the horizontal distribution of sources.
+        Notice how the closely spaced sources in the middle of the profile (c)
+        are shallower than their counterparts in (b).
     }
-    \label{fig:depth-types}
+    \label{fig:depth_types}
 \end{figure*}
+
+It is widely known from potential theory that the depth of a point source
+influences the wavelength of the observed field at the surface.
+This makes the source depth a key parameter affecting the outcome of
+interpolation and other operations done with equivalent sources.
+Several different strategies for assigning the depths of equivalent sources
+have been proposed in the literature.
+Here, we will highlight the following (Fig.~\ref{fig:depth_types}):
+
+\begin{enumerate}
+  \item
+    \emph{Constant depth}:
+    The simplest option is to locate all sources at the same depth
+    (Fig.~\ref{fig:depth_types}a).
+    If the measurements were taken at significantly different altitudes, some
+    measurements will be more distant to the sources than others,
+    which may create problems for reproducing short wavelengths in high
+    altitude points.
+ \item
+    \emph{Relative depth}:
+    The depths of sources are determined by shifting the vertical coordinate of
+    data points downward by a fixed amount (Fig.~\ref{fig:depth_types}b).
+    The sources will not all be at the same vertical coordinate, but they will
+    all be at the same vertical distance from the observation points.
+ \item
+    \emph{Variable depth}:
+    The depths of sources are proportional to the horizontal distance to the
+    nearest neighbouring data points or sources (Fig.~\ref{fig:depth_types}c).
+    Different variations of this strategy have been proposed before, for
+    example \citet{cordell1992}, \citet{guspi2004}, and \citet{guspi2009}.
+    The rationale for this strategy is that if a survey has data points
+    clustered in some areas, we may
+    want the sources below those areas to be shallower in order to preserve the
+    shorter wavelengths that can be measured.
+\end{enumerate}
+
+Our approach to the \emph{variable depth} strategy will be:
+
+\begin{equation}
+  z = z_{obs} + \Delta z + \alpha h,
+\end{equation}
+
+\noindent
+in which $z$ is the depth of an equivalent source,
+$\Delta z$ is a relative depth shift that is the same for all sources,
+$\alpha$ is an adimensional depth factor,
+$h$ is the median horizontal distance to the $k$ nearest neighbouring sources,
+and
+$z_{obs}$ is a vertical observation coordinate that will depend on the
+horizontal layout strategy.
+For \emph{sources-below-data}, it is the vertical coordinate of the data point
+corresponding to the given source.
+For \emph{regular-grid}, it can be interpolated from the vertical coordinates
+of all data points.
+Finally, for \emph{block-averaged-sources} it will be the average vertical
+coordinate of data within the corresponding block.
+
+In the following sections, we will test the effectiveness and trade-offs of
+each of these strategies on synthetic data.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Comparison of source distributions}
 
 The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
@@ -842,10 +870,6 @@ scheme if no further information is provided.
         Variable depth & $\checkmark$ & $\checkmark$ & $\times$     \\
     \end{tabular}
 \end{table*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Comparison of source distributions}
 
 Our first goal is to to compare the performance of all source distributions
 from Table~\ref{tab:source-distributions} when predicting harmonic field data
@@ -1075,7 +1099,7 @@ some computation time.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Performance of gradient boosted equivalent sources}
+\section{Performance of gradient-boosted equivalent sources}
 
 Our second goal is to assess the accuracy of the predictions achieved by the
 gradient boosting algorithm while registering its performance by comparison
@@ -1083,7 +1107,7 @@ with the non-boosted equivalent sources.
 
 
 \subsection{Window size}
-\label{sec:window-size}
+\label{sec:window_size}
 
 One factor that plays an important role on the performance of the gradient
 boosted equivalent sources is the size of the overlapping windows used to create
@@ -1153,7 +1177,7 @@ Using the best set of parameters for each overlap, we registered the achieved
 RMS against the values of the target grid and the time needed to fit the
 sources coefficients.
 The RMS was obtained as the mean RMS achieved by using different random seeds
-as we did on~\ref{sec:window-size}.
+as we did on~\ref{sec:window_size}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
