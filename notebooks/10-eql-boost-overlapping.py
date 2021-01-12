@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -23,7 +23,6 @@ import time
 import numpy as np
 import pandas as pd
 import xarray as xr
-import harmonica as hm
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
@@ -72,57 +71,24 @@ region = (
     target.northing.max().values,
 )
 
-# # Grid data with EQLHarmonic for reference on performance
-#
-# Use the best of parameters for block-averaged sources with relative depth, which was obtained on a previous notebook.
+# # Read EQLHarmonic results for reference
 
-depth_type = "relative_depth"
-block_spacing = 2e3
-damping = 1e-3
-depth = 9e3
-
-# Grid the data using `hm.EQLHarmonic` and track time of the fitting process
-
-# +
-points = block_averaged_sources(
-    coordinates, depth_type=depth_type, spacing=block_spacing, depth=depth
-)
-eql = hm.EQLHarmonic(
-    points=points,
-    damping=damping,
+eql_harmonic_results = pd.read_csv(
+    results_dir / "gradient-boosted" / "eql_harmonic.csv"
 )
 
-n_runs = 10
-times = np.empty(n_runs)
-eql.fit(coordinates, getattr(survey, field).values)  # fit to compile Numba functions
-for i in range(n_runs):
-    start = time.time()
-    eql.fit(coordinates, getattr(survey, field).values)
-    end = time.time()
-    times[i] = end - start
+eql_rms = eql_harmonic_results.rms.values[0]
+eql_residue = eql_harmonic_results.residue.values[0]
+eql_fitting_time = eql_harmonic_results.fitting_time.values[0]
 
-eql_fitting_time = times.mean()
-
-grid = eql.grid(upward=target.height, region=region, shape=target.shape).scalars
-# -
-
-# Compute RMS of the grid against the target grid and the residue of the gridder (difference between data and predictions on the same observation points)
-
-# +
-eql_rms = np.sqrt(mean_squared_error(grid.values, target.values))
-diff = survey.g_z - eql.predict((survey.easting, survey.northing, survey.height))
-eql_residue = np.sqrt(np.mean(diff ** 2))
-
-print("RMS score: {} mGal".format(eql_rms))
-print("Residue: {} mGal".format(eql_residue))
-print("Fitting time: {} +/- {} s".format(eql_fitting_time, times.std()))
-# -
-
-# ## Grid data with EQLHarmonicBoost using different overlappings
+# # Grid data with EQLHarmonicBoost using different overlappings
 
 # Define gridding parameters. Use the same depth obtained for EQLHarmonic and a window size of 30km. The damping might be changed to produce similar quality results.
 
 # +
+depth_type = "relative_depth"
+block_spacing = 2e3
+depth = 9e3
 dampings = np.logspace(-3, 1, 5)
 window_size = 30e3
 
@@ -360,3 +326,19 @@ plt.show()
 
 json_file = results_dir / "boost-overlapping.json"
 save_to_json(variables, json_file)
+
+# ## Dump results to a CSV file
+
+gradient_boosted_results = pd.DataFrame(
+    {
+        "overlaps": overlaps,
+        "rms": rms_mean,
+        "rms_std": rms_std,
+        "fitting_time": fitting_times,
+        "fitting_time_std": fitting_times_std,
+    }
+)
+gradient_boosted_results.to_csv(
+    results_dir / "gradient-boosted" / "gradient-boosted-overlapping.csv",
+    index=False,
+)
