@@ -13,6 +13,7 @@ dependencies:
   - cartopy
   - dask
   - tqdm
+  - numba
   # Jupyter related dependencies
   - ipython
   - jupyter

@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
-#     display_name: Python [conda env:eql-gradient-boosted]
+#     display_name: Python 3
 #     language: python
-#     name: conda-env-eql-gradient-boosted-py
+#     name: python3
 # ---
 
 # # Generate manuscript figures
@@ -20,6 +20,7 @@ import xarray as xr
 import pandas as pd
 import verde as vd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import StrMethodFormatter
 
 # ## Load custom matplotlib configuration
 
@@ -247,12 +248,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        ax.yaxis.offsetText.set_x(-0.13)
+        ax.yaxis.offsetText.set_x(-0.16)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(
+                prediction.rms, prediction.n_points
+            ),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -346,12 +349,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-        ax.yaxis.offsetText.set_x(-0.13)
+        ax.yaxis.offsetText.set_x(-0.16)
         ax.set_xlabel(ax.get_xlabel() + " [m]")
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f}, \#sources: {}".format(prediction.rms, prediction.n_points),
+            r"RMS: {:.2f} mGal, \#sources: {}".format(
+                prediction.rms, prediction.n_points
+            ),
             fontsize="small",
             horizontalalignment="center",
         )
@@ -396,5 +401,106 @@ fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 plt.tight_layout()
 plt.savefig(
     Path("..") / "manuscript" / "figs" / "airborne_survey_differences.pdf", dpi=300
+)
+plt.show()
+# -
+
+# # Gradient boosted eqls: window size
+
+# +
+eql_harmonic_results = pd.read_csv(
+    results_dir / "gradient-boosted" / "eql_harmonic.csv"
+)
+
+eql_rms = eql_harmonic_results.rms.values[0]
+eql_residue = eql_harmonic_results.residue.values[0]
+eql_fitting_time = eql_harmonic_results.fitting_time.values[0]
+# -
+
+boost_window_size = pd.read_csv(
+    results_dir / "gradient-boosted" / "gradient-boosted-window-size.csv",
+)
+
+boost_window_size
+
+# +
+width = 3.33
+figsize = (width, width * 0.85 * 1.5)
+fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
+ax1.errorbar(
+    boost_window_size.window_size_ratio,
+    boost_window_size.rms,
+    yerr=boost_window_size.rms_std,
+    fmt="o",
+    capsize=2,
+    label="Gradient-boosted sources",
+)
+ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
+ax1.set_ylabel("RMS [mGal]")
+ax1.grid()
+ax1.legend()
+
+ax2.errorbar(
+    boost_window_size.window_size_ratio,
+    boost_window_size.fitting_time / eql_fitting_time,
+    yerr=boost_window_size.fitting_time_std / eql_fitting_time,
+    fmt="o",
+    capsize=3,
+)
+ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
+ax2.set_xlabel("Window size as a fraction of the survey area")
+ax2.set_ylabel("Fitting time ratio")
+ax2.set_yscale("log")
+ax2.set_xlim(0, 0.7)
+ax2.grid()
+ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
+plt.tight_layout()
+plt.savefig(
+    Path("..") / "manuscript" / "figs" / "gradient-boosted-window-size.pdf", dpi=300
+)
+plt.show()
+# -
+
+# # Gradient boosted eqls: overlapping
+
+boost_overlapping = pd.read_csv(
+    results_dir / "gradient-boosted" / "gradient-boosted-overlapping.csv"
+)
+
+# +
+width = 3.33
+figsize = (width, width * 0.85 * 1.5)
+fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
+
+ax1.errorbar(
+    boost_overlapping.overlaps,
+    boost_overlapping.rms,
+    yerr=boost_overlapping.rms_std,
+    fmt="o",
+    capsize=2,
+    label="Gradient-boosted sources",
+)
+ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
+ax1.set_ylabel("RMS [mGal]")
+ax1.grid()
+ax1.legend()
+
+ax2.errorbar(
+    boost_overlapping.overlaps,
+    boost_overlapping.fitting_time / eql_fitting_time,
+    yerr=boost_overlapping.fitting_time_std / eql_fitting_time,
+    fmt="o",
+    capsize=3,
+)
+ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
+ax2.set_xlabel("Overlap")
+ax2.set_ylabel("Fitting time ratio")
+ax2.set_yscale("log")
+ax2.set_xlim(-0.05, 1)
+ax2.grid()
+ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
+plt.tight_layout()
+plt.savefig(
+    Path("..") / "manuscript" / "figs" / "gradient-boosted-overlap.pdf", dpi=300
 )
 plt.show()
