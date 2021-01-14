@@ -847,8 +847,10 @@ In the following sections, we will test the effectiveness and trade-offs of
 each of these strategies on synthetic data.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Tests on synthetic data}
 
-\section{Comparison of source distributions}
+Start with a description of the model and surveys. This is common for all
+tests.
 
 The combination of the three source layouts with the three strategies to define
 the depth of the sources define seven different source distributions (see
@@ -886,7 +888,7 @@ We can then quantitatively compare how accurate is each source distribution at
 predicting unobserved data on each synthetic survey and quantify the
 computational load needed to do it.
 
-\subsection{Synthetic Model}
+%\subsection{Synthetic Model}
 
 %Describe forward model made out of prisms.
 %Show prisms model?
@@ -917,7 +919,7 @@ We will refer to this grid as the \emph{target} grid in the future.
     \label{fig:target-grid}
 \end{figure}
 
-\subsection{Synthetic Surveys}
+%\subsection{Synthetic Surveys}
 
 In order to compare the predictive capabilities of each source distribution
 under on different surveys, we created a ground and an airborne \emph{synthetic
@@ -976,7 +978,8 @@ and~\ref{fig:synthetic-airborne-survey}(b)).
     \label{fig:synthetic-airborne-survey}
 \end{figure}
 
-\subsection{Comparisons}
+
+\subsection{Comparison of source distribution strategies}
 
 Each source distribution from Table~\ref{tab:source-distributions} needs
 certain parameters in order to build the set of point sources.
@@ -1086,46 +1089,16 @@ both ground and airborne synthetic surveys, respectively.
     \label{fig:airborne-survey-differences}
 \end{figure*}
 
-
-
-\subsection{Discussion}
-
-Figures~\ref{fig:ground-survey-differences}
-and~\ref{fig:airborne-survey-differences} show that all source distributions
-produce accurate predictions, both for the ground and airborne survey.
-The RMS scores don't show significant difference, so we can only conclude
-that all the source distributions are able to produce comparable predictions.
-Nevertheless, the \emph{block averaged sources} make use of less sources to
-produce this predictions, what would reduce the computational load needed to
-fit the sources coefficients and finally compute the actual prediction.
-
-The RMS doesn't seem to depend on the choice of the depth strategy used to
-locate the equivalent sources.
-At first glance, the choice of a depth strategy doesn't seem to impact the
-computational needs.
-Nevertheless, when trying to find the set of parameters that produce the most
-accurate predictions through a method like cross-validation, we need to fit the
-source coefficients one time per every possible combination of parameters.
-A depth strategy like the \emph{variable depth} needs a higher number of
-parameters (depth, depth factor, K nearest) than \emph{constant depth} or
-\emph{relative depth} (which takes only a depth parameter).
-The addition of these new parameters makes the search of the best set more
-computationally expensive: more parameters means increasing the dimensions of
-the parameters space and thus increasing the number of possible combinations.
-Therefore we would be more prone to choose a \emph{constant depth} or
-a \emph{relative depth} when dealing with very large datasets in order to save
-some computation time.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Performance of gradient-boosted equivalent sources}
+\subsection{Performance and accuracy of gradient boosting}
 
 Our second goal is to assess the accuracy of the predictions achieved by the
 gradient boosting algorithm while registering its performance by comparison
 with the non-boosted equivalent sources.
 
 
-\subsection{Window size}
+\subsubsection{Window size}
 \label{sec:window_size}
 
 One factor that plays an important role on the performance of the gradient
@@ -1219,7 +1192,7 @@ available memory.
 Therefore we recommend using the largest window that generates Jacobian
 matrices that could fit in the available memory.
 
-\subsection{Amount of overlap}
+\subsubsection{Amount of overlap}
 
 Another factor that plays an important role on the performance of the gradient
 boosted equivalent sources is the amount of overlap between adjacent windows.
@@ -1292,6 +1265,41 @@ accurate predictions in reasonable times.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Gridding Australia gravity data}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discussion}
+
+\subsection{Location of sources}
+
+Figures~\ref{fig:ground-survey-differences}
+and~\ref{fig:airborne-survey-differences} show that all source distributions
+produce accurate predictions, both for the ground and airborne survey.
+The RMS scores don't show significant difference, so we can only conclude
+that all the source distributions are able to produce comparable predictions.
+Nevertheless, the \emph{block averaged sources} make use of less sources to
+produce this predictions, what would reduce the computational load needed to
+fit the sources coefficients and finally compute the actual prediction.
+
+The RMS doesn't seem to depend on the choice of the depth strategy used to
+locate the equivalent sources.
+At first glance, the choice of a depth strategy doesn't seem to impact the
+computational needs.
+Nevertheless, when trying to find the set of parameters that produce the most
+accurate predictions through a method like cross-validation, we need to fit the
+source coefficients one time per every possible combination of parameters.
+A depth strategy like the \emph{variable depth} needs a higher number of
+parameters (depth, depth factor, K nearest) than \emph{constant depth} or
+\emph{relative depth} (which takes only a depth parameter).
+The addition of these new parameters makes the search of the best set more
+computationally expensive: more parameters means increasing the dimensions of
+the parameters space and thus increasing the number of possible combinations.
+Therefore we would be more prone to choose a \emph{constant depth} or
+a \emph{relative depth} when dealing with very large datasets in order to save
+some computation time.
+
+\subsection{Gradient boosting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
