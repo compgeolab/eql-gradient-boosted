@@ -87,6 +87,12 @@ plt.gca().set_aspect("equal")
 plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
 
+plt.figure(figsize=(12, 12))
+tmp = plt.scatter(*coordinates[:2], c=coordinates[-1], s=0.01)
+plt.gca().set_aspect("equal")
+plt.colorbar(tmp, label="m", shrink=0.7)
+plt.show()
+
 # ## Project coordinates
 
 # +
@@ -102,40 +108,19 @@ plt.gca().set_aspect("equal")
 plt.colorbar(tmp, label="mGal", shrink=0.7)
 plt.show()
 
-# ## Estimate parameters: spacing for block-averaged sources and window size for gradient boosting
+# ## Estimate window size for gradient boosting
 
-# Estimate the block spacing that we will use for block-averaged sources
+# We will choose the spacing for the block-averaged sources equal to the spacing for the ultimate grid.
+# The final grid will have a spacing of 1 arc-minute, which can be approximated by ~1.8km.
 
-# Get number of data points
-n_data = proj_coordinates[0].size
-print("Number of data points: {}".format(n_data))
+ell.mean_radius * np.radians(1 / 60)
 
-# +
-spacings = np.linspace(4e3, 10e3, 7)
-
-n_data_per_sources = []
-for spacing in spacings:
-    sources = block_averaged_sources(
-        proj_coordinates, spacing=spacing, depth_type="relative_depth", depth=0
-    )
-    n_data_per_sources.append(n_data / sources[0].size)
-# -
-
-plt.plot(spacings, n_data_per_sources, "o")
-plt.xlabel("Block spacing [m]")
-plt.ylabel("# data points / # sources")
-plt.title("Number of data points per sources")
-plt.grid()
-plt.show()
-
-# Lets choose a block spacing of 6000m so we obtain ~10 data points per source
-
-spacing = 6000
+spacing = 1800.0
 
 # Estimate the window size for gradient boosting
 
 # +
-window_sizes = np.linspace(100e3, 1000e3, 10)
+window_sizes = np.arange(50e3, 350e3, 25e3)
 
 # Create sources with the spacing obtained before
 sources = block_averaged_sources(
@@ -163,21 +148,17 @@ plt.title("Memory needed to store the larger Jacobian matrix")
 plt.grid()
 plt.show()
 
-# ### Conclusions:
-#
-# - Choose a spacing of 6000m so we obtain ~10 data points per source
-# - Choose a window size of 500km so we don't exceed 10GB of RAM.
+# Choose a window size of 250km so we use around of ~10GB of RAM.
 
-window_size = 500e3
-spacing = 6e3
+window_size = 225e3
 
 # ## Cross-validate gridder for estimating parameters
 
 # Choose only a portion of the data to apply CV to speed up things
 
 # +
-easting_0, northing_0 = 13783825.0, -3661038.0
-easting_size, northing_size = 550e3, 550e3
+easting_0, northing_0 = 14053825.0, -3451038.0
+easting_size, northing_size = 300e3, 300e3
 smaller_region = (
     easting_0,
     easting_0 + easting_size,
@@ -194,7 +175,7 @@ print(f"Small region: {vd.get_region(proj_coords_cv)}")
 # -
 
 plt.figure(figsize=(12, 12))
-tmp = plt.scatter(*proj_coords_cv[:2], c=disturbance_cv, s=0.01)
+tmp = plt.scatter(*proj_coords_cv[:2], c=disturbance_cv, s=0.2)
 plt.gca().set_aspect("equal")
 plt.colorbar(tmp, label="mGal", shrink=0.8)
 plt.show()
@@ -204,8 +185,8 @@ plt.show()
 # +
 depth_type = "relative_depth"
 random_state = 0
-dampings = np.logspace(-2, 3, 6)
-depths = [10e3, 15e3, 20e3, 25e3, 30e3, 35e3]
+dampings = np.logspace(-3, 3, 7)
+depths = np.linspace(1e3, 10e3, 10)
 
 # Combine these parameters
 parameter_sets = combine_parameters(
@@ -221,25 +202,13 @@ parameter_sets = combine_parameters(
 print("Number of combinations:", len(parameter_sets))
 # -
 
-# Find mean distance to nearest neighbors in order to choose a proper block spacing for cross validation
-
-# +
-distances = vd.median_distance(proj_coords_cv, k_nearest=500)
-median_distance = np.median(distances)
-print(median_distance)
-
-plt.hist(distances)
-plt.axvline(median_distance, c="C1")
-plt.show()
-# -
-
 # Apply cross validation
 
 # +
 # %%time
-cv = vd.BlockKFold(spacing=20e3, n_splits=6, shuffle=True, random_state=0)
+cv = vd.BlockKFold(spacing=5e3, n_splits=6, shuffle=True, random_state=0)
 
-scores = []
+scores, scores_std = [], []
 for parameters in parameter_sets:
     points = block_averaged_sources(proj_coords_cv, **parameters)
     eql = EQLHarmonicBoost(
@@ -249,18 +218,22 @@ for parameters in parameter_sets:
         random_state=parameters["random_state"],
     )
     start = time.time()
-    score = np.mean(
-        vd.cross_val_score(
-            eql,
-            proj_coords_cv,
-            disturbance_cv,
-            cv=cv,
-            scoring="neg_root_mean_squared_error",
-        )
+    scores_i = vd.cross_val_score(
+        eql,
+        proj_coords_cv,
+        disturbance_cv,
+        cv=cv,
     )
     end = time.time()
-    print("Last CV took: {:.0f}s".format(end - start))
+    score = np.mean(scores_i)
+    score_std = np.std(scores_i)
+    print(
+        "Last CV took: {:.0f}s. Score: {:.3f}. Score std: {:.6f}".format(
+            end - start, score, score_std
+        )
+    )
     scores.append(score)
+    scores_std.append(score_std)
 # -
 
 plt.hist(scores)
@@ -270,13 +243,16 @@ for score, param in zip(scores, parameter_sets):
     print(score, param)
 
 # +
-depths_m, dampings_m = np.meshgrid(depths, dampings)
+dampings_m, depths_m = np.meshgrid(dampings, depths)
 scores_2d = np.array(scores).reshape(depths_m.shape)
 
-plt.scatter(depths_m, dampings_m, c=np.abs(scores_2d), s=200)
+plt.scatter(depths_m, dampings_m, c=scores_2d, s=200, vmax=1, vmin=0.7)
 plt.yscale("log")
 plt.colorbar()
 plt.show()
+# -
+
+scores_2d
 
 # +
 best_score = np.max(scores)
@@ -286,25 +262,46 @@ print(best_score)
 print(best_parameters)
 # -
 
-# ## Cross validate using the entire dataset
+# ## Use the subset for gridding on this subregion
+
+points = block_averaged_sources(proj_coords_cv, **best_parameters)
 
 # %%time
-points = block_averaged_sources(proj_coordinates, **best_parameters)
 eql = EQLHarmonicBoost(
     points=points,
     damping=best_parameters["damping"],
-    window_size=window_size,
+    window_size=best_parameters["window_size"],
     random_state=best_parameters["random_state"],
 )
-scores = vd.cross_val_score(
-    eql,
-    proj_coordinates,
-    disturbance,
-    cv=cv,
-    scoring="neg_root_mean_squared_error",
+eql.fit(proj_coords_cv, disturbance_cv)
+
+# %%time
+# Interpolate on a regular grid
+grid = eql.grid(
+    upward=data.height.values.max(),
+    spacing=spacing,
+    data_names=["disturbance"],
 )
 
-print(scores)
+# +
+maxabs = vd.maxabs(grid.disturbance, disturbance_cv)
+
+fig, (ax1, ax2) = plt.subplots(
+    nrows=1, ncols=2, figsize=(18, 12), sharex=True, sharey=True
+)
+grid.disturbance.plot(ax=ax1, add_colorbar=False, vmin=-maxabs, vmax=maxabs)
+
+easting, northing = np.meshgrid(grid.easting, grid.northing)
+# ax1.scatter(easting, northing, c="k", s=0.05)
+# ax1.scatter(*points[:2], c="k", s=0.05)
+
+tmp = ax2.scatter(
+    *proj_coords_cv[:2], c=disturbance_cv, s=20, vmin=-maxabs, vmax=maxabs
+)
+for ax in (ax1, ax2):
+    ax.set_aspect("equal")
+plt.show()
+# -
 
 # ## Grid gravity disturbance
 
@@ -337,9 +334,10 @@ region = vd.get_region(coordinates)
 grid = eql.grid(
     upward=data.height.values.max(),
     region=region,
-    spacing=0.02,
+    spacing=1 / 60,
     projection=projection,
     dims=("latitude", "longitude"),
+    data_names=["disturbance"],
 )
 
 grid
@@ -349,7 +347,7 @@ grid_masked = vd.distance_mask(
 )
 
 plt.figure(figsize=(12, 12))
-grid_masked.scalars.plot()
+grid_masked.disturbance.plot()
 plt.gca().set_aspect("equal")
 plt.show()
 
@@ -361,22 +359,21 @@ subgrid = grid_masked.sel(longitude=slice(*region[:2]), latitude=slice(*region[2
 inside = vd.inside(coordinates, region)
 scatter = [c[inside] for c in coordinates]
 disturbance_portion = disturbance[inside]
-
 # +
-maxabs = vd.maxabs(subgrid.scalars.values)
+maxabs = vd.maxabs(subgrid.disturbance.values)
 
-fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(18, 12), sharey=True, sharex=True)
-subgrid.scalars.plot(ax=ax1, add_colorbar=False)
+fig, (ax1, ax2) = plt.subplots(
+    nrows=1, ncols=2, figsize=(18, 12), sharey=True, sharex=True
+)
+subgrid.disturbance.plot(ax=ax1, add_colorbar=False)
 ax1.set_aspect("equal")
 
-tmp = ax2.scatter(*scatter[:2], c=disturbance_portion, s=2, vmin=-maxabs, vmax=maxabs, cmap="RdBu_r")
+tmp = ax2.scatter(
+    *scatter[:2], c=disturbance_portion, s=2, vmin=-maxabs, vmax=maxabs, cmap="RdBu_r"
+)
 ax2.set_aspect("equal")
 
 cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.03])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label="mGal")
 
 plt.show()
-# -
-
-
-
