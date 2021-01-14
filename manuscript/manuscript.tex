@@ -1293,6 +1293,48 @@ accurate predictions in reasonable times.
 
 \section{Gridding Australia gravity data}
 
+Our final goal is to show how gradient-boosted equivalent sources can be used
+to interpolate a very large dataset of gravity data into a regular grid.
+We selected a compilation of gravity surveys over Australia made by
+\citet{wynne2018}.
+It consists in more than 1.7 million data points that cover most part of the
+Australia territory obtained through observations on ground
+(see Fig.~\ref{fig:australia-data}).
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{figs/australia-data.pdf}
+    \caption{
+    }
+    \label{fig:australia-data}
+\end{figure}
+
+First we compute the gravity disturbance by removing the normal gravity from
+the observed gravity data (see Fig.~\ref{fig:australia-disturbance}).
+The normal gravity is computed on each observation point through the
+closed-form formula given by \citet{li2001} and using the WGS84 ellipsoid as
+reference.
+Then we obtain plain coordinates of the observation points by applying
+a Mercator projection.
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{figs/australia-disturbance.pdf}
+    \caption{
+    }
+    \label{fig:australia-disturbance}
+\end{figure}
+
+We start the interpolation process by defining a set of block-averaged sources
+at a relative depth of \AustraliaRelativeDepth{}.
+The choice of the block spacing must be done taking into account the desired
+resolution of the final grid.
+If the grid will have a much higher resolution than the block spacing, the
+equivalent sources will not be able to reproduce the high frequency components
+of the data.
+Therefore we recommend setting a block spacing that matches the resolution of
+the final grid.
+In this case we will generate a regular grid with a resolution of 1~arc-minute,
+which can be approximated by \SI{1.8}{\kilometer} for the Earth.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusions}
