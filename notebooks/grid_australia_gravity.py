@@ -19,7 +19,6 @@ import time
 import pooch
 import pyproj
 import numpy as np
-import pandas as pd
 import xarray as xr
 import boule as bl
 import verde as vd
@@ -426,6 +425,7 @@ variables = {
     "australia_eql_damping": best_parameters["damping"],
     "australia_eql_spacing": best_parameters["spacing"],
     "australia_eql_window_size": best_parameters["window_size"],
+    "australia_eql_n_sources": points[0].size,
 }
 
 json_file = Path("..") / "results" / "australia.json"
