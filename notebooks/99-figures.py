@@ -541,6 +541,7 @@ maxabs = vd.maxabs(
 
 fig = pygmt.Figure()
 fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
+fig.coast(land="#333333")
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.plot(
     x=australia_data.longitude,
@@ -556,6 +557,7 @@ fig.show()
 
 fig = pygmt.Figure()
 fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
+fig.coast(land="#333333")
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.grdimage(
     australia_grid.disturbance,
