@@ -14,10 +14,12 @@
 # ---
 
 # +
+from pathlib import Path
 import time
 import pooch
 import pyproj
 import numpy as np
+import pandas as pd
 import xarray as xr
 import boule as bl
 import verde as vd
@@ -27,9 +29,12 @@ from boost_and_layouts import (
     EQLHarmonicBoost,
     block_averaged_sources,
     combine_parameters,
+    save_to_json,
 )
 
 # -
+
+results_dir = Path("..") / "results" / "australia"
 
 # ## Download Australia gravity data
 
@@ -92,6 +97,26 @@ tmp = plt.scatter(*coordinates[:2], c=coordinates[-1], s=0.01)
 plt.gca().set_aspect("equal")
 plt.colorbar(tmp, label="m", shrink=0.7)
 plt.show()
+
+# Save gravity disturbance points on a netCDF file to save disk space
+
+# +
+coords = {
+    "longitude": ("points", coordinates[0]),
+    "latitude": ("points", coordinates[1]),
+    "height": ("points", coordinates[2]),
+}
+data_vars = {
+    "gravity": ("points", data.gravity[inside]),
+    "disturbance": ("points", np.array(disturbance, dtype="float32")),
+}
+
+ds = xr.Dataset(data_vars, coords=coords)
+# -
+
+ds
+
+ds.to_netcdf(results_dir / "australia-data.nc")
 
 # ## Project coordinates
 
@@ -343,7 +368,7 @@ grid = eql.grid(
 grid
 
 grid_masked = vd.distance_mask(
-    coordinates, maxdist=80e3, grid=grid, projection=projection
+    coordinates, maxdist=50e3, grid=grid, projection=projection
 )
 
 plt.figure(figsize=(12, 12))
@@ -377,3 +402,31 @@ cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.03])
 fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label="mGal")
 
 plt.show()
+# -
+# Save grid on a netCDF file. First transform some arrays into float32 to save disk space.
+
+grid_masked["upward"] = (
+    ("latitude", "longitude"),
+    np.array(grid_masked.upward, dtype="float32"),
+)
+grid_masked["disturbance"] = (
+    ("latitude", "longitude"),
+    np.array(grid_masked.disturbance, dtype="float32"),
+)
+
+grid_masked
+
+grid_masked.to_netcdf(results_dir / "australia-grid.nc")
+
+# Save parameters to a JSON file
+
+# +
+variables = {
+    "australia_eql_depth": best_parameters["depth"],
+    "australia_eql_damping": best_parameters["damping"],
+    "australia_eql_spacing": best_parameters["spacing"],
+    "australia_eql_window_size": best_parameters["window_size"],
+}
+
+json_file = Path("..") / "results" / "australia.json"
+save_to_json(variables, json_file)
