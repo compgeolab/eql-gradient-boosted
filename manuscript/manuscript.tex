@@ -31,6 +31,7 @@
 \input{best-parameters-airborne-survey.tex}
 \input{source-layouts-schematics.tex}
 \input{boost-overlapping.tex}
+\input{australia.tex}
 
 
 % Define title, authors, affiliations and DOI
@@ -1301,12 +1302,12 @@ It consists in more than 1.7 million data points that cover most part of the
 Australia territory obtained through observations on ground
 (see Fig.~\ref{fig:australia-data}).
 
-\begin{figure}
-    \includegraphics[width=\linewidth]{figs/australia-data.pdf}
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/australia-data-gravity.png}
     \caption{
     }
-    \label{fig:australia-data}
-\end{figure}
+    \label{fig:australia-data-gravity}
+\end{figure*}
 
 First we compute the gravity disturbance by removing the normal gravity from
 the observed gravity data (see Fig.~\ref{fig:australia-disturbance}).
@@ -1316,15 +1317,15 @@ reference.
 Then we obtain plain coordinates of the observation points by applying
 a Mercator projection.
 
-\begin{figure}
-    \includegraphics[width=\linewidth]{figs/australia-disturbance.pdf}
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/australia-data-disturbance.png}
     \caption{
     }
-    \label{fig:australia-disturbance}
-\end{figure}
+    \label{fig:australia-data-disturbance}
+\end{figure*}
 
 We start the interpolation process by defining a set of block-averaged sources
-at a relative depth of \AustraliaRelativeDepth{}.
+at a relative depth of \AustraliaEqlDepth{}.
 The choice of the block spacing must be done taking into account the desired
 resolution of the final grid.
 If the grid will have a much higher resolution than the block spacing, the
@@ -1333,7 +1334,14 @@ of the data.
 Therefore we recommend setting a block spacing that matches the resolution of
 the final grid.
 In this case we will generate a regular grid with a resolution of 1~arc-minute,
-which can be approximated by \SI{1.8}{\kilometer} for the Earth.
+which can be approximated by \SI{1.8}{\kilo\meter} for the Earth.
+
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/australia-grid.png}
+    \caption{
+    }
+    \label{fig:australia-grid}
+\end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

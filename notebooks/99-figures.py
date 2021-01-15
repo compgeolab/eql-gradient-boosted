@@ -525,16 +525,19 @@ fig.plot(
     x=australia_data.longitude,
     y=australia_data.latitude,
     color=australia_data.gravity,
-    style="c1p",
+    style="c0.5p",
     cmap=True,
 )
 fig.colorbar(frame='af+l"Observed gravity [mGal]"')
 fig.coast(shorelines=True)
 fig.savefig(figs_dir / "australia-data-gravity.png")
 fig.show()
+# -
 
-# +
-maxabs = vd.maxabs(australia_data.disturbance.values)
+maxabs = vd.maxabs(
+    australia_data.disturbance.values,
+    australia_grid.disturbance.values,
+)
 
 fig = pygmt.Figure()
 fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
@@ -543,16 +546,13 @@ fig.plot(
     x=australia_data.longitude,
     y=australia_data.latitude,
     color=australia_data.disturbance,
-    style="c1p",
+    style="c0.5p",
     cmap=True,
 )
-fig.colorbar(frame='af+l"Gravity Disturbance[mGal]"')
+fig.colorbar(frame='xa50+l"Gravity Disturbance[mGal]"')
 fig.coast(shorelines=True)
 fig.savefig(figs_dir / "australia-data-disturbance.png")
 fig.show()
-
-# +
-maxabs = vd.maxabs(australia_grid.disturbance.values)
 
 fig = pygmt.Figure()
 fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
@@ -560,8 +560,9 @@ pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.grdimage(
     australia_grid.disturbance,
     nan_transparent=True,
+    shading="",
 )
-fig.colorbar(frame='af+l"Gravity Disturbance [mGal]"')
+fig.colorbar(frame='xa50+l"Gravity Disturbance [mGal]"')
 fig.coast(shorelines=True)
 fig.savefig(figs_dir / "australia-grid.png")
 fig.show()
