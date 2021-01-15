@@ -274,7 +274,7 @@ variables["australia_eql_window_size"] *= 1e-3
 units["australia_eql_depth"] = "meter"
 units["australia_eql_damping"] = None
 units["australia_eql_spacing"] = "meter"
-units["australia_eql_window_size"] = "kilometer"
+units["australia_eql_window_size"] = "kilo meter"
 units["australia_eql_n_sources"] = None
 # -
 
