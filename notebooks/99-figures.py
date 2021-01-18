@@ -519,7 +519,6 @@ proj_gmt = "M{:.0f}/{:.0f}/6.66i".format(lon_ts, lat_ts)
 vmin, vmax = australia_data.gravity.values.min(), australia_data.gravity.values.max()
 
 fig = pygmt.Figure()
-fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
 pygmt.makecpt(cmap="viridis", series=(vmin, vmax))
 fig.plot(
     x=australia_data.longitude,
@@ -527,9 +526,11 @@ fig.plot(
     color=australia_data.gravity,
     style="c0.5p",
     cmap=True,
+    projection=proj_gmt,  # needed on the first plot
 )
-fig.colorbar(frame='af+l"Observed gravity [mGal]"')
 fig.coast(shorelines=True)
+fig.basemap(region=region, frame=["afg"])
+fig.colorbar(frame='af+l"Observed gravity [mGal]"')
 fig.savefig(figs_dir / "australia-data-gravity.png")
 fig.show()
 # -
@@ -540,8 +541,11 @@ maxabs = vd.maxabs(
 )
 
 fig = pygmt.Figure()
-fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
-fig.coast(land="#333333")
+fig.coast(
+    land="#333333",
+    region=region,
+    projection=proj_gmt,  # needed on the first plot
+)
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.plot(
     x=australia_data.longitude,
@@ -550,21 +554,26 @@ fig.plot(
     style="c0.5p",
     cmap=True,
 )
-fig.colorbar(frame='xa50+l"Gravity Disturbance[mGal]"')
 fig.coast(shorelines=True)
+fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
+fig.colorbar(frame='xa50+l"Gravity Disturbance[mGal]"')
 fig.savefig(figs_dir / "australia-data-disturbance.png")
 fig.show()
 
 fig = pygmt.Figure()
-fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
-fig.coast(land="#333333")
+fig.coast(
+    land="#333333",
+    region=region,
+    projection=proj_gmt,  # needed on the first plot
+)
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.grdimage(
     australia_grid.disturbance,
     nan_transparent=True,
     shading="",
 )
-fig.colorbar(frame='xa50+l"Gravity Disturbance [mGal]"')
 fig.coast(shorelines=True)
+fig.basemap(region=region, frame=["afg"])
+fig.colorbar(frame='xa50+l"Gravity Disturbance [mGal]"')
 fig.savefig(figs_dir / "australia-grid.png")
 fig.show()
