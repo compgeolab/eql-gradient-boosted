@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -426,6 +426,9 @@ variables = {
     "australia_eql_spacing": best_parameters["spacing"],
     "australia_eql_window_size": best_parameters["window_size"],
     "australia_eql_n_sources": points[0].size,
+    "australia_eql_grid_n_longitude": grid_masked.longitude.size,
+    "australia_eql_grid_n_latitude": grid_masked.latitude.size,
+    "australia_eql_grid_height": grid_masked.upward.values.ravel()[0],
 }
 
 json_file = Path("..") / "results" / "australia.json"

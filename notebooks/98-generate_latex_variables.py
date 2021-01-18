@@ -276,6 +276,9 @@ units["australia_eql_damping"] = None
 units["australia_eql_spacing"] = "meter"
 units["australia_eql_window_size"] = "kilo meter"
 units["australia_eql_n_sources"] = None
+units["australia_eql_grid_n_longitude"] = None
+units["australia_eql_grid_n_latitude"] = None
+units["australia_eql_grid_height"] = "meter"
 # -
 
 latex_variables = [
