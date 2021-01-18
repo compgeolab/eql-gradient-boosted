@@ -6,11 +6,14 @@ dependencies:
   - pip
   - numpy
   - boule=0.2.0
+  - pooch=1.2.0
+  - pygmt=0.2.1
   - pyproj
   - netcdf4
   - matplotlib
   - cartopy
   - dask
+  - tqdm
   - numba
   # Jupyter related dependencies
   - ipython
@@ -28,4 +31,3 @@ dependencies:
       - git+https://github.com/fatiando/harmonica@master
   - pip:
       - git+https://github.com/fatiando/verde@master
-

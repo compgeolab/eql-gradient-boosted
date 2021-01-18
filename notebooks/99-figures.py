@@ -8,9 +8,9 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.9.1
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
-#     name: python3
+#     name: conda-env-eql-gradient-boosted-py
 # ---
 
 # # Generate manuscript figures
@@ -19,6 +19,7 @@ from pathlib import Path
 import xarray as xr
 import pandas as pd
 import verde as vd
+import pygmt
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 
@@ -31,6 +32,8 @@ plt.style.use(Path(".") / "matplotlib.rc")
 results_dir = Path("..") / "results"
 ground_results_dir = results_dir / "ground_survey"
 airborne_results_dir = results_dir / "airborne_survey"
+
+figs_dir = Path("..") / "manuscript" / "figs"
 
 # ## Ground survey
 
@@ -103,7 +106,7 @@ ax2.set_title("Observed gravity acceleration", pad=3)
 
 plt.tight_layout(h_pad=0.2)
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "ground-survey.pdf",
+    figs_dir / "ground-survey.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -168,7 +171,7 @@ ax2.set_title("Observed gravity acceleration", pad=3)
 
 plt.tight_layout(h_pad=0.2)
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "airborne-survey.pdf",
+    figs_dir / "airborne-survey.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -196,7 +199,7 @@ clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
 ax.set_title("Target grid")
 plt.tight_layout()
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "target-grid.pdf",
+    figs_dir / "target-grid.pdf",
     bbox_inches="tight",
     dpi=300,
 )
@@ -298,9 +301,7 @@ cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
-plt.savefig(
-    Path("..") / "manuscript" / "figs" / "ground_survey_differences.pdf", dpi=300
-)
+plt.savefig(figs_dir / "ground_survey_differences.pdf", dpi=300)
 plt.show()
 # -
 
@@ -399,9 +400,7 @@ cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
 fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
 
 plt.tight_layout()
-plt.savefig(
-    Path("..") / "manuscript" / "figs" / "airborne_survey_differences.pdf", dpi=300
-)
+plt.savefig(figs_dir / "airborne_survey_differences.pdf", dpi=300)
 plt.show()
 # -
 
@@ -455,9 +454,7 @@ ax2.set_xlim(0, 0.7)
 ax2.grid()
 ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
 plt.tight_layout()
-plt.savefig(
-    Path("..") / "manuscript" / "figs" / "gradient-boosted-window-size.pdf", dpi=300
-)
+plt.savefig(figs_dir / "gradient-boosted-window-size.pdf", dpi=300)
 plt.show()
 # -
 
@@ -500,7 +497,83 @@ ax2.set_xlim(-0.05, 1)
 ax2.grid()
 ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
 plt.tight_layout()
-plt.savefig(
-    Path("..") / "manuscript" / "figs" / "gradient-boosted-overlap.pdf", dpi=300
-)
+plt.savefig(figs_dir / "gradient-boosted-overlap.pdf", dpi=300)
 plt.show()
+# -
+
+# ## Australia gravity
+
+australia_data = xr.open_dataset(results_dir / "australia" / "australia-data.nc")
+australia_grid = xr.open_dataset(results_dir / "australia" / "australia-grid.nc")
+
+# +
+region = vd.get_region(
+    (australia_data.longitude.values, australia_data.latitude.values)
+)
+lat_ts = australia_data.latitude.mean().values
+lon_ts = australia_data.longitude.mean().values
+
+proj_gmt = "M{:.0f}/{:.0f}/6.66i".format(lon_ts, lat_ts)
+
+# +
+vmin, vmax = australia_data.gravity.values.min(), australia_data.gravity.values.max()
+
+fig = pygmt.Figure()
+pygmt.makecpt(cmap="viridis", series=(vmin, vmax))
+fig.plot(
+    x=australia_data.longitude,
+    y=australia_data.latitude,
+    color=australia_data.gravity,
+    style="c0.5p",
+    cmap=True,
+    projection=proj_gmt,  # needed on the first plot
+)
+fig.coast(shorelines=True)
+fig.basemap(region=region, frame=["afg"])
+fig.colorbar(frame='af+l"Observed gravity [mGal]"')
+fig.savefig(figs_dir / "australia-data-gravity.png")
+fig.show()
+# -
+
+maxabs = vd.maxabs(
+    australia_data.disturbance.values,
+    australia_grid.disturbance.values,
+)
+
+fig = pygmt.Figure()
+fig.coast(
+    land="#333333",
+    region=region,
+    projection=proj_gmt,  # needed on the first plot
+)
+pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
+fig.plot(
+    x=australia_data.longitude,
+    y=australia_data.latitude,
+    color=australia_data.disturbance,
+    style="c0.5p",
+    cmap=True,
+)
+fig.coast(shorelines=True)
+fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
+fig.colorbar(frame='xa50+l"Gravity Disturbance[mGal]"')
+fig.savefig(figs_dir / "australia-data-disturbance.png")
+fig.show()
+
+fig = pygmt.Figure()
+fig.coast(
+    land="#333333",
+    region=region,
+    projection=proj_gmt,  # needed on the first plot
+)
+pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
+fig.grdimage(
+    australia_grid.disturbance,
+    nan_transparent=True,
+    shading="",
+)
+fig.coast(shorelines=True)
+fig.basemap(region=region, frame=["afg"])
+fig.colorbar(frame='xa50+l"Gravity Disturbance [mGal]"')
+fig.savefig(figs_dir / "australia-grid.png")
+fig.show()
