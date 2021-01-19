@@ -1369,6 +1369,50 @@ disturbance on a regular grid of
 
 \section{Conclusions}
 
+Equivalent sources that uses the inverse of the distance as the Green's
+functions are well suited for interpolating gravity disturbance data.
+Block-averaged sources reduces the number of point sources, reducing the
+computational load needed to estimate their coefficients, preventing aliasing
+on the interpolated values while maintaining accurate predictions.
+Special attention must be payed when choosing the size of the block spacing:
+as a thumb rule, it must be approximately equal to the resolution of the
+regular grid where the values will be interpolated.
+The three compared strategies for setting the depth of the sources (constant
+depth, relative depth and variable depth) don't significantly affect
+the accuracy of the interpolations.
+Nevertheless, the choice of the parameters for each depth strategy does affects
+the accuracy and the frequency components of the interpolations.
+
+Gradient-boosted equivalent sources heavily reduces the computer memory
+needed to estimate source coefficients, making possible to interpolate even
+very large datasets.
+The interpolations obtained though this new method achieve almost the same
+accuracy than the non-boosted sources, while reducing the computation time
+needed to estimate the source coefficients.
+Because it doesn't involve any assumption on the location of the sources, it
+can be used in conjunction with any horizontal source layout and any strategy
+for setting their depth.
+Moreover, the results equivalent sources can be used not only for interpolating
+on a regular grid, but also on any set of observation points, allowing to
+create profiles or upward continuations.
+In order to maximize the accuracy of the interpolations, the size of the
+rolling windows must be chosen as the maximum value that creates Jacobian
+matrices that fit into our computer memory.
+Therefore its choice is subject to the particular infrastructure where the
+interpolation will be carried out.
+We have shown that an overlap of 50\% between adjacent windows achieves a good
+compromise between accuracy and computation time needed to fit the source
+coefficients.
+
+The gradient-boosted equivalent sources were used to interpolate a compilation
+of more than 1.7 million gravity points from Australia on a regular grid with
+a resolution of 1~arc-minute.
+The whole process was carried out on a modest personal computer, requiring
+a maximum of 10GB of memory.
+This shows how the new gradient-boosted equivalent sources can be applied to
+real-world data.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Acknowledgements}
