@@ -57,40 +57,44 @@ coords_scale = 1e-3
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(ncols=4, nrows=1, sharey=True, figsize=figsize)
 
 tmp = ax1.scatter(
-    survey_ground.easting * coords_scale, survey_ground.northing * coords_scale, c=survey_ground.height, cmap="cividis", s=size
+    survey_ground.easting * coords_scale,
+    survey_ground.northing * coords_scale,
+    c=survey_ground.height,
+    cmap="cividis",
+    s=size,
 )
-clb = plt.colorbar(
-    tmp,
-    ax=ax1,
-    **cbar_args
-)
+clb = plt.colorbar(tmp, ax=ax1, **cbar_args)
 clb.set_label("meters")
 
-tmp = ax2.scatter(survey_ground.easting * coords_scale, survey_ground.northing * coords_scale, c=survey_ground.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp,
-    ax=ax2,
-    **cbar_args
+tmp = ax2.scatter(
+    survey_ground.easting * coords_scale,
+    survey_ground.northing * coords_scale,
+    c=survey_ground.g_z,
+    cmap="viridis",
+    s=size,
 )
+clb = plt.colorbar(tmp, ax=ax2, **cbar_args)
 clb.set_label("mGal")
 
 tmp = ax3.scatter(
-    survey_airborne.easting * coords_scale, survey_airborne.northing * coords_scale, c=survey_airborne.height, cmap="cividis", s=size
+    survey_airborne.easting * coords_scale,
+    survey_airborne.northing * coords_scale,
+    c=survey_airborne.height,
+    cmap="cividis",
+    s=size,
 )
-clb = plt.colorbar(
-    tmp,
-    ax=ax3,
-    **cbar_args
-)
+clb = plt.colorbar(tmp, ax=ax3, **cbar_args)
 clb.set_label("meters")
 
 
-tmp = ax4.scatter(survey_airborne.easting * coords_scale, survey_airborne.northing * coords_scale, c=survey_airborne.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp,
-    ax=ax4,
-    **cbar_args
+tmp = ax4.scatter(
+    survey_airborne.easting * coords_scale,
+    survey_airborne.northing * coords_scale,
+    c=survey_airborne.g_z,
+    cmap="viridis",
+    s=size,
 )
+clb = plt.colorbar(tmp, ax=ax4, **cbar_args)
 clb.set_label("mGal")
 
 ax1.set_ylabel("northing [km]")
@@ -115,7 +119,9 @@ ax3.set_title("Observation points", **title_args)
 ax4.set_title("Synthetic gravity", **title_args)
 
 plt.figtext(0.3, 0.9, "Ground survey", horizontalalignment="center", fontsize="large")
-plt.figtext(0.78, 0.9, "Airborne survey", horizontalalignment="center", fontsize="large")
+plt.figtext(
+    0.78, 0.9, "Airborne survey", horizontalalignment="center", fontsize="large"
+)
 
 plt.tight_layout(w_pad=0, pad=0)
 plt.savefig(
@@ -196,7 +202,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey_ground.easting, survey_ground.northing, s=2, alpha=0.3, color="k", linewidths=0)
+        ax.scatter(
+            survey_ground.easting,
+            survey_ground.northing,
+            s=2,
+            alpha=0.3,
+            color="k",
+            linewidths=0,
+        )
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -218,8 +231,8 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 0.5,
                 1.13,
-                #r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
-            depth_type.replace("_", " ").capitalize(),
+                # r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -230,7 +243,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 -0.33,
                 0.5,
-                #r"\textbf{{" + layout_names[i] + r"}}",
+                # r"\textbf{{" + layout_names[i] + r"}}",
                 layout_names[i],
                 fontsize="large",
                 fontweight="bold",
@@ -249,8 +262,8 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-#cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
-#fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+# cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+# fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
 cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
 cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
@@ -302,7 +315,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey_airborne.easting, survey_airborne.northing, s=1, alpha=0.3, color="k", linewidths=0)
+        ax.scatter(
+            survey_airborne.easting,
+            survey_airborne.northing,
+            s=1,
+            alpha=0.3,
+            color="k",
+            linewidths=0,
+        )
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -324,8 +344,8 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 0.5,
                 1.13,
-                #r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
-            depth_type.replace("_", " ").capitalize(),
+                # r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -336,7 +356,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             ax.text(
                 -0.33,
                 0.5,
-                #r"\textbf{{" + layout_names[i] + r"}}",
+                # r"\textbf{{" + layout_names[i] + r"}}",
                 layout_names[i],
                 fontsize="large",
                 fontweight="bold",
@@ -355,8 +375,8 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-#cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
-#fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+# cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+# fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
 cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
 cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
