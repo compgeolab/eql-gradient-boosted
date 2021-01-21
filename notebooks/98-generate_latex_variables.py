@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -249,6 +249,36 @@ with open(json_file, "r") as f:
     variables = json.loads(f.read())
 
 units["boost_overlapping_window_size"] = "meter"
+# -
+
+latex_variables = [
+    create_latex_variable(key, value, unit=units[key])
+    for key, value in variables.items()
+]
+display(latex_variables)
+
+with open(tex_file, "w") as f:
+    f.write("\n".join(latex_variables))
+
+# ## Australia gravity
+
+# +
+json_file = results_dir / "australia.json"
+tex_file = manuscript_dir / "australia.tex"
+
+with open(json_file, "r") as f:
+    variables = json.loads(f.read())
+
+variables["australia_eql_window_size"] *= 1e-3
+
+units["australia_eql_depth"] = "meter"
+units["australia_eql_damping"] = None
+units["australia_eql_spacing"] = "meter"
+units["australia_eql_window_size"] = "kilo meter"
+units["australia_eql_n_sources"] = None
+units["australia_eql_grid_n_longitude"] = None
+units["australia_eql_grid_n_latitude"] = None
+units["australia_eql_grid_height"] = "meter"
 # -
 
 latex_variables = [
