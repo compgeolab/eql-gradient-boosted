@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.9.1
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -35,143 +35,91 @@ airborne_results_dir = results_dir / "airborne_survey"
 
 figs_dir = Path("..") / "manuscript" / "figs"
 
-# ## Ground survey
+# ## Ground and airborne synthetic surveys
 
-survey = pd.read_csv(ground_results_dir / "survey.csv")
+survey_ground = pd.read_csv(ground_results_dir / "survey.csv")
+survey_airborne = pd.read_csv(airborne_results_dir / "survey.csv")
 
 # +
 # Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
+figsize = (6.66, 2.9)
+cbar_args = dict(
+    shrink=0.95,
+    pad=0.16,
+    aspect=40,
+    orientation="horizontal",
+)
+size = 0.5
+labels = "a b c d".split()
+coords_scale = 1e-3
 
 # Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(ncols=4, nrows=1, sharey=True, figsize=figsize)
 
-# Plot survey points
 tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
+    survey_ground.easting * coords_scale, survey_ground.northing * coords_scale, c=survey_ground.height, cmap="cividis", s=size
 )
 clb = plt.colorbar(
     tmp,
     ax=ax1,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
+    **cbar_args
 )
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
+clb.set_label("meters")
 
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
+tmp = ax2.scatter(survey_ground.easting * coords_scale, survey_ground.northing * coords_scale, c=survey_ground.g_z, cmap="viridis", s=size)
 clb = plt.colorbar(
     tmp,
     ax=ax2,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
+    **cbar_args
 )
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+clb.set_label("mGal")
 
-
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x",
-    which="both",
-    bottom=False,
-    top=False,
-    labelbottom=False,
+tmp = ax3.scatter(
+    survey_airborne.easting * coords_scale, survey_airborne.northing * coords_scale, c=survey_airborne.height, cmap="cividis", s=size
 )
+clb = plt.colorbar(
+    tmp,
+    ax=ax3,
+    **cbar_args
+)
+clb.set_label("meters")
 
-for ax, label in zip((ax1, ax2), labels):
+
+tmp = ax4.scatter(survey_airborne.easting * coords_scale, survey_airborne.northing * coords_scale, c=survey_airborne.g_z, cmap="viridis", s=size)
+clb = plt.colorbar(
+    tmp,
+    ax=ax4,
+    **cbar_args
+)
+clb.set_label("mGal")
+
+ax1.set_ylabel("northing [km]")
+for ax, label in zip((ax1, ax2, ax3, ax4), labels):
     ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
+    ax.set_xlabel("easting [km]")
     ax.annotate(
         label,
         xy=(0.04, 0.94),
         xycoords="axes fraction",
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
+    ax.grid(linestyle="--", linewidth=0.1)
 
-ax1.set_title("Ground survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
+title_args = dict(
+    pad=4,
+    fontsize="medium",
+)
+ax1.set_title("Observation points", **title_args)
+ax2.set_title("Synthetic gravity", **title_args)
+ax3.set_title("Observation points", **title_args)
+ax4.set_title("Synthetic gravity", **title_args)
 
+plt.figtext(0.3, 0.9, "Ground survey", horizontalalignment="center", fontsize="large")
+plt.figtext(0.78, 0.9, "Airborne survey", horizontalalignment="center", fontsize="large")
 
-plt.tight_layout(h_pad=0.2)
+plt.tight_layout(w_pad=0, pad=0)
 plt.savefig(
-    figs_dir / "ground-survey.pdf",
-    bbox_inches="tight",
-    dpi=300,
-)
-# -
-
-# ## Airborne survey
-
-survey = pd.read_csv(airborne_results_dir / "survey.csv")
-
-# +
-# Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
-
-# Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
-
-# Plot survey points
-tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
-)
-clb = plt.colorbar(
-    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
-
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
-
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x",
-    which="both",
-    bottom=False,
-    top=False,
-    labelbottom=False,
-)
-
-for ax, label in zip((ax1, ax2), labels):
-    ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
-    ax.annotate(
-        label,
-        xy=(0.04, 0.94),
-        xycoords="axes fraction",
-        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
-    )
-
-ax1.set_title("Airborne survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
-
-plt.tight_layout(h_pad=0.2)
-plt.savefig(
-    figs_dir / "airborne-survey.pdf",
+    figs_dir / "synthetic-survey-layouts.pdf",
     bbox_inches="tight",
     dpi=300,
 )
