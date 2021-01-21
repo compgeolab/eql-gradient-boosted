@@ -158,6 +158,7 @@ plt.show()
 
 # +
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+layout_names = ["Sources below data", "Block-averaged sources", "Regular grid sources"]
 field_units = "mGal"
 
 best_predictions = []
@@ -179,7 +180,7 @@ vmax = vd.maxabs(
 
 # Initialize figure
 fig, axes = plt.subplots(
-    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+    nrows=3, ncols=3, figsize=(6.66, 6.9), sharex=True, sharey=True
 )
 
 # Plot the differences between the target and the best prediction for each layout
@@ -195,7 +196,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey.easting, survey.northing, s=0.3, alpha=0.2, color="k")
+        ax.scatter(survey_ground.easting, survey_ground.northing, s=2, alpha=0.3, color="k", linewidths=0)
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -204,19 +205,21 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(
+            r"RMS = {:.2f} mGal, sources = {}".format(
                 prediction.rms, prediction.n_points
             ),
-            fontsize="small",
+            fontsize="medium",
             horizontalalignment="center",
+            pad=5,
         )
 
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
                 0.5,
-                1.16,
-                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                1.13,
+                #r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+            depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -225,9 +228,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Annotate the rows of the figure
         if j == 0:
             ax.text(
-                -0.38,
+                -0.33,
                 0.5,
-                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                #r"\textbf{{" + layout_names[i] + r"}}",
+                layout_names[i],
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
@@ -245,10 +249,13 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
-fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
+#cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+#fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
+cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
+cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
-plt.tight_layout()
+plt.tight_layout(w_pad=0)
 plt.savefig(figs_dir / "ground_survey_differences.pdf", dpi=300)
 plt.show()
 # -
@@ -257,6 +264,7 @@ plt.show()
 
 # +
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+layout_names = ["Sources below data", "Block-averaged sources", "Regular grid sources"]
 field_units = "mGal"
 
 best_predictions = []
@@ -278,7 +286,7 @@ vmax = vd.maxabs(
 
 # Initialize figure
 fig, axes = plt.subplots(
-    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+    nrows=3, ncols=3, figsize=(6.66, 6.9), sharex=True, sharey=True
 )
 
 # Plot the differences between the target and the best prediction for each layout
@@ -294,7 +302,7 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey.easting, survey.northing, s=0.1, alpha=0.2, color="k")
+        ax.scatter(survey_airborne.easting, survey_airborne.northing, s=1, alpha=0.3, color="k", linewidths=0)
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -303,19 +311,21 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(
+            r"RMS = {:.2f} mGal, sources = {}".format(
                 prediction.rms, prediction.n_points
             ),
-            fontsize="small",
+            fontsize="medium",
             horizontalalignment="center",
+            pad=5,
         )
 
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
                 0.5,
-                1.16,
-                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                1.13,
+                #r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+            depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -324,9 +334,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Annotate the rows of the figure
         if j == 0:
             ax.text(
-                -0.38,
+                -0.33,
                 0.5,
-                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                #r"\textbf{{" + layout_names[i] + r"}}",
+                layout_names[i],
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
@@ -344,10 +355,13 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
-fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
+#cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+#fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
+cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
+cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
-plt.tight_layout()
+plt.tight_layout(w_pad=0)
 plt.savefig(figs_dir / "airborne_survey_differences.pdf", dpi=300)
 plt.show()
 # -
