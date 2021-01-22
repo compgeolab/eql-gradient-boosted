@@ -526,13 +526,19 @@ maxabs = vd.maxabs(
 fig = pygmt.Figure()
 
 pygmt.config(
-    FONT_ANNOT="11p,Helvetica,black", 
-    FONT_TITLE="15p,Helvetica,black", 
+    FONT_ANNOT="11p,Helvetica,black",
+    FONT_TITLE="15p,Helvetica,black",
     FONT_LABEL="11p,Helvetica,black",
     MAP_FRAME_WIDTH="2p",
 )
 
-fig.grdimage("@earth_relief_01m", region=region, projection=proj_gmt, shading="+a45+nt0.7", cmap="gray")
+fig.grdimage(
+    "@earth_relief_01m",
+    region=region,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
 fig.coast(
     land="#333333",
 )
@@ -548,14 +554,20 @@ fig.coast(shorelines=True)
 fig.basemap(frame=["af", 'WeSN+t"Gravity disturbance observations"'])
 with pygmt.config(FONT_ANNOT="9p,Helvetica,black"):
     fig.colorbar(
-        box='+gwhite+c-0.1c/0.2c+r0.1c',
-        position="jBL+h+w2.6i/0.07i+o0.2i/0.65i", 
-        frame=['xa50+l"mGal"'],    
+        box="+gwhite+c-0.1c/0.2c+r0.1c",
+        position="jBL+h+w2.6i/0.07i+o0.2i/0.65i",
+        frame=['xa50+l"mGal"'],
     )
 
 fig.shift_origin("5.1i", 0)
 
-fig.grdimage("@earth_relief_01m", region=region, projection=proj_gmt, shading="+a45+nt0.7", cmap="gray")
+fig.grdimage(
+    "@earth_relief_01m",
+    region=region,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
 fig.coast(
     land="#333333",
 )
