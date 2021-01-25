@@ -927,28 +927,19 @@ deviation.
     \label{fig:synthetic-target}
 \end{figure}
 
+
 \subsection{Comparison of source distribution strategies}
 
-The combination of the three source layouts with the three strategies to define
-the depth of the sources define seven different source distributions (see
-Table~\ref{tab:source-distributions}).
-The \emph{grid sources} is only compatible with the \emph{constant depth}
-scheme if no further information is provided.
-
-\begin{table*}
-    \centering
-    \caption{
-        Source distributions as combinations of source layouts and depth
-        strategies.
-    }
-    \label{tab:source-distributions}
-    \begin{tabular}{lccc}
-        & Source below data & Block averaged sources & Grid sources \\ \hline
-        Constant depth & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
-        Relative depth & $\checkmark$ & $\checkmark$ & $\times$     \\
-        Variable depth & $\checkmark$ & $\checkmark$ & $\times$     \\
-    \end{tabular}
-\end{table*}
+We investigated the effect of different strategies for distributing the
+equivalent sources horizontally and vertically on interpolation accuracy.
+To do this, we used the damped least-squares solution described in
+Section~\ref{sec:eql_inversion} (without gradient boosting) to interpolate the
+synthetic datasets (Fig.~\ref{fig:synthetic-layouts}) and compared the results
+against the target grid (Fig.~\ref{fig:synthetic-target}).
+This process was repeated for each combination of horizontal layout
+(sources-below-data and block-averaged-sources) and depth type (constant,
+relative, and variable) and for regular-grid sources with a constant depth,
+totalling 7 different combinations.
 
 Our first goal is to to compare the performance of all source distributions
 from Table~\ref{tab:source-distributions} when predicting harmonic field data
