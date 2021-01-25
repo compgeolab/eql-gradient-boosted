@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.9.1
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
@@ -507,32 +507,14 @@ australia_data = xr.open_dataset(results_dir / "australia" / "australia-data.nc"
 australia_grid = xr.open_dataset(results_dir / "australia" / "australia-grid.nc")
 
 # +
-region = vd.get_region(
-    (australia_data.longitude.values, australia_data.latitude.values)
+region = vd.pad_region(
+    vd.get_region((australia_data.longitude.values, australia_data.latitude.values)),
+    1,
 )
 lat_ts = australia_data.latitude.mean().values
 lon_ts = australia_data.longitude.mean().values
 
-proj_gmt = "M{:.0f}/{:.0f}/6.66i".format(lon_ts, lat_ts)
-
-# +
-vmin, vmax = australia_data.gravity.values.min(), australia_data.gravity.values.max()
-
-fig = pygmt.Figure()
-pygmt.makecpt(cmap="viridis", series=(vmin, vmax))
-fig.plot(
-    x=australia_data.longitude,
-    y=australia_data.latitude,
-    color=australia_data.gravity,
-    style="c0.5p",
-    cmap=True,
-    projection=proj_gmt,  # needed on the first plot
-)
-fig.coast(shorelines=True)
-fig.basemap(region=region, frame=["afg"])
-fig.colorbar(frame='af+l"Observed gravity [mGal]"')
-fig.savefig(figs_dir / "australia-data-gravity.png")
-fig.show()
+proj_gmt = "M{:.0f}/{:.0f}/5i".format(lon_ts, lat_ts)
 # -
 
 maxabs = vd.maxabs(
@@ -540,11 +522,25 @@ maxabs = vd.maxabs(
     australia_grid.disturbance.values,
 )
 
+# +
 fig = pygmt.Figure()
+
+pygmt.config(
+    FONT_ANNOT="11p,Helvetica,black",
+    FONT_TITLE="15p,Helvetica,black",
+    FONT_LABEL="11p,Helvetica,black",
+    MAP_FRAME_WIDTH="2p",
+)
+
+fig.grdimage(
+    "@earth_relief_01m",
+    region=region,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
 fig.coast(
     land="#333333",
-    region=region,
-    projection=proj_gmt,  # needed on the first plot
 )
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.plot(
@@ -555,25 +551,33 @@ fig.plot(
     cmap=True,
 )
 fig.coast(shorelines=True)
-fig.basemap(region=region, projection=proj_gmt, frame=["afg"])
-fig.colorbar(frame='xa50+l"Gravity Disturbance[mGal]"')
-fig.savefig(figs_dir / "australia-data-disturbance.png")
-fig.show()
+fig.basemap(frame=["af", 'WeSN+t"Gravity disturbance observations"'])
+with pygmt.config(FONT_ANNOT="9p,Helvetica,black"):
+    fig.colorbar(
+        box="+gwhite+c-0.1c/0.2c+r0.1c",
+        position="jBL+h+w2.6i/0.07i+o0.2i/0.65i",
+        frame=['xa50+l"mGal"'],
+    )
 
-fig = pygmt.Figure()
+fig.shift_origin("5.1i", 0)
+
+fig.grdimage(
+    "@earth_relief_01m",
+    region=region,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
 fig.coast(
     land="#333333",
-    region=region,
-    projection=proj_gmt,  # needed on the first plot
 )
 pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
 fig.grdimage(
     australia_grid.disturbance,
     nan_transparent=True,
-    shading="",
 )
 fig.coast(shorelines=True)
-fig.basemap(region=region, frame=["afg"])
-fig.colorbar(frame='xa50+l"Gravity Disturbance [mGal]"')
-fig.savefig(figs_dir / "australia-grid.png")
-fig.show()
+fig.basemap(frame=["af", 'wESN+t"Interpolated grid of gravity disturbances"'])
+
+fig.savefig(figs_dir / "australia.png")
+fig.show(width=900)
