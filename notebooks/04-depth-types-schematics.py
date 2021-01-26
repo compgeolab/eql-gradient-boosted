@@ -89,35 +89,31 @@ labels = "a b c".split()
 
 # Plot
 for ax, depth_type, title, label in zip(axes, points, titles, labels):
-    ax.scatter(coordinates[0], coordinates[2], s=size, label="stations", marker="^")
-    ax.scatter(points[depth_type][0], points[depth_type][2], s=size, label="sources")
+    observations = ax.scatter(coordinates[0], coordinates[2], s=size, marker="^")
+    sources = ax.scatter(points[depth_type][0], points[depth_type][2], s=size)
     ax.axhline(y=0, color="grey", linestyle="--", linewidth=0.5)
     ax.set_title(title)
     ax.set_aspect("equal")
-    ax.tick_params(
-        axis="y",  # changes apply to the y-axis
-        which="both",  # both major and minor ticks are affected
-        left=False,  # ticks along the left edge are off
-        right=False,  # ticks along the right edge are off
-        labelleft=False,  # labels along the bottom edge are off
-    )
-    ax.tick_params(
-        axis="x",  # changes apply to the y-axis
-        which="both",  # both major and minor ticks are affected
-        bottom=False,  # ticks along the left edge are off
-        top=False,  # ticks along the right edge are off
-        labelbottom=False,  # labels along the bottom edge are off
-    )
+    ax.axis("off")
     ax.annotate(
         label,
-        xy=(0.045, 0.88),
+        xy=(0.045, 0.98),
         xycoords="axes fraction",
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
 
-axes[0].legend(loc=(0.6, 0.32), borderpad=0.2, labelspacing=0.3)
+plt.figlegend(
+    handles=(observations, sources),
+    labels=("observation points", "equivalent sources"),
+    loc=(0.62, 0.02),
+    borderpad=0,
+    handletextpad=0,
+    frameon=False,
+    ncol=2,
+    columnspacing=0,
+)
 axes[0].set_ylim(-200, 130)
 
 plt.tight_layout(w_pad=0)
-plt.savefig(Path("..") / "manuscript" / "figs" / "depth_types.pdf")
+plt.savefig(Path("..") / "manuscript" / "figs" / "depth_types.pdf", bbox_inches="tight")
 plt.show()
