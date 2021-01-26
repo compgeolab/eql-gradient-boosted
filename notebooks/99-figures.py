@@ -17,6 +17,7 @@
 
 from pathlib import Path
 import xarray as xr
+import numpy as np
 import pandas as pd
 import verde as vd
 import pygmt
@@ -35,145 +36,98 @@ airborne_results_dir = results_dir / "airborne_survey"
 
 figs_dir = Path("..") / "manuscript" / "figs"
 
-# ## Ground survey
+# ## Ground and airborne synthetic surveys
 
-survey = pd.read_csv(ground_results_dir / "survey.csv")
+survey_ground = pd.read_csv(ground_results_dir / "survey.csv")
+survey_airborne = pd.read_csv(airborne_results_dir / "survey.csv")
 
 # +
 # Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
+figsize = (6.66, 2.9)
+cbar_args = dict(
+    shrink=0.95,
+    pad=0.16,
+    aspect=40,
+    orientation="horizontal",
+)
+size = 0.5
+labels = "a b c d".split()
+coords_scale = 1e-3
 
 # Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(ncols=4, nrows=1, sharey=True, figsize=figsize)
 
-# Plot survey points
 tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
+    survey_ground.easting * coords_scale,
+    survey_ground.northing * coords_scale,
+    c=survey_ground.height,
+    cmap="cividis",
+    s=size,
 )
-clb = plt.colorbar(
-    tmp,
-    ax=ax1,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
+clb = plt.colorbar(tmp, ax=ax1, **cbar_args)
+clb.set_label("meters")
+
+tmp = ax2.scatter(
+    survey_ground.easting * coords_scale,
+    survey_ground.northing * coords_scale,
+    c=survey_ground.g_z,
+    cmap="viridis",
+    s=size,
 )
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
+clb = plt.colorbar(tmp, ax=ax2, **cbar_args)
+clb.set_label("mGal")
 
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp,
-    ax=ax2,
-    shrink=cbar_shrink,
-    orientation="vertical",
-    pad=cbar_pad,
-    aspect=cbar_aspect,
+tmp = ax3.scatter(
+    survey_airborne.easting * coords_scale,
+    survey_airborne.northing * coords_scale,
+    c=survey_airborne.height,
+    cmap="cividis",
+    s=size,
 )
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
+clb = plt.colorbar(tmp, ax=ax3, **cbar_args)
+clb.set_label("meters")
 
 
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x",
-    which="both",
-    bottom=False,
-    top=False,
-    labelbottom=False,
+tmp = ax4.scatter(
+    survey_airborne.easting * coords_scale,
+    survey_airborne.northing * coords_scale,
+    c=survey_airborne.g_z,
+    cmap="viridis",
+    s=size,
 )
+clb = plt.colorbar(tmp, ax=ax4, **cbar_args)
+clb.set_label("mGal")
 
-for ax, label in zip((ax1, ax2), labels):
+ax1.set_ylabel("northing [km]")
+for ax, label in zip((ax1, ax2, ax3, ax4), labels):
     ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
+    ax.set_xlabel("easting [km]")
     ax.annotate(
         label,
         xy=(0.04, 0.94),
         xycoords="axes fraction",
         bbox=dict(boxstyle="circle", fc="white", lw=0.2),
     )
+    ax.grid(linestyle="--", linewidth=0.1)
 
-ax1.set_title("Ground survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
+title_args = dict(
+    pad=4,
+    fontsize="medium",
+)
+ax1.set_title("Observation points", **title_args)
+ax2.set_title("Synthetic gravity", **title_args)
+ax3.set_title("Observation points", **title_args)
+ax4.set_title("Synthetic gravity", **title_args)
 
+plt.figtext(0.3, 0.9, "Ground survey", horizontalalignment="center", fontsize="large")
+plt.figtext(
+    0.78, 0.9, "Airborne survey", horizontalalignment="center", fontsize="large"
+)
 
-plt.tight_layout(h_pad=0.2)
+plt.tight_layout(w_pad=0, pad=0)
 plt.savefig(
-    figs_dir / "ground-survey.pdf",
+    figs_dir / "synthetic-survey-layouts.pdf",
     bbox_inches="tight",
-    dpi=300,
-)
-# -
-
-# ## Airborne survey
-
-survey = pd.read_csv(airborne_results_dir / "survey.csv")
-
-# +
-# Define useful parameters
-width = 3.33
-figsize = (width, width * 1.7)
-cbar_shrink = 0.95
-cbar_pad = 0.03
-cbar_aspect = 30
-size = 2
-labels = "a b".split()
-
-# Initialize figure and axes
-fig, (ax1, ax2) = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=figsize)
-
-# Plot survey points
-tmp = ax1.scatter(
-    survey.easting, survey.northing, c=survey.height, cmap="cividis", s=size
-)
-clb = plt.colorbar(
-    tmp, ax=ax1, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("m", labelpad=-15, y=1.05, rotation=0)
-
-# Plot measured values
-tmp = ax2.scatter(survey.easting, survey.northing, c=survey.g_z, cmap="viridis", s=size)
-clb = plt.colorbar(
-    tmp, ax=ax2, shrink=cbar_shrink, orientation="vertical", pad=0.03, aspect=30
-)
-clb.set_label("mGal", labelpad=-15, y=1.05, rotation=0)
-
-ax2.set_xlabel("easting [m]")
-ax1.tick_params(
-    axis="x",
-    which="both",
-    bottom=False,
-    top=False,
-    labelbottom=False,
-)
-
-for ax, label in zip((ax1, ax2), labels):
-    ax.set_aspect("equal")
-    ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
-    ax.set_ylabel("northing [m]")
-    ax.yaxis.offsetText.set_x(-0.2)
-    ax.annotate(
-        label,
-        xy=(0.04, 0.94),
-        xycoords="axes fraction",
-        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
-    )
-
-ax1.set_title("Airborne survey points", pad=3)
-ax2.set_title("Observed gravity acceleration", pad=3)
-
-plt.tight_layout(h_pad=0.2)
-plt.savefig(
-    figs_dir / "airborne-survey.pdf",
-    bbox_inches="tight",
-    dpi=300,
 )
 # -
 
@@ -201,7 +155,6 @@ plt.tight_layout()
 plt.savefig(
     figs_dir / "target-grid.pdf",
     bbox_inches="tight",
-    dpi=300,
 )
 plt.show()
 # -
@@ -210,6 +163,7 @@ plt.show()
 
 # +
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+layout_names = ["Sources below data", "Block-averaged sources", "Regular grid sources"]
 field_units = "mGal"
 
 best_predictions = []
@@ -231,7 +185,7 @@ vmax = vd.maxabs(
 
 # Initialize figure
 fig, axes = plt.subplots(
-    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+    nrows=3, ncols=3, figsize=(6.66, 6.9), sharex=True, sharey=True
 )
 
 # Plot the differences between the target and the best prediction for each layout
@@ -247,7 +201,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey.easting, survey.northing, s=0.3, alpha=0.2, color="k")
+        ax.scatter(
+            survey_ground.easting,
+            survey_ground.northing,
+            s=2,
+            alpha=0.3,
+            color="k",
+            linewidths=0,
+        )
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -256,19 +217,21 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(
+            r"RMS = {:.2f} mGal, sources = {}".format(
                 prediction.rms, prediction.n_points
             ),
-            fontsize="small",
+            fontsize="medium",
             horizontalalignment="center",
+            pad=5,
         )
 
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
                 0.5,
-                1.16,
-                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                1.13,
+                # r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -277,9 +240,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Annotate the rows of the figure
         if j == 0:
             ax.text(
-                -0.38,
+                -0.33,
                 0.5,
-                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                # r"\textbf{{" + layout_names[i] + r"}}",
+                layout_names[i],
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
@@ -297,11 +261,17 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
-fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
+# cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+# fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
+cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
+cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
-plt.tight_layout()
-plt.savefig(figs_dir / "ground_survey_differences.pdf", dpi=300)
+plt.tight_layout(w_pad=0)
+plt.savefig(
+    figs_dir / "ground_survey_differences.pdf",
+    bbox_inches="tight",
+)
 plt.show()
 # -
 
@@ -309,6 +279,7 @@ plt.show()
 
 # +
 layouts = ["source_below_data", "block_averaged_sources", "grid_sources"]
+layout_names = ["Sources below data", "Block-averaged sources", "Regular grid sources"]
 field_units = "mGal"
 
 best_predictions = []
@@ -330,7 +301,7 @@ vmax = vd.maxabs(
 
 # Initialize figure
 fig, axes = plt.subplots(
-    nrows=3, ncols=3, figsize=(6.66, 6.66), sharex=True, sharey=True
+    nrows=3, ncols=3, figsize=(6.66, 6.9), sharex=True, sharey=True
 )
 
 # Plot the differences between the target and the best prediction for each layout
@@ -346,7 +317,14 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
             add_colorbar=False,
             rasterized=True,
         )
-        ax.scatter(survey.easting, survey.northing, s=0.1, alpha=0.2, color="k")
+        ax.scatter(
+            survey_airborne.easting,
+            survey_airborne.northing,
+            s=1,
+            alpha=0.3,
+            color="k",
+            linewidths=0,
+        )
         ax.set_aspect("equal")
         # Set scientific notation on axis labels (and change offset text position)
         ax.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
@@ -355,19 +333,21 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         ax.set_ylabel(ax.get_ylabel() + " [m]")
         # Set title with RMS and number of points
         ax.set_title(
-            r"RMS: {:.2f} mGal, \#sources: {}".format(
+            r"RMS = {:.2f} mGal, sources = {}".format(
                 prediction.rms, prediction.n_points
             ),
-            fontsize="small",
+            fontsize="medium",
             horizontalalignment="center",
+            pad=5,
         )
 
         # Annotate the columns of the figure
         if i == 0:
             ax.text(
                 0.5,
-                1.16,
-                r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                1.13,
+                # r"\textbf{{" + depth_type.replace("_", " ").title() + r"}}",
+                depth_type.replace("_", " ").capitalize(),
                 fontsize="large",
                 fontweight="bold",
                 horizontalalignment="center",
@@ -376,9 +356,10 @@ for i, (ax_row, dataset) in enumerate(zip(axes, best_predictions)):
         # Annotate the rows of the figure
         if j == 0:
             ax.text(
-                -0.38,
+                -0.33,
                 0.5,
-                r"\textbf{{" + dataset.layout.replace("_", " ").title() + r"}}",
+                # r"\textbf{{" + layout_names[i] + r"}}",
+                layout_names[i],
                 fontsize="large",
                 fontweight="bold",
                 verticalalignment="center",
@@ -396,15 +377,21 @@ axes[-1][-1].set_visible(False)
 axes[-1][-2].set_visible(False)
 
 # Add colorbar
-cbar_ax = fig.add_axes([0.38, 0.075, 0.015, 0.24])
-fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=field_units)
+# cbar_ax = fig.add_axes([0.39, 0.075, 0.01, 0.25])
+# fig.colorbar(tmp, cax=cbar_ax, orientation="vertical", label=f"Difference between\ntarget and interpolation\n[{field_units}]")
+cbar_ax = fig.add_axes([0.49, 0.3, 0.4, 0.01])
+cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_units}")
+cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
-plt.tight_layout()
-plt.savefig(figs_dir / "airborne_survey_differences.pdf", dpi=300)
+plt.tight_layout(w_pad=0)
+plt.savefig(
+    figs_dir / "airborne_survey_differences.pdf",
+    bbox_inches="tight",
+)
 plt.show()
 # -
 
-# # Gradient boosted eqls: window size
+# # Gradient-boosted equivalent sources comparison
 
 # +
 eql_harmonic_results = pd.read_csv(
@@ -422,82 +409,93 @@ boost_window_size = pd.read_csv(
 
 boost_window_size
 
-# +
-width = 3.33
-figsize = (width, width * 0.85 * 1.5)
-fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
-ax1.errorbar(
-    boost_window_size.window_size_ratio,
-    boost_window_size.rms,
-    yerr=boost_window_size.rms_std,
-    fmt="o",
-    capsize=2,
-    label="Gradient-boosted sources",
-)
-ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
-ax1.set_ylabel("RMS [mGal]")
-ax1.grid()
-ax1.legend()
-
-ax2.errorbar(
-    boost_window_size.window_size_ratio,
-    boost_window_size.fitting_time / eql_fitting_time,
-    yerr=boost_window_size.fitting_time_std / eql_fitting_time,
-    fmt="o",
-    capsize=3,
-)
-ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
-ax2.set_xlabel("Window size as a fraction of the survey area")
-ax2.set_ylabel("Fitting time ratio")
-ax2.set_yscale("log")
-ax2.set_xlim(0, 0.7)
-ax2.grid()
-ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
-plt.tight_layout()
-plt.savefig(figs_dir / "gradient-boosted-window-size.pdf", dpi=300)
-plt.show()
-# -
-
-# # Gradient boosted eqls: overlapping
-
 boost_overlapping = pd.read_csv(
     results_dir / "gradient-boosted" / "gradient-boosted-overlapping.csv"
 )
 
+boost_overlapping
+
 # +
-width = 3.33
-figsize = (width, width * 0.85 * 1.5)
-fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
+figsize = (6.66, 4)
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize, sharex="col", sharey="row")
 
-ax1.errorbar(
-    boost_overlapping.overlaps,
-    boost_overlapping.rms,
-    yerr=boost_overlapping.rms_std,
-    fmt="o",
-    capsize=2,
-    label="Gradient-boosted sources",
-)
-ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
-ax1.set_ylabel("RMS [mGal]")
-ax1.grid()
-ax1.legend()
 
-ax2.errorbar(
-    boost_overlapping.overlaps,
-    boost_overlapping.fitting_time / eql_fitting_time,
-    yerr=boost_overlapping.fitting_time_std / eql_fitting_time,
-    fmt="o",
+ax1, ax2 = axes[:, 0]
+
+boosted = ax1.errorbar(
+    boost_window_size.window_size_ratio ** 2 * 100,
+    boost_window_size.rms,
+    yerr=boost_window_size.rms_std,
+    fmt=".",
     capsize=3,
 )
-ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
-ax2.set_xlabel("Overlap")
-ax2.set_ylabel("Fitting time ratio")
+nonboosted = ax1.axhline(eql_rms, linestyle="--", color="C1")
+ax1.set_ylabel("Interpolation RMS error [mGal]")
+ax1.set_ylim(0.2, 1.3)
+ax1.set_xticks(np.arange(0, 45, 5))
+
+ax2.errorbar(
+    boost_window_size.window_size_ratio ** 2 * 100,
+    boost_window_size.fitting_time / eql_fitting_time,
+    yerr=boost_window_size.fitting_time_std / eql_fitting_time,
+    fmt=".",
+    capsize=3,
+)
+ax2.axhline(1, linestyle="--", color="C1")
+ax2.set_xlabel("Window area as a percentage of the survey area [\\%]")
+ax2.set_ylabel("Relative computation time")
 ax2.set_yscale("log")
-ax2.set_xlim(-0.05, 1)
-ax2.grid()
+ax2.set_xlim(-2, 45)
+
+ax1, ax2 = axes[:, 1]
+
+ax1.errorbar(
+    boost_overlapping.overlaps * 100,
+    boost_overlapping.rms,
+    yerr=boost_overlapping.rms_std,
+    fmt=".",
+    capsize=3,
+)
+ax1.axhline(eql_rms, linestyle="--", color="C1")
+
+ax2.errorbar(
+    boost_overlapping.overlaps * 100,
+    boost_overlapping.fitting_time / eql_fitting_time,
+    yerr=boost_overlapping.fitting_time_std / eql_fitting_time,
+    fmt=".",
+    capsize=3,
+)
+ax2.axhline(1, linestyle="--", color="C1")
+ax2.set_xlabel("Percentage of window overlap [\\%]")
+ax2.set_yscale("log")
+ax2.set_xlim(-5, 100)
+ax2.set_xticks(np.arange(0, 110, 10))
 ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
-plt.tight_layout()
-plt.savefig(figs_dir / "gradient-boosted-overlap.pdf", dpi=300)
+
+axes[0, 1].legend(
+    handles=(nonboosted, boosted),
+    labels=("Regular eq. sources", "Gradient-boosted eq. sources"),
+    loc="upper right",
+    framealpha=1,
+    edgecolor="white",
+    shadow=True,
+)
+
+labels = "a b c d".split()
+for ax, label in zip(axes.ravel(), labels):
+    ax.annotate(
+        label,
+        xy=(0.03, 0.92),
+        xycoords="axes fraction",
+        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
+    )
+    ax.grid(which="both", alpha=0.5, linestyle="--", linewidth=0.5)
+
+plt.tight_layout(w_pad=0, h_pad=0.5)
+plt.savefig(
+    figs_dir / "gradient-boosted-comparisons.pdf",
+    bbox_inches="tight",
+)
 plt.show()
 # -
 
