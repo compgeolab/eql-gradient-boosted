@@ -423,7 +423,7 @@ fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize, sharex="col", sharey
 ax1, ax2 = axes[:, 0]
 
 boosted = ax1.errorbar(
-    boost_window_size.window_size_ratio,
+    boost_window_size.window_size_ratio**2,
     boost_window_size.rms,
     yerr=boost_window_size.rms_std,
     fmt=".",
@@ -431,10 +431,10 @@ boosted = ax1.errorbar(
 )
 nonboosted = ax1.axhline(eql_rms, linestyle="--", color="C1")
 ax1.set_ylabel("Interpolation RMS error [mGal]")
-ax1.set_ylim(0.2, 1.2)
+ax1.set_ylim(0.2, 1.3)
 
 ax2.errorbar(
-    boost_window_size.window_size_ratio,
+    boost_window_size.window_size_ratio**2,
     boost_window_size.fitting_time / eql_fitting_time,
     yerr=boost_window_size.fitting_time_std / eql_fitting_time,
     fmt=".",
@@ -444,7 +444,7 @@ ax2.axhline(1, linestyle="--", color="C1")
 ax2.set_xlabel("Window size as a fraction of the survey area")
 ax2.set_ylabel("Relative computation time")
 ax2.set_yscale("log")
-ax2.set_xlim(0, 0.7)
+ax2.set_xlim(-0.02, 0.45)
 
 ax1, ax2 = axes[:, 1]
 
