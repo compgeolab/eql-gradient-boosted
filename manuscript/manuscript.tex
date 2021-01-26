@@ -1131,7 +1131,7 @@ surveys over Australia made by \citet{wynne2018} and filtered and referenced to
 the WGS84 ellipsoid by \citet{australia_compilation}.
 It contains over 1.7 million data points and covers most of the Australian
 territory at variable point spacings.
-Our goal is to create a 1 arc-minute resolution grid of gravity disturbances at
+Our goal is to create a 1~arc-minute resolution grid of gravity disturbances at
 a constant geometric height of \AustraliaEqlGridHeight{} (the largest height of
 observations).
 
@@ -1140,20 +1140,20 @@ the WGS84 ellipsoid from the observed gravity data (Fig.~\ref{fig:australia}).
 Here, normal gravity was computed at each observation point through the
 closed-form formula of \citet{ligotze2001} using the Boule software
 \citep{boule2020}.
-Finally, we convert the observations to planar Cartesian coordinates by
+Finally, we converted the observations to planar Cartesian coordinates by
 applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
 at a relative depth of \AustraliaEqlDepth{} and a block size of
 \SI{1.8}{\kilo\meter}, resulting in a total of \AustraliaEqlNSources{}~point
 sources.
-The block size was chosen to match the desired resolution of the final grid (1
-arc-minute is approximately \SI{1.8}{\kilo\meter} at the equator).
+The block size was chosen to match the desired resolution of the final grid
+ (1~arc-minute is approximately \SI{1.8}{\kilo\meter} at the equator).
 The coefficients of the gradient-boosted equivalent sources are estimated using
 a damping equal to \AustraliaEqlDamping{} and a window size of
 \AustraliaEqlWindowSize{}, which was chosen in order to limit the amount of
-computer memory needed to store the Jacobian matrix to under 10 Gigabytes.
-Finally, we used estimated source coefficients to predict the values of the
+computer memory needed to store the Jacobian matrix to under 10~Gigabytes.
+Finally, we used the estimated source coefficients to predict the values of the
 gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid.
@@ -1169,7 +1169,7 @@ southwestern parts), which is expected from the upward continuation that was
 performed to have the grid at a constant height.
 On a modest workstation with 16 cores and 16 Gigabytes of RAM,
 estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
-$\sim 1.3$ hours and the forward modelling step took $\sim 18$ minutes.
+$\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
