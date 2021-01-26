@@ -1102,7 +1102,7 @@ sizes to compensate.
         with a relative depth).
         Window sizes are given as a percentage of the survey area (e.g., 100\%
         represents a window with the same area as the survey) and window
-        overlap is given as a percentage of the window size 
+        overlap is given as a percentage of the window size
         (an overlap of 50\% means that two adjacent windows
         share an area half of the size of the entire window).
         Computation time refers to the time required to estimate the source
@@ -1152,7 +1152,8 @@ observations).
 We computed the gravity disturbance by removing the normal gravity of
 the WGS84 ellipsoid from the observed gravity data (Fig.~\ref{fig:australia}).
 Here, normal gravity was computed at each observation point through the
-closed-form formula of \citet{ligotze2001} (TODO: ADD CITATION TO BOULE).
+closed-form formula of \citet{ligotze2001} using the Boule software
+\citep{boule2020}.
 Finally, we convert the observations to planar Cartesian coordinates by
 applying a Mercator projection.
 
