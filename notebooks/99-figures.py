@@ -442,7 +442,7 @@ ax2.errorbar(
     capsize=3,
 )
 ax2.axhline(1, linestyle="--", color="C1")
-ax2.set_xlabel("Window area as a percentage of the survey area")
+ax2.set_xlabel("Window area as a percentage of the survey area [\\%]")
 ax2.set_ylabel("Relative computation time")
 ax2.set_yscale("log")
 ax2.set_xlim(-2, 45)
@@ -466,7 +466,7 @@ ax2.errorbar(
     capsize=3,
 )
 ax2.axhline(1, linestyle="--", color="C1")
-ax2.set_xlabel("Percentage of window overlap")
+ax2.set_xlabel("Percentage of window overlap [\\%]")
 ax2.set_yscale("log")
 ax2.set_xlim(-5, 100)
 ax2.set_xticks(np.arange(0, 110, 10))
