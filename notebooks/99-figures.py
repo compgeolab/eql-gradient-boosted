@@ -17,6 +17,7 @@
 
 from pathlib import Path
 import xarray as xr
+import numpy as np
 import pandas as pd
 import verde as vd
 import pygmt
@@ -127,7 +128,6 @@ plt.tight_layout(w_pad=0, pad=0)
 plt.savefig(
     figs_dir / "synthetic-survey-layouts.pdf",
     bbox_inches="tight",
-    dpi=300,
 )
 # -
 
@@ -155,7 +155,6 @@ plt.tight_layout()
 plt.savefig(
     figs_dir / "target-grid.pdf",
     bbox_inches="tight",
-    dpi=300,
 )
 plt.show()
 # -
@@ -269,7 +268,9 @@ cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_un
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
 plt.tight_layout(w_pad=0)
-plt.savefig(figs_dir / "ground_survey_differences.pdf", dpi=300)
+plt.savefig(figs_dir / "ground_survey_differences.pdf",
+    bbox_inches="tight",
+           )
 plt.show()
 # -
 
@@ -382,11 +383,12 @@ cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_un
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
 plt.tight_layout(w_pad=0)
-plt.savefig(figs_dir / "airborne_survey_differences.pdf", dpi=300)
+plt.savefig(figs_dir / "airborne_survey_differences.pdf", 
+    bbox_inches="tight",)
 plt.show()
 # -
 
-# # Gradient boosted eqls: window size
+# # Gradient-boosted equivalent sources comparison
 
 # +
 eql_harmonic_results = pd.read_csv(
@@ -404,82 +406,90 @@ boost_window_size = pd.read_csv(
 
 boost_window_size
 
+boost_overlapping = pd.read_csv(
+    results_dir / "gradient-boosted" / "gradient-boosted-overlapping.csv"
+)
+
+boost_overlapping
+
 # +
-width = 3.33
-figsize = (width, width * 0.85 * 1.5)
-fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
-ax1.errorbar(
+figsize = (6.66, 3.5)
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize, sharex="col", sharey="row")
+
+
+ax1, ax2 = axes[:, 0]
+
+boosted = ax1.errorbar(
     boost_window_size.window_size_ratio,
     boost_window_size.rms,
     yerr=boost_window_size.rms_std,
-    fmt="o",
-    capsize=2,
-    label="Gradient-boosted sources",
+    fmt=".",
+    capsize=3,
 )
-ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
-ax1.set_ylabel("RMS [mGal]")
-ax1.grid()
-ax1.legend()
+nonboosted = ax1.axhline(eql_rms, linestyle="--", color="C1")
+ax1.set_ylabel("Interpolation RMS error [mGal]")
+ax1.set_ylim(0.2, 1.2)
 
 ax2.errorbar(
     boost_window_size.window_size_ratio,
     boost_window_size.fitting_time / eql_fitting_time,
     yerr=boost_window_size.fitting_time_std / eql_fitting_time,
-    fmt="o",
+    fmt=".",
     capsize=3,
 )
-ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
+ax2.axhline(1, linestyle="--", color="C1")
 ax2.set_xlabel("Window size as a fraction of the survey area")
-ax2.set_ylabel("Fitting time ratio")
+ax2.set_ylabel("Relative computation time")
 ax2.set_yscale("log")
 ax2.set_xlim(0, 0.7)
-ax2.grid()
-ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
-plt.tight_layout()
-plt.savefig(figs_dir / "gradient-boosted-window-size.pdf", dpi=300)
-plt.show()
-# -
 
-# # Gradient boosted eqls: overlapping
-
-boost_overlapping = pd.read_csv(
-    results_dir / "gradient-boosted" / "gradient-boosted-overlapping.csv"
-)
-
-# +
-width = 3.33
-figsize = (width, width * 0.85 * 1.5)
-fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, figsize=figsize, sharex=True)
+ax1, ax2 = axes[:, 1]
 
 ax1.errorbar(
     boost_overlapping.overlaps,
     boost_overlapping.rms,
     yerr=boost_overlapping.rms_std,
-    fmt="o",
-    capsize=2,
-    label="Gradient-boosted sources",
+    fmt=".",
+    capsize=3,
 )
-ax1.axhline(eql_rms, linestyle="--", color="C1", label="Regular sources")
-ax1.set_ylabel("RMS [mGal]")
-ax1.grid()
-ax1.legend()
+ax1.axhline(eql_rms, linestyle="--", color="C1")
 
 ax2.errorbar(
     boost_overlapping.overlaps,
     boost_overlapping.fitting_time / eql_fitting_time,
     yerr=boost_overlapping.fitting_time_std / eql_fitting_time,
-    fmt="o",
+    fmt=".",
     capsize=3,
 )
-ax2.axhline(1, linestyle="--", color="C1", label="Fitting time of EQLHarmonic")
-ax2.set_xlabel("Overlap")
-ax2.set_ylabel("Fitting time ratio")
+ax2.axhline(1, linestyle="--", color="C1")
+ax2.set_xlabel("Fraction of window overlap")
 ax2.set_yscale("log")
 ax2.set_xlim(-0.05, 1)
-ax2.grid()
+ax2.set_xticks(np.arange(0, 1.1, 0.1))
 ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
-plt.tight_layout()
-plt.savefig(figs_dir / "gradient-boosted-overlap.pdf", dpi=300)
+
+axes[0, 1].legend(
+    handles=(nonboosted, boosted),
+    labels=("Regular eq. sources", "Gradient-boosted eq. sources"),
+    loc="upper right",
+    framealpha=1,
+    edgecolor="white",
+    shadow=True,
+)
+
+labels = "a b c d".split()
+for ax, label in zip(axes.ravel(), labels):    
+    ax.annotate(
+        label,
+        xy=(0.03, 0.92),
+        xycoords="axes fraction",
+        bbox=dict(boxstyle="circle", fc="white", lw=0.2),
+    )
+    ax.grid(which="both", alpha=0.5, linestyle="--", linewidth=0.5)
+
+plt.tight_layout(w_pad=0, h_pad=0.5)
+plt.savefig(figs_dir / "gradient-boosted-comparisons.pdf", 
+    bbox_inches="tight",)
 plt.show()
 # -
 
