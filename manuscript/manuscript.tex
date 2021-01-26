@@ -1281,6 +1281,94 @@ the figures.
 
 \section{Conclusions}
 
+The equivalent source technique has been proven to be a well suited method for
+interpolating any harmonic data such as gravity disturbances and magnetic
+anomalies.
+The two main reasons that make it to stand out over all-purpose 2D
+interpolation methods is the fact that the equivalent sources take into account
+the height of the observations and they always produce harmonic predictions.
+The main inconvenience of using equivalent sources is the computational
+requirements needed to estimate the coefficients of the equivalent sources,
+specially on the computer memory needed to store the Jacobian matrix.
+This forbids the application of the equivalent source technique to very
+large datasets where the computer memory needed to store the whole Jacobian
+matrix greatly exceeds the specifications of modest personal computers now days.
+
+In this work we present two strategies that could be simultaneously applied in
+order to interpolate very large datasets in reasonable times without the need
+to store large matrices into memory:
+the block-averaged sources, which reduce the number of
+equivalent sources needed for the interpolation;
+and the gradient-boosted equivalent sources that simplify the
+problem of estimating the source coefficients into smaller problems
+through sets of equivalent sources defined by overlapping windows.
+
+Both methods were exhaustively tested against a synthetic model and synthetic
+surveys in order to compare accurate they are in comparison to the existing
+techniques and how they perform in terms of computational resources.
+Block-averaged sources were compared to the interpolations obtained with two
+traditional strategies for locating the sources:
+the \emph{source below data} and the \emph{regular grid} of sources.
+The performance of the gradient-boosted equivalent sources was compared against
+the regular non-boosted equivalent sources, along with tests for assessing how
+the choice of the window size and the amount of overlap between adjacent
+windows affect both the accuracy of the interpolations and the computational
+load.
+
+Our results showed that the block-averaged sources reduce the computational
+load needed to estimate their coefficients in comparison to the two traditional
+strategies mentioned before.
+They also showed that this reduction of the number of sources doesn't affect
+the accuracy of the predictions, making block-averaged sources a better
+alternative to the traditional methods.
+Besides, block-averaged sources might also prevent aliasing on the interpolated
+values, specially when the observation points show high anisotropy, i.e. they
+were taken along paths with a high sample frequency.
+From our experimentation with this new strategy we noticed that special
+attention must be payed when choosing the size of the block spacing:
+as a thumb rule, it must be approximately equal to the resolution of the
+regular grid where the values will be interpolated.
+
+We have also carried out similar tests to compare the vertical location of the
+sources.
+Our results showed that any one of the three strategies taken into account
+(\emph{constant depth}, \emph{relative depth} and \emph{variable depth})
+doesn't significantly affects the accuracy of the interpolations.
+Nevertheless, we are more prone to choose either the \emph{constant depth} or
+the \emph{relative depth} for any application because they involve less
+hyper-parameters that would be needed to estimated before the actual
+interpolation.
+
+Regarding the gradient-boosted equivalent sources, our results show that they
+heavily reduce the computer memory needed to estimate source coefficients,
+making possible to interpolate even very large datasets.
+The interpolations obtained though this new method achieve almost the same
+accuracy than the non-boosted sources, while reducing the computation time
+needed to estimate the source coefficients.
+Because it doesn't involve any assumption on the location of the sources, it
+can be used in conjunction with any horizontal source layout and any strategy
+for setting their depth.
+This allows to use both the block-averaged sources and the gradient-boosted
+equivalent sources simultaneously.
+Our results allowed us to develop a rule of thumb in order to maximize the
+accuracy of the interpolations: the size of the overlapping windows must be
+chosen as the maximum value that creates Jacobian matrices that fit into our
+computer memory.
+Therefore its choice is subject to the particular infrastructure where the
+interpolation will be carried out.
+We also show that an overlap of 50\% between adjacent windows achieves a good
+compromise between accuracy and computation time needed to fit the source
+coefficients.
+
+Finally, both proposed methods were used to interpolate a compilation of more
+than 1.7 million gravity points from Australia on a regular grid with
+a resolution of 1~arc-minute.
+The whole process was carried out on a modest personal computer, requiring
+a maximum of 10GB of memory.
+This shows how the new gradient-boosted equivalent sources can be applied to
+real-world data.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Acknowledgements}
