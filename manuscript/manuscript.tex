@@ -626,21 +626,6 @@ data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
 
-\textbf{NOTE: This paragraph might be better in the Discussion section.}
-
-Our gradient boosting algorithm for overlapping windows is similar to the
-``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
-fits portions of an equivalent source model to the data residuals.
-The key differences are:
-(1) the sources in the overlapping portions of the windows are fit more than
-once, allowing the algorithm to self-correct for poor solutions to any given
-window;
-(2) using only data points within the window when fitting the data enables the
-use of larger datasets;
-(3) experience shows that the step size parameter improves the convergence of
-the solution, particularly when using only the data inside the windows for
-fitting.
-
 
 \subsection{Location of sources}
 \label{sec:source_distribution}
@@ -1185,18 +1170,22 @@ On a modest workstation with 16 cores and 16 Gigabytes of RAM,
 estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
 $\sim 1.3$ hours and the forward modelling step took $\sim 18$ minutes.
 
-FOR DISCUSSION:
-
-If the grid will have a much higher resolution than the block spacing, the
-equivalent sources will not be able to reproduce the high frequency components
-of the data.
-Therefore we recommend setting a block spacing that matches the resolution of
-the final grid.
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Discussion}
+
+Our gradient boosting algorithm for overlapping windows is similar to the
+``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
+fits portions of an equivalent source model to the data residuals.
+The key differences are:
+(1) the sources in the overlapping portions of the windows are fit more than
+once, allowing the algorithm to self-correct for poor solutions to any given
+window;
+(2) using only data points within the window when fitting the data enables the
+use of larger datasets;
+(3) experience shows that the step size parameter improves the convergence of
+the solution, particularly when using only the data inside the windows for
+fitting.
 
 \subsection{Location of sources}
 
@@ -1255,6 +1244,13 @@ a balance between predictions accuracy and computational time needed to fit the
 source coefficients.
 This corroborates that our naive choice of 50\% is good enough for producing
 accurate predictions in reasonable times.
+
+
+If the grid will have a much higher resolution than the block spacing, the
+equivalent sources will not be able to reproduce the high frequency components
+of the data.
+Therefore we recommend setting a block spacing that matches the resolution of
+the final grid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
