@@ -1058,56 +1058,35 @@ for windows with an area greater than $\sim 20\%$ of the survey area.
 As the window size increases, both RMS error and computation time appear to
 stabilize to nearly constant levels.
 
-\subsubsection{Amount of overlap}
+\subsubsection{Window overlap}
 
-Another factor that plays an important role on the performance of the gradient
-boosted equivalent sources is the amount of overlap between adjacent windows.
-The previous choice of 50\% showed to be sufficiently good to achieve
-acceptable accuracy, although a deeper study should be carried out to assess
-how the amount of overlap impacts both accuracy and fitting time.
+The amount of overlap between adjacent windows plays an important role in the
+performance of the gradient-boosted equivalent sources.
+It controls the number of iterations and how often a particular source is used
+in the least-squares fitting process.
+While the experiments in the previous section showed that 50\% overlap was
+sufficient to achieve acceptable interpolation accuracy, we separately studied
+the impacts of the amount of window overlap on both accuracy and computation
+time.
 
-We interpolated the synthetic airborne survey using the gradient boosted
-equivalent sources on the same points of the target grid.
-The interpolations were carried out using different amount of overlap, from
-0\% to 0.95\% with a step size of 0.05\%.
-For each overlap we gridded the synthetic data using block-averaged sources
-with a spacing of
-\SI{\BestAirborneBlockAveragedSourcesRelativeDepthSpacing}{\meter},
-a relative depth of
-\SI{\BestAirborneBlockAveragedSourcesRelativeDepthDepth}{\meter},
-a window size of \BoostOverlappingWindowSize, and with different
-values of damping.
-Then we compared the resulting interpolations with the target grid in order to
-get the best prediction for each overlap and the damping value used to
-obtain it.
+We performed a similar experiment to one in section~\ref{sec:window_size} but
+this time kept the window size fixed to \BoostOverlappingWindowSize{} and
+varied the amount of overlap from 0\% to 95\% with a step size of 5\%.
+All other experimental procedures remained unchanged.
+Figs.~\ref{fig:gradient-boosted-comparison}b and
+\ref{fig:gradient-boosted-comparison}d show the RMS error and computation time
+required for estimating the source coefficients, respectively, as a function of
+the window overlap.
 
-Using the best set of parameters for each overlap, we registered the achieved
-RMS against the values of the target grid and the time needed to fit the
-sources coefficients.
-The RMS was obtained as the mean RMS achieved by using different random seeds
-as we did on~\ref{sec:window_size}.
-
-We have also computed the fitting time ratio for each overlap, in a similar way
-we did for the window sizes (see Fig.~\ref{fig:gradient-boosted-comparison}d).
-
-From the results obtained we can conclude that a lower values of overlap
-generates less accurate results, while a higher overlap increases the
-computational time required for fitting the source coefficients due to the
-significant increment of the number of overlapping windows.
-
-We found that overlaps less than 40\% produce very inaccurate predictions in
-comparison with the non-boosted equivalent sources, while values larger that
-80\% produce predictions with almost the same level of accuracy as the latter.
-Nevertheless, overlap values larger that 70\% takes significantly more
-computational time to fit the source coefficients.
-
-THE FOLLOWING PARAGRAPH SHOULD BE IN DISCUSSION?
-
-We can then conclude that using overlap values between 40\% and 70\% generate
-a balance between predictions accuracy and computational time needed to fit the
-source coefficients.
-This corroborates that our naive choice of 50\% is good enough for producing
-accurate predictions in reasonable times.
+Our results show what the interpolation RMS error decreases with the amount of
+overlap, reaching the same accuracy as the regular equivalent sources at
+approximately 90\% overlap.
+On the other hand, the computation time increases with the amount of overlap,
+becoming larger than that of the regular equivalent sources for overlaps
+greater than 70\%.
+This is expected since increasing the overlap adds iterations to the gradient
+boosting algorithm without decreasing the individual least-squares problem
+sizes to compensate.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/gradient-boosted-comparisons.pdf}
@@ -1247,6 +1226,14 @@ The only limitation to do so is to generate Jacobian matrices larger than the
 available memory.
 Therefore we recommend using the largest window that generates Jacobian
 matrices that could fit in the available memory.
+
+Overlap:
+
+We can then conclude that using overlap values between 40\% and 70\% generate
+a balance between predictions accuracy and computational time needed to fit the
+source coefficients.
+This corroborates that our naive choice of 50\% is good enough for producing
+accurate predictions in reasonable times.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
