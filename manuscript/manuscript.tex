@@ -1292,7 +1292,7 @@ accurate predictions in reasonable times.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Gridding Australia gravity data}
+\section{Gridding gravity data from Australia}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/australia.png}
@@ -1308,31 +1308,26 @@ accurate predictions in reasonable times.
     \label{fig:australia}
 \end{figure*}
 
-Our final goal is to show how gradient-boosted equivalent sources can be used
-to interpolate a very large dataset of gravity data into a regular grid.
-We selected a compilation of gravity surveys over Australia made by
-\citet{wynne2018}.
-It consists in more than 1.7 million data points that cover most part of the
-Australia territory obtained through observations on ground.
-First we compute the gravity disturbance by removing the normal gravity from
-the observed gravity data (Fig.~\ref{fig:australia}).
-The normal gravity is computed on each observation point through the
-closed-form formula given by \citet{ligotze2001} and using the WGS84 ellipsoid
-as reference.
-Then we obtain planar coordinates of the observation points by applying
-a Mercator projection.
+This section will demonstrate how gradient-boosted equivalent sources can be
+used to interpolate large datasets of gravity data onto a regular grid at
+uniform height.
+For this purpose, we selected a compilation of ground gravity surveys over
+Australia made by \citet{wynne2018} (TODO: MENTION THE COMPGEOLAB VERSION?).
+It contains over 1.7 million data points and covers most of the Australian
+territory at variable point spacings.
+We computed the gravity disturbance by removing the normal gravity of the WGS84
+ellipsoid from the observed gravity data (Fig.~\ref{fig:australia}).
+Here, normal gravity was computed at each observation point through the
+closed-form formula of \citet{ligotze2001} (TODO: ADD CITATION TO BOULE).
+Finally, we convert the observations to planar Cartesian coordinates by
+applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
-at a relative depth of \AustraliaEqlDepth{} and a block spacing of
-\SI{1.8}{\kilo\meter}.
-These parameters create \AustraliaEqlNSources{}~point sources.
-The choice of the block spacing must be done taking into account the desired
+at a relative depth of \AustraliaEqlDepth{} and a block size of
+\SI{1.8}{\kilo\meter}, resulting in a total of \AustraliaEqlNSources{}~point
+sources.
+The block size was chosen to match the desired
 resolution of the final grid.
-If the grid will have a much higher resolution than the block spacing, the
-equivalent sources will not be able to reproduce the high frequency components
-of the data.
-Therefore we recommend setting a block spacing that matches the resolution of
-the final grid.
 In this case we will generate a regular grid with a resolution of 1~arc-minute,
 which can be approximated by \SI{1.8}{\kilo\meter} for the Earth.
 
@@ -1346,6 +1341,14 @@ disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid
 (Fig.~\ref{fig:australia}).
+
+FOR DISCUSSION:
+
+If the grid will have a much higher resolution than the block spacing, the
+equivalent sources will not be able to reproduce the high frequency components
+of the data.
+Therefore we recommend setting a block spacing that matches the resolution of
+the final grid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
