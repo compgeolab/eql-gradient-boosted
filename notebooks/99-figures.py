@@ -432,6 +432,7 @@ boosted = ax1.errorbar(
 nonboosted = ax1.axhline(eql_rms, linestyle="--", color="C1")
 ax1.set_ylabel("Interpolation RMS error [mGal]")
 ax1.set_ylim(0.2, 1.3)
+ax1.set_xticks(np.arange(0, 45, 5))
 
 ax2.errorbar(
     boost_window_size.window_size_ratio ** 2 * 100,

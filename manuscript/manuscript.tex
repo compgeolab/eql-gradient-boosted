@@ -1051,11 +1051,11 @@ the window size.
 The results show that the interpolation RMS error for gradient-boosting is
 generally larger than the error for regular equivalent sources.
 The error decreases asymptotically to within $\sim 40\%$ of the regular
-equivalent sources for windows with an area greater than $\sim 35\%$ of the
+equivalent sources for windows with an area greater than $\sim 10\%$ of the
 survey area.
 The computation time similarly decreases with window size, with the
 gradient-boosting being generally faster than the regular equivalent sources
-for windows with an area greater than $\sim 20\%$ of the survey area.
+for windows with an area greater than $\sim 5\%$ of the survey area.
 As the window size increases, both RMS error and computation time appear to
 stabilize to nearly constant levels.
 
@@ -1097,10 +1097,9 @@ sizes to compensate.
         gradient-boosted equivalent sources (blue dots and error bars).
         Both methods used the same source positions (block-averaged sources
         with a relative depth).
-        Window sizes are given as a fraction of the survey area (e.g., 1
+        Window sizes are given as a percentage of the survey area (e.g., 100
         represents a window with the same area as the survey) and window
-        overlap is given as a fraction of the window size (e.g., 0.5 equals
-        50\% overlap).
+        overlap is given as a percentage of the window size.
         Computation time refers to the time required to estimate the source
         coefficients and is reported as a ratio between the gradient-boosted
         and the regular equivalent sources.
