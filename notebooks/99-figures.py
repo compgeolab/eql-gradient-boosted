@@ -423,7 +423,7 @@ fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize, sharex="col", sharey
 ax1, ax2 = axes[:, 0]
 
 boosted = ax1.errorbar(
-    boost_window_size.window_size_ratio**2,
+    boost_window_size.window_size_ratio ** 2 * 100,
     boost_window_size.rms,
     yerr=boost_window_size.rms_std,
     fmt=".",
@@ -434,22 +434,22 @@ ax1.set_ylabel("Interpolation RMS error [mGal]")
 ax1.set_ylim(0.2, 1.3)
 
 ax2.errorbar(
-    boost_window_size.window_size_ratio**2,
+    boost_window_size.window_size_ratio ** 2 * 100,
     boost_window_size.fitting_time / eql_fitting_time,
     yerr=boost_window_size.fitting_time_std / eql_fitting_time,
     fmt=".",
     capsize=3,
 )
 ax2.axhline(1, linestyle="--", color="C1")
-ax2.set_xlabel("Window size as a fraction of the survey area")
+ax2.set_xlabel("Window area as a percentage of the survey area")
 ax2.set_ylabel("Relative computation time")
 ax2.set_yscale("log")
-ax2.set_xlim(-0.02, 0.45)
+ax2.set_xlim(-2, 45)
 
 ax1, ax2 = axes[:, 1]
 
 ax1.errorbar(
-    boost_overlapping.overlaps,
+    boost_overlapping.overlaps * 100,
     boost_overlapping.rms,
     yerr=boost_overlapping.rms_std,
     fmt=".",
@@ -458,17 +458,17 @@ ax1.errorbar(
 ax1.axhline(eql_rms, linestyle="--", color="C1")
 
 ax2.errorbar(
-    boost_overlapping.overlaps,
+    boost_overlapping.overlaps * 100,
     boost_overlapping.fitting_time / eql_fitting_time,
     yerr=boost_overlapping.fitting_time_std / eql_fitting_time,
     fmt=".",
     capsize=3,
 )
 ax2.axhline(1, linestyle="--", color="C1")
-ax2.set_xlabel("Fraction of window overlap")
+ax2.set_xlabel("Percentage of window overlap")
 ax2.set_yscale("log")
-ax2.set_xlim(-0.05, 1)
-ax2.set_xticks(np.arange(0, 1.1, 0.1))
+ax2.set_xlim(-5, 100)
+ax2.set_xticks(np.arange(0, 110, 10))
 ax2.yaxis.set_major_formatter(StrMethodFormatter("{x:g}"))
 
 axes[0, 1].legend(
