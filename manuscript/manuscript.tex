@@ -388,6 +388,7 @@ function can be found by solving the \emph{normal equation system}
     \hat{\mathbf{m}} =
     \mathbf{B}\trans\mathbf{W}
     \mathbf{d}^o.
+    \label{eq:least_squares_solution}
 \end{equation}
 
 Once the scaled coefficients are obtained, the estimated unscaled coefficients
@@ -851,6 +852,33 @@ each of these strategies on synthetic data.
 
 \section{Tests on synthetic data}
 
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/synthetic-survey-layouts.pdf}
+    \caption{
+        Maps of the observation locations and gravity values for the synthetic
+        ground and airborne surveys.
+        (a)~Horizontal position and height of the ground survey points.
+        (b)~Synthetic gravity data calculated on the ground survey points with
+        added pseudo-random Gaussian noise.
+        (c)~Horizontal position and height of the airborne survey points.
+        (d)~Synthetic gravity data calculated on the airborne survey points
+        with added pseudo-random Gaussian noise.
+        Heights are given in meters above the zero height plane.
+    }
+    \label{fig:synthetic-layouts}
+\end{figure*}
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{figs/target-grid.pdf}
+    \caption{
+        Pseudo-color map of the target grid of synthetic gravity data. The grid
+        is composed of \TargetEastingSize{}$\times$\TargetNorthingSize{} points
+        with a spacing of \TargetSpacing{}. The grid height is \TargetHeight{}
+        above the zero height plane.
+    }
+    \label{fig:synthetic-target}
+\end{figure}
+
 We have used synthetic gravity datasets to test the interpolation accuracy of
 the difference horizontal and vertical source distribution strategies as well
 as the gradient-boosted equivalent source method.
@@ -900,35 +928,34 @@ airborne (Fig.~\ref{fig:synthetic-layouts}d) data to which we added
 pseudo-random Gaussian noise with zero mean and \SurveyNoise{} standard
 deviation.
 
+
+\subsection{Source distribution strategies}
+
 \begin{figure*}
-    \includegraphics[width=\linewidth]{figs/synthetic-survey-layouts.pdf}
+    \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
     \caption{
-        Maps of the observation locations and gravity values for the synthetic
-        ground and airborne surveys.
-        (a)~Horizontal position and height of the ground survey points.
-        (b)~Synthetic gravity data calculated on the ground survey points with
-        added pseudo-random Gaussian noise.
-        (c)~Horizontal position and height of the airborne survey points.
-        (d)~Synthetic gravity data calculated on the airborne survey points
-        with added pseudo-random Gaussian noise.
-        Heights are given in meters above the zero height plane.
+        Pseudo-color maps of the differences between the target grid and the
+        interpolated synthetic ground survey data produced by each source
+        distribution strategy.
+        The black dots represent the horizontal location of the synthetic data
+        points. The RMS error and total number of equivalent sources is
+        reported for each strategy at the top of the respective maps.
     }
-    \label{fig:synthetic-layouts}
+    \label{fig:ground-survey-differences}
 \end{figure*}
 
-\begin{figure}
-    \includegraphics[width=\linewidth]{figs/target-grid.pdf}
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/airborne_survey_differences.pdf}
     \caption{
-        Pseudo-color map of the target grid of synthetic gravity data. The grid
-        is composed of \TargetEastingSize{}$\times$\TargetNorthingSize{} points
-        with a spacing of \TargetSpacing{}. The grid height is \TargetHeight{}
-        above the zero height plane.
+        Pseudo-color maps of the differences between the target grid and the
+        interpolated synthetic airborne survey data produced by each source
+        distribution strategy.
+        The black dots represent the horizontal location of the synthetic data
+        points. The RMS error and total number of equivalent sources is
+        reported for each strategy at the top of the respective maps.
     }
-    \label{fig:synthetic-target}
-\end{figure}
-
-
-\subsection{Comparison of source distribution strategies}
+    \label{fig:airborne-survey-differences}
+\end{figure*}
 
 We investigated the effect of different strategies for distributing the
 equivalent sources horizontally and vertically on interpolation accuracy.
@@ -976,114 +1003,60 @@ produced similar RMS errors of approximately \SI{0.3}{\mgal}.
 The maps of the differences between the target grid and interpolation results
 are visually indistinguishable from each other.
 
-\begin{figure*}
-    \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
-    \caption{
-        Pseudo-color maps of the differences between the target grid and the
-        interpolated synthetic ground survey data produced by each source
-        distribution strategy.
-        The black dots represent the horizontal location of the synthetic data
-        points. The RMS error and total number of equivalent sources is
-        reported for each strategy at the top of the respective maps.
-    }
-    \label{fig:ground-survey-differences}
-\end{figure*}
-
-\begin{figure*}
-    \includegraphics[width=\linewidth]{figs/airborne_survey_differences.pdf}
-    \caption{
-        Pseudo-color maps of the differences between the target grid and the
-        interpolated synthetic airborne survey data produced by each source
-        distribution strategy.
-        The black dots represent the horizontal location of the synthetic data
-        points. The RMS error and total number of equivalent sources is
-        reported for each strategy at the top of the respective maps.
-    }
-    \label{fig:airborne-survey-differences}
-\end{figure*}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Performance and accuracy of gradient boosting}
 
-Our second goal is to assess the accuracy of the predictions achieved by the
-gradient boosting algorithm while registering its performance by comparison
-with the non-boosted equivalent sources.
+\subsection{Window size and overlap in gradient boosting}
+
+We assessed the trade-offs in interpolation accuracy and computation time of
+the gradient-boosted equivalent sources algorithm as a function of the two key
+controlling factors: the window size and the window overlap.
+The comparisons were performed against a regular least-squares solution
+(Eq.~\ref{eq:least_squares_solution}) using the synthetic airborne data
+(Fig.~\ref{fig:synthetic-layouts}c-d) .
+To avoid biasing the results, we used the same locations of equivalent sources
+for both the regular and gradient-boosted interpolations, namely
+block-averaged-sources with a block size of
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthSpacing}{\meter} and a
+relative depth of
+\SI{\BestAirborneBlockAveragedSourcesRelativeDepthDepth}{\meter}.
 
 \subsubsection{Window size}
 \label{sec:window_size}
 
-One factor that plays an important role on the performance of the gradient
-boosted equivalent sources is the size of the overlapping windows used to create
-each set of equivalent sources.
 The size of the windows controls the size of the Jacobian matrices
-$\tilde{\mathbf{A}_k}$: smaller windows create smaller Jacobian matrices.
-Thus, using smaller windows will reduce the amount of computer memory needed to
-fit the source coefficients.
-Nevertheless, smaller windows may produce less accurate predictions because
-their inability to achieve the global minimum of the misfit from
-equation~\ref{eq:misfit-unscaled}.
-Besides, the window size might also impact on the computation time needed to
-fit the source coefficients: smaller windows will generate simpler least-square
-problems which are easier to solve, but they will also create more iterations.
+$\tilde{\mathbf{A}}_k$ by limiting the number of data points and equivalent
+sources used in each step of the gradient-boosting algorithm
+(Alg.~\ref{alg:gradient_boosting_window}).
+Thus, using smaller windows will reduce the total amount of computer memory
+required to estimate the source coefficients.
+Nevertheless, smaller windows may produce less accurate interpolations by
+failing to achieve the global minimum of the goal function in
+Eq.~\ref{eq:misfit}.
+The window size might also impact the computation time in non-intuitive ways
+since smaller windows generate smaller least-squares problems but also require
+more gradient-boosting iterations.
 
-We want to assess how the size of the overlapping windows impacts both the
-accuracy of the predictions and the computation time needed to fit the source
-coefficients in comparison with the performance of the non-boosted equivalent
-sources.
+We calculated the interpolation RMS error and computation time for a fixed
+window overlap of 50\% and several window sizes.
+To avoid any biases introduced by the shuffling of windows, the calculations
+were repeated using different seeds for the pseudo-random number generator used
+in the shuffling.
+Figs.~\ref{fig:gradient-boosted-comparison}a and
+\ref{fig:gradient-boosted-comparison}c show the RMS error and computation time
+required for estimating the source coefficients, respectively, as a function of
+the window size.
 
-We applied the gradient boosted equivalent sources to interpolate the synthetic
-airborne survey on the same points of the target grid.
-We selected several window sizes to assess how accuracy and performance depend
-on that variable.
-For each window size we gridded the synthetic data using block-averaged sources
-with a spacing of
-\SI{\BestAirborneBlockAveragedSourcesRelativeDepthSpacing}{\meter},
-a relative depth of
-\SI{\BestAirborneBlockAveragedSourcesRelativeDepthDepth}{\meter}, an overlap
-of 50\%, and with different values of damping.
-Then we compared the resulting interpolations with the target grid in order to
-get the best prediction for each window size and the damping value used to
-obtain it.
-
-Using the best set of parameters for each window size, we registered the
-achieved RMS against the values of the target grid and the time needed to fit
-the sources coefficients (see Fig.~\ref{fig:gradient-boosted-comparison}a).
-In order to avoid any errors introduced by the way windows are shuffled, the
-RMS for each window size was obtained as the mean RMS achieved by using
-different random seeds.
-
-We have also registered the computational time needed to fit the
-gradient-boosted equivalent sources for each window size and computed the ratio
-between these times and the computational time needed to fit the non-boosted
-equivalent sources (see Fig.~\ref{fig:gradient-boosted-comparison}b).
-
-From the results obtained from the comparison with the synthetic airborne
-survey we can conclude that smaller windows generate less accurate predictions
-than using larger ones and require significantly more computational time to fit
-the sources.
-The reduction of the accuracy might be due to an oversimplification of the
-least-squares problem, and the increase of the computational time might be
-generated by the great number of iterations required to fit the sources.
-As the windows gets larger, the accuracy starts increasing because more data
-points are included into the fitting process of the source coefficients, while
-the fitting process takes less time due to a reduction of the number of
-iterations.
-For very large windows, both accuracy and fitting time are almost constant.
-
-In comparison with the non-boosted equivalent sources, we can see that the
-gradient-boosted ones produce slightly less accurate results due to not being
-able to achieve the global minimum of the least-squares problem, but they
-perform faster.
-
-THE FOLLOWING PARAGRAPH SHOULD BE IN DISCUSSION?
-
-When using gradient-boosted equivalent sources we can conclude that we want to
-maximize the window size as much as possible.
-The only limitation to do so is to generate Jacobian matrices larger than the
-available memory.
-Therefore we recommend using the largest window that generates Jacobian
-matrices that could fit in the available memory.
+The results show that the interpolation RMS error for gradient-boosting is
+generally larger than the error for regular equivalent sources.
+The error decreases asymptotically to within $\sim 40\%$ of the regular
+equivalent sources for windows with an area greater than $\sim 35\%$ of the
+survey area.
+The computation time similarly decreases with window size, with the
+gradient-boosting being generally faster than the regular equivalent sources
+for windows with an area greater than $\sim 20\%$ of the survey area.
+As the window size increases, both RMS error and computation time appear to
+stabilize to nearly constant levels.
 
 \subsubsection{Amount of overlap}
 
@@ -1161,7 +1134,6 @@ accurate predictions in reasonable times.
 }
     \label{fig:gradient-boosted-comparison}
 \end{figure*}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1255,6 +1227,26 @@ a \emph{relative depth} when dealing with very large datasets in order to save
 some computation time.
 
 \subsection{Gradient boosting}
+
+Window size:
+
+In comparison with the non-boosted equivalent sources, we can see that the
+gradient-boosted ones produce slightly less accurate results due to not being
+able to achieve the global minimum of the least-squares problem, but they
+perform faster.
+The reduction of the accuracy might be due to an oversimplification of the
+least-squares problem, and the increase of the computational time might be
+generated by the great number of iterations required to fit the sources.
+As the windows gets larger, the accuracy starts increasing because more data
+points are included into the fitting process of the source coefficients, while
+the fitting process takes less time due to a reduction of the number of
+iterations.
+When using gradient-boosted equivalent sources we can conclude that we want to
+maximize the window size as much as possible.
+The only limitation to do so is to generate Jacobian matrices larger than the
+available memory.
+Therefore we recommend using the largest window that generates Jacobian
+matrices that could fit in the available memory.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

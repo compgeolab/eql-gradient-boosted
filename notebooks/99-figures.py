@@ -413,7 +413,7 @@ boost_overlapping = pd.read_csv(
 boost_overlapping
 
 # +
-figsize = (6.66, 3.5)
+figsize = (6.66, 4)
 fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize, sharex="col", sharey="row")
 
 
