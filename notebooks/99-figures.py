@@ -268,9 +268,10 @@ cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_un
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
 plt.tight_layout(w_pad=0)
-plt.savefig(figs_dir / "ground_survey_differences.pdf",
+plt.savefig(
+    figs_dir / "ground_survey_differences.pdf",
     bbox_inches="tight",
-           )
+)
 plt.show()
 # -
 
@@ -383,8 +384,10 @@ cbl = fig.colorbar(tmp, cax=cbar_ax, orientation="horizontal", label=f"{field_un
 cbl.ax.set_title("Difference between target and interpolated", fontsize="medium")
 
 plt.tight_layout(w_pad=0)
-plt.savefig(figs_dir / "airborne_survey_differences.pdf", 
-    bbox_inches="tight",)
+plt.savefig(
+    figs_dir / "airborne_survey_differences.pdf",
+    bbox_inches="tight",
+)
 plt.show()
 # -
 
@@ -478,7 +481,7 @@ axes[0, 1].legend(
 )
 
 labels = "a b c d".split()
-for ax, label in zip(axes.ravel(), labels):    
+for ax, label in zip(axes.ravel(), labels):
     ax.annotate(
         label,
         xy=(0.03, 0.92),
@@ -488,8 +491,10 @@ for ax, label in zip(axes.ravel(), labels):
     ax.grid(which="both", alpha=0.5, linestyle="--", linewidth=0.5)
 
 plt.tight_layout(w_pad=0, h_pad=0.5)
-plt.savefig(figs_dir / "gradient-boosted-comparisons.pdf", 
-    bbox_inches="tight",)
+plt.savefig(
+    figs_dir / "gradient-boosted-comparisons.pdf",
+    bbox_inches="tight",
+)
 plt.show()
 # -
 
