@@ -1254,7 +1254,7 @@ The two main reasons that make it to stand out from other 2D interpolation
 methods is the fact that the equivalent sources take into account the height of
 the observations and that the interpolated values will always be harmonic
 functions.
-The main challenge to using equivalent sources in practice is the high
+The main challenge of using equivalent sources in practice is the high
 computational load of estimating the coefficients of the equivalent sources,
 specially on the computer memory needed to store the Jacobian matrix.
 In this work we present two strategies that could be simultaneously applied in
@@ -1263,7 +1263,7 @@ computation times on modest hardware:
 block-averaging source locations, which reduce the number of equivalent sources
 needed for the interpolation,
 and the gradient-boosted equivalent source algorithm, which breaks down the
-inverse problem into smaller  sets of equivalent sources defined by overlapping
+inverse problem into smaller sets of equivalent sources defined by overlapping
 windows.
 Both methods were tested against synthetic datasets in order to compare their
 accuracy and how they perform in terms of computational resources.
@@ -1286,7 +1286,7 @@ sources showed that any one of the three strategies tested
 produces comparable accuracy of interpolation.
 Nevertheless, we are more prone to recommending either the \emph{constant
 depth} or the \emph{relative depth} for most applications because they involve
-less hyper-parameters that would be needed to configured before the actual
+less hyper-parameters that would need to be configured before the actual
 interpolation.
 
 Gradient-boosted equivalent sources were shown to heavily reduce the computer
