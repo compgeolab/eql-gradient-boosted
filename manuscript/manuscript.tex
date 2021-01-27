@@ -284,11 +284,11 @@ whose elements are
 
 For a given set of $N$ observed field values $\mathbf{d}^o$,
 we can find a least-squares solution to
-equation~\ref{eq:linear-problem} and obtain the values of
+Eq.~\ref{eq:linear-problem} and obtain the values of
 $\mathbf{c}$ that best fit the observations.
 These values can, in turn, be used to predict the value of the harmonic field
 at any other point outside of the sources by evaluating
-equation~\ref{eq:eql-forward}.
+Eq.~\ref{eq:eql-forward}.
 Gridding and upward continuation can thus be achieved by predicting values on
 points that fall on a regular grid or at different heights.
 
@@ -339,7 +339,7 @@ We define a diagonal matrix $\mathbf{S}$
 
 \noindent in which $\sigma_j$ is the standard deviation of the $j$-th column of
 $\mathbf{A}$.
-We then write the forward problem in equation~\ref{eq:linear-problem} as
+We then write the forward problem in Eq.~\ref{eq:linear-problem} as
 
 \begin{equation}
     \mathbf{d}
@@ -360,7 +360,7 @@ We then write the forward problem in equation~\ref{eq:linear-problem} as
 $\mathbf{m}$ is a vector containing scaled coefficients with the same units as
 the data.
 
-The goal function defined in equation~\ref{eq:misfit-unscaled} can be
+The goal function defined in Eq.~\ref{eq:misfit-unscaled} can be
 rewritten as
 
 \begin{equation}
@@ -426,7 +426,7 @@ matrix equation
 \end{equation}
 
 We can transform our equivalent source problem in
-equation~\ref{eq:linear-problem} into an additive model by following these
+Eq.~\ref{eq:linear-problem} into an additive model by following these
 steps:
 
 \begin{enumerate}
@@ -453,7 +453,7 @@ optimization in the so-called ``function space'', with $\alpha_k$ corresponding
 to step sizes in steepest descent.
 The adaptation of the gradient boosting method to find the damped least-squares
 solutions for the $K$ parameters vectors $\mathbf{c}_k$ and step sizes
-$\alpha_k$ in equation~\ref{eq:gb-linear-model} is presented in
+$\alpha_k$ in Eq.~\ref{eq:gb-linear-model} is presented in
 Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
@@ -549,7 +549,7 @@ of algorithm~\ref{alg:gradient_boosting}).
 By doing so, we can reduce the size of the Jacobian matrix further to $N_k
 \times M_k$ elements.
 The forward modeling operation performed in step \ref{alg:predicted} can be
-done by a summation (equation~\ref{eq:forward-sum})
+done by a summation (Eq.~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
@@ -897,15 +897,11 @@ We created two synthetic datasets from the model, one simulating a ground
 survey and another an airborne acquisition (Fig.~\ref{fig:synthetic-layouts}).
 To create the synthetic ground survey, we selected measurement positions from a
 portion of a public domain dataset for Southern Africa, available through the
-NOAA National Centers for Environmental Information (NCEI)\footnote{
-\url{https://www.ngdc.noaa.gov/mgg/gravity/gravity.html}
-(last accessed 25 January 2020)}.
-For the synthetic airborne survey, we used a portion of the Great Britain Aeromagnetic
-Survey acquired by Hunting Geology and Geophysics Ltd and Canadian Aeroservices
-Ltd between 1955 and 1965 and made publicly available by the
-British Geological Survey (BGS)\footnote{
-\url{https://www.bgs.ac.uk/products/geophysics/aeromagneticRegional.html}
-(last accessed 25 January 2020)}.
+NOAA National Centers for Environmental Information (NCEI).
+For the synthetic airborne survey, we used a portion of the Great Britain
+Aeromagnetic Survey acquired by Hunting Geology and Geophysics Ltd and Canadian
+Aeroservices Ltd between 1955 and 1965 and made publicly available by the
+British Geological Survey (BGS).
 In both cases, we rescaled the horizontal coordinates of each survey portion to
 span an area of \SurveyEasting{}$\times$\SurveyNorthing{}, matching the model
 dimensions.
@@ -988,7 +984,7 @@ The parameter values used in these searches and the one producing the smallest
 RMS error are outlined in Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey}.
 
-Figures~\ref{fig:ground-survey-differences}
+Fig~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution
 strategy for the ground and airborne synthetic surveys, respectively.
@@ -1251,30 +1247,6 @@ producing accurate predictions in reasonable times.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Software implementation}
-
-We have implemented the methods described in the previous sections though
-a software written in Python language.
-The code for generating the results of this work are available in
-\url{https://doi.org/10.6084/m9.figshare.13604360} or
-\url{https//github.com/compgeolab/eql-gradient-boosted}.
-The gradient-boosted equivalent sources implementation is based on the
-non-boosted sources available through the Harmonica library
-\citep{harmonica2020}, part of the Fatiando a Terra project
-\citep{fatiando2013}.
-Another Python libraries were used:
-Verde \citep{verde2018} to apply block reductions and managing coordinates,
-Boule \citep{boule2020} for computing normal gravity,
-Xarray \citep{xarray2017} and Numpy \citep{numpy2020} for managing
-multidimensional datasets and numerical
-computations,
-Numba \citep{numba2015} for writing pre-comipled implementations and
-parallelization,
-Matplotlib \citep{matplotlib2007} and PyGMT \citep{pygmt2020} for generating
-the figures.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Conclusions}
 
 The equivalent source technique has been proven to be a well suited method for
@@ -1364,6 +1336,48 @@ a maximum of 10GB of memory.
 This shows how the new gradient-boosted equivalent sources can be applied to
 real-world data.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Data and code availability}
+
+The Python source code used to produce all results and figures presented here
+is available at
+\url{https://doi.org/10.6084/m9.figshare.13604360} and
+\url{https://github.com/compgeolab/eql-gradient-boosted}
+under the BSD 3-clause open-source license.
+
+The gradient-boosted equivalent sources implementation is based on the
+equivalent source code in the Harmonica library \citep{harmonica2020}.
+Other software used in this study includes:
+Pooch \citep{pooch2020} for downloading and caching datasets,
+Verde \citep{verde2018} for block reductions and coordinate manipulations,
+Boule \citep{boule2020} for normal gravity calculations,
+xarray \citep{xarray2017} and Numpy \citep{numpy2020} for multidimensional
+arrays and numerical computations,
+Numba \citep{numba2015} for just-in-time compilation and parallelization,
+Matplotlib \citep{matplotlib2007} and PyGMT \citep{pygmt2020} for generating
+the figures and maps,
+and the Jupyter notebook programming environment \citep{jupyter2016}.
+Harmonica, Boule, Pooch, and Verde are part of the Fatiando a Terra project
+\citep{fatiando2013}.
+
+All datasets used are open-access and publicly available.
+The synthetic surveys were generated using
+a public domain gravity dataset for Southern Africa distributed by the
+NOAA NCEI (\url{https://www.ngdc.noaa.gov/mgg/gravity/gravity.html})
+and the Great Britain Aeromagnetic
+Survey distributed by the
+British Geological Survey (BGS) under an Open Government License
+(\url{https://www.bgs.ac.uk/products/geophysics/aeromagneticRegional.html}).
+The shaded relief in Fig.~\ref{fig:australia} is the SRTM15+ dataset by
+\citet{tozer2019}.
+The Australian ground gravity
+data is based on a compilation distributed by Geoscience Australia under a
+Creative Commons Attribution 4.0 International Licence \citep{wynne2018}  which
+was filtered and referenced to the WGS84 ellipsoid by
+\citet{australia_compilation} and is distributed under the same license
+(\url{https://doi.org/10.6084/m9.figshare.13643837}).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1371,10 +1385,7 @@ real-world data.
 
 We are indebted to the developers and maintainers of the open-source software
 without which this work would not have been possible.
-The synthetic airborne survey was based upon the Great Britain aeromagnetic
-data, reproduced with the permission of the British Geological Survey
-\textcopyright{} UKRI.
-All rights reserved.
+Contains British Geological Survey materials © UKRI.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
