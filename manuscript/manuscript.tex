@@ -93,12 +93,38 @@
 }
 \maketitle
 
+\noindent
+\textbf{Keywords:}
+Gravity anomalies and Earth structure;
+Magnetic anomalies: modelling and interpretation;
+Geopotential theory;
+Inverse theory;
+Statistical methods;
+Australia;
+
 \begin{abstract}
-    My abstract
-    \\[0.5cm]
-    \textbf{Keywords:}
-    My keywords
+  The equivalent source technique is a powerful and widely used method for
+  processing gravity and magnetic data.  Nevertheless, it has the major
+  drawback of having a large computational cost in terms of processing time and
+  computer memory.
+  We present two techniques for reducing the computational cost of equivalent
+  source processing: block-averaging source locations and the
+  gradient-boosted equivalent source algorithm.
+  By using block-averaging, we reduce the number of source coefficients that
+  must be estimated while retaining the minimum desired resolution in the final
+  processed data.
+  With the gradient boosting method, we estimate the layer coefficients in
+  small batches along overlapping windows, allowing us to reduce the computer
+  memory requirements arbitrarily to conform to the constraints of the
+  available hardware.
+  We show that the combination of block-averaging and gradient-boosted
+  equivalent sources are capable of producing accurate interpolations through
+  tests against synthetic data.
+  Moreover, we demonstrate the feasibility of our method by gridding a gravity
+  dataset covering Australia with over 1.7 million observations using a modest
+  personal computer in under two hours of total processing time.
 \end{abstract}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
