@@ -1199,15 +1199,18 @@ interpolation RMS errors and from visual inspection of the difference maps.
 Therefore, we argue that all source distribution strategies are able to produce
 comparably accurate interpolations.
 Nevertheless, the \emph{block-averaged-sources} strategy make use of fewer
-sources to when compared with other strategies, which reduces the computational
+sources when compared with other strategies, which reduces the computational
 load of estimating the sources coefficients and forward modelling.
 To ensure that the interpolation is able to reproduce the high frequencies in
 the data, the block size used in the averaging should be chosen to match the
 desired grid resolution.
 
-The choice of source depth strategy does not appear to impact the interpolation
-RMS error.
-At a first glance, the choice of a depth strategy also would not seem to impact
+The choice of source depth strategy does not appear to significantly impact the
+interpolation RMS error.
+In the particular case of a sparse ground survey with block-averaged-sources,
+the use of a variable depth visibly reduced edge effects and artifacts in areas
+of poor data coverage.
+At a first glance, the choice of a depth strategy would not seem to impact
 the computation time.
 However, when searching for the set of hyper-parameters that produce the most
 accurate interpolation (e.g., through cross-validation), one must solve the
