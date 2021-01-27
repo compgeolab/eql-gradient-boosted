@@ -932,6 +932,7 @@ deviation.
 
 
 \subsection{Source distribution strategies}
+\label{sec:synthetic_distributions}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
@@ -1384,15 +1385,23 @@ All rights reserved.
 
 \appendix
 
-\section{Source distributions parameters}
+\section{Source position parameters used for the tests on synthetic data}
+
+Tables~\ref{tab:parameters-ground-survey}
+and~\ref{tab:parameters-airborne-survey} show the parameter values tested and
+their optimal values for creating the equivalent source distributions tested in
+Section~\ref{sec:synthetic_distributions}.
+The optimal values were used to produce the results in
+Figs~\ref{fig:ground-survey-differences}
+and~\ref{fig:airborne-survey-differences}.
 
 \begin{table*}
     \centering
     \caption{
-        Parameters used with each source distribution when gridding the
-        synthetic ground survey. The table also contains the set of parameters
-        that generates the best prediction for each source distribution and its
-        corresponding RMS score (in mGal).
+        Parameters used to produce each source distribution for interpolating
+        the synthetic ground survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
     }
     \label{tab:parameters-ground-survey}
     \begin{tabular}{c c l c c c}
@@ -1444,7 +1453,7 @@ All rights reserved.
                 & \BestGroundSourceBelowDataVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \GroundSourceBelowDataVariableDepthKNearest
                 & \BestGroundSourceBelowDataVariableDepthKNearest
                 & \\
@@ -1464,7 +1473,7 @@ All rights reserved.
                     \BestGroundBlockAveragedSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesConstantDepthSpacing
                 & \BestGroundBlockAveragedSourcesConstantDepthSpacing
                 & \\
@@ -1482,7 +1491,7 @@ All rights reserved.
                     \BestGroundBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesRelativeDepthSpacing
                 & \BestGroundBlockAveragedSourcesRelativeDepthSpacing
                 & \\
@@ -1505,12 +1514,12 @@ All rights reserved.
                 & \BestGroundBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \GroundBlockAveragedSourcesVariableDepthKNearest
                 & \BestGroundBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesVariableDepthSpacing
                 & \BestGroundBlockAveragedSourcesVariableDepthSpacing
                 & \\
@@ -1530,7 +1539,7 @@ All rights reserved.
                     \BestGroundGridSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Grid spacing (m)
                 & \GroundGridSourcesConstantDepthSpacing
                 & \BestGroundGridSourcesConstantDepthSpacing
                 & \\
@@ -1545,10 +1554,10 @@ All rights reserved.
 \begin{table*}
     \centering
     \caption{
-        Parameters used with each source distribution when gridding the
-        synthetic airborne survey. The table also contains the set of
-        parameters that generates the best prediction for each source
-        distribution and its corresponding RMS score (in mGal).
+        Parameters used to produce each source distribution for interpolating
+        the synthetic airborne survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
     }
     \label{tab:parameters-airborne-survey}
     \begin{tabular}{c c l c c c}
@@ -1600,7 +1609,7 @@ All rights reserved.
                 & \BestAirborneSourceBelowDataVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \AirborneSourceBelowDataVariableDepthKNearest
                 & \BestAirborneSourceBelowDataVariableDepthKNearest
                 & \\
@@ -1620,7 +1629,7 @@ All rights reserved.
                     \BestAirborneBlockAveragedSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesConstantDepthSpacing
                 & \BestAirborneBlockAveragedSourcesConstantDepthSpacing
                 & \\
@@ -1638,7 +1647,7 @@ All rights reserved.
                     \BestAirborneBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesRelativeDepthSpacing
                 & \BestAirborneBlockAveragedSourcesRelativeDepthSpacing
                 & \\
@@ -1661,12 +1670,12 @@ All rights reserved.
                 & \BestAirborneBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \AirborneBlockAveragedSourcesVariableDepthKNearest
                 & \BestAirborneBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesVariableDepthSpacing
                 & \BestAirborneBlockAveragedSourcesVariableDepthSpacing
                 & \\
@@ -1686,7 +1695,7 @@ All rights reserved.
                     \BestAirborneGridSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Grid spacing (m)
                 & \AirborneGridSourcesConstantDepthSpacing
                 & \BestAirborneGridSourcesConstantDepthSpacing
                 & \\
