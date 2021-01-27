@@ -928,6 +928,7 @@ deviation.
 
 
 \subsection{Source distribution strategies}
+\label{sec:synthetic_distributions}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
@@ -1395,15 +1396,23 @@ Contains British Geological Survey materials © UKRI.
 
 \appendix
 
-\section{Source distributions parameters}
+\section{Source position parameters used for the tests on synthetic data}
+
+Tables~\ref{tab:parameters-ground-survey}
+and~\ref{tab:parameters-airborne-survey} show the parameter values tested and
+their optimal values for creating the equivalent source distributions tested in
+Section~\ref{sec:synthetic_distributions}.
+The optimal values were used to produce the results in
+Figs~\ref{fig:ground-survey-differences}
+and~\ref{fig:airborne-survey-differences}.
 
 \begin{table*}
     \centering
     \caption{
-        Parameters used with each source distribution when gridding the
-        synthetic ground survey. The table also contains the set of parameters
-        that generates the best prediction for each source distribution and its
-        corresponding RMS score (in mGal).
+        Parameters used to produce each source distribution for interpolating
+        the synthetic ground survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
     }
     \label{tab:parameters-ground-survey}
     \begin{tabular}{c c l c c c}
@@ -1455,7 +1464,7 @@ Contains British Geological Survey materials © UKRI.
                 & \BestGroundSourceBelowDataVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \GroundSourceBelowDataVariableDepthKNearest
                 & \BestGroundSourceBelowDataVariableDepthKNearest
                 & \\
@@ -1475,7 +1484,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestGroundBlockAveragedSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesConstantDepthSpacing
                 & \BestGroundBlockAveragedSourcesConstantDepthSpacing
                 & \\
@@ -1493,7 +1502,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestGroundBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesRelativeDepthSpacing
                 & \BestGroundBlockAveragedSourcesRelativeDepthSpacing
                 & \\
@@ -1516,12 +1525,12 @@ Contains British Geological Survey materials © UKRI.
                 & \BestGroundBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \GroundBlockAveragedSourcesVariableDepthKNearest
                 & \BestGroundBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \GroundBlockAveragedSourcesVariableDepthSpacing
                 & \BestGroundBlockAveragedSourcesVariableDepthSpacing
                 & \\
@@ -1541,7 +1550,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestGroundGridSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Grid spacing (m)
                 & \GroundGridSourcesConstantDepthSpacing
                 & \BestGroundGridSourcesConstantDepthSpacing
                 & \\
@@ -1556,10 +1565,10 @@ Contains British Geological Survey materials © UKRI.
 \begin{table*}
     \centering
     \caption{
-        Parameters used with each source distribution when gridding the
-        synthetic airborne survey. The table also contains the set of
-        parameters that generates the best prediction for each source
-        distribution and its corresponding RMS score (in mGal).
+        Parameters used to produce each source distribution for interpolating
+        the synthetic airborne survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
     }
     \label{tab:parameters-airborne-survey}
     \begin{tabular}{c c l c c c}
@@ -1611,7 +1620,7 @@ Contains British Geological Survey materials © UKRI.
                 & \BestAirborneSourceBelowDataVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \AirborneSourceBelowDataVariableDepthKNearest
                 & \BestAirborneSourceBelowDataVariableDepthKNearest
                 & \\
@@ -1631,7 +1640,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestAirborneBlockAveragedSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesConstantDepthSpacing
                 & \BestAirborneBlockAveragedSourcesConstantDepthSpacing
                 & \\
@@ -1649,7 +1658,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestAirborneBlockAveragedSourcesRelativeDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesRelativeDepthSpacing
                 & \BestAirborneBlockAveragedSourcesRelativeDepthSpacing
                 & \\
@@ -1672,12 +1681,12 @@ Contains British Geological Survey materials © UKRI.
                 & \BestAirborneBlockAveragedSourcesVariableDepthDepthFactor
                 & \\
             &
-                & K nearest
+                & $k$ neighbours
                 & \AirborneBlockAveragedSourcesVariableDepthKNearest
                 & \BestAirborneBlockAveragedSourcesVariableDepthKNearest
                 & \\
             &
-                & Spacing (m)
+                & Block size (m)
                 & \AirborneBlockAveragedSourcesVariableDepthSpacing
                 & \BestAirborneBlockAveragedSourcesVariableDepthSpacing
                 & \\
@@ -1697,7 +1706,7 @@ Contains British Geological Survey materials © UKRI.
                     \BestAirborneGridSourcesConstantDepthRms
                   } \\
             &
-                & Spacing (m)
+                & Grid spacing (m)
                 & \AirborneGridSourcesConstantDepthSpacing
                 & \BestAirborneGridSourcesConstantDepthSpacing
                 & \\
