@@ -629,11 +629,11 @@ overall misfit decreases with iteration.
 Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
 fits portions of an equivalent source model to the data residuals.
-The key differences are:
-(1) the sources in the overlapping portions of the windows are fit more than
-once, allowing the algorithm to self-correct for poor solutions to any given
-window;
-(2) using only data points within the window when fitting the data enables the
+The key differences are that in our method:
+(1) the sources in the overlapping portions of the windows are
+fit more than once, allowing the algorithm to self-correct for poor solutions
+to any given window;
+(2) we use only data points within the window when fitting the data enables the
 use of larger datasets;
 (3) experience shows that the step size parameter improves the convergence of
 the solution, particularly when using only the data inside the windows for
@@ -656,7 +656,7 @@ locations, and minimize the required computational resources.
 A large number of evenly distributed sources along the survey region are
 capable of reproducing the observed data.
 Nevertheless, the computational load can be prohibitive and such
-underdetermined problems are prone to overfiting the data, leading to poor
+underdetermined problems are prone to overfitting the data, leading to poor
 predictive power when interpolating and extrapolating.
 On the other hand, using few sources will reduce the computational requirements
 but the model may be incapable of reproducing the full spectral content of the
@@ -829,6 +829,7 @@ Our approach to the \emph{variable depth} strategy will be:
 
 \begin{equation}
   z = z_{obs} + \Delta z + \alpha h,
+  \label{eq:variable_depth}
 \end{equation}
 
 \noindent
@@ -1190,68 +1191,62 @@ $\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
 
 \subsection{Location of sources}
 
-Figures~\ref{fig:ground-survey-differences}
-and~\ref{fig:airborne-survey-differences} show that all source distributions
-produce accurate predictions, both for the ground and airborne survey.
-The RMS scores don't show significant difference, so we can only conclude
-that all the source distributions are able to produce comparable predictions.
-Nevertheless, the \emph{block averaged sources} make use of less sources to
-produce this predictions, what would reduce the computational load needed to
-fit the sources coefficients and finally compute the actual prediction.
+The results of our tests on synthetic data
+(Figs~\ref{fig:ground-survey-differences}
+and~\ref{fig:airborne-survey-differences}) show that there are no significant
+differences between source distribution strategies, both in terms of the
+interpolation RMS errors and from visual inspection of the difference maps.
+Therefore, we argue that all source distribution strategies are able to produce
+comparably accurate interpolations.
+Nevertheless, the \emph{block-averaged-sources} strategy make use of fewer
+sources when compared with other strategies, which reduces the computational
+load of estimating the sources coefficients and forward modelling.
+To ensure that the interpolation is able to reproduce the high frequencies in
+the data, the block size used in the averaging should be chosen to match the
+desired grid resolution.
 
-The RMS doesn't seem to depend on the choice of the depth strategy used to
-locate the equivalent sources.
-At first glance, the choice of a depth strategy doesn't seem to impact the
-computational needs.
-Nevertheless, when trying to find the set of parameters that produce the most
-accurate predictions through a method like cross-validation, we need to fit the
-source coefficients one time per every possible combination of parameters.
-A depth strategy like the \emph{variable depth} needs a higher number of
-parameters (depth, depth factor, K nearest) than \emph{constant depth} or
-\emph{relative depth} (which takes only a depth parameter).
-The addition of these new parameters makes the search of the best set more
-computationally expensive: more parameters means increasing the dimensions of
-the parameters space and thus increasing the number of possible combinations.
-Therefore we would be more prone to choose a \emph{constant depth} or
-a \emph{relative depth} when dealing with very large datasets in order to save
-some computation time.
+The choice of source depth strategy does not appear to significantly impact the
+interpolation RMS error.
+In the particular case of a sparse ground survey with block-averaged-sources,
+the use of a variable depth visibly reduced edge effects and artifacts in areas
+of poor data coverage.
+At a first glance, the choice of a depth strategy would not seem to impact
+the computation time.
+However, when searching for the set of hyper-parameters that produce the most
+accurate interpolation (e.g., through cross-validation), one must solve the
+inverse problem once for every possible combination of parameters.
+A depth strategy like the \emph{variable depth} requires a higher number of
+hyper-parameters (depth shift $\Delta z$, depth factor $\alpha$, and the number
+of nearest neighbours $k$ from Eq.~\ref{eq:variable_depth}) than other
+strategies which only require a single parameter.
+Having more parameters means increasing the dimensions of the parameter space
+and thus increasing the number of possible combinations.
+Thus, we recommend using a \emph{constant depth} or a \emph{relative depth}
+when processing large datasets in order to minimize computation time.
 
 \subsection{Gradient boosting}
 
-Window size:
+From Fig.~\ref{fig:gradient-boosted-comparison}a
+and~\ref{fig:gradient-boosted-comparison}c, we can see that the
+gradient-boosted equivalent sources produce slightly less accurate
+interpolation results but are able to achieve smaller computation times than
+regular equivalent sources.
+The reduction of the accuracy might be due to the gradient boosting algorithm
+failing to converge to the global minimum of the goal function.
+As the windows increase in size, interpolation error decreases because more data
+points are included into the least-squares fitting of the source coefficients.
+At the same time, the fitting process becomes faster because of a reduction in
+the number of iterations.
+Our results indicate that it is desirable to maximize the window size up to the
+point that the Jacobian matrices still fit within the available computer
+memory.
 
-In comparison with the non-boosted equivalent sources, we can see that the
-gradient-boosted ones produce slightly less accurate results due to not being
-able to achieve the global minimum of the least-squares problem, but they
-perform faster.
-The reduction of the accuracy might be due to an oversimplification of the
-least-squares problem, and the increase of the computational time might be
-generated by the great number of iterations required to fit the sources.
-As the windows gets larger, the accuracy starts increasing because more data
-points are included into the fitting process of the source coefficients, while
-the fitting process takes less time due to a reduction of the number of
-iterations.
-When using gradient-boosted equivalent sources we can conclude that we want to
-maximize the window size as much as possible.
-The only limitation to do so is to generate Jacobian matrices larger than the
-available memory.
-Therefore we recommend using the largest window that generates Jacobian
-matrices that could fit in the available memory.
-
-Overlap:
-
-We can then conclude that using overlap values between 40\% and 70\% generate
-a balance between predictions accuracy and computational time needed to fit the
-source coefficients.
-This corroborates that our naive choice of 50\% is good enough for producing
-accurate predictions in reasonable times.
-
-
-If the grid will have a much higher resolution than the block spacing, the
-equivalent sources will not be able to reproduce the high frequency components
-of the data.
-Therefore we recommend setting a block spacing that matches the resolution of
-the final grid.
+The results shown in Figs~\ref{fig:gradient-boosted-comparison}b
+and~\ref{fig:gradient-boosted-comparison}d indicate that using
+window overlap values between 40\% and 70\% strike a balance between
+accuracy and computation time.
+This corroborates our initial choice of 50\% overlap, which is good enough for
+producing accurate predictions in reasonable times.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
