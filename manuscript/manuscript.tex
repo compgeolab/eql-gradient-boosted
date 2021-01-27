@@ -284,11 +284,11 @@ whose elements are
 
 For a given set of $N$ observed field values $\mathbf{d}^o$,
 we can find a least-squares solution to
-equation~\ref{eq:linear-problem} and obtain the values of
+Eq.~\ref{eq:linear-problem} and obtain the values of
 $\mathbf{c}$ that best fit the observations.
 These values can, in turn, be used to predict the value of the harmonic field
 at any other point outside of the sources by evaluating
-equation~\ref{eq:eql-forward}.
+Eq.~\ref{eq:eql-forward}.
 Gridding and upward continuation can thus be achieved by predicting values on
 points that fall on a regular grid or at different heights.
 
@@ -339,7 +339,7 @@ We define a diagonal matrix $\mathbf{S}$
 
 \noindent in which $\sigma_j$ is the standard deviation of the $j$-th column of
 $\mathbf{A}$.
-We then write the forward problem in equation~\ref{eq:linear-problem} as
+We then write the forward problem in Eq.~\ref{eq:linear-problem} as
 
 \begin{equation}
     \mathbf{d}
@@ -360,7 +360,7 @@ We then write the forward problem in equation~\ref{eq:linear-problem} as
 $\mathbf{m}$ is a vector containing scaled coefficients with the same units as
 the data.
 
-The goal function defined in equation~\ref{eq:misfit-unscaled} can be
+The goal function defined in Eq.~\ref{eq:misfit-unscaled} can be
 rewritten as
 
 \begin{equation}
@@ -426,7 +426,7 @@ matrix equation
 \end{equation}
 
 We can transform our equivalent source problem in
-equation~\ref{eq:linear-problem} into an additive model by following these
+Eq.~\ref{eq:linear-problem} into an additive model by following these
 steps:
 
 \begin{enumerate}
@@ -453,7 +453,7 @@ optimization in the so-called ``function space'', with $\alpha_k$ corresponding
 to step sizes in steepest descent.
 The adaptation of the gradient boosting method to find the damped least-squares
 solutions for the $K$ parameters vectors $\mathbf{c}_k$ and step sizes
-$\alpha_k$ in equation~\ref{eq:gb-linear-model} is presented in
+$\alpha_k$ in Eq.~\ref{eq:gb-linear-model} is presented in
 Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
@@ -549,7 +549,7 @@ of algorithm~\ref{alg:gradient_boosting}).
 By doing so, we can reduce the size of the Jacobian matrix further to $N_k
 \times M_k$ elements.
 The forward modeling operation performed in step \ref{alg:predicted} can be
-done by a summation (equation~\ref{eq:forward-sum})
+done by a summation (Eq.~\ref{eq:forward-sum})
 instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
@@ -987,7 +987,7 @@ The parameter values used in these searches and the one producing the smallest
 RMS error are outlined in Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey}.
 
-Figures~\ref{fig:ground-survey-differences}
+Fig~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution
 strategy for the ground and airborne synthetic surveys, respectively.
