@@ -626,8 +626,6 @@ data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
 
-\textbf{NOTE: This paragraph might be better in the Discussion section.}
-
 Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
 fits portions of an equivalent source model to the data residuals.
@@ -1122,7 +1120,7 @@ sizes to compensate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Gridding Australia gravity data}
+\section{Gridding gravity data from Australia}
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/australia.png}
@@ -1138,45 +1136,53 @@ sizes to compensate.
     \label{fig:australia}
 \end{figure*}
 
-Our final goal is to show how gradient-boosted equivalent sources can be used
-to interpolate a very large dataset of gravity data into a regular grid.
-We selected a compilation of gravity surveys over Australia made by
-\citet{wynne2018}.
-It consists in more than 1.7 million data points that cover most part of the
-Australia territory obtained through observations on ground.
-First we compute the gravity disturbance by removing the normal gravity from
-the observed gravity data (Fig.~\ref{fig:australia}).
-The normal gravity is computed on each observation point through the
-closed-form formula given by \citet{ligotze2001} and using the WGS84 ellipsoid
-as reference.
-Then we obtain planar coordinates of the observation points by applying
-a Mercator projection.
+This section will demonstrate how gradient-boosted equivalent sources can be
+used to interpolate large datasets of gravity data onto a regular grid at
+uniform height.
+For this purpose, we selected an open-access compilation of ground gravity
+surveys over Australia made by \citet{wynne2018} and filtered and referenced to
+the WGS84 ellipsoid by \citet{australia_compilation}.
+It contains over 1.7 million data points and covers most of the Australian
+territory at variable point spacings.
+Our goal is to create a 1~arc-minute resolution grid of gravity disturbances at
+a constant geometric height of \AustraliaEqlGridHeight{} (the largest height of
+observations).
+
+We computed the gravity disturbance by removing the normal gravity of
+the WGS84 ellipsoid from the observed gravity data (Fig.~\ref{fig:australia}).
+Here, normal gravity was computed at each observation point through the
+closed-form formula of \citet{ligotze2001} using the Boule software
+\citep{boule2020}.
+Finally, we converted the observations to planar Cartesian coordinates by
+applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
-at a relative depth of \AustraliaEqlDepth{} and a block spacing of
-\SI{1.8}{\kilo\meter}.
-These parameters create \AustraliaEqlNSources{}~point sources.
-The choice of the block spacing must be done taking into account the desired
-resolution of the final grid.
-If the grid will have a much higher resolution than the block spacing, the
-equivalent sources will not be able to reproduce the high frequency components
-of the data.
-Therefore we recommend setting a block spacing that matches the resolution of
-the final grid.
-In this case we will generate a regular grid with a resolution of 1~arc-minute,
-which can be approximated by \SI{1.8}{\kilo\meter} for the Earth.
-
+at a relative depth of \AustraliaEqlDepth{} and a block size of
+\SI{1.8}{\kilo\meter}, resulting in a total of \AustraliaEqlNSources{}~point
+sources.
+The block size was chosen to match the desired resolution of the final grid
+ (1~arc-minute is approximately \SI{1.8}{\kilo\meter} at the equator).
 The coefficients of the gradient-boosted equivalent sources are estimated using
 a damping equal to \AustraliaEqlDamping{} and a window size of
-\AustraliaEqlWindowSize{} in order to limit the amount of memory needed to
-store the largest Jacobian matrix to 10GB.
-
-Finally, the equivalent sources are used to predict the values of the gravity
-disturbance on a regular grid of
+\AustraliaEqlWindowSize{}, which was chosen in order to limit the amount of
+computer memory needed to store the Jacobian matrix to under 10~Gigabytes.
+Finally, we used the estimated source coefficients to predict the values of the
+gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
-\AustraliaEqlGridHeight{} above the ellipsoid
-(Fig.~\ref{fig:australia}).
+\AustraliaEqlGridHeight{} above the ellipsoid.
+Fig.~\ref{fig:australia} shows the original data distribution and the
+interpolated regular grid.
+Grid points that are further than \SI{50}{\kilo\meter} from the nearest data
+point are masked to avoid unrealistic extrapolations.
 
+The resulting grid preserves the high resolution of the original data while
+avoiding aliasing artifacts because to the block averaging.
+Some parts of the grid are smoother and with reduced amplitude (e.g., some
+southwestern parts), which is expected from the upward continuation that was
+performed to have the grid at a constant height.
+On a modest workstation with 16 cores and 16~Gigabytes of RAM,
+estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
+$\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1237,6 +1243,13 @@ overlap values between 40\% and 70\% generate a balance between predictions
 accuracy and computational time needed to fit the source coefficients.
 This corroborates that our naive choice of 50\% is good enough for producing
 accurate predictions in reasonable times.
+
+
+If the grid will have a much higher resolution than the block spacing, the
+equivalent sources will not be able to reproduce the high frequency components
+of the data.
+Therefore we recommend setting a block spacing that matches the resolution of
+the final grid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
