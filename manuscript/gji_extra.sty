@@ -77,8 +77,10 @@
 %
 %    \tablenum{TEXT}
 
-\def\tablenum#1{\def\thetable{#1}\let\@currentlabel\thetable
-    \addtocounter{table}{\m@ne}}
+% The authors of this manuscript have comment out this line because tablenum is
+% already being defined by siunitx
+% \def\tablenum#1{\def\thetable{#1}\let\@currentlabel\thetable
+%     \addtocounter{table}{\m@ne}}
 
 % The \figurenum command allows the author to override all automatic
 % figure marking schemes.
@@ -223,7 +225,9 @@
 %    \tablevspace{DIMEN}
 %    \tablebreak
 
-\let\nl=\pt@nl
+% The authors of this manuscript have comment out this line because nl is
+% already being defined by siunitx
+% \let\nl=\pt@nl
 \let\nextline=\pt@nl
 
 \def\tablevspace#1{\noalign{\vskip{#1}}}
