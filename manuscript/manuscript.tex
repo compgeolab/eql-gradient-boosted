@@ -8,9 +8,16 @@
 \usepackage{siunitx}
 \usepackage{url}
 \usepackage[pdftex,colorlinks=true]{hyperref}
+
+% Import packages useful for creating the parameters tables
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{setspace}
+
+% Solve issue between gji style and siunitx
+\makeatletter
+\let\author@tabular\tabular
+\makeatother
 
 % Define style for urls
 \urlstyle{same}
