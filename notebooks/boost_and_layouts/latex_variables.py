@@ -12,11 +12,11 @@ def create_latex_variable(variable_name, value, unit=None, fmt="5g"):
     if fmt is not None:
         value = value_to_string(value, fmt)
     if unit:
-        tex_string = r"\newcommand{{{variable_name}}}{{{value}~{unit}}}".format(
+        tex_string = r"\newcommand{{\{variable_name}}}{{{value}~{unit}}}".format(
             variable_name=variable_name, value=value, unit=unit
         )
     else:
-        tex_string = r"\newcommand{{{variable_name}}}{{{value}}}".format(
+        tex_string = r"\newcommand{{\{variable_name}}}{{{value}}}".format(
             variable_name=variable_name, value=value
         )
     return tex_string

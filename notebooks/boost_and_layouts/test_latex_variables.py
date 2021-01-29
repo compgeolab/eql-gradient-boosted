@@ -29,19 +29,19 @@ def test_latex_variable():
     """
     assert (
         create_latex_variable("my_variable", 3.1416, unit=None)
-        == r"\newcommand{MyVariable}{3.1416}"
+        == r"\newcommand{\MyVariable}{3.1416}"
     )
     assert (
         create_latex_variable("my_other_variable", 3.141592653589793, unit=None)
-        == r"\newcommand{MyOtherVariable}{3.14159}"
+        == r"\newcommand{\MyOtherVariable}{3.14159}"
     )
     assert (
         create_latex_variable("my_length", 5400, unit="m")
-        == r"\newcommand{MyLength}{5400~m}"
+        == r"\newcommand{\MyLength}{5400~m}"
     )
     assert (
         create_latex_variable("my_area", 200, unit="m$^2$")
-        == r"\newcommand{MyArea}{200~m$^2$}"
+        == r"\newcommand{\MyArea}{200~m$^2$}"
     )
 
 
