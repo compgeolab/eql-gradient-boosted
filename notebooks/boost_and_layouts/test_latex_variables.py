@@ -80,7 +80,18 @@ def test_format_unit():
     """
     Test format_unit function
     """
-    units = ["m", "m2", "m-2", "kg", "kg2", "kg-4", "kg m-3", "kg2 m-5"]
+    units = [
+        "m",
+        "m2",
+        "m-2",
+        "kg",
+        "kg2",
+        "kg-4",
+        "kg m-3",
+        "kg2 m-5",
+        "mGal",
+        "J mGal-2",
+    ]
     expected_outcomes = [
         r"\text{m}",
         r"\text{m}^{2}",
@@ -90,6 +101,8 @@ def test_format_unit():
         r"\text{kg}^{-4}",
         r"\text{kg} \, \text{m}^{-3}",
         r"\text{kg}^{2} \, \text{m}^{-5}",
+        r"\text{mGal}",
+        r"\text{J} \, \text{mGal}^{-2}",
     ]
     for unit, expected in zip(units, expected_outcomes):
         assert format_unit(unit) == expected

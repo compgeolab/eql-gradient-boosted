@@ -46,9 +46,9 @@ def format_unit(unit):
     """
     # Define regex pattern for units as alphabetic characters followed by
     # a positive or negative int.
-    unit_pattern = r"^[a-z]+-?(\d+)?$"
+    unit_pattern = r"^[a-zA-Z]+-?(\d+)?$"
     # Get each unit from the passed string
-    splits = unit.strip().lower().split()
+    splits = unit.strip().split()
     # Generate the LaTeX units
     units = []
     for split in splits:
@@ -56,7 +56,7 @@ def format_unit(unit):
         if not re.match(unit_pattern, split):
             raise ValueError("Invalid unit '{}'.".format(split))
         # Take the alphabetic characters of the unit and its power (if exists)
-        alpha = re.findall("[a-z]+", split)[0]
+        alpha = re.findall("[a-zA-Z]+", split)[0]
         power = re.findall(r"-?\d+", split)
         # Build LaTeX unit
         unit_tex = r"\text{{{}}}".format(alpha)
