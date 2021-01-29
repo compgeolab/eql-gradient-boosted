@@ -7,6 +7,7 @@ from .latex_variables import (
     create_latex_variable,
     list_to_latex,
     create_loglist,
+    format_unit,
 )
 
 
@@ -37,11 +38,15 @@ def test_latex_variable():
     )
     assert (
         create_latex_variable("my_length", 5400, unit="m")
-        == r"\newcommand{\MyLength}{5400~m}"
+        == r"\newcommand{\MyLength}{$5400 \, \text{m}$}"
     )
     assert (
-        create_latex_variable("my_area", 200, unit="m$^2$")
-        == r"\newcommand{\MyArea}{200~m$^2$}"
+        create_latex_variable("my_area", 200, unit="m2")
+        == r"\newcommand{\MyArea}{$200 \, \text{m}^{2}$}"
+    )
+    assert (
+        create_latex_variable("my_density", 2670, unit="kg m-3")
+        == r"\newcommand{\MyDensity}{$2670 \, \text{kg} \, \text{m}^{-3}$}"
     )
 
 
@@ -69,3 +74,34 @@ def test_loglist():
     assert create_loglist(values) == r"10$^{-5}$, 10$^{-4}$,$\dots$, 1"
     values = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2]
     assert create_loglist(values) == r"10$^{-5}$, 10$^{-4}$,$\dots$, 10$^{2}$"
+
+
+def test_format_unit():
+    """
+    Test format_unit function
+    """
+    units = ["m", "m2", "m-2", "kg", "kg2", "kg-4", "kg m-3", "kg2 m-5"]
+    expected_outcomes = [
+        r"\text{m}",
+        r"\text{m}^{2}",
+        r"\text{m}^{-2}",
+        r"\text{kg}",
+        r"\text{kg}^{2}",
+        r"\text{kg}^{-4}",
+        r"\text{kg} \, \text{m}^{-3}",
+        r"\text{kg}^{2} \, \text{m}^{-5}",
+    ]
+    for unit, expected in zip(units, expected_outcomes):
+        assert format_unit(unit) == expected
+
+
+def test_format_unit_invalid():
+    """
+    Test format_unit with invalid inputs
+    """
+    with pytest.raises(ValueError):
+        format_unit("2m")
+    with pytest.raises(ValueError):
+        format_unit("m2kg")
+    with pytest.raises(ValueError):
+        format_unit("m-kg")

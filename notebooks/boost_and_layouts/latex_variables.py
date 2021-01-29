@@ -1,6 +1,7 @@
 """
 Function to define LaTeX variables
 """
+import re
 import numpy as np
 
 
@@ -12,7 +13,8 @@ def create_latex_variable(variable_name, value, unit=None, fmt="5g"):
     if fmt is not None:
         value = value_to_string(value, fmt)
     if unit:
-        tex_string = r"\newcommand{{\{variable_name}}}{{{value}~{unit}}}".format(
+        unit = format_unit(unit)
+        tex_string = r"\newcommand{{\{variable_name}}}{{${value} \, {unit}$}}".format(
             variable_name=variable_name, value=value, unit=unit
         )
     else:
@@ -36,6 +38,32 @@ def format_variable_name(name):
     Remove underscores and case the first letter of each word.
     """
     return name.replace("_", " ").title().replace(" ", "")
+
+
+def format_unit(unit):
+    """
+    Format unit string to LaTeX
+    """
+    # Define regex pattern for units as alphabetic characters followed by
+    # a positive or negative int.
+    unit_pattern = r"^[a-z]+-?(\d+)?$"
+    # Get each unit from the passed string
+    splits = unit.strip().lower().split()
+    # Generate the LaTeX units
+    units = []
+    for split in splits:
+        # Check if the passed unit has the valid format
+        if not re.match(unit_pattern, split):
+            raise ValueError("Invalid unit '{}'.".format(split))
+        # Take the alphabetic characters of the unit and its power (if exists)
+        alpha = re.findall("[a-z]+", split)[0]
+        power = re.findall(r"-?\d+", split)
+        # Build LaTeX unit
+        unit_tex = r"\text{{{}}}".format(alpha)
+        if power:
+            unit_tex += "^{{{}}}".format(power[0])
+        units.append(unit_tex)
+    return r" \, ".join(units)
 
 
 def list_to_latex(values, max_list_items=4, fmt="5g"):
