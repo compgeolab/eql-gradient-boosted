@@ -3,12 +3,12 @@ name: manuscript
 on:
   pull_request:
     paths:
-      - 'manuscript/**'
+      - "manuscript/**"
   push:
     branches:
       - master
     paths:
-      - 'manuscript/**'
+      - "manuscript/**"
 
 jobs:
   build:
@@ -26,6 +26,7 @@ jobs:
         run: |
           cd manuscript
           make
+          make gji
           cd _output
           rm -f *.aux *.log *.bbl *.blg *.out *.toc
           touch .nojekyll
@@ -36,7 +37,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: manuscript
-          path: manuscript/_output/manuscript.pdf
+          path: |
+            manuscript/_output/manuscript.pdf
+            manuscript/_output/manuscript-gji.pdf
 
   publish:
     needs: [build]
@@ -66,8 +69,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.OUTPUT_DIR }}
           publish_branch: ${{ env.PREVIEW_BRANCH }}
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
           # Only keep the latest commit to avoid bloating the repository
           force_orphan: true
 
@@ -78,7 +81,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.OUTPUT_DIR }}
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
           # Only keep the latest commit to avoid bloating the repository
           force_orphan: true
