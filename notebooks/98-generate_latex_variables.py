@@ -19,7 +19,6 @@
 from IPython.display import display
 from pathlib import Path
 import json
-import numpy as np
 import xarray as xr
 
 from boost_and_layouts import (
@@ -27,6 +26,7 @@ from boost_and_layouts import (
     create_loglist,
     list_to_latex,
     format_variable_name,
+    format_power_of_ten,
 )
 
 
@@ -63,8 +63,8 @@ def format_damping(variable_name, value):
     Convert damping to a LaTeX variable
     """
     variable_name = format_variable_name(variable_name)
-    value = "e{:.0f}".format(np.log10(value))
-    return r"\newcommand{{\{variable_name}}}{{\num{{{value}}}}}".format(
+    value = format_power_of_ten(value)
+    return r"\newcommand{{\{variable_name}}}{{{value}}}".format(
         variable_name=variable_name, value=value
     )
 
@@ -136,22 +136,22 @@ with open(json_file, "r") as f:
 units = variables.copy()
 
 units["n_prisms"] = None
-units["model_easting"] = "meter"
-units["model_northing"] = "meter"
-units["model_depth"] = "meter"
-units["model_min_density"] = "kg per cubic meter"
-units["model_max_density"] = "kg per cubic meter"
-units["survey_easting"] = "meter"
-units["survey_northing"] = "meter"
-units["survey_noise"] = "milli Gal"
+units["model_easting"] = "m"
+units["model_northing"] = "m"
+units["model_depth"] = "m"
+units["model_min_density"] = "kg m-3"
+units["model_max_density"] = "kg m-3"
+units["survey_easting"] = "m"
+units["survey_northing"] = "m"
+units["survey_noise"] = "mGal"
 units["ground_survey_points"] = None
-units["ground_survey_min_height"] = "meter"
-units["ground_survey_max_height"] = "meter"
+units["ground_survey_min_height"] = "m"
+units["ground_survey_max_height"] = "m"
 units["airborne_survey_points"] = None
-units["airborne_survey_min_height"] = "meter"
-units["airborne_survey_max_height"] = "meter"
-units["target_height"] = "meter"
-units["target_spacing"] = "meter"
+units["airborne_survey_min_height"] = "m"
+units["airborne_survey_max_height"] = "m"
+units["target_height"] = "m"
+units["target_spacing"] = "m"
 units["target_easting_size"] = None
 units["target_northing_size"] = None
 # -
@@ -248,7 +248,7 @@ tex_file = manuscript_dir / "boost-overlapping.tex"
 with open(json_file, "r") as f:
     variables = json.loads(f.read())
 
-units["boost_overlapping_window_size"] = "meter"
+units["boost_overlapping_window_size"] = "m"
 # -
 
 latex_variables = [
@@ -271,14 +271,14 @@ with open(json_file, "r") as f:
 
 variables["australia_eql_window_size"] *= 1e-3
 
-units["australia_eql_depth"] = "meter"
+units["australia_eql_depth"] = "m"
 units["australia_eql_damping"] = None
-units["australia_eql_spacing"] = "meter"
-units["australia_eql_window_size"] = "kilo meter"
+units["australia_eql_spacing"] = "m"
+units["australia_eql_window_size"] = "km"
 units["australia_eql_n_sources"] = None
 units["australia_eql_grid_n_longitude"] = None
 units["australia_eql_grid_n_latitude"] = None
-units["australia_eql_grid_height"] = "meter"
+units["australia_eql_grid_height"] = "m"
 # -
 
 latex_variables = [

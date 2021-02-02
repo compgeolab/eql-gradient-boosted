@@ -8,6 +8,7 @@ from .latex_variables import (
     create_loglist,
     list_to_latex,
     format_variable_name,
+    format_power_of_ten,
 )
 from .utils import (
     save_to_json,
