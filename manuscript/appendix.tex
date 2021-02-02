@@ -1,0 +1,323 @@
+\appendix
+
+\section{Source position parameters used for the tests on synthetic data}
+
+Tables~\ref{tab:parameters-ground-survey}
+and~\ref{tab:parameters-airborne-survey} show the parameter values tested and
+their optimal values for creating the equivalent source distributions tested in
+Section~\ref{sec:synthetic_distributions}.
+The optimal values were used to produce the results in
+Figs~\ref{fig:ground-survey-differences}
+and~\ref{fig:airborne-survey-differences}.
+
+\begin{table*}
+    \centering
+    \caption{
+        Parameters used to produce each source distribution for interpolating
+        the synthetic ground survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
+    }
+    \label{tab:parameters-ground-survey}
+    \begin{tabular}{c c l c c c}
+        \textbf{Source layout}
+            & \textbf{Depth type}
+            & \multicolumn{1}{c}{\textbf{Parameters}}
+            & \textbf{Values}
+            & \textbf{Best}
+            & \textbf{RMS} \\
+        \toprule
+
+        \multirow{8}{*}{Source Below Data}
+            & \multirow{2}{*}{Constant}
+                & Depth (m)
+                & \GroundSourceBelowDataConstantDepthDepth
+                & \BestGroundSourceBelowDataConstantDepthDepth
+                & \multirow{2}{*}{
+                    \BestGroundSourceBelowDataConstantDepthRms
+                  } \\
+            &
+                & Damping
+                & \GroundSourceBelowDataConstantDepthDamping
+                & \BestGroundSourceBelowDataConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{2}{*}{Relative}
+                & Depth (m)
+                & \GroundSourceBelowDataRelativeDepthDepth
+                & \BestGroundSourceBelowDataRelativeDepthDepth
+                & \multirow{2}{*}{
+                    \BestGroundSourceBelowDataRelativeDepthRms
+                  } \\
+            &
+                & Damping
+                & \GroundSourceBelowDataRelativeDepthDamping
+                & \BestGroundSourceBelowDataRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{4}{*}{Variable}
+                & Depth (m)
+                & \GroundSourceBelowDataVariableDepthDepth
+                & \BestGroundSourceBelowDataVariableDepthDepth
+                & \multirow{4}{*}{
+                    \BestGroundSourceBelowDataVariableDepthRms
+                  } \\
+            &
+                & Depth factor
+                & \GroundSourceBelowDataVariableDepthDepthFactor
+                & \BestGroundSourceBelowDataVariableDepthDepthFactor
+                & \\
+            &
+                & $k$ neighbours
+                & \GroundSourceBelowDataVariableDepthKNearest
+                & \BestGroundSourceBelowDataVariableDepthKNearest
+                & \\
+            &
+                & Damping
+                & \GroundSourceBelowDataVariableDepthDamping
+                & \BestGroundSourceBelowDataVariableDepthDamping
+                & \\
+        \midrule
+
+        \multirow{11}{*}{Block Averaged Sources}
+            & \multirow{3}{*}{Constant}
+                & Depth (m)
+                & \GroundBlockAveragedSourcesConstantDepthDepth
+                & \BestGroundBlockAveragedSourcesConstantDepthDepth
+                & \multirow{3}{*}{
+                    \BestGroundBlockAveragedSourcesConstantDepthRms
+                  } \\
+            &
+                & Block size (m)
+                & \GroundBlockAveragedSourcesConstantDepthSpacing
+                & \BestGroundBlockAveragedSourcesConstantDepthSpacing
+                & \\
+            &
+                & Damping
+                & \GroundBlockAveragedSourcesConstantDepthDamping
+                & \BestGroundBlockAveragedSourcesConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{3}{*}{Relative}
+                & Depth (m)
+                & \GroundBlockAveragedSourcesRelativeDepthDepth
+                & \BestGroundBlockAveragedSourcesRelativeDepthDepth
+                & \multirow{3}{*}{
+                    \BestGroundBlockAveragedSourcesRelativeDepthRms
+                  } \\
+            &
+                & Block size (m)
+                & \GroundBlockAveragedSourcesRelativeDepthSpacing
+                & \BestGroundBlockAveragedSourcesRelativeDepthSpacing
+                & \\
+            &
+                & Damping
+                & \GroundBlockAveragedSourcesRelativeDepthDamping
+                & \BestGroundBlockAveragedSourcesRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{5}{*}{Variable}
+                & Depth (m)
+                & \GroundBlockAveragedSourcesVariableDepthDepth
+                & \BestGroundBlockAveragedSourcesVariableDepthDepth
+                & \multirow{5}{*}{
+                    \BestGroundBlockAveragedSourcesVariableDepthRms
+                  } \\
+            &
+                & Depth factor
+                & \GroundBlockAveragedSourcesVariableDepthDepthFactor
+                & \BestGroundBlockAveragedSourcesVariableDepthDepthFactor
+                & \\
+            &
+                & $k$ neighbours
+                & \GroundBlockAveragedSourcesVariableDepthKNearest
+                & \BestGroundBlockAveragedSourcesVariableDepthKNearest
+                & \\
+            &
+                & Block size (m)
+                & \GroundBlockAveragedSourcesVariableDepthSpacing
+                & \BestGroundBlockAveragedSourcesVariableDepthSpacing
+                & \\
+            &
+                & Damping
+                & \GroundBlockAveragedSourcesVariableDepthDamping
+                & \BestGroundBlockAveragedSourcesVariableDepthDamping
+                & \\
+        \midrule
+
+        \multirow{4}{*}{Grid Sources}
+            & \multirow{4}{*}{Constant}
+                & Depth (m)
+                & \GroundGridSourcesConstantDepthDepth
+                & \BestGroundGridSourcesConstantDepthDepth
+                & \multirow{4}{*}{
+                    \BestGroundGridSourcesConstantDepthRms
+                  } \\
+            &
+                & Grid spacing (m)
+                & \GroundGridSourcesConstantDepthSpacing
+                & \BestGroundGridSourcesConstantDepthSpacing
+                & \\
+            &
+                & Damping
+                & \GroundGridSourcesConstantDepthDamping
+                & \BestGroundGridSourcesConstantDepthDamping
+                & \\
+    \end{tabular}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{
+        Parameters used to produce each source distribution for interpolating
+        the synthetic airborne survey data. Also contains the set of parameters
+        that generates the smallest RMS error for each source distribution and
+        their corresponding RMS.
+    }
+    \label{tab:parameters-airborne-survey}
+    \begin{tabular}{c c l c c c}
+        \textbf{Source layout}
+            & \textbf{Depth type}
+            & \multicolumn{1}{c}{\textbf{Parameters}}
+            & \textbf{Values}
+            & \textbf{Best}
+            & \textbf{RMS} \\
+        \toprule
+
+        \multirow{8}{*}{Source Below Data}
+            & \multirow{2}{*}{Constant}
+                & Depth (m)
+                & \AirborneSourceBelowDataConstantDepthDepth
+                & \BestAirborneSourceBelowDataConstantDepthDepth
+                & \multirow{2}{*}{
+                    \BestAirborneSourceBelowDataConstantDepthRms
+                  } \\
+            &
+                & Damping
+                & \AirborneSourceBelowDataConstantDepthDamping
+                & \BestAirborneSourceBelowDataConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{2}{*}{Relative}
+                & Depth (m)
+                & \AirborneSourceBelowDataRelativeDepthDepth
+                & \BestAirborneSourceBelowDataRelativeDepthDepth
+                & \multirow{2}{*}{
+                    \BestAirborneSourceBelowDataRelativeDepthRms
+                  } \\
+            &
+                & Damping
+                & \AirborneSourceBelowDataRelativeDepthDamping
+                & \BestAirborneSourceBelowDataRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{4}{*}{Variable}
+                & Depth (m)
+                & \AirborneSourceBelowDataVariableDepthDepth
+                & \BestAirborneSourceBelowDataVariableDepthDepth
+                & \multirow{4}{*}{
+                    \BestAirborneSourceBelowDataVariableDepthRms
+                  } \\
+            &
+                & Depth factor
+                & \AirborneSourceBelowDataVariableDepthDepthFactor
+                & \BestAirborneSourceBelowDataVariableDepthDepthFactor
+                & \\
+            &
+                & $k$ neighbours
+                & \AirborneSourceBelowDataVariableDepthKNearest
+                & \BestAirborneSourceBelowDataVariableDepthKNearest
+                & \\
+            &
+                & Damping
+                & \AirborneSourceBelowDataVariableDepthDamping
+                & \BestAirborneSourceBelowDataVariableDepthDamping
+                & \\
+        \midrule
+
+        \multirow{11}{*}{Block Averaged Sources}
+            & \multirow{3}{*}{Constant}
+                & Depth (m)
+                & \AirborneBlockAveragedSourcesConstantDepthDepth
+                & \BestAirborneBlockAveragedSourcesConstantDepthDepth
+                & \multirow{3}{*}{
+                    \BestAirborneBlockAveragedSourcesConstantDepthRms
+                  } \\
+            &
+                & Block size (m)
+                & \AirborneBlockAveragedSourcesConstantDepthSpacing
+                & \BestAirborneBlockAveragedSourcesConstantDepthSpacing
+                & \\
+            &
+                & Damping
+                & \AirborneBlockAveragedSourcesConstantDepthDamping
+                & \BestAirborneBlockAveragedSourcesConstantDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{3}{*}{Relative}
+                & Depth (m)
+                & \AirborneBlockAveragedSourcesRelativeDepthDepth
+                & \BestAirborneBlockAveragedSourcesRelativeDepthDepth
+                & \multirow{3}{*}{
+                    \BestAirborneBlockAveragedSourcesRelativeDepthRms
+                  } \\
+            &
+                & Block size (m)
+                & \AirborneBlockAveragedSourcesRelativeDepthSpacing
+                & \BestAirborneBlockAveragedSourcesRelativeDepthSpacing
+                & \\
+            &
+                & Damping
+                & \AirborneBlockAveragedSourcesRelativeDepthDamping
+                & \BestAirborneBlockAveragedSourcesRelativeDepthDamping
+                & \\
+            \cmidrule{2-6}
+            & \multirow{5}{*}{Variable}
+                & Depth (m)
+                & \AirborneBlockAveragedSourcesVariableDepthDepth
+                & \BestAirborneBlockAveragedSourcesVariableDepthDepth
+                & \multirow{5}{*}{
+                    \BestAirborneBlockAveragedSourcesVariableDepthRms
+                  } \\
+            &
+                & Depth factor
+                & \AirborneBlockAveragedSourcesVariableDepthDepthFactor
+                & \BestAirborneBlockAveragedSourcesVariableDepthDepthFactor
+                & \\
+            &
+                & $k$ neighbours
+                & \AirborneBlockAveragedSourcesVariableDepthKNearest
+                & \BestAirborneBlockAveragedSourcesVariableDepthKNearest
+                & \\
+            &
+                & Block size (m)
+                & \AirborneBlockAveragedSourcesVariableDepthSpacing
+                & \BestAirborneBlockAveragedSourcesVariableDepthSpacing
+                & \\
+            &
+                & Damping
+                & \AirborneBlockAveragedSourcesVariableDepthDamping
+                & \BestAirborneBlockAveragedSourcesVariableDepthDamping
+                & \\
+        \midrule
+
+        \multirow{4}{*}{Grid Sources}
+            & \multirow{4}{*}{Constant}
+                & Depth (m)
+                & \AirborneGridSourcesConstantDepthDepth
+                & \BestAirborneGridSourcesConstantDepthDepth
+                & \multirow{4}{*}{
+                    \BestAirborneGridSourcesConstantDepthRms
+                  } \\
+            &
+                & Grid spacing (m)
+                & \AirborneGridSourcesConstantDepthSpacing
+                & \BestAirborneGridSourcesConstantDepthSpacing
+                & \\
+            &
+                & Damping
+                & \AirborneGridSourcesConstantDepthDamping
+                & \BestAirborneGridSourcesConstantDepthDamping
+                & \\
+    \end{tabular}
+\end{table*}

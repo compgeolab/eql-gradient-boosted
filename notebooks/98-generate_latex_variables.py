@@ -103,7 +103,7 @@ def best_parameters_to_latex(parameters, survey):
 # ## Define results and manuscript directories
 
 results_dir = Path("..") / "results"
-manuscript_dir = Path("..") / "manuscript"
+manuscript_dir = Path("..") / "manuscript" / "results"
 ground_results_dir = results_dir / "ground_survey"
 airborne_results_dir = results_dir / "airborne_survey"
 
