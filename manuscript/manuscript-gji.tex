@@ -1,0 +1,62 @@
+\documentclass[extra]{gji}
+\usepackage[utf8]{inputenc}
+\usepackage{timet}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[longend,linesnumbered,ruled]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[pdftex,colorlinks=true]{hyperref}
+
+% Import packages useful for creating the parameters tables
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{setspace}
+
+% Define style for urls
+\urlstyle{same}
+
+% Import variables
+\input{variables.tex}
+
+
+% Define title, authors, affiliations and DOI
+% ===========================================
+\title{\Title}
+\author[\SolerShort{} and \UiedaShort{}]{
+    \Soler$^{1,2}$ and \Uieda$^{3}$ \\
+    $^{1}$\AffiliationA \\
+    $^{2}$\AffiliationB \\
+    $^{3}$\AffiliationC \\
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+\begin{summary}
+    \input{abstract}
+\end{summary}
+
+\begin{keywords}
+    \input{keywords}
+\end{keywords}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{content.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{gji}
+\bibliography{references}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{appendix.tex}
+
+\end{document}
