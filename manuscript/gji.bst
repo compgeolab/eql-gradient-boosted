@@ -1136,6 +1136,14 @@ FUNCTION {format.publisher}
   output
 }
 
+% Function to simply add the publisher
+FUNCTION {simple.publisher}
+{ publisher empty$
+    { "" }
+    { new.block publisher }
+  if$
+}
+
 FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
@@ -1327,6 +1335,7 @@ FUNCTION {misc}
   new.block
   format.title output
   howpublished output
+  simple.publisher output
   format.doi output
   note output
   fin.entry
