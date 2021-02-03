@@ -1,4 +1,12 @@
-%% 
+%% Modified version of `gji.bst`
+%%
+%% Adds publisher and doi to misc publications.
+%% The doi package is needed for the doi to work.
+%%
+%%    \usepackage{doi}
+%%
+%% ----------------------------------------
+%%
 %% This is file `gji.bst',
 %% ---------------------------------------- 
 %% *** For Geophysical Journal International *** 
@@ -53,6 +61,7 @@ ENTRY
     author
     booktitle
     chapter
+    doi
     edition
     editor
     howpublished
@@ -736,6 +745,15 @@ FUNCTION {format.full.names}
   while$
 }
 
+% Format doi with hyperlink
+FUNCTION {format.doi}
+{ doi empty$
+    { "" }
+    % { new.block "doi:\href{https://dx.doi.org/" doi * "}{" * doi * "}" * }
+    { new.block "\doi{" doi * "}" * }
+  if$
+}
+
 FUNCTION {author.editor.key.full}
 { author empty$
     { editor empty$
@@ -1301,6 +1319,7 @@ FUNCTION {mastersthesis}
   fin.entry
 }
 
+% Add publisher and doi to any misc publication
 FUNCTION {misc}
 { output.bibitem
   format.authors output
@@ -1309,6 +1328,7 @@ FUNCTION {misc}
   new.block
   format.title output
   howpublished output
+  format.doi output
   note output
   fin.entry
 }
