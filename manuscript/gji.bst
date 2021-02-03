@@ -749,7 +749,6 @@ FUNCTION {format.full.names}
 FUNCTION {format.doi}
 { doi empty$
     { "" }
-    % { new.block "doi:\href{https://dx.doi.org/" doi * "}{" * doi * "}" * }
     { new.block "\doi{" doi * "}" * }
   if$
 }
