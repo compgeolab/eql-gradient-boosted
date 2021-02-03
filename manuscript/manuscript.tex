@@ -1,20 +1,27 @@
-\documentclass[twocolumn]{article}
-\setlength{\columnsep}{2\columnsep}
+\documentclass[twocolumn,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage[longend,linesnumbered,ruled]{algorithm2e}
 \usepackage{graphicx}
-\usepackage[round,authoryear,sort]{natbib}
-\usepackage{url}
+\usepackage[longend,linesnumbered,ruled]{algorithm2e}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
+
+% Import packages useful for creating the parameters tables
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{setspace}
 
+% Import natbib and doi packages
+\usepackage[round,authoryear,sort]{natbib}
+\usepackage{doi} % show dois as links on references
+
 % Define style for urls
 \urlstyle{same}
+
+% Configure column separation and page geometry
+\usepackage[hmargin=2cm, vmargin=3cm]{geometry}
+\setlength{\columnsep}{2\columnsep}
 
 % Import variables
 \input{variables.tex}
@@ -80,7 +87,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibliographystyle{humannat}
+\bibliographystyle{apalike-doi}
 \bibliography{references}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
