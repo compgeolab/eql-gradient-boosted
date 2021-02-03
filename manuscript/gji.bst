@@ -5,6 +5,8 @@
 %%
 %%    \usepackage{doi}
 %%
+%% Modifications by Santiago Soler (santiago.r.soler@gmail.com)
+%%
 %% ----------------------------------------
 %%
 %% This is file `gji.bst',
