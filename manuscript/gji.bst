@@ -8,9 +8,9 @@
 %% ----------------------------------------
 %%
 %% This is file `gji.bst',
-%% ---------------------------------------- 
-%% *** For Geophysical Journal International *** 
-%%    based on egs.bst 
+%% ----------------------------------------
+%% *** For Geophysical Journal International ***
+%%    based on egs.bst
  %-------------------------------------------------------------------
  % The original source file contains the following version information:
  % \ProvidesFile{merlin.mbs}[1996/09/18 3.81 (PWD)]
@@ -1141,11 +1141,11 @@ FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
-%  fin.year 
+%  fin.year
   format.title "title" output.check
-  crossref missing$ 
+  crossref missing$
     { journal
       italics
       "journal" output.check
@@ -1172,7 +1172,7 @@ FUNCTION {book}
       if$
     }
   if$
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
 %  fin.year
   format.btitle "title" output.check
@@ -1194,7 +1194,7 @@ FUNCTION {booklet}
 { output.bibitem
   format.authors output
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title "title" output.check
   howpublished output
@@ -1216,7 +1216,7 @@ FUNCTION {inbook}
       if$
     }
   if$
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.btitle "title" output.check
   crossref missing$
@@ -1240,7 +1240,7 @@ FUNCTION {incollection}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title "title" output.check
   crossref missing$
@@ -1264,7 +1264,7 @@ FUNCTION {inproceedings}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title "title" output.check
   crossref missing$
@@ -1295,7 +1295,7 @@ FUNCTION {manual}
 { output.bibitem
   format.authors output
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.btitle "title" output.check
   organization output
@@ -1309,7 +1309,7 @@ FUNCTION {mastersthesis}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.btitle "title" output.check
   bbl.mthesis format.thesis.type output.nonnull
@@ -1324,7 +1324,7 @@ FUNCTION {misc}
 { output.bibitem
   format.authors output
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title output
   howpublished output
@@ -1337,7 +1337,7 @@ FUNCTION {phdthesis}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.btitle "title" output.check
   bbl.phdthesis format.thesis.type output.nonnull
@@ -1351,7 +1351,7 @@ FUNCTION {proceedings}
 { output.bibitem
   format.editors output
   editor format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.btitle "title" output.check
   format.bvolume output
@@ -1367,7 +1367,7 @@ FUNCTION {techreport}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title "title" output.check
   format.tr.number output.nonnull
@@ -1381,7 +1381,7 @@ FUNCTION {unpublished}
 { output.bibitem
   format.authors "author" output.check
   author format.key output
-  format.date "year" output.check 
+  format.date "year" output.check
   new.block
   format.title "title" output.check
   note "note" output.check
@@ -1693,6 +1693,6 @@ FUNCTION {end.bib}
 }
 
 EXECUTE {end.bib}
-%% End of customized bst file 
-%% 
+%% End of customized bst file
+%%
 %% End of file `egs.bst'.
