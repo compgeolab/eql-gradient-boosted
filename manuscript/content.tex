@@ -310,7 +310,7 @@ Gradient boosting was first introduced by \citet{friedman2001, friedman2002} as
 a method for fitting additive parametric models of the form
 
 \begin{equation}
-  d = \sum_{k=1}^K \alpha_k f(\mathbf{c}_k),
+    \mathbf{d} = \sum_{k=1}^K \alpha_k f(\mathbf{c}_k),
 \end{equation}
 
 \noindent where $\alpha_k$ is a scalar coefficient called the \emph{step-size}
@@ -481,8 +481,8 @@ the final \textit{gradient-boosted equivalent source algorithm}.
     $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
     \;
 
+    calculate $ \mathbf{d}_k $, where
     $
-    \mathbf{d}_k \Rightarrow
     {d_k}_i
     =
     \sum\limits_{j=1}^{M_k} \dfrac{{c_k}_j}{\left\lVert \mathbf{p}_i -
@@ -519,7 +519,7 @@ the final \textit{gradient-boosted equivalent source algorithm}.
 The influence of distance sources on the solution is maintained by using the
 entire set of data points when calculating
 the step size $\alpha_k$ and updating the residuals vector.
-In this case, the step size prevents the algorithm from worsening the fit to
+In this case, the step size prevents the algorithm from worsening the fit over
 data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
@@ -528,12 +528,12 @@ Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
 fits portions of an equivalent source model to the data residuals.
 The key differences are that in our method:
-(1) the sources in the overlapping portions of the windows are
-fit more than once, allowing the algorithm to self-correct for poor solutions
-to any given window;
-(2) we use only data points within the window when fitting, what enables the
+(i)~the sources in the overlapping portions of the windows are fitted more than
+once, allowing the algorithm to self-correct for poor solutions to any given
+window;
+(ii)~we use only data points within the window when fitting, what enables the
 use of larger datasets;
-(3) experience shows that the step size parameter improves the convergence of
+(iii)~experience shows that the step size parameter improves the convergence of
 the solution, particularly when using only the data inside the windows for
 fitting.
 
@@ -568,7 +568,7 @@ The coverage of the survey region is often uneven, leaving large areas without
 any observation.
 On the other hand, observations from airborne surveys are located along almost
 straight and closely spaced flight lines.
-Measurements are usually taken at a high temporal frequency, leading to the
+Measurements are usually taken at a high temporal frequency, leading to
 observation points along the flight lines that are several times closer to each
 other than the flight line spacing.
 This creates a bias in the sampling, which can cause aliasing artifacts in
@@ -640,18 +640,18 @@ This is done by:
 
 \begin{enumerate}
     \item Dividing the survey region into rectangular blocks of equal size.
-    \item Computing the median horizontal position of the observation points
-      that fall inside each block. Blocks without any observation point are
-      omitted.
+    \item \label{item:median-position} Computing the median horizontal position
+        of the observation points that fall inside each block. Blocks without
+        any observation point are omitted.
     \item Assign one point source to the median horizontal position calculated
-      in step 1.
+        in step \ref{item:median-position}.
 \end{enumerate}
 
 The number of sources created by this new layout will be less than the number
 of observations if the block size is chosen appropriately (i.e., making sure
 that blocks are large enough to contain more than a single data point).
 The overdetermined problem that arises from this layout has a lower
-computational load and is less prone to overfiting the data since the model
+computational load and is less prone to overfitting the data since the model
 complexity is lower.
 Moreover, the block averaging process can balance the spacing between sources
 along a flight line and between adjacent lines, helping to reduce aliasing
@@ -673,8 +673,8 @@ using a fraction of the equivalent sources.
         data points.
         Source depths are
         (a)~a \emph{constant depth} at a chosen vertical coordinate,
-        (b)~a \emph{relative depth} determined by uniformly shifting the
-        vertical coordinate of data points downwards,
+        (b)~a \emph{relative depth} determined by uniformly downward shifting
+        the vertical coordinate of data points,
         and
         (c)~a \emph{variable depth} determined by shifting the vertical
         coordinates of the observation points by an amount proportional to the
