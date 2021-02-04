@@ -23,9 +23,9 @@ for example continuous curvature splines in tension \citep{smith1990},
 bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
 These general-purpose methods have limitations when it comes to interpolating
 potential field data:
-(i) they are not able to take into account the variable height of the
+(i)~they are not able to take into account the variable height of the
 observation points and
-(ii) the interpolating functions are not necessarily harmonic functions, which
+(ii)~the interpolating functions are not necessarily harmonic, which
 is the underlying assumption behind many processing techniques
 (e.g., upward continuation and vertical derivatives).
 
@@ -33,8 +33,8 @@ A widely used method for interpolating gravity and magnetic data
 is the equivalent sources technique (also known as equivalent layer, radial
 basis functions, or Green's functions interpolation), first introduced by
 \citet{dampney1969}.
-It consists in fitting a model of elementary sources to the data and using this
-model to predict new data values.
+It consists in fitting a model of finite elementary sources to the data and
+using this model to predict new data values.
 Besides interpolation, equivalent sources have been used for
 reduction-to-the-pole of magnetic data
 \citep{silva1986, nakatsuka2006, guspi2009}, upward
@@ -64,7 +64,7 @@ To reduce the computational load, \citet{mendonca1994} built the solution
 iteratively by incorporating one data point at a time using the ``equivalent
 data concept''.
 \citet{leao1989} processed the input data using a moving window, only fitting the
-data inside the window and predicting observations at the center of the window.
+data inside the window and predicting observations at its center.
 \citet{li2010} and \citet{barnes2011} apply different operations to generate a
 sparse representation of the sensitive matrix (respectively, wavelet
 compression and quadtree discretization), which significantly improves the
@@ -81,7 +81,7 @@ descent to avoid calculating the Hessian matrix and solving linear systems.
 Many of the existing methods solve under-determined problems, requiring a much
 larger number of equivalent sources than the number of data points.
 Some achieve greater efficiency by restricting their applications
-specific data types \citep{siqueira2017},
+to specific data types \citep{siqueira2017},
 interpolating only on regular grids \citep{leao1989},
 or requiring already gridded data \citep{takahashi2020},
 to name a few.
@@ -113,12 +113,14 @@ a large one.
 This has some similarities with the strategy used by \citet{leao1989} but
 without the requirement for sources and predictions to be on regular grids.
 
-Through tests on synthetic data, we show that: (i) the \emph{block-averaged}
-sources are able to achieve the same accuracy as other traditional equivalent
-source layouts while using a fraction of the number of sources, and (ii) the
-\emph{gradient boosting} algorithm greatly reduces the computational memory
-required to fit very large datasets without sacrificing prediction accuracy.
-Finally, a combination of both strategies are used to process a collection of
+Through tests on synthetic data, we show that:
+(i)~the \emph{block-averaged} sources are able to achieve the same accuracy as
+other traditional equivalent source layouts while using a fraction of the
+number of sources, and
+(ii)~the \emph{gradient boosting} algorithm greatly reduces the computational
+memory required to fit very large datasets without sacrificing prediction
+accuracy.
+Finally, a combination of both strategies is used to process a collection of
 around 1.7 million ground gravity data measurements from Australia.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
