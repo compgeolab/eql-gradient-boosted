@@ -586,9 +586,9 @@ gridded products.
         (a) Set of \SourceLayoutsSchematicsObservations{} observation points
         that simulate a ground survey.
         (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
-        obtained through the \emph{sources-below-data} layout.
+        obtained through the \emph{sources below data} layout.
         (c) Location of the \SourceLayoutsSchematicsGridSources{} sources
-        obtained through the \emph{regular-grid} layout.
+        obtained through the \emph{regular grid} layout.
         (d) Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
         sources obtained through the \emph{block-averaged sources} layout.
         Grey dashed lines represent the spatial blocks within which the median
@@ -614,18 +614,18 @@ are:
     ($N<M$).
 \end{enumerate}
 
-For ground surveys, the \emph{regular-grid} layout needs a sufficiently
+For ground surveys, the \emph{regular grid} layout needs a sufficiently
 small grid spacing to be able to fit the observed data.
 This creates an unnecessarily large number of sources in areas where no
 observations exist.
-In contrast, the \emph{sources-below-data} layout is more likely to accurately
+In contrast, the \emph{sources below data} layout is more likely to accurately
 fit the observed data with many fewer sources, reducing the computational load.
-But when applied to airborne surveys, the \emph{sources-below-data} layout may
+But when applied to airborne surveys, the \emph{sources below data} layout may
 place an undesirably large number of sources along the flight paths.
 This could lead to aliasing effects on the predicted values, such as the
 stripes parallel to flight lines that are often observed when griding airborne
 magnetic data.
-The \emph{regular-grid} layout can avoid this effect by evenly
+The \emph{regular grid} layout can avoid this effect by evenly
 distributing sources and using a continuous source layer (e.g.,
 right-rectangular prisms or tesseroids).
 
@@ -738,11 +738,11 @@ $h$ is the median horizontal distance to the $k$ nearest neighbouring sources,
 and
 $z_{obs}$ is a vertical observation coordinate that will depend on the
 horizontal layout strategy.
-For \emph{sources-below-data}, it is the vertical coordinate of the data point
+For \emph{sources below data}, it is the vertical coordinate of the data point
 corresponding to the given source.
-For \emph{regular-grid}, it can be interpolated from the vertical coordinates
+For \emph{regular grid}, it can be interpolated from the vertical coordinates
 of all data points.
-Finally, for \emph{block-averaged-sources} it will be the average vertical
+Finally, for \emph{block-averaged sources} it will be the average vertical
 coordinate of data within the corresponding block.
 
 In the following sections, we will test the effectiveness and trade-offs of
@@ -861,14 +861,14 @@ Section~\ref{sec:eql_inversion} (without gradient boosting) to interpolate the
 synthetic datasets (Fig.~\ref{fig:synthetic-layouts}) and compared the results
 against the target grid (Fig.~\ref{fig:synthetic-target}).
 This process was repeated for each combination of horizontal layout
-(sources-below-data and block-averaged-sources) and depth type (constant,
-relative, and variable) and for regular-grid sources with a constant depth,
-totalling 7 different combinations.
+(\emph{sources below data} and \emph{block-averaged sources}) and depth type
+(\emph{constant}, \emph{relative}, and \emph{variable}) and for regular grid
+sources with a constant depth, totalling 7 different combinations.
 
 Each source distribution strategy requires certain hyper-parameters to be
 chosen in order to build the set of point sources.
 For example, using a constant depth needs the definition of the depth and using
-block-average-sources requires the definition of the block size.
+block-averaged sources requires the definition of the block size.
 The predictive capabilities of the equivalent sources depend on the choice of
 these hyper-parameters.
 To ensure that our comparisons are fair, we perform an exhaustive search over
@@ -888,14 +888,14 @@ target grid and the best prediction achieved by each source distribution
 strategy for the ground and airborne synthetic surveys, respectively.
 For the synthetic ground survey, the horizontal layouts produced similar RMS
 values of approximately 0.8\mGal regardless of the depth type, with the
-exception of the regular-grid layout which produced a larger RMS of
+exception of the regular grid layout which produced a larger RMS of
 \BestGroundGridSourcesConstantDepthRms{}\mGal.
 The differences between the target grid and the interpolated values are larger
 in regions of poor data coverage.
 Edge effects are present for all strategies but are noticeably smaller for the
-combination of block-averaged-sources with a variable depth based on the
+combination of block-averaged sources with a variable depth based on the
 nearest neighbour distance.
-For the synthetic airborne survey, all strategies (including the regular-grid)
+For the synthetic airborne survey, all strategies (including the regular grid)
 produced similar RMS errors of approximately 0.3\mGal.
 The maps of the differences between the target grid and interpolation results
 are visually indistinguishable from each other.
@@ -914,7 +914,7 @@ The comparisons were performed against a regular least-squares solution
 (Fig.~\ref{fig:synthetic-layouts}c-d) .
 To avoid biasing the results, we used the same locations of equivalent sources
 for both the regular and gradient-boosted interpolations, namely
-block-averaged-sources with a block size of
+block-averaged sources with a block size of
 \BestAirborneBlockAveragedSourcesRelativeDepthSpacing\m and a
 relative depth of
 \BestAirborneBlockAveragedSourcesRelativeDepthDepth\m.
@@ -1093,7 +1093,7 @@ differences between source distribution strategies, both in terms of the
 interpolation RMS errors and from visual inspection of the difference maps.
 Therefore, we argue that all source distribution strategies are able to produce
 comparably accurate interpolations.
-Nevertheless, the \emph{block-averaged-sources} strategy make use of fewer
+Nevertheless, the \emph{block-averaged sources} strategy make use of fewer
 sources when compared with other strategies, which reduces the computational
 load of estimating the sources coefficients and forward modelling.
 To ensure that the interpolation is able to reproduce the high frequencies in
@@ -1102,7 +1102,7 @@ desired grid resolution.
 
 The choice of source depth strategy does not appear to significantly impact the
 interpolation RMS error.
-In the particular case of a sparse ground survey with block-averaged-sources,
+In the particular case of a sparse ground survey with block-averaged sources,
 the use of a variable depth visibly reduced edge effects and artifacts in areas
 of poor data coverage.
 At a first glance, the choice of a depth strategy would not seem to impact
