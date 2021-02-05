@@ -1,3 +1,13 @@
+%% Modified version of `gji.bst`
+%%
+%% Adds publisher and doi to misc publications.
+%% The doi package is needed for the doi to work.
+%%
+%%    \usepackage{doi}
+%%
+%% Modifications by Santiago Soler (santiago.r.soler@gmail.com)
+%%
+%% ----------------------------------------
 %%
 %% This is file `gji.bst',
 %% ----------------------------------------
@@ -53,6 +63,7 @@ ENTRY
     author
     booktitle
     chapter
+    doi
     edition
     editor
     howpublished
@@ -736,6 +747,14 @@ FUNCTION {format.full.names}
   while$
 }
 
+% Format doi with hyperlink
+FUNCTION {format.doi}
+{ doi empty$
+    { "" }
+    { new.block "\doi{" doi * "}" * }
+  if$
+}
+
 FUNCTION {author.editor.key.full}
 { author empty$
     { editor empty$
@@ -1119,6 +1138,14 @@ FUNCTION {format.publisher}
   output
 }
 
+% Function to simply add the publisher
+FUNCTION {simple.publisher}
+{ publisher empty$
+    { "" }
+    { new.block publisher }
+  if$
+}
+
 FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
@@ -1301,6 +1328,7 @@ FUNCTION {mastersthesis}
   fin.entry
 }
 
+% Add publisher and doi to any misc publication
 FUNCTION {misc}
 { output.bibitem
   format.authors output
@@ -1309,6 +1337,8 @@ FUNCTION {misc}
   new.block
   format.title output
   howpublished output
+  simple.publisher output
+  format.doi output
   note output
   fin.entry
 }
