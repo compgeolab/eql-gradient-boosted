@@ -509,6 +509,7 @@ region = vd.pad_region(
     vd.get_region((australia_data.longitude.values, australia_data.latitude.values)),
     1,
 )
+subregion = [121, 133, -22, -14]
 lat_ts = australia_data.latitude.mean().values
 lon_ts = australia_data.longitude.mean().values
 
@@ -525,10 +526,13 @@ fig = pygmt.Figure()
 
 pygmt.config(
     FONT_ANNOT="11p,Helvetica,black",
-    FONT_TITLE="15p,Helvetica,black",
+    FONT_TITLE="13p,Helvetica,black",
     FONT_LABEL="11p,Helvetica,black",
+    MAP_TITLE_OFFSET="0p",
     MAP_FRAME_WIDTH="2p",
 )
+
+fig.shift_origin(0, "5.1i")
 
 fig.grdimage(
     "@earth_relief_01m",
@@ -549,7 +553,12 @@ fig.plot(
     cmap=True,
 )
 fig.coast(shorelines=True)
-fig.basemap(frame=["af", 'WeSN+t"Gravity disturbance observations"'])
+fig.plot(
+    x=[subregion[0], subregion[1], subregion[1], subregion[0], subregion[0]],
+    y=[subregion[3], subregion[3], subregion[2], subregion[2], subregion[3]],
+    pen="2p,orangered1,-",
+)
+fig.basemap(frame=["af", 'WeSn+t"a) Gravity disturbance observations"'])
 with pygmt.config(FONT_ANNOT="9p,Helvetica,black"):
     fig.colorbar(
         box="+gwhite+c-0.1c/0.2c+r0.1c",
@@ -575,7 +584,50 @@ fig.grdimage(
     nan_transparent=True,
 )
 fig.coast(shorelines=True)
-fig.basemap(frame=["af", 'wESN+t"Interpolated grid of gravity disturbances"'])
+fig.basemap(frame=["af", 'wESn+t"b) Interpolated grid of gravity disturbances"'])
+
+fig.shift_origin("-5.1i", "-4.3i")
+
+fig.grdimage(
+    "@earth_relief_01m",
+    region=subregion,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
+fig.coast(
+    land="#333333",
+)
+pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
+fig.plot(
+    x=australia_data.longitude,
+    y=australia_data.latitude,
+    color=australia_data.disturbance,
+    style="c1p",
+    cmap=True,
+)
+fig.coast(shorelines=True)
+fig.basemap(frame=["af", 'WeSn+t"c) Highlight of gravity disturbance observations"'])
+
+fig.shift_origin("5.1i", 0)
+
+fig.grdimage(
+    "@earth_relief_01m",
+    region=subregion,
+    projection=proj_gmt,
+    shading="+a45+nt0.7",
+    cmap="gray",
+)
+fig.coast(
+    land="#333333",
+)
+pygmt.makecpt(cmap="polar", series=(-maxabs, maxabs))
+fig.grdimage(
+    australia_grid.disturbance,
+    nan_transparent=True,
+)
+fig.coast(shorelines=True)
+fig.basemap(frame=["af", 'wESn+t"d) Highlight of interpolated gravity disturbances"'])
 
 fig.savefig(figs_dir / "australia.png")
 fig.show(width=900)
