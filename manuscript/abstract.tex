@@ -5,15 +5,15 @@ computer memory.
 We present two techniques for reducing the computational cost of equivalent
 source processing: block-averaging source locations and the
 gradient-boosted equivalent source algorithm.
-By using block-averaging, we reduce the number of source coefficients that
+Through block-averaging, we reduce the number of source coefficients that
 must be estimated while retaining the minimum desired resolution in the final
 processed data.
-With the gradient boosting method, we estimate the layer coefficients in
+With the gradient boosting method, we estimate the sources coefficients in
 small batches along overlapping windows, allowing us to reduce the computer
 memory requirements arbitrarily to conform to the constraints of the
 available hardware.
 We show that the combination of block-averaging and gradient-boosted
-equivalent sources are capable of producing accurate interpolations through
+equivalent sources is capable of producing accurate interpolations through
 tests against synthetic data.
 Moreover, we demonstrate the feasibility of our method by gridding a gravity
 dataset covering Australia with over 1.7 million observations using a modest

@@ -23,9 +23,9 @@ for example continuous curvature splines in tension \citep{smith1990},
 bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
 These general-purpose methods have limitations when it comes to interpolating
 potential field data:
-(i) they are not able to take into account the variable height of the
+(i)~they are not able to take into account the variable height of the
 observation points and
-(ii) the interpolating functions are not necessarily harmonic functions, which
+(ii)~the interpolating functions are not necessarily harmonic, which
 is the underlying assumption behind many processing techniques
 (e.g., upward continuation and vertical derivatives).
 
@@ -33,8 +33,8 @@ A widely used method for interpolating gravity and magnetic data
 is the equivalent sources technique (also known as equivalent layer, radial
 basis functions, or Green's functions interpolation), first introduced by
 \citet{dampney1969}.
-It consists in fitting a model of elementary sources to the data and using this
-model to predict new data values.
+It consists in fitting a model of finite elementary sources to the data and
+using this model to predict new data values.
 Besides interpolation, equivalent sources have been used for
 reduction-to-the-pole of magnetic data
 \citep{silva1986, nakatsuka2006, guspi2009}, upward
@@ -64,7 +64,7 @@ To reduce the computational load, \citet{mendonca1994} built the solution
 iteratively by incorporating one data point at a time using the ``equivalent
 data concept''.
 \citet{leao1989} processed the input data using a moving window, only fitting the
-data inside the window and predicting observations at the center of the window.
+data inside the window and predicting observations at its center.
 \citet{li2010} and \citet{barnes2011} apply different operations to generate a
 sparse representation of the sensitive matrix (respectively, wavelet
 compression and quadtree discretization), which significantly improves the
@@ -81,7 +81,7 @@ descent to avoid calculating the Hessian matrix and solving linear systems.
 Many of the existing methods solve under-determined problems, requiring a much
 larger number of equivalent sources than the number of data points.
 Some achieve greater efficiency by restricting their applications
-specific data types \citep{siqueira2017},
+to specific data types \citep{siqueira2017},
 interpolating only on regular grids \citep{leao1989},
 or requiring already gridded data \citep{takahashi2020},
 to name a few.
@@ -113,12 +113,14 @@ a large one.
 This has some similarities with the strategy used by \citet{leao1989} but
 without the requirement for sources and predictions to be on regular grids.
 
-Through tests on synthetic data, we show that: (i) the \emph{block-averaged}
-sources are able to achieve the same accuracy as other traditional equivalent
-source layouts while using a fraction of the number of sources, and (ii) the
-\emph{gradient boosting} algorithm greatly reduces the computational memory
-required to fit very large datasets without sacrificing prediction accuracy.
-Finally, a combination of both strategies are used to process a collection of
+Through tests on synthetic data, we show that:
+(i)~the \emph{block-averaged} sources are able to achieve the same accuracy as
+other traditional equivalent source layouts while using a fraction of the
+number of sources, and
+(ii)~the \emph{gradient boosting} algorithm greatly reduces the computational
+memory required to fit very large datasets without sacrificing prediction
+accuracy.
+Finally, a combination of both strategies is used to process a collection of
 around 1.7 million ground gravity data measurements from Australia.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -308,7 +310,7 @@ Gradient boosting was first introduced by \citet{friedman2001, friedman2002} as
 a method for fitting additive parametric models of the form
 
 \begin{equation}
-  d = \sum_{k=1}^K \alpha_k f(\mathbf{c}_k),
+    d = \sum_{k=1}^K \alpha_k f(\mathbf{c}_k),
 \end{equation}
 
 \noindent where $\alpha_k$ is a scalar coefficient called the \emph{step-size}
@@ -479,8 +481,8 @@ the final \textit{gradient-boosted equivalent source algorithm}.
     $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
     \;
 
+    calculate $ \mathbf{d}_k $, where
     $
-    \mathbf{d}_k \Rightarrow
     {d_k}_i
     =
     \sum\limits_{j=1}^{M_k} \dfrac{{c_k}_j}{\left\lVert \mathbf{p}_i -
@@ -517,7 +519,7 @@ the final \textit{gradient-boosted equivalent source algorithm}.
 The influence of distance sources on the solution is maintained by using the
 entire set of data points when calculating
 the step size $\alpha_k$ and updating the residuals vector.
-In this case, the step size prevents the algorithm from worsening the fit to
+In this case, the step size prevents the algorithm from worsening the fit on
 data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
@@ -526,12 +528,12 @@ Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
 fits portions of an equivalent source model to the data residuals.
 The key differences are that in our method:
-(1) the sources in the overlapping portions of the windows are
-fit more than once, allowing the algorithm to self-correct for poor solutions
-to any given window;
-(2) we use only data points within the window when fitting, what enables the
+(i)~the sources in the overlapping portions of the windows are fitted more than
+once, allowing the algorithm to self-correct for poor solutions to any given
+window;
+(ii)~we use only data points within the window when fitting, what enables the
 use of larger datasets;
-(3) experience shows that the step size parameter improves the convergence of
+(iii)~experience shows that the step size parameter improves the convergence of
 the solution, particularly when using only the data inside the windows for
 fitting.
 
@@ -566,7 +568,7 @@ The coverage of the survey region is often uneven, leaving large areas without
 any observation.
 On the other hand, observations from airborne surveys are located along almost
 straight and closely spaced flight lines.
-Measurements are usually taken at a high temporal frequency, leading to the
+Measurements are usually taken at a high temporal frequency, leading to
 observation points along the flight lines that are several times closer to each
 other than the flight line spacing.
 This creates a bias in the sampling, which can cause aliasing artifacts in
@@ -581,13 +583,13 @@ gridded products.
         Blue points represent the locations of observations and orange points
         represent the locations of equivalent sources according to different
         layout strategies.
-        (a) Set of \SourceLayoutsSchematicsObservations{} observation points
+        (a)~Set of \SourceLayoutsSchematicsObservations{} observation points
         that simulate a ground survey.
-        (b) Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
-        obtained through the \emph{sources-below-data} layout.
-        (c) Location of the \SourceLayoutsSchematicsGridSources{} sources
-        obtained through the \emph{regular-grid} layout.
-        (d) Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
+        (b)~Location of the \SourceLayoutsSchematicsSourceBelowData{} sources
+        obtained through the \emph{sources below data} layout.
+        (c)~Location of the \SourceLayoutsSchematicsGridSources{} sources
+        obtained through the \emph{regular grid} layout.
+        (d)~Location of the \SourceLayoutsSchematicsBlockAveragedSources{}
         sources obtained through the \emph{block-averaged sources} layout.
         Grey dashed lines represent the spatial blocks within which the median
         observation location is calculated.
@@ -612,18 +614,18 @@ are:
     ($N<M$).
 \end{enumerate}
 
-For ground surveys, the \emph{regular-grid} layout needs a sufficiently
+For ground surveys, the \emph{regular grid} layout needs a sufficiently
 small grid spacing to be able to fit the observed data.
 This creates an unnecessarily large number of sources in areas where no
 observations exist.
-In contrast, the \emph{sources-below-data} layout is more likely to accurately
+In contrast, the \emph{sources below data} layout is more likely to accurately
 fit the observed data with many fewer sources, reducing the computational load.
-But when applied to airborne surveys, the \emph{sources-below-data} layout may
+But when applied to airborne surveys, the \emph{sources below data} layout may
 place an undesirably large number of sources along the flight paths.
 This could lead to aliasing effects on the predicted values, such as the
 stripes parallel to flight lines that are often observed when griding airborne
 magnetic data.
-The \emph{regular-grid} layout can avoid this effect by evenly
+The \emph{regular grid} layout can avoid this effect by evenly
 distributing sources and using a continuous source layer (e.g.,
 right-rectangular prisms or tesseroids).
 
@@ -638,18 +640,18 @@ This is done by:
 
 \begin{enumerate}
     \item Dividing the survey region into rectangular blocks of equal size.
-    \item Computing the median horizontal position of the observation points
-      that fall inside each block. Blocks without any observation point are
-      omitted.
+    \item \label{item:median-position} Computing the median horizontal position
+        of the observation points that fall inside each block. Blocks without
+        any observation point are omitted.
     \item Assign one point source to the median horizontal position calculated
-      in step 1.
+        in step \ref{item:median-position}.
 \end{enumerate}
 
 The number of sources created by this new layout will be less than the number
 of observations if the block size is chosen appropriately (i.e., making sure
 that blocks are large enough to contain more than a single data point).
 The overdetermined problem that arises from this layout has a lower
-computational load and is less prone to overfiting the data since the model
+computational load and is less prone to overfitting the data since the model
 complexity is lower.
 Moreover, the block averaging process can balance the spacing between sources
 along a flight line and between adjacent lines, helping to reduce aliasing
@@ -671,8 +673,8 @@ using a fraction of the equivalent sources.
         data points.
         Source depths are
         (a)~a \emph{constant depth} at a chosen vertical coordinate,
-        (b)~a \emph{relative depth} determined by uniformly shifting the
-        vertical coordinate of data points downwards,
+        (b)~a \emph{relative depth} determined by uniformly downward shifting
+        the vertical coordinate of data points,
         and
         (c)~a \emph{variable depth} determined by shifting the vertical
         coordinates of the observation points by an amount proportional to the
@@ -736,11 +738,11 @@ $h$ is the median horizontal distance to the $k$ nearest neighbouring sources,
 and
 $z_{obs}$ is a vertical observation coordinate that will depend on the
 horizontal layout strategy.
-For \emph{sources-below-data}, it is the vertical coordinate of the data point
+For \emph{sources below data}, it is the vertical coordinate of the data point
 corresponding to the given source.
-For \emph{regular-grid}, it can be interpolated from the vertical coordinates
+For \emph{regular grid}, it can be interpolated from the vertical coordinates
 of all data points.
-Finally, for \emph{block-averaged-sources} it will be the average vertical
+Finally, for \emph{block-averaged sources} it will be the average vertical
 coordinate of data within the corresponding block.
 
 In the following sections, we will test the effectiveness and trade-offs of
@@ -805,7 +807,7 @@ The ground survey contains \GroundSurveyPoints{} observations distributed at
 heights between \GroundSurveyMinHeight{} and \GroundSurveyMaxHeight{}
 (Fig.~\ref{fig:synthetic-layouts}a).
 The airborne survey has \AirborneSurveyPoints{} observations at heights between
-\AirborneSurveyMinHeight{} and \AirborneSurveyMaxHeight{}.
+\AirborneSurveyMinHeight{} and \AirborneSurveyMaxHeight{}
 (Fig.~\ref{fig:synthetic-layouts}c).
 
 The vertical component of the gravitational acceleration generated by the
@@ -859,14 +861,14 @@ Section~\ref{sec:eql_inversion} (without gradient boosting) to interpolate the
 synthetic datasets (Fig.~\ref{fig:synthetic-layouts}) and compared the results
 against the target grid (Fig.~\ref{fig:synthetic-target}).
 This process was repeated for each combination of horizontal layout
-(sources-below-data and block-averaged-sources) and depth type (constant,
-relative, and variable) and for regular-grid sources with a constant depth,
-totalling 7 different combinations.
+(\emph{sources below data} and \emph{block-averaged sources}) and depth type
+(\emph{constant}, \emph{relative}, and \emph{variable}) and for regular grid
+sources with a constant depth, totalling 7 different combinations.
 
 Each source distribution strategy requires certain hyper-parameters to be
 chosen in order to build the set of point sources.
 For example, using a constant depth needs the definition of the depth and using
-block-average-sources requires the definition of the block size.
+block-averaged sources requires the definition of the block size.
 The predictive capabilities of the equivalent sources depend on the choice of
 these hyper-parameters.
 To ensure that our comparisons are fair, we perform an exhaustive search over
@@ -885,16 +887,16 @@ and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution
 strategy for the ground and airborne synthetic surveys, respectively.
 For the synthetic ground survey, the horizontal layouts produced similar RMS
-values of approximately 0.8\mGal regardless of the depth type, with the
-exception of the regular-grid layout which produced a larger RMS of
-\BestGroundGridSourcesConstantDepthRms{}\mGal.
+values of approximately 0.8\mGal{} regardless of the depth type, with the
+exception of the regular grid layout which produced a larger RMS of
+\BestGroundGridSourcesConstantDepthRms{}\mGal{}.
 The differences between the target grid and the interpolated values are larger
 in regions of poor data coverage.
 Edge effects are present for all strategies but are noticeably smaller for the
-combination of block-averaged-sources with a variable depth based on the
+combination of block-averaged sources with a variable depth based on the
 nearest neighbour distance.
-For the synthetic airborne survey, all strategies (including the regular-grid)
-produced similar RMS errors of approximately 0.3\mGal.
+For the synthetic airborne survey, all strategies (including the regular grid)
+produced similar RMS errors of approximately 0.3\mGal{}.
 The maps of the differences between the target grid and interpolation results
 are visually indistinguishable from each other.
 
@@ -912,10 +914,10 @@ The comparisons were performed against a regular least-squares solution
 (Fig.~\ref{fig:synthetic-layouts}c-d) .
 To avoid biasing the results, we used the same locations of equivalent sources
 for both the regular and gradient-boosted interpolations, namely
-block-averaged-sources with a block size of
-\BestAirborneBlockAveragedSourcesRelativeDepthSpacing\m and a
+block-averaged sources with a block size of
+\BestAirborneBlockAveragedSourcesRelativeDepthSpacing\m{} and a
 relative depth of
-\BestAirborneBlockAveragedSourcesRelativeDepthDepth\m.
+\BestAirborneBlockAveragedSourcesRelativeDepthDepth\m{}.
 
 \subsubsection{Window size}
 \label{sec:window_size}
@@ -943,7 +945,7 @@ Figs.~\ref{fig:gradient-boosted-comparison}a and
 required for estimating the source coefficients, respectively, as a function of
 the window size.
 
-The results show that the interpolation RMS error for gradient-boosting is
+The results show that the interpolation error for gradient-boosting is
 generally larger than the error for regular equivalent sources.
 The error decreases asymptotically to within $\sim 40\%$ of the regular
 equivalent sources for windows with an area greater than $\sim 10\%$ of the
@@ -974,7 +976,7 @@ Figs.~\ref{fig:gradient-boosted-comparison}b and
 required for estimating the source coefficients, respectively, as a function of
 the window overlap.
 
-Our results show what the interpolation RMS error decreases with the amount of
+Our results show that the interpolation RMS error decreases with the amount of
 overlap, reaching the same accuracy as the regular equivalent sources at
 approximately 90\% overlap.
 On the other hand, the computation time increases with the amount of overlap,
@@ -1004,8 +1006,8 @@ sizes to compensate.
         means (error bars represent 1 standard deviation) of results using
         different seeds for the pseudo-random number generator.
         (a)~RMS error between the target grid and interpolation results and
-        (b)~computation time as a function of window size.
-        (c)~RMS error between the target grid and interpolation results and
+        (b)~RMS error between the target grid and interpolation results and
+        (c)~computation time as a function of window size.
         (d)~computation time as a function of window overlap.
 }
     \label{fig:gradient-boosted-comparison}
@@ -1052,10 +1054,10 @@ applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
 at a relative depth of \AustraliaEqlDepth{} and a block size of
-1.8\km, resulting in a total of \AustraliaEqlNSources{}~point
+1.8\km{}, resulting in a total of \AustraliaEqlNSources{}~point
 sources.
 The block size was chosen to match the desired resolution of the final grid
- (1~arc-minute is approximately 1.8\km at the equator).
+ (1~arc-minute is approximately 1.8\km{} at the equator).
 The coefficients of the gradient-boosted equivalent sources are estimated using
 a damping equal to \AustraliaEqlDamping{} and a window size of
 \AustraliaEqlWindowSize{}, which was chosen in order to limit the amount of
@@ -1066,11 +1068,11 @@ gravity disturbance on a regular grid of
 \AustraliaEqlGridHeight{} above the ellipsoid.
 Fig.~\ref{fig:australia} shows the original data distribution and the
 interpolated regular grid.
-Grid points that are further than 50\km from the nearest data
+Grid points that are further than 50\km{} from the nearest data
 point are masked to avoid unrealistic extrapolations.
 
 The resulting grid preserves the high resolution of the original data while
-avoiding aliasing artifacts because to the block averaging.
+avoiding aliasing artifacts due to the block averaging.
 Some parts of the grid are smoother and with reduced amplitude (e.g., some
 southwestern parts), which is expected from the upward continuation that was
 performed to have the grid at a constant height.
@@ -1091,7 +1093,7 @@ differences between source distribution strategies, both in terms of the
 interpolation RMS errors and from visual inspection of the difference maps.
 Therefore, we argue that all source distribution strategies are able to produce
 comparably accurate interpolations.
-Nevertheless, the \emph{block-averaged-sources} strategy make use of fewer
+Nevertheless, the \emph{block-averaged sources} strategy make use of fewer
 sources when compared with other strategies, which reduces the computational
 load of estimating the sources coefficients and forward modelling.
 To ensure that the interpolation is able to reproduce the high frequencies in
@@ -1100,7 +1102,7 @@ desired grid resolution.
 
 The choice of source depth strategy does not appear to significantly impact the
 interpolation RMS error.
-In the particular case of a sparse ground survey with block-averaged-sources,
+In the particular case of a sparse ground survey with block-averaged sources,
 the use of a variable depth visibly reduced edge effects and artifacts in areas
 of poor data coverage.
 At a first glance, the choice of a depth strategy would not seem to impact
@@ -1220,8 +1222,8 @@ Other software used in this study includes:
 Pooch \citep{pooch2020} for downloading and caching datasets,
 Verde \citep{verde2018} for block reductions and coordinate manipulations,
 Boule \citep{boule2020} for normal gravity calculations,
-xarray \citep{xarray2017} and Numpy \citep{numpy2020} for multidimensional
-arrays and numerical computations,
+xarray \citep{xarray2017} and Numpy \citep{numpy2020} for handling
+multidimensional arrays and numerical computations,
 Numba \citep{numba2015} for just-in-time compilation and parallelization,
 Matplotlib \citep{matplotlib2007} and PyGMT \citep{pygmt2020} for generating
 the figures and maps,
@@ -1254,7 +1256,7 @@ was filtered and referenced to the WGS84 ellipsoid by
 We are indebted to the developers and maintainers of the open-source software
 without which this work would not have been possible.
 S.R. Soler is supported by a scholarship from CONICET, Argentina.
-Contains British Geological Survey materials © UKRI.
+This work contains British Geological Survey materials © UKRI.
 
 S.R. Soler and L. Uieda jointly developed the initial idea, analysed the
 results, and wrote the paper. S.R. Soler produced all results and developed the

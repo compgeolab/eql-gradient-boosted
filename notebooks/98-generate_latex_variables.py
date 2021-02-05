@@ -151,7 +151,7 @@ units["airborne_survey_points"] = None
 units["airborne_survey_min_height"] = "m"
 units["airborne_survey_max_height"] = "m"
 units["target_height"] = "m"
-units["target_spacing"] = "m"
+units["target_spacing"] = "km"
 units["target_easting_size"] = None
 units["target_northing_size"] = None
 # -
