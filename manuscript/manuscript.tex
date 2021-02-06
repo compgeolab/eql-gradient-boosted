@@ -20,8 +20,8 @@
 \urlstyle{same}
 
 % Configure column separation and page geometry
-\usepackage[hmargin=2cm, vmargin=3cm]{geometry}
-\setlength{\columnsep}{2\columnsep}
+%\usepackage[hmargin=2cm, vmargin=3cm]{geometry}
+%\setlength{\columnsep}{2\columnsep}
 
 % Import variables
 \input{variables.tex}
@@ -49,7 +49,7 @@
 \fancyhf{}
 \lhead{
     \fontsize{9pt}{12pt}\selectfont
-    \Author{} (\the\year{}). \DOI{}
+    \Author{} (\the\year{}). \Title{}.
 }
 \rhead{\fontsize{9pt}{12pt}\selectfont \thepage}
 \renewcommand{\headrulewidth}{0pt}
@@ -58,7 +58,6 @@
     pdftitle={\Title},
     pdfauthor={\Author},
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -73,8 +72,17 @@
 \maketitle
 
 \noindent
-\textbf{Keywords:}
-\input{keywords.tex}
+\textbf{Disclaimer:}
+This is a non-peer reviewed preprint submitted to EarthArXiv.
+It is currently under review at \textit{Geophysical Journal International}.
+
+%Accepted 2016 October 13. Received in original form 2016 March 24.
+%\\[0.4cm]
+%This is a pre-copyedited, author-produced PDF of an article
+%published in \textit{Geophysical Journal International} following peer review.
+%The version of record
+%``\textit{\Author{} (\Year{}). \Title{}. \Journal{}. doi:\DOI{}}''
+%is available online at: \DOILink{}.
 
 \begin{abstract}
     \input{abstract}
