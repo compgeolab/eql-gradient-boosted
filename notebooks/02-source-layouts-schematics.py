@@ -6,12 +6,14 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.7.1
+#       jupytext_version: 1.9.1
 #   kernelspec:
 #     display_name: Python [conda env:eql-gradient-boosted]
 #     language: python
 #     name: conda-env-eql-gradient-boosted-py
 # ---
+
+# # Source layouts schematics
 
 # +
 from IPython.display import display  # noqa: F401  # ignore used but not imported
@@ -169,3 +171,67 @@ for layout in layouts:
 
 json_file = results_dir / "source-layouts-schematics.json"
 save_to_json(variables, json_file)
+# -
+
+# # Gradient boosting schematics
+
+sources = source_distributions["source_below_data"]
+region = vd.get_region(sources)
+
+# +
+overlapping = 0.5
+window_size = 18e3
+spacing = window_size * (1 - overlapping)
+
+centers, indices = vd.rolling_window(sources, size=window_size, spacing=spacing)
+spacing_easting = centers[0][0, 1] - centers[0][0, 0]
+spacing_northing = centers[1][1, 0] - centers[1][0, 0]
+
+print("Desired spacing:", spacing)
+print("Actual spacing:", (spacing_easting, spacing_northing))
+
+# +
+indices = [i[0] for i in indices.ravel()]
+centers = [i.ravel() for i in centers]
+n_windows = centers[0].size
+
+print("Number of windows:", n_windows)
+
+# +
+from matplotlib.patches import Rectangle
+
+ncols = 3
+nrows = int(np.ceil(n_windows / ncols))
+# figsize = (6.66, 2 * nrows)
+figsize = (3.33, 1 * nrows)
+size = 2
+
+
+fig, axes = plt.subplots(
+    ncols=ncols, nrows=nrows, figsize=figsize, sharex=True, sharey=True
+)
+axes = axes.ravel()
+
+for i in range(n_windows):
+    ax = axes[i]
+    window = indices[i]
+    easting, northing = centers[0][i], centers[1][i]
+    not_window = [i for i in np.arange(sources[0].size) if i not in window]
+    ax.scatter(sources[0][window], sources[1][window], c="C3", s=size)
+    ax.scatter(sources[0][not_window], sources[1][not_window], c="C7", s=size)
+    rectangle = Rectangle(
+        xy=(easting - window_size / 2, northing - window_size / 2),
+        width=window_size,
+        height=window_size,
+        fill=False,
+        linewidth=0.5,
+        linestyle="--",
+    )
+    ax.add_patch(rectangle)
+    ax.set_aspect("equal")
+    ax.axis("off")
+
+plt.tight_layout()
+plt.savefig(Path("..") / "manuscript" / "figs" / "gradient-boosting-schematics.pdf")
+plt.show()
+# -
