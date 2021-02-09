@@ -345,12 +345,25 @@ steps:
 \end{enumerate}
 
 
-\begin{figure}
+\begin{figure*}
     \includegraphics[width=\linewidth]{figs/gradient-boosting-schematics.pdf}
     \caption{
+        Sketch of the gradient-boosting process.
+        (a)~Set of observation points that simulate a ground survey.
+        (b)~Location of the sources obtained by putting one source below each
+        observation point.
+        (c)~Sets of equivalent sources obtained through gradient-boosting by
+        selecting only the ones that fall inside each overlapping window.
+        Blue and orange dots represent the horizontal location of the
+        observation points and the original sources, respectively.
+        The dashed line squares represent the boundaries of each overlapping
+        window, while its corresponding sources are symbolized through red
+        dots.
+        Grey dots represent the other sources that aren't included in that
+        particular set.
     }
     \label{fig:gradient-boosting-schematics}
-\end{figure}
+\end{figure*}
 
 The gradient boosting algorithm works by fitting each component of the
 additive model, one at a time, to the residuals of the previous component.

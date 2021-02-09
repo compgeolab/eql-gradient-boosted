@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 import verde as vd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 import boost_and_layouts
 from boost_and_layouts import save_to_json
@@ -198,11 +199,8 @@ n_windows = centers[0].size
 print("Number of windows:", n_windows)
 
 # +
-from matplotlib.patches import Rectangle
-
 ncols = 3
 nrows = int(np.ceil(n_windows / ncols))
-# figsize = (6.66, 2 * nrows)
 figsize = (3.33, 1 * nrows)
 size = 2
 
@@ -232,6 +230,7 @@ for i in range(n_windows):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig(Path("..") / "manuscript" / "figs" / "gradient-boosting-schematics.pdf")
+plt.savefig(
+    Path("..") / "manuscript" / "figs" / "svg" / "gradient-boosting-windows.svg"
+)
 plt.show()
-# -
