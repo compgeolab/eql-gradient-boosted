@@ -1,8 +1,8 @@
 # Gradient-boosted equivalent sources
 
 by
-Santiago Soler
-and Leonardo Uieda
+[Santiago Soler](https://santisoler.github.io)
+and [Leonardo Uieda](https://leouieda.com)
 
 A preprint version is available
 [here](https://raw.githubusercontent.com/compgeolab/eql-gradient-boosted/gh-pages/manuscript.pdf?token=ACYBWRNGVBJUURFPKHBJWZLAFZWA4)
