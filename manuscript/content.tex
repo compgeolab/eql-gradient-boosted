@@ -535,14 +535,14 @@ Instead of storing all of the multiple $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
-After each iteration of the gradient-boosting algorithm, we add the multiplication of
-the estimated coefficients $\hat{\mathbf{c}}_k$ and the step-size
-$\alpha_k$ to the corresponding elements of vector $\mathbf{c}$.
+After each iteration of the gradient-boosting algorithm, we add the
+multiplication of the estimated coefficients $\hat{\mathbf{c}}_k$ and the
+step-size $\alpha_k$ to the corresponding elements of vector $\mathbf{c}$.
 Because the relation between the source coefficients and the effect they
 generate is linear, we can safely compute the resulting field through
 Equation~\ref{eq:eql-forward}.
-This way, the memory needed to store the entire set of estimated coefficients is
-limited to a single vector of $M$ elements.
+This way, the memory needed to store the entire set of estimated coefficients
+is limited to a single vector of $M$ elements.
 
 Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
