@@ -534,7 +534,7 @@ Instead of storing all of the multiple $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
-After each iteration of the gradient-boosting algorithm, we add the product of
+After each iteration of the gradient-boosting algorithm, we add the multiplication of
 the resulting coefficients $\hat{\mathbf{c}}_k$ and the step-size coefficient
 $\alpha_k$  to the $\mathbf{c}$ vector, respecting the order of its elements.
 Because the relation between the source coefficients and the effect they
