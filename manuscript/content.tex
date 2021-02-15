@@ -530,7 +530,7 @@ specifically the ones that fall on the intersection between the two windows.
 We can interpret this as the gradient-boosting algorithm fitting the source
 coefficients multiple times: one time for every window that covers each source.
 This fact can be exploited in order to save some computational memory.
-Instead of allocating the multiple $\mathbf{c}_k$ vectors
+Instead of storing all of the multiple $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 full of zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
