@@ -536,7 +536,7 @@ with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
 After each iteration of the gradient-boosting algorithm, we add the multiplication of
 the estimated coefficients $\hat{\mathbf{c}}_k$ and the step-size
-$\alpha_k$  to the $\mathbf{c}$ vector, respecting the order of its elements.
+$\alpha_k$ to the corresponding elements of vector $\mathbf{c}$.
 Because the relation between the source coefficients and the effect they
 generate is linear, we can safely compute the resulting field through
 Equation~\ref{eq:eql-forward}.
