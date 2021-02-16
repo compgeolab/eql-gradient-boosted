@@ -546,6 +546,26 @@ data points that fall outside of the current window.
 As such, it improves the convergence of the solution and ensures that the
 overall misfit decreases with iteration.
 
+It is worth noting that two sets of equivalent sources obtained through two
+adjacent overlapping windows have some portion of the sources on the same
+locations, specifically the ones that fall on the intersection between the two
+windows.
+We can interpret this as the gradient-boosting algorithm fitting the source
+coefficients multiple times: one time for every window that covers each source.
+This fact can be exploited in order to save some computational memory.
+Instead of storing all of the multiple $\mathbf{c}_k$ vectors
+(Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
+with zeros, where each element represents the coefficient of each one of the
+original $M$ sources.
+After each iteration of the gradient-boosting algorithm, we add the
+multiplication of the estimated coefficients $\hat{\mathbf{c}}_k$ and the
+step-size $\alpha_k$ to the corresponding elements of vector $\mathbf{c}$.
+Because the relation between the source coefficients and the effect they
+generate is linear, we can safely compute the resulting field through
+Equation~\ref{eq:eql-forward}.
+This way, the memory needed to store the entire set of estimated coefficients
+is limited to a single vector of $M$ elements.
+
 Our gradient boosting algorithm for overlapping windows is similar to the
 ``bootstrap inversion'' used in \citet{vonfrese1988}, which also iteratively
 fits portions of an equivalent source model to the data residuals.
