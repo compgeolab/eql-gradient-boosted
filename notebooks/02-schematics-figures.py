@@ -133,7 +133,7 @@ for ax, label in zip(axes, labels):
 
 # Plot observation points
 ax = axes[0]
-ax.scatter(survey.easting, survey.northing, s=size, c="C0")
+ax.scatter(survey.easting, survey.northing, s=size, c="C0", marker="^")
 ax.set_title("Observation points")
 
 # Plot location of sources for each source layout
@@ -199,38 +199,109 @@ n_windows = centers[0].size
 print("Number of windows:", n_windows)
 
 # +
-ncols = 3
-nrows = int(np.ceil(n_windows / ncols))
-figsize = (3.33, 1 * nrows)
-size = 2
+ncols = 10
+figsize = (1.7 * ncols, 1.7)
+size = 3
 
+fig, axes = plt.subplots(ncols=ncols, nrows=1, figsize=figsize, dpi=300, sharex=True, sharey=True)
 
-fig, axes = plt.subplots(
-    ncols=ncols, nrows=nrows, figsize=figsize, sharex=True, sharey=True
-)
-axes = axes.ravel()
-
-for i in range(n_windows):
-    ax = axes[i]
-    window = indices[i]
-    easting, northing = centers[0][i], centers[1][i]
-    not_window = [i for i in np.arange(sources[0].size) if i not in window]
-    ax.scatter(sources[0][window], sources[1][window], c="C3", s=size)
-    ax.scatter(sources[0][not_window], sources[1][not_window], c="C7", s=size)
-    rectangle = Rectangle(
-        xy=(easting - window_size / 2, northing - window_size / 2),
-        width=window_size,
-        height=window_size,
-        fill=False,
-        linewidth=0.5,
-        linestyle="--",
-    )
-    ax.add_patch(rectangle)
+for ax in axes:
     ax.set_aspect("equal")
     ax.axis("off")
 
-plt.tight_layout()
+# Observation points
+axes[0].scatter(survey.easting, survey.northing, s=size, c="C0", marker="^")
+
+# Sources
+axes[1].scatter(*sources[:2], s=size, c="C1")
+
+# First fit
+# ---------
+window_i = 0
+window = indices[window_i]
+not_window = [i for i in np.arange(sources[0].size) if i not in window]
+w_center_easting, w_center_northing = centers[0][window_i], centers[1][window_i]
+rectangle_kwargs = dict(
+    xy=(w_center_easting - window_size / 2, w_center_northing - window_size / 2),
+    width=window_size,
+    height=window_size,
+    fill=False,
+    linewidth=0.5,
+    linestyle="--",
+    color="#444444",
+)
+
+# Observation points
+axes[2].scatter(
+    survey.easting.values[window], survey.northing.values[window], s=size, c="C0", marker="^"
+)
+axes[2].scatter(
+    survey.easting.values[not_window], survey.northing.values[not_window], s=size, c="C7", marker="^"
+)
+rectangle = Rectangle(**rectangle_kwargs)
+axes[2].add_patch(rectangle)
+
+# Sources
+axes[3].scatter(sources[0][window], sources[1][window], s=size, c="C1")
+axes[3].scatter(sources[0][not_window], sources[1][not_window], s=size, c="C7")
+rectangle = Rectangle(**rectangle_kwargs)
+axes[3].add_patch(rectangle)
+
+# First Prediction
+# ----------------
+axes[4].scatter(
+    survey.easting, survey.northing, s=size, c="C3", marker="v"
+)
+axes[5].scatter(sources[0][window], sources[1][window], s=size, c="C1")
+rectangle = Rectangle(**rectangle_kwargs)
+axes[5].add_patch(rectangle)
+
+# Second fit
+# ----------
+window_i = 3
+window = indices[window_i]
+not_window = [i for i in np.arange(sources[0].size) if i not in window]
+w_center_easting, w_center_northing = centers[0][window_i], centers[1][window_i]
+rectangle_kwargs = dict(
+    xy=(w_center_easting - window_size / 2, w_center_northing - window_size / 2),
+    width=window_size,
+    height=window_size,
+    fill=False,
+    linewidth=0.5,
+    linestyle="--",
+    color="#444444",
+)
+
+# Residue
+axes[6].scatter(
+    survey.easting.values[window], survey.northing.values[window], s=size, c="C3", marker="v"
+)
+axes[6].scatter(
+    survey.easting.values[not_window], survey.northing.values[not_window], s=size, c="C7", marker="^"
+)
+rectangle = Rectangle(**rectangle_kwargs)
+axes[6].add_patch(rectangle)
+
+# Sources
+axes[7].scatter(sources[0][window], sources[1][window], s=size, c="C1")
+axes[7].scatter(sources[0][not_window], sources[1][not_window], s=size, c="C7")
+rectangle = Rectangle(**rectangle_kwargs)
+axes[7].add_patch(rectangle)
+
+# Second Prediction
+# -----------------
+axes[8].scatter(
+    survey.easting, survey.northing, s=size, c="C3", marker="v"
+)
+axes[9].scatter(sources[0][window], sources[1][window], s=size, c="C1")
+rectangle = Rectangle(**rectangle_kwargs)
+axes[9].add_patch(rectangle)
+
+
 plt.savefig(
-    Path("..") / "manuscript" / "figs" / "svg" / "gradient-boosting-windows.svg"
+    Path("..") / "manuscript" / "figs" / "svg" / "gradient-boosting-raw.svg"
 )
 plt.show()
+# -
+
+

@@ -347,21 +347,25 @@ steps:
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.8\linewidth]{figs/gradient-boosting-schematics.pdf}
+    \includegraphics[width=\linewidth]{figs/gradient-boosting-schematics.pdf}
     \caption{
-        Sketch of the gradient-boosting process.
-        (a)~Set of observation points that simulate a ground survey.
-        (b)~Location of the sources obtained by putting one source below each
-        observation point.
-        (c)~Sets of equivalent sources obtained through gradient-boosting by
-        selecting only the ones that fall inside each overlapping window.
-        Blue and orange dots represent the horizontal location of the
-        observation points and the original sources, respectively.
-        The dashed line squares represent the boundaries of each overlapping
-        window, while its corresponding sources are symbolized through red
-        dots.
-        Grey dots represent the other sources that aren't included in that
-        particular set.
+        Sketch of the gradient-boosting algorithm.
+        Given a set of data points (blue upwards triangles), define a set of
+        equivalent sources (orange dots).
+        Start the gradient-boosting algorithm by selecting the data points and
+        the sources that fall under one of the overlapping windows, and
+        estimate their coefficients by fitting against this portion of the
+        data.
+        Then predict the effect of this set of sources on every observation
+        point and calculate the residuals.
+        Use another window to select residual points and sources that fall
+        under it, and estimate their coefficients by fitting them against the
+        selected residual points.
+        Predict the effect of this set of sources on every observation point
+        and update the residue.
+        Repeat this step for every remaining window.
+        The order in which the windows are covered is randomized to improve
+        convergence of the algorithm.
     }
     \label{fig:gradient-boosting-schematics}
 \end{figure*}
