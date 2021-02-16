@@ -203,7 +203,9 @@ ncols = 10
 figsize = (1.7 * ncols, 1.7)
 size = 3
 
-fig, axes = plt.subplots(ncols=ncols, nrows=1, figsize=figsize, dpi=300, sharex=True, sharey=True)
+fig, axes = plt.subplots(
+    ncols=ncols, nrows=1, figsize=figsize, dpi=300, sharex=True, sharey=True
+)
 
 for ax in axes:
     ax.set_aspect("equal")
@@ -233,10 +235,18 @@ rectangle_kwargs = dict(
 
 # Observation points
 axes[2].scatter(
-    survey.easting.values[window], survey.northing.values[window], s=size, c="C0", marker="^"
+    survey.easting.values[window],
+    survey.northing.values[window],
+    s=size,
+    c="C0",
+    marker="^",
 )
 axes[2].scatter(
-    survey.easting.values[not_window], survey.northing.values[not_window], s=size, c="C7", marker="^"
+    survey.easting.values[not_window],
+    survey.northing.values[not_window],
+    s=size,
+    c="C7",
+    marker="^",
 )
 rectangle = Rectangle(**rectangle_kwargs)
 axes[2].add_patch(rectangle)
@@ -249,9 +259,7 @@ axes[3].add_patch(rectangle)
 
 # First Prediction
 # ----------------
-axes[4].scatter(
-    survey.easting, survey.northing, s=size, c="C3", marker="v"
-)
+axes[4].scatter(survey.easting, survey.northing, s=size, c="C3", marker="v")
 axes[5].scatter(sources[0][window], sources[1][window], s=size, c="C1")
 rectangle = Rectangle(**rectangle_kwargs)
 axes[5].add_patch(rectangle)
@@ -274,10 +282,18 @@ rectangle_kwargs = dict(
 
 # Residue
 axes[6].scatter(
-    survey.easting.values[window], survey.northing.values[window], s=size, c="C3", marker="v"
+    survey.easting.values[window],
+    survey.northing.values[window],
+    s=size,
+    c="C3",
+    marker="v",
 )
 axes[6].scatter(
-    survey.easting.values[not_window], survey.northing.values[not_window], s=size, c="C7", marker="^"
+    survey.easting.values[not_window],
+    survey.northing.values[not_window],
+    s=size,
+    c="C7",
+    marker="^",
 )
 rectangle = Rectangle(**rectangle_kwargs)
 axes[6].add_patch(rectangle)
@@ -290,18 +306,12 @@ axes[7].add_patch(rectangle)
 
 # Second Prediction
 # -----------------
-axes[8].scatter(
-    survey.easting, survey.northing, s=size, c="C3", marker="v"
-)
+axes[8].scatter(survey.easting, survey.northing, s=size, c="C3", marker="v")
 axes[9].scatter(sources[0][window], sources[1][window], s=size, c="C1")
 rectangle = Rectangle(**rectangle_kwargs)
 axes[9].add_patch(rectangle)
 
 
-plt.savefig(
-    Path("..") / "manuscript" / "figs" / "svg" / "gradient-boosting-raw.svg"
-)
+plt.savefig(Path("..") / "manuscript" / "figs" / "svg" / "gradient-boosting-raw.svg")
 plt.show()
 # -
-
-
