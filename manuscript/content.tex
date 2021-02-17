@@ -523,24 +523,21 @@ that simulate a ground survey and locating one source below each data point.
     \centering
     \includegraphics[width=\linewidth]{figs/gradient-boosting-schematics.pdf}
     \caption{
-        Sketch of the gradient-boosted equivalent source algorithm.
-        Given a set of data points (blue upwards triangles), define a set of
-        equivalent sources (orange dots) by locating one source below each
-        observation point.
-        Start the gradient-boosting algorithm by selecting the data points and
-        the sources that fall under one of the overlapping windows, and
-        estimate their coefficients by fitting against this portion of the
-        data.
-        Then predict the effect of this set of sources on every observation
-        point and calculate the residuals (red downward triangles).
-        Use another window to select residual points and sources that fall
-        under it, and estimate their coefficients by fitting them against the
-        selected residual points.
-        Predict the effect of this set of sources on every observation point
-        and update the residuals.
-        Repeat this step for every remaining window.
-        The order in which the windows are covered is randomized to improve
-        convergence of the algorithm.
+        Sketch of the gradient-boosted equivalent source algorithm.        
+        Data points are represented by blue upwards-facing triangles,
+        equivalent sources by orange dots, data residuals by red downwards-facing 
+        triangles, and the current window by black dashed lines.
+        The algorithm starts by selecting the data and sources 
+        inside the first window and estimating the source coefficients 
+        using the selected data points.
+        Then, the effect of the estimated sources is predicted on all data
+        points and used to calculate the residuals.
+        Another window is used to select residuals and sources and 
+        estimate the coefficients using the selected residuals instead of the 
+        original data.
+        Again, the effect of the estimated sources is predicted on all data points
+        and the residuals are updated.
+        These steps are repeated for every window in a randomized order.
     }
     \label{fig:gradient-boosting-schematics}
 \end{figure*}
