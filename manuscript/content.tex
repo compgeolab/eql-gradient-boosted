@@ -333,10 +333,10 @@ steps:
   \item Define a set of $K$ overlapping windows of equal size that cover the
     survey area.
   \item Create $K$ separate sets of equivalent sources, one for each window.
-    Each set will be formed by the portion of the original $M$ sources that fall inside
-    the respective window.
-    Since the windows overlap, the total number of sources
-    from all sets will be greater than $M$.
+    Each set will be formed by the portion of the original $M$ sources that
+    fall inside the respective window.
+    Since the windows overlap, the total number of sources from all sets will
+    be greater than $M$.
   \item Define the vector $\mathbf{c}_k$ as the coefficients of the equivalent
     sources of the $k$-th window and matrix $\mathbf{A}_k$ as the Jacobian
     matrix between those sources and every data point of the survey.
@@ -452,6 +452,9 @@ instead of a matrix-vector product, which allows us to avoid computing and
 storing the larger $N \times M_k$ Jacobian at any point.
 Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
 the final \textit{gradient-boosted equivalent source algorithm}.
+Figure~\ref{fig:gradient-boosting-schematics} shows a sketch of the
+gradient-boosted equivalent source algorithm with a set of observation points
+that simulate a ground survey and locating one source below each data point.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
@@ -515,6 +518,29 @@ the final \textit{gradient-boosted equivalent source algorithm}.
   \caption{Gradient-boosted equivalent source algorithm.}
   \label{alg:gradient_boosting_window}
 \end{algorithm}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{figs/gradient-boosting-schematics.pdf}
+    \caption{
+        Sketch of the gradient-boosted equivalent source algorithm.        
+        Data points are represented by blue upwards-facing triangles,
+        equivalent sources by orange dots, data residuals by red downwards-facing 
+        triangles, and the current window by black dashed lines.
+        The algorithm starts by selecting the data and sources 
+        inside the first window and estimating the source coefficients 
+        using the selected data points.
+        Then, the effect of the estimated sources is predicted on all data
+        points and used to calculate the residuals.
+        Another window is used to select residuals and sources and 
+        estimate the coefficients using the selected residuals instead of the 
+        original data.
+        Again, the effect of the estimated sources is predicted on all data points
+        and the residuals are updated.
+        These steps are repeated for every window in a randomized order.
+    }
+    \label{fig:gradient-boosting-schematics}
+\end{figure*}
 
 The influence of distance sources on the solution is maintained by using the
 entire set of data points when calculating
