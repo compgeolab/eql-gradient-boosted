@@ -1,4 +1,4 @@
-\documentclass[extra]{gji}
+\documentclass[extra,mreferee]{gji}
 \usepackage[utf8]{inputenc}
 \usepackage{timet}
 \usepackage{amssymb}
@@ -14,12 +14,15 @@
 \usepackage{booktabs}
 \usepackage{setspace}
 
-% Define style for urls
-\urlstyle{same}
-
 % Import variables
 \input{variables.tex}
 
+% Define style for urls
+\urlstyle{same}
+\hypersetup{
+    allcolors=blue,
+    pdftitle={\Title},
+}
 
 % Define title, authors, affiliations and DOI
 % ===========================================
@@ -30,7 +33,6 @@
     $^{2}$\AffiliationB \\
     $^{3}$\AffiliationC \\
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
