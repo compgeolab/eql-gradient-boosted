@@ -1164,6 +1164,8 @@ FUNCTION {article}
       format.pages output
     }
   if$
+  % Add doi to any article
+  format.doi output
   note output
   fin.entry
 }
