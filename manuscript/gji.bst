@@ -1296,6 +1296,8 @@ FUNCTION {inproceedings}
       format.pages output
     }
   if$
+  % Add doi to inproceedings
+  format.doi output
   note output
   fin.entry
 }
