@@ -22,6 +22,10 @@ gji: $(OUTPUT_GJI)
 clean:
 	rm -rf $(OUTDIR)
 
+word-count:
+	texcount -merge $(PROJECT).tex
+	texcount -merge $(GJI).tex
+
 show: all
 	@( $(PDFVIEWER) $(OUTPUT) 2> /dev/null; )
 
