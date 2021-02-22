@@ -18,7 +18,6 @@ dependencies:
   # Jupyter related dependencies
   - ipython
   - jupyter
-  - jupytext
   # Development dependencies
   - pytest
   - pytest-cov

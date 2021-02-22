@@ -4,7 +4,9 @@ PYTEST_ARGS=--cov --cov-report=term-missing --cov -v
 LINT_FILES=$(NOTEBOOKS)
 BLACK_FILES=$(NOTEBOOKS)
 FLAKE8_FILES=$(NOTEBOOKS)
-JUPYTEXT=jupytext --execute --set-kernel - --to notebook
+NOTEBOOKS_LIST = $(wildcard $(NOTEBOOKS)/*.ipynb)
+NBCONVERT = jupyter nbconvert --inplace --to notebook
+NBCONVERT_ARGS = --ExecutePreprocessor.kernel_name=python3
 
 help:
 	@echo "Commands:"
@@ -15,15 +17,11 @@ help:
 	@echo "  check     run code style and quality checks (black and flake8)"
 	@echo "  lint      run pylint for a deeper (and slower) quality check"
 	@echo "  clean     clean up build and generated files"
-	@echo "  sync      make jupytext to sync notebooks and scripts"
 	@echo ""
 
 
 run:
-	$(JUPYTEXT) $(NOTEBOOKS)/*.py
-
-sync:
-	jupytext --to notebook --set-kernel - $(NOTEBOOKS)/*.py
+	$(foreach notebook, $(NOTEBOOKS_LIST), $(NBCONVERT) $(NBCONVERT_ARGS) --execute $(notebook);)
 
 test:
 	# Run a tmp folder to make sure the tests are run on the installed version
