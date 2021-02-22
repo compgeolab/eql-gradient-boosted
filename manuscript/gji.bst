@@ -1,6 +1,7 @@
 %% Modified version of `gji.bst`
 %%
 %% Adds publisher and doi to misc publications.
+%% Adds doi to articles and inproceedings.
 %% The doi package is needed for the doi to work.
 %%
 %%    \usepackage{doi}
@@ -1164,6 +1165,8 @@ FUNCTION {article}
       format.pages output
     }
   if$
+  % Add doi to articles
+  format.doi output
   note output
   fin.entry
 }
@@ -1294,6 +1297,8 @@ FUNCTION {inproceedings}
       format.pages output
     }
   if$
+  % Add doi to inproceedings
+  format.doi output
   note output
   fin.entry
 }
