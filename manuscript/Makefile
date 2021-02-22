@@ -24,6 +24,10 @@ gji: $(GJI_PDF)
 clean:
 	rm -rf $(OUTDIR)
 
+word-count:
+	texcount -merge $(PREPRINT).tex
+	texcount -merge $(GJI).tex
+
 show-preprint: preprint
 	@( $(PDFVIEWER) $(PREPRINT_PDF) 2> /dev/null; )
 
