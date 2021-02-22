@@ -2,7 +2,7 @@
 PREPRINT = preprint
 GJI = gji
 # List other .tex needed files
-TEX_FILES = variables.tex content.tex appendix.tex keywords.tex abstract.tex references.bib
+TEX_FILES = variables.tex content.tex appendix.tex abstract.tex references.bib
 RESULTS = results/australia.tex results/best-parameters-airborne-survey.tex results/best-parameters-ground-survey.tex results/boost-overlapping.tex results/parameters-airborne-survey.tex results/parameters-ground-survey.tex results/source-layouts-schematics.tex results/synthetic-surveys.tex
 # Folder where output will be placed
 OUTDIR = _output
