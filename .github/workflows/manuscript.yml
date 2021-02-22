@@ -38,8 +38,8 @@ jobs:
         with:
           name: manuscript
           path: |
-            manuscript/_output/manuscript.pdf
-            manuscript/_output/manuscript-gji.pdf
+            manuscript/_output/preprint.pdf
+            manuscript/_output/gji.pdf
 
   publish:
     needs: [build]
