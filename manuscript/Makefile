@@ -22,10 +22,8 @@ gji: $(OUTPUT_GJI)
 clean:
 	rm -rf $(OUTDIR)
 
-count:
+word-count:
 	texcount -merge $(PROJECT).tex
-
-count-gji:
 	texcount -merge $(GJI).tex
 
 show: all
