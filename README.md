@@ -21,10 +21,7 @@ The version of record
 is available online at: [doi.org/xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
 -->
 
-A preprint version is available
-[here](https://github.com/compgeolab/eql-gradient-boosted/raw/gh-pages/preprint.pdf)
-<!-- Replace this link with the doi in figshare when ready -->
-
+A preprint version is available on EarthArXiv at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
 
 <!-- After this repo was made available on figshare or Zenodo -->
 
