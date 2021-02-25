@@ -6,8 +6,6 @@
 \usepackage[longend,linesnumbered,ruled]{algorithm2e}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
-\usepackage{authblk}  % add authors and affiliations
-\renewcommand\Affilfont{\small}
 
 % Import packages useful for creating the parameters tables
 \usepackage{multirow}
@@ -29,21 +27,21 @@
 \input{variables.tex}
 
 
-% Define title, authors and affiliations
-% ======================================
-\title{\Title}
-\author[1,2]{\Soler}
-\author[3]{\Uieda}
-\affil[1]{\CONICET (\SolerMail)}
-\affil[2]{\IGSV}
-\affil[3]{\Liverpool}
-\date{
-    \normalsize
-    \today
-}
-\newcommand{\AuthorsShort}{%
+% Define title, authors, affiliations and DOI
+% ===========================================
+\newcommand{\Author}{%
     \SolerShort{} and \UiedaShort{}
 }
+\newcommand{\AuthorAffil}{%
+    {\large
+        \Soler$^{1,2}$ and \Uieda$^{3}$
+    }
+    \\[0.4cm]
+    {\small $^{1}$\AffiliationA} \\
+    {\small $^{2}$\AffiliationB} \\
+    {\small $^{3}$\AffiliationC} \\
+}
+
 
 % Configure header and hypersetup
 % ===============================
@@ -51,20 +49,26 @@
 \fancyhf{}
 \lhead{
     \fontsize{9pt}{12pt}\selectfont
-    \AuthorsShort{} (\the\year{}). \Title{}.
+    \Author{} (\the\year{}). \Title{}.
 }
 \rhead{\fontsize{9pt}{12pt}\selectfont \thepage}
 \renewcommand{\headrulewidth}{0pt}
 \hypersetup{
     allcolors=blue,
     pdftitle={\Title},
-    pdfauthor={\AuthorsShort},
+    pdfauthor={\Author},
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
+\title{\Title}
+\author{\AuthorAffil}
+\date{
+    \normalsize
+    \today
+}
 \maketitle
 
 \noindent
