@@ -42,6 +42,7 @@ classical equivalent sources technique.
 This new method is inspired by the gradient-boosting technique, mainly used in machine learning solutions.
 
 <!-- Include an abstract figure with caption -->
+![](presentations/visual-abstract/visual-abstract.jpg)
 
 ## Abstract
 
