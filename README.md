@@ -4,13 +4,37 @@ by
 [Santiago Soler](https://santisoler.github.io)
 and [Leonardo Uieda](https://leouieda.com)
 
-This paper has been submitted for publication in the *Geophysical Journal
+This paper has been submitted for publication in *Geophysical Journal
 International*.
+
+> After publication
+
+<!--
+This paper has been published in *Geophysical Journal International*.
+The version of record
+
+> Soler, S. R. and Uieda, L. (2021).
+> Gradient-boosted equivalent sources,
+> _Geophysical Journal International_.
+> doi: [xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
+
+is available online at: [doi.org/xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
+-->
 
 A preprint version is available
 [here](https://github.com/compgeolab/eql-gradient-boosted/raw/gh-pages/preprint.pdf)
-
 <!-- Replace this link with the doi in figshare when ready -->
+
+
+> After this repo was made available on figshare or Zenodo
+
+<!--
+**This repository contains the data and code used to produce all results and figures shown
+in the paper.**
+An archived version of this repository is available at
+[doi.org/xx.xxxxx/xxxxx](https://doi.org/xx.xxxxx/xxxxx)
+-->
+
 
 ## About
 
