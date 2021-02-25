@@ -7,7 +7,7 @@ and [Leonardo Uieda](https://leouieda.com)
 This paper has been submitted for publication in *Geophysical Journal
 International*.
 
-> After publication
+<!-- After publication -->
 
 <!--
 This paper has been published in *Geophysical Journal International*.
@@ -26,7 +26,7 @@ A preprint version is available
 <!-- Replace this link with the doi in figshare when ready -->
 
 
-> After this repo was made available on figshare or Zenodo
+<!-- After this repo was made available on figshare or Zenodo -->
 
 <!--
 **This repository contains the data and code used to produce all results and figures shown
