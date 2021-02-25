@@ -9,14 +9,14 @@ The two main LaTeX documents are:
 - `gji.tex`: for building the manuscript using the GJI template
 
 These two files only contain a header and some configurations, but the content
-of the article is split in separate files, which content is imported directly
+of the article is split in separate files, which are then imported directly
 into `preprint.tex` and `gji.tex`.
 The extra files are:
 
 - `abstract.tex`: contains the text for the abstract
 - `content.tex`: contains the body of the paper, with sections, figures,
     equations, etc.
-- `appendix.tex`: contains appendixes.
+- `appendix.tex`: contains the appendix.
 - `variables.tex`: defines some variables that contain additional information
     like the title of the manuscript, information about the authors, keywords
     and more.
@@ -31,7 +31,7 @@ using their template (`gji.cls`, `gji_extra.sty` and `times.sty`).
 The figures of the article can be found under the `figs` directory.
 They are automatically created by the Jupyter notebooks inside the `notebooks`
 folder.
-These notebooks also store some numerical variables that we include in the
+These notebooks also store some numerical values that we include in the
 manuscript as LaTeX variables defined in files under the `results` folder.
 They are also automatically created by the notebooks.
 
