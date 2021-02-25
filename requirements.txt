@@ -3,5 +3,5 @@ numpy
 scipy
 xarray
 matplotlib
-verde==1.5.0
+git+https://github.com/fatiando/verde@master
 git+https://github.com/fatiando/harmonica@master
