@@ -21,8 +21,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.number }}
           body: |
-            :robot: :wave: Hi there, human. It looks like you're editing the manuscript. I'll build it for you whenever you make changes and place the resulting PDF at: https://github.com/${{ github.repository }}/blob/${{ env.PREVIEW_BRANCH }}/manuscript.pdf
-            You can see the resulting PDF of the GJI version of the manuscript at: https://github.com/${{ github.repository }}/blob/${{ env.PREVIEW_BRANCH }}/manuscript-gji.pdf
+            :robot: :wave: Hi there, human. It looks like you're editing the manuscript. I'll build it for you whenever you make changes and place the resulting PDF at: https://github.com/${{ github.repository }}/blob/${{ env.PREVIEW_BRANCH }}/preprint.pdf
+            You can see the resulting PDF of the GJI version of the manuscript at: https://github.com/${{ github.repository }}/blob/${{ env.PREVIEW_BRANCH }}/gji.pdf
 
             > The preview branch `${{ env.PREVIEW_BRANCH }}` will be deleted when the PR is closed/merged.
           comment-author: "github-actions[bot]"
