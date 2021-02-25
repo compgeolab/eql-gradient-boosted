@@ -23,14 +23,10 @@ is available online at: [doi.org/xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
 
 A preprint version is available on EarthArXiv at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
 
-<!-- After this repo was made available on figshare or Zenodo -->
-
-<!--
 **This repository contains the data and code used to produce all results and figures shown
 in the paper.**
 An archived version of this repository is available at
-[doi.org/xx.xxxxx/xxxxx](https://doi.org/xx.xxxxx/xxxxx)
--->
+[doi.org/10.6084/m9.figshare.13604360](https://doi.org/10.6084/m9.figshare.13604360)
 
 
 ## About
