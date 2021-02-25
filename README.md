@@ -4,6 +4,9 @@ by
 [Santiago Soler](https://santisoler.github.io)
 and [Leonardo Uieda](https://leouieda.com)
 
+This paper has been submitted for publication in the *Geophysical Journal
+International*.
+
 A preprint version is available
 [here](https://github.com/compgeolab/eql-gradient-boosted/raw/gh-pages/preprint.pdf)
 
