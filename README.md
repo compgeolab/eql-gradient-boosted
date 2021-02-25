@@ -5,7 +5,7 @@ by
 and [Leonardo Uieda](https://leouieda.com)
 
 A preprint version is available
-[here](https://raw.githubusercontent.com/compgeolab/eql-gradient-boosted/gh-pages/manuscript.pdf?token=ACYBWRNGVBJUURFPKHBJWZLAFZWA4)
+[here](https://github.com/compgeolab/eql-gradient-boosted/raw/gh-pages/preprint.pdf)
 
 <!-- Replace this link with the doi in figshare when ready -->
 
