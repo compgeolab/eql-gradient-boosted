@@ -6,6 +6,7 @@
 \usepackage[longend,linesnumbered,ruled]{algorithm2e}
 \usepackage[pdftex,colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
+\usepackage{orcidlink}
 
 % Import packages useful for creating the parameters tables
 \usepackage{multirow}
@@ -34,12 +35,13 @@
 }
 \newcommand{\AuthorAffil}{%
     {\large
-        \Soler$^{1,2}$ and \Uieda$^{3}$
+        \Soler$^{1,2}$\orcidlink{\SolerORCID} and
+        \Uieda$^{3}$\orcidlink{\UiedaORCID}
     }
     \\[0.4cm]
-    {\small $^{1}$\AffiliationA} \\
-    {\small $^{2}$\AffiliationB} \\
-    {\small $^{3}$\AffiliationC} \\
+    {\small $^{1}$\CONICET} \\
+    {\small $^{2}$\IGSV} \\
+    {\small $^{3}$\Liverpool} \\
 }
 
 
