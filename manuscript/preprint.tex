@@ -20,15 +20,15 @@
 % Define style for urls
 \urlstyle{same}
 
-% Import variables
-\input{variables.tex}
-
 % Configure column separation and page geometry
 \usepackage[hmargin=2cm,vmargin=2.9cm]{geometry}
 
+% Import variables
+\input{variables.tex}
 
-% Define title, authors, affiliations and DOI
-% ===========================================
+
+% Define authors and affiliations
+% ===============================
 \newcommand{\Author}{%
   \SolerShort{} \& \UiedaShort
 }
@@ -45,20 +45,21 @@
     {\small $^{2}$\IGSV} \\
     {\small $^{3}$\Liverpool} \\
 }
-\newcommand{\PreprintDOI}{10.31223/X58G7C}
+
+
+% Configure header and footer
+% ===========================
 \newcommand{\Footer}{%
   \Author{} (\the\year{}). \Title{}. EarthArXiv.
   doi:\href{https://doi.org/\PreprintDOI}{\PreprintDOI}
 }
+\newcommand{\Header}{%
+    This is a non-peer reviewed preprint submitted to EarthArXiv
+}
 
-
-% Configure header and hypersetup
-% ===============================
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{
-  This is a non-peer reviewed preprint submitted to EarthArXiv.
-}
+\lhead{\Header{}}
 \rfoot{\thepage}
 \lfoot{\Footer{}}
 \renewcommand{\footrulewidth}{0.1pt}
@@ -70,11 +71,16 @@
   \renewcommand{\footrulewidth}{0.1pt}
   \renewcommand{\headrulewidth}{0pt}
 }
+
+
+% Configure hypersetup
+% ====================
 \hypersetup{
     allcolors=blue,
     pdftitle={\Title},
     pdfauthor={\Author},
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
