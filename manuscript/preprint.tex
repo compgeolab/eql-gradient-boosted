@@ -21,22 +21,24 @@
 \urlstyle{same}
 
 % Configure column separation and page geometry
-%\usepackage[hmargin=2cm, vmargin=3cm]{geometry}
-%\setlength{\columnsep}{2\columnsep}
+\usepackage[hmargin=2cm,vmargin=2.9cm]{geometry}
 
 % Import variables
 \input{variables.tex}
 
 
-% Define title, authors, affiliations and DOI
-% ===========================================
+% Define authors and affiliations
+% ===============================
 \newcommand{\Author}{%
-    \SolerShort{} and \UiedaShort{}
+  \SolerShort{} \& \UiedaShort
+}
+\newcommand{\AuthorLong}{%
+  \Soler{} and \Uieda
 }
 \newcommand{\AuthorAffil}{%
     {\large
-        \Soler$^{1,2}$\orcidlink{\SolerORCID} and
-        \Uieda$^{3}$\orcidlink{\UiedaORCID}
+      \Soler$^{1,2}$ \orcidlink{\SolerORCID} and
+        \Uieda$^{3}$ \orcidlink{\UiedaORCID}
     }
     \\[0.4cm]
     {\small $^{1}$\CONICET (\SolerMail)} \\
@@ -45,21 +47,40 @@
 }
 
 
-% Configure header and hypersetup
-% ===============================
+% Configure header and footer
+% ===========================
+\newcommand{\Footer}{%
+  \Author{} (\the\year{}). \Title{}. EarthArXiv.
+  doi:\href{https://doi.org/\PreprintDOI}{\PreprintDOI}
+}
+\newcommand{\Header}{%
+    This is a non-peer reviewed preprint submitted to EarthArXiv
+}
+
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{
-    \fontsize{9pt}{12pt}\selectfont
-    \Author{} (\the\year{}). \Title{}.
+\lhead{\Header{}}
+\rfoot{\thepage}
+\lfoot{\Footer{}}
+\renewcommand{\footrulewidth}{0.1pt}
+\renewcommand{\headrulewidth}{0.1pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \rfoot{\thepage}
+  \lfoot{\Footer{}}
+  \renewcommand{\footrulewidth}{0.1pt}
+  \renewcommand{\headrulewidth}{0pt}
 }
-\rhead{\fontsize{9pt}{12pt}\selectfont \thepage}
-\renewcommand{\headrulewidth}{0pt}
+
+
+% Configure hypersetup
+% ====================
 \hypersetup{
     allcolors=blue,
     pdftitle={\Title},
     pdfauthor={\Author},
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -77,6 +98,12 @@
 \textbf{Disclaimer:}
 This is a non-peer reviewed preprint submitted to EarthArXiv.
 It is currently under review at \textit{Geophysical Journal International}.
+\\[0.5cm]
+\noindent
+\textbf{License:}
+\textcopyright{} \the\year{} \AuthorLong{}.
+Available under a Creative Commons Attribution 4.0 International license
+(\href{https://creativecommons.org/licenses/by/4.0/}{CC-BY}).
 
 %Accepted 2016 October 13. Received in original form 2016 March 24.
 %\\[0.4cm]
