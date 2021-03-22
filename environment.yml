@@ -7,6 +7,7 @@ dependencies:
   - numpy
   - boule=0.2.0
   - pooch=1.2.0
+  - verde=1.6.1
   - pygmt=0.2.1
   - pyproj
   - netcdf4
@@ -28,5 +29,3 @@ dependencies:
   - flake8-bugbear
   - pip:
       - git+https://github.com/fatiando/harmonica@master
-  - pip:
-      - git+https://github.com/fatiando/verde@master
