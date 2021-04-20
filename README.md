@@ -176,11 +176,6 @@ All source code is made available under a BSD 3-clause license. You can freely
 use and modify the code, without warranty, so long as you provide attribution
 to the authors. See `LICENSE.md` for the full license text.
 
-Data and the results of numerical tests are available under the
+Manuscript text, figures, data and the results of numerical tests are available
+under the
 [Creative Commons Attribution 4.0 License (CC-BY)](https://creativecommons.org/licenses/by/4.0/).
-
-The manuscript text and figures are not open source.
-The authors reserve the rights to the article content.
-
-<!-- , which has been accepted for publication in -->
-<!-- Geophysical Journal International. -->

@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 from harmonica import EQLHarmonic
 
 from harmonica.equivalent_layer.harmonic import greens_func_cartesian
-from harmonica.equivalent_layer.utils import predict_numba
+from harmonica.equivalent_layer.utils import predict_numba_parallel
 
 
 class EQLHarmonicBoost(EQLHarmonic):
@@ -206,7 +206,7 @@ class EQLHarmonicBoost(EQLHarmonic):
                 copy_jacobian=True,
             )
             predicted[:] = 0
-            predict_numba(
+            predict_numba_parallel(
                 coordinates,
                 points_chunk,
                 coeffs_chunk,
