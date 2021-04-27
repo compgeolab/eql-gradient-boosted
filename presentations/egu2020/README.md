@@ -14,7 +14,7 @@ Presented at the EGU2020 General Assembly.
 |-------:|:---|
 |Session |[G4.3: Acquisition and processing of gravity and magnetic field data and their integrative interpretation](https://meetingorganizer.copernicus.org/EGU2020/session/35332)|
 |Abstract|doi:[10.5194/egusphere-egu2020-549](https://doi.org/10.5194/egusphere-egu2020-549)|
-|Slides  |doi:[10.6084/m9.figshare.12245372](https://doi.org/10.6084/m9.figshare.12245372)|
+|Slides  |doi:[10.6084/m9.figshare.12217973](https://doi.org/10.6084/m9.figshare.12217973)|
 
 The figures have been created by running `egu2020_figures.py`,
 except for `draws.svg` which was created using Inkscape.
