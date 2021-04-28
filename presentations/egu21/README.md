@@ -17,6 +17,8 @@ Presented at the EGU21 General Assembly.
 |vPICO Single Slide | doi:[10.6084/m9.figshare.14461792](https://doi.org/10.6084/m9.figshare.14461792) |
 
 
+![EGU21 vPICO Slide](pico.png)
+
 The slide has been created through Inkscape using the figures generated after
 the first submission of the article to GJI.
 
