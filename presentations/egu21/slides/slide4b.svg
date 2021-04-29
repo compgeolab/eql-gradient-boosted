@@ -200,8 +200,8 @@
     <rect
        x="121.66698"
        y="17.233942"
-       width="328.4335"
-       height="111.52599"
+       width="422.13482"
+       height="92.086091"
        id="rect885" />
     <rect
        x="121.66698"
@@ -1129,9 +1129,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35355339"
-     inkscape:cx="344.9018"
-     inkscape:cy="835.28839"
+     inkscape:zoom="0.5"
+     inkscape:cx="895.19776"
+     inkscape:cy="434.3844"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -1166,7 +1166,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1194,11 +1194,10 @@
        style="font-style:normal;font-weight:normal;font-size:24.6944px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect885);fill:#15616d;fill-opacity:1;stroke:none;"
        x="159.41365"
        y="0"
-       transform="translate(-31.593418,15.189358)"><tspan
-         x="132.15173"
+       transform="translate(-78.891131,15.189358)"><tspan
+         x="149.09991"
          y="39.61693"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.6944px;font-family:ANTON;-inkscape-font-specification:ANTON;text-align:center;text-anchor:middle;fill:#15616d">The Solution: </tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.6944px;font-family:ANTON;-inkscape-font-specification:ANTON;fill:#ff7d00">Gradient boosting</tspan></tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.6944px;font-family:ANTON;-inkscape-font-specification:ANTON;text-align:center;text-anchor:middle;fill:#15616d">Gradient-boosted equivalent sources</tspan></tspan></text>
     <g
        id="g14986"
        transform="translate(-5.0046556,-1.0583333)">
@@ -1208,11 +1207,11 @@
         <text
            xml:space="preserve"
            style="font-size:7.34697px;line-height:1.1;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:discretionary-ligatures;text-align:center;word-spacing:0px;text-anchor:middle;display:inline;stroke-width:0.344389;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
-           x="461.96664"
+           x="459.32086"
            y="169.05205"
            id="text3220"><tspan
              sodipodi:role="line"
-             x="461.96664"
+             x="459.32086"
              y="169.05205"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.34697px;font-family:Poppins;-inkscape-font-specification:Poppins;text-align:center;text-anchor:middle;stroke-width:0.344389"
              id="tspan3218"><tspan
@@ -5812,7 +5811,7 @@
              y="156.15627"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.34697px;font-family:Poppins;-inkscape-font-specification:Poppins;text-align:center;text-anchor:middle;stroke-width:0.344389"
              id="tspan9335">fit the <tspan
-   style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:Poppins;-inkscape-font-specification:'Poppins Semi-Bold'"
+   style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:Poppins;-inkscape-font-specification:'Poppins Semi-Bold';fill:#b900cb;fill-opacity:1"
    id="tspan9337">step-size</tspan> coefficient</tspan></text>
         <g
            id="g9098">
@@ -15013,7 +15012,9 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.34697px;font-family:Poppins;-inkscape-font-specification:Poppins;text-align:center;text-anchor:middle;stroke-width:0.344389"
              id="tspan16203">fit the <tspan
    style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-family:Poppins;-inkscape-font-specification:'Poppins Semi-Bold';fill:#001524;stroke-width:0.344389"
-   id="tspan16207">step-size <tspan
+   id="tspan16207"><tspan
+   style="fill:#b900cb;fill-opacity:1"
+   id="tspan3177">step-size</tspan> <tspan
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Poppins;-inkscape-font-specification:Poppins;stroke-width:0.344389"
    id="tspan21884">coefficient</tspan></tspan></tspan></text>
       </g>

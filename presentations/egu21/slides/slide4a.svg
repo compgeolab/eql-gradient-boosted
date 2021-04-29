@@ -18,6 +18,65 @@
   <defs
      id="defs2">
     <marker
+       style="overflow:visible;"
+       id="marker1928"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#ff7f0b;stroke-opacity:1;fill:#ff7f0b;fill-opacity:1"
+         id="path1926" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="marker1818"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#d62728;stroke-opacity:1;fill:#d62728;fill-opacity:1"
+         id="path1816" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="marker1704"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#b900cb;stroke-opacity:1;fill:#b900cb;fill-opacity:1"
+         id="path1702" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#1f77b4;stroke-opacity:1;fill:#1f77b4;fill-opacity:1"
+         id="path1373" />
+    </marker>
+    <marker
        style="overflow:visible"
        id="marker9727"
        refX="0"
@@ -1217,8 +1276,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35355339"
-     inkscape:cx="357.07064"
-     inkscape:cy="870.21211"
+     inkscape:cx="141.08706"
+     inkscape:cy="264.21149"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -1455,12 +1514,12 @@
     <g
        id="g8928-6" />
     <g
-       id="g1393"
-       transform="translate(-11.081062,44.651479)">
+       id="g1340"
+       transform="translate(-21.166667)">
       <g
          style="fill:#1f77b4;fill-opacity:1"
          id="g5715"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol6392"
            x="91.925003"
@@ -1473,7 +1532,7 @@
       <g
          style="fill:#15616d;fill-opacity:1"
          id="g1673"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol2732"
            x="101.058"
@@ -1486,7 +1545,7 @@
       <g
          style="fill:#15616d;fill-opacity:1"
          id="g8078"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol3740"
            x="115.228"
@@ -1499,7 +1558,7 @@
       <g
          style="fill:#15616d;fill-opacity:1"
          id="g4251"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol7162"
            x="113.561"
@@ -1512,7 +1571,7 @@
       <g
          style="fill:#15616d;fill-opacity:1"
          id="g9596"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol8142"
            x="111.574"
@@ -1525,7 +1584,7 @@
       <g
          style="fill:#15616d;fill-opacity:1"
          id="g8645"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol9160"
            x="115.977"
@@ -1546,7 +1605,7 @@
       <g
          style="fill:#b900cb;fill-opacity:1"
          id="g2969"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol9618"
            x="127.725"
@@ -1559,7 +1618,7 @@
       <g
          style="fill:#b900cb;fill-opacity:1"
          id="g1757"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-51.720591,0.027313)">
         <use
            xlink:href="#symbol8142"
            x="134.09801"
@@ -1572,7 +1631,7 @@
       <g
          style="fill:#d62728;fill-opacity:1"
          id="g772"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-46.428924,0.027313)">
         <use
            xlink:href="#symbol9819"
            x="139"
@@ -1585,7 +1644,7 @@
       <g
          style="fill:#d62728;fill-opacity:1"
          id="g5775"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-46.428924,0.027313)">
         <use
            xlink:href="#symbol8142"
            x="147.662"
@@ -1598,7 +1657,7 @@
       <g
          style="fill:#ff7f0b;fill-opacity:1"
          id="g9378"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-41.137257,0.027313)">
         <use
            xlink:href="#symbol5722"
            x="152.564"
@@ -1611,7 +1670,7 @@
       <g
          style="fill:#ff7f0b;fill-opacity:1"
          id="g4785"
-         transform="matrix(2.3859751,0,0,2.3859751,-38.574991,-66.683596)">
+         transform="matrix(2.3859751,0,0,2.3859751,-41.137257,0.027313)">
         <use
            xlink:href="#symbol9772"
            x="157.65601"
@@ -1656,7 +1715,86 @@
          id="tspan1420"
          x="45.176147"
          y="135.3923"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';fill:#15616d;stroke-width:0.538784">2. The </tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';fill:#15616d;stroke-width:0.538784">2. The data can be reproduced as sum of their effects: </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.4941px;line-height:0;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:discretionary-ligatures;word-spacing:0px;fill:#1f77b4;fill-opacity:1;stroke-width:0.538784;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+       x="52.017746"
+       y="233.86182"
+       id="text1201"><tspan
+         sodipodi:role="line"
+         id="tspan1199"
+         x="52.017746"
+         y="233.86182"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';fill:#1f77b4;fill-opacity:1;stroke-width:0.538784">observed data</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.4941px;line-height:1;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:discretionary-ligatures;text-align:center;word-spacing:0px;text-anchor:middle;fill:#ff7f0b;fill-opacity:1;stroke-width:0.538784;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+       x="330.56607"
+       y="240.2888"
+       id="text1205"><tspan
+         sodipodi:role="line"
+         id="tspan1203"
+         x="330.56607"
+         y="240.2888"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#ff7f0b;fill-opacity:1;stroke-width:0.538784">source coefficients</tspan><tspan
+         sodipodi:role="line"
+         x="330.56607"
+         y="252.07893"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#ff7f0b;fill-opacity:1;stroke-width:0.538784"
+         id="tspan1207">of k window</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.4941px;line-height:1;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:discretionary-ligatures;text-align:center;word-spacing:0px;text-anchor:middle;fill:#d62728;fill-opacity:1;stroke-width:0.538784;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+       x="273.67938"
+       y="158.0771"
+       id="text1213"><tspan
+         sodipodi:role="line"
+         x="273.67938"
+         y="158.0771"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#d62728;fill-opacity:1;stroke-width:0.538784"
+         id="tspan1217">Jacobian matrix</tspan><tspan
+         sodipodi:role="line"
+         x="273.67938"
+         y="169.86723"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#d62728;fill-opacity:1;stroke-width:0.538784"
+         id="tspan1219">(smaller)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.4941px;line-height:1;font-family:Arial;-inkscape-font-specification:Arial;font-variant-ligatures:discretionary-ligatures;text-align:center;word-spacing:0px;text-anchor:middle;fill:#b900cb;fill-opacity:1;stroke-width:0.538784;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:100000"
+       x="229.99303"
+       y="253.21324"
+       id="text1227"><tspan
+         sodipodi:role="line"
+         x="229.99303"
+         y="253.21324"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#b900cb;fill-opacity:1;stroke-width:0.538784"
+         id="tspan1225">step-size</tspan><tspan
+         sodipodi:role="line"
+         x="229.99303"
+         y="265.00336"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.4941px;font-family:Poppins;-inkscape-font-specification:'Poppins Medium';text-align:center;text-anchor:middle;fill:#b900cb;fill-opacity:1;stroke-width:0.538784"
+         id="tspan1234">coefficient</tspan></text>
+    <path
+       style="fill:none;stroke:#1f77b4;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
+       d="m 155.13885,212.88196 v 16.96008 h -12.42466"
+       id="path1344"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#b900cb;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1704)"
+       d="m 243.71148,219.61834 v 16.12883"
+       id="path1700"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d62728;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1818)"
+       d="M 274.9625,188.25805 V 175.30422"
+       id="path1814"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#ff7f0b;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1928)"
+       d="m 317.29586,215.63754 v 12.95383"
+       id="path1924"
+       sodipodi:nodetypes="cc" />
   </g>
   <style
      type="text/css"
