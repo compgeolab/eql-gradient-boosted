@@ -15,6 +15,7 @@ Presented at the EGU21 General Assembly.
 |Session | [G4.3 Acquisition and processing of gravity and magnetic field data and their integrative interpretation](https://meetingorganizer.copernicus.org/EGU21/session/39917) |
 |Abstract | doi:[10.5194/egusphere-egu21-1276](https://doi.org/10.5194/egusphere-egu21-1276) |
 |vPICO Single Slide | doi:[10.6084/m9.figshare.14461792](https://doi.org/10.6084/m9.figshare.14461792) |
+|Short video | doi:[10.6084/m9.figshare.14515188](https://doi.org/10.6084/m9.figshare.14515188) |
 
 
 ![EGU21 vPICO Slide](pico.png)
