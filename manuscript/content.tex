@@ -1126,7 +1126,7 @@ amount of memory needed to under 16~Gigabytes.
         (b) Root-mean square errors obtained after the K-Fold cross-validation
         for each pair of damping and depth parameters. The orange
         square highlights the minimum RMS value.
-        (c) Root-mean square error of the residue after each iteration of the
+        (c) Root-mean square error of the residuals after each iteration of the
         coefficients estimation process.
     }
     \label{fig:australia-memory-cv-error}
@@ -1164,7 +1164,7 @@ a damping equal to \AustraliaEqlDamping{}.
 Finally, we proceed to estimate the coefficients of the whole set of
 gradient-boosted equivalent sources using the parameters previously determined.
 Fig.~\ref{fig:australia-memory-cv-error}c shows the root-mean square of the
-residue after each iteration of the gradient-boosting algorithm, exposing how
+residuals after each iteration of the gradient-boosting algorithm, exposing how
 to algorithm converges at a minimum difference between the gravity disturbance
 data and the predicted values by the equivalent sources.
 We then used the estimated source coefficients to predict the values of the
