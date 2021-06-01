@@ -1147,7 +1147,7 @@ the $k$ folds.
 With the goal of speeding up the computations, we selected a portion of the
 Australia gravity disturbances to run the cross-validation: an area of
 \AustraliaSmallAreaEastingSize{}$\times$\AustraliaSmallAreaNorthingSize{}
-containing \AustraliaSmallAreaNPoints points.
+containing \AustraliaSmallAreaNPoints{} points.
 We run the cross-validation with a combination of \emph{depth} ranging from
 \AustraliaDepthMin{} to \AustraliaDepthMax{},
 and \emph{damping} from
@@ -1165,7 +1165,7 @@ Finally, we proceed to estimate the coefficients of the whole set of
 gradient-boosted equivalent sources using the parameters previously determined.
 Fig.~\ref{fig:australia-memory-cv-error}c shows the root-mean square of the
 residuals after each iteration of the gradient-boosting algorithm, exposing how
-to algorithm converges at a minimum difference between the gravity disturbance
+the algorithm converges at a minimum difference between the gravity disturbance
 data and the predicted values by the equivalent sources.
 We then used the estimated source coefficients to predict the values of the
 gravity disturbance on a regular grid of
