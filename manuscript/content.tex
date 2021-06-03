@@ -950,6 +950,7 @@ are visually indistinguishable from each other.
 
 
 \subsection{Window size and overlap in gradient boosting}
+\label{sec:window_size_and_overlap}
 
 We assessed the trade-offs in interpolation accuracy and computation time of
 the gradient-boosted equivalent sources algorithm as a function of the two key
@@ -1058,6 +1059,48 @@ sizes to compensate.
 }
     \label{fig:gradient-boosted-comparison}
 \end{figure*}
+
+
+\subsection{
+    Interpolating synthetic survey with gradient boosting
+}
+
+Finally we used gradient-boosted equivalent sources to interpolate the
+synthetic airborne survey. We started by locating a set of block-averaged
+equivalent sources using a block size of \EqlBoostAirborneSpacing{} and, based
+on the results presented on section \ref{sec:window_size_and_overlap}, we
+decided to use an overlap of 50\% and a window size of
+\EqlBoostAirborneWindowSize{} in order to define a considerable amount of
+windows.
+
+We estimated the \emph{depth} and \emph{damping} parameters by comparing the
+predictions against the values of the target grid, exploring \emph{depth}
+values between \EqlBoostAirborneMinDepth{} and \EqlBoostAirborneMaxDepth{} and
+\emph{damping} values between \EqlBoostAirborneMinDamping{} and
+\EqlBoostAirborneMaxDamping{} by steps of one order of magnitude.
+The most accurate predictions achieved a RMS error of
+\EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
+a damping of \EqlBoostAirborneDamping{}.
+
+Figure \ref{fig:eql-boost-airborne}a shows the difference between the target
+grid and the predictions made by the gradient-boosted equivalent sources.
+Figure \ref{fig:eql-boost-airborne}b shows the RMS error of the
+residuals after each iteration, exposing how the gradient-boosting algorithm
+converges to a minimum fitting error.
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
+    \caption{
+        Results of interpolating the airborne synthetic survey with
+        gradient-boosted equivalent sources.
+        a)~Pseudo-color maps of the differences between the target grid and the
+        interpolated synthetic airborne survey data produced gradient-boosted
+        equivalent sources.
+        b)~Root-mean squared error of the residuals after each iteration of the
+        gradient-boosting algorithm.
+}
+\label{fig:eql-boost-airborne}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
