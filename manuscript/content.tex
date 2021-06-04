@@ -1042,11 +1042,15 @@ The most accurate predictions achieved a RMS error of
 \EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
 a damping of \EqlBoostAirborneDamping{}.
 
-Figure \ref{fig:eql-boost-airborne}a shows the difference between the target
+Figure \ref{fig:eql-boost-airborne}a shows the differences between the target
 grid and the predictions made by the gradient-boosted equivalent sources.
 Figure \ref{fig:eql-boost-airborne}b shows the RMS error of the
 residuals after each iteration, exposing how the gradient-boosting algorithm
 converges to a minimum fitting error.
+
+Worth noting that the RMS error achieved by the gradient-boosted equivalent
+sources is comparable to the values obtained by the regular equivalent sources
+in Section \ref{sec:synthetic_distributions}.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
