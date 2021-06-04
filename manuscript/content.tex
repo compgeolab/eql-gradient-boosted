@@ -319,9 +319,12 @@ For linear regression problems, these additive models can be written as the
 matrix equation
 
 \begin{equation}
-    \mathbf{d} = \sum_{k=1}^K \alpha_k \mathbf{A}_k \mathbf{c}_k \ .
+    \mathbf{d} = \sum_{k=1}^K \mathbf{A}_k \mathbf{c}_k \ .
     \label{eq:gb-linear-model}
 \end{equation}
+
+\noindent Because of the linearity of the problem, the step-size parameters
+can be included into the parameter vector $\mathbf{c}_k$.
 
 We can transform our equivalent source problem in
 Eq.~\ref{eq:linear-problem} into an additive model by following these
@@ -347,11 +350,10 @@ steps:
 The gradient boosting algorithm works by fitting each component of the
 additive model, one at a time, to the residuals of the previous component.
 \citet{friedman2001} demonstrates that this corresponds to a steepest-descent
-optimization in the so-called ``function space'', with $\alpha_k$ corresponding
-to step sizes in steepest descent.
+optimization in the so-called ``function space''.
 The adaptation of the gradient boosting method to find the damped least-squares
-solutions for the $K$ parameters vectors $\mathbf{c}_k$ and step sizes
-$\alpha_k$ in Eq.~\ref{eq:gb-linear-model} is presented in
+solutions for the $K$ parameters vectors $\mathbf{c}_k$ in
+Eq.~\ref{eq:gb-linear-model} is presented in
 Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
@@ -384,23 +386,7 @@ Algorithm~\ref{alg:gradient_boosting}.
     \nllabel{alg:predicted}
     \;
 
-    $
-      \alpha_k = \underset{\alpha}{\mathrm{argmin}}
-      \left(
-        \left\lVert
-          \mathbf{r}_{k - 1} - \alpha \mathbf{d}_k
-        \right\rVert ^ 2
-      \right)
-      = \dfrac{
-        \mathbf{r}_{k-1}\trans \mathbf{d}_k
-      }{
-        \mathbf{d}_k\trans \mathbf{d}_k
-      }
-    $
-    \nllabel{alg:stepsize}
-    \;
-
-    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{d}_k$
+    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \mathbf{d}_k$
     \nllabel{alg:residual}
     \;
   }
@@ -410,14 +396,14 @@ Algorithm~\ref{alg:gradient_boosting}.
   \label{alg:gradient_boosting}
 \end{algorithm}
 
-After all $\alpha_k$ step sizes and $\mathbf{c}_k$ coefficients vectors
-are estimated, we can predict the effect of the additive equivalent source
-model on any point through the summation
+After all $\mathbf{c}_k$ coefficients vectors are estimated, we can predict the
+effect of the additive equivalent source model on any point through the
+summation
 
 \begin{equation}
     d(\mathbf{p}) =
     \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
-    \alpha_k \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
+    \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
     \ ,
 \end{equation}
 
@@ -442,7 +428,7 @@ points that fall within the $k$-th window for fitting the sources
 (steps \ref{alg:scale} and \ref{alg:fit} of
 algorithm~\ref{alg:gradient_boosting}),
 while using all available data when calculating the step size and residuals
-(steps \ref{alg:predicted}, \ref{alg:stepsize}, and \ref{alg:residual}
+(steps \ref{alg:predicted} and \ref{alg:residual}
 of algorithm~\ref{alg:gradient_boosting}).
 By doing so, we can reduce the size of the Jacobian matrix further to $N_k
 \times M_k$ elements.
@@ -495,22 +481,7 @@ that simulate a ground survey and locating one source below each data point.
     $
     \;
 
-    $
-      \alpha_k = \underset{\alpha}{\mathrm{argmin}}
-      \left(
-        \left\lVert
-          \mathbf{r}_{k - 1} - \alpha \mathbf{d}_k
-        \right\rVert ^ 2
-      \right)
-      = \dfrac{
-        \mathbf{r}_{k-1}\trans \mathbf{d}_k
-      }{
-        \mathbf{d}_k\trans \mathbf{d}_k
-      }
-    $
-    \;
-
-    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \alpha_k\mathbf{d}_k$
+    $\mathbf{r}_k = \mathbf{r}_{k - 1} - \mathbf{d}_k$
     \;
   }
   \BlankLine
@@ -542,14 +513,6 @@ that simulate a ground survey and locating one source below each data point.
     \label{fig:gradient-boosting-schematics}
 \end{figure*}
 
-The influence of distance sources on the solution is maintained by using the
-entire set of data points when calculating
-the step size $\alpha_k$ and updating the residuals vector.
-In this case, the step size prevents the algorithm from worsening the fit on
-data points that fall outside of the current window.
-As such, it improves the convergence of the solution and ensures that the
-overall misfit decreases with iteration.
-
 It is worth noting that two sets of equivalent sources obtained through two
 adjacent overlapping windows have some portion of the sources on the same
 locations, specifically the ones that fall on the intersection between the two
@@ -561,9 +524,9 @@ Instead of storing all of the multiple $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
-After each iteration of the gradient-boosting algorithm, we add the
-multiplication of the estimated coefficients $\hat{\mathbf{c}}_k$ and the
-step-size $\alpha_k$ to the corresponding elements of vector $\mathbf{c}$.
+After each iteration of the gradient-boosting algorithm, we add the estimated
+coefficients $\hat{\mathbf{c}}_k$ to the corresponding elements of vector
+$\mathbf{c}$.
 Because the relation between the source coefficients and the effect they
 generate is linear, we can safely compute the resulting field through
 Equation~\ref{eq:eql-forward}.
@@ -578,10 +541,7 @@ The key differences are that in our method:
 once, allowing the algorithm to self-correct for poor solutions to any given
 window;
 (ii)~we use only data points within the window when fitting, what enables the
-use of larger datasets;
-(iii)~experience shows that the step size parameter improves the convergence of
-the solution, particularly when using only the data inside the windows for
-fitting.
+use of larger datasets.
 
 
 \subsection{Location of sources}
@@ -950,6 +910,7 @@ are visually indistinguishable from each other.
 
 
 \subsection{Window size and overlap in gradient boosting}
+\label{sec:window_size_and_overlap}
 
 We assessed the trade-offs in interpolation accuracy and computation time of
 the gradient-boosted equivalent sources algorithm as a function of the two key
@@ -1058,6 +1019,52 @@ sizes to compensate.
 }
     \label{fig:gradient-boosted-comparison}
 \end{figure*}
+
+
+\subsection{
+    Interpolating synthetic survey with gradient boosting
+}
+
+Finally we used gradient-boosted equivalent sources to interpolate the
+synthetic airborne survey. We started by locating a set of block-averaged
+equivalent sources using a block size of \EqlBoostAirborneSpacing{} and, based
+on the results presented on section \ref{sec:window_size_and_overlap}, we
+decided to use an overlap of 50\% and a window size of
+\EqlBoostAirborneWindowSize{} in order to define a considerable amount of
+windows.
+
+We estimated the \emph{depth} and \emph{damping} parameters by comparing the
+predictions against the values of the target grid, exploring \emph{depth}
+values between \EqlBoostAirborneMinDepth{} and \EqlBoostAirborneMaxDepth{} and
+\emph{damping} values between \EqlBoostAirborneMinDamping{} and
+\EqlBoostAirborneMaxDamping{} by steps of one order of magnitude.
+The most accurate predictions achieved a RMS error of
+\EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
+a damping of \EqlBoostAirborneDamping{}.
+
+Figure \ref{fig:eql-boost-airborne}a shows the differences between the target
+grid and the predictions made by the gradient-boosted equivalent sources.
+Figure \ref{fig:eql-boost-airborne}b shows the RMS error of the
+residuals after each iteration, exposing how the gradient-boosting algorithm
+converges to a minimum fitting error.
+
+Worth noting that the RMS error achieved by the gradient-boosted equivalent
+sources is comparable to the values obtained by the regular equivalent sources
+in Section \ref{sec:synthetic_distributions}.
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
+    \caption{
+        Results of interpolating the airborne synthetic survey with
+        gradient-boosted equivalent sources.
+        a)~Pseudo-color maps of the differences between the target grid and the
+        interpolated synthetic airborne survey data produced gradient-boosted
+        equivalent sources.
+        b)~Root-mean squared error of the residuals after each iteration of the
+        gradient-boosting algorithm.
+}
+\label{fig:eql-boost-airborne}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

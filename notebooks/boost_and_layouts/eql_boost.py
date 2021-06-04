@@ -61,14 +61,6 @@ class EQLHarmonicBoost(EQLHarmonic):
         number generator. If None, the random number generator is the
         ``RandomState`` instance used by `np.random`. Ignored if ``shuffle`` is
         False. Default None.
-    line_search : bool
-        If True, the gradient boosting method fits the step-size parameter on
-        each iteration in order to minimize the misfit between the effect of
-        the fitted coefficients on that iteration on every observation point
-        and the previous residue. This helps to stabilize the convergence and
-        to take into account, to some extent, the effect of the fitted
-        coefficients on observation points outside the current window. If
-        False, only the source coefficients are fitted. Default to True.
 
     Attributes
     ----------
@@ -95,14 +87,12 @@ class EQLHarmonicBoost(EQLHarmonic):
         warm_start=False,
         shuffle=True,
         random_state=None,
-        line_search=True,
     ):
         super().__init__(damping=damping, points=points, relative_depth=relative_depth)
         self.window_size = window_size
         self.warm_start = warm_start
         self.shuffle = shuffle
         self.random_state = random_state
-        self.line_search = line_search
 
     def fit(self, coordinates, data, weights=None):
         """
@@ -205,6 +195,7 @@ class EQLHarmonicBoost(EQLHarmonic):
                 self.damping,
                 copy_jacobian=True,
             )
+            # Predict field of the sources in the window on every data point
             predicted[:] = 0
             predict_numba_parallel(
                 coordinates,
@@ -213,12 +204,11 @@ class EQLHarmonicBoost(EQLHarmonic):
                 predicted,
                 greens_func_cartesian,
             )
-            if self.line_search:
-                step = np.sum(residue * predicted) / np.sum(predicted ** 2)
-                predicted *= step
-                coeffs_chunk *= step
+            # Update the residue
             residue -= predicted
+            # Add RMS of the residue
             errors.append(np.sqrt(np.mean(residue ** 2)))
+            # Update source coefficients
             self.coefs_[point_window] += coeffs_chunk
         self.errors_ = np.array(errors)
 
