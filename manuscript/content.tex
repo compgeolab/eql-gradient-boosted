@@ -221,7 +221,7 @@ Consequently, this range will vary (often dramatically) between datasets,
 making it difficult to choose an appropriate value for $\lambda_d$ in practice.
 
 To solve this issue, we first scale the Jacobian matrix so that its elements
-are unitless and each column has unit variance.
+are dimensionless and each column has unit variance.
 We define a diagonal matrix $\mathbf{S}$
 
 \begin{equation}
@@ -254,9 +254,9 @@ We then write the forward problem in Eq.~\ref{eq:linear-problem} as
     \mathbf{B} \mathbf{m}
 \end{equation}
 
-\noindent where $\mathbf{B}$ is the scaled and unitless Jacobian matrix and
-$\mathbf{m}$ is a vector containing scaled coefficients with the same units as
-the data.
+\noindent where $\mathbf{B}$ is the scaled and dimensionless Jacobian matrix
+and $\mathbf{m}$ is a vector containing scaled coefficients with the same units
+as the data.
 
 The goal function defined in Eq.~\ref{eq:misfit-unscaled} can be
 rewritten as
@@ -274,9 +274,18 @@ rewritten as
 \noindent where $\lambda$ is a \emph{dimensionless} damping parameter and
 regularization is applied on the scaled coefficients $\mathbf{m}$ instead of
 $\mathbf{c}$.
+Using a dimensionless damping parameter allows us to narrow the range of values
+of $\lambda$ that would generate the most accurate predictions, irrespective
+of the dataset and its units.
+The damping parameter controls the amount of regularization that is be applied:
+a large damping value would generate smooth solutions that fail to reproduce
+the high frequency components, while a small value would overfit the data,
+failing to produce accurate predictions.
 From experience, we recommend searching for suitable $\lambda$ values between
-$10^{-8}$ and $10^{2}$ varying by order-of-magnitude, irrespective of the
+$10^{-6}$ and $10^{4}$ varying by order-of-magnitude, irrespective of the
 dataset.
+The choice of the damping and any other hyper-parameter could be done through
+validation methods, such as cross-validation algorithms.
 
 The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
 function can be found by solving the \emph{normal equation system}
