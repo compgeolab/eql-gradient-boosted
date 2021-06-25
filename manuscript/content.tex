@@ -214,6 +214,11 @@ Jacobian matrix elements.
 The second term on the right-hand side of the equation is a zeroth-order
 Tikhonov regularization \citep{tikhonov1977} (also known as a damping
 regularization or ridge regression) that is used to stabilize the solution.
+The damping parameter controls the amount of regularization that will be applied.
+An overly large value would generate a smooth solution that fails to reproduce
+the high frequency components of the data, while an overly small value would 
+result in over-fitting, thus failing to produce realistic interpolation results 
+\citep{martinez2016}.
 
 The range of acceptable values for the damping parameter $\lambda_d$ will
 depend on the values of the Jacobian matrix $\mathbf{A}$ and the coefficients.
@@ -277,15 +282,11 @@ $\mathbf{c}$.
 Using a dimensionless damping parameter allows us to narrow the range of values
 of $\lambda$ that would generate the most accurate predictions, irrespective
 of the dataset and its units.
-The damping parameter controls the amount of regularization that is be applied:
-a large damping value would generate smooth solutions that fail to reproduce
-the high frequency components, while a small value would overfit the data,
-failing to produce realistic interpolation results.
 From experience, we recommend searching for suitable $\lambda$ values between
-$10^{-6}$ and $10^{4}$ varying by order-of-magnitude, irrespective of the
-dataset.
-The choice of the damping and other hyper-parameters like the source depth could be done through
-well-established statistical methods, such as cross-validation.
+$10^{-6}$ and $10^{4}$ varying by order-of-magnitude.
+The choice of the damping and other hyper-parameters like the source depth
+could be done through well-established statistical methods, such as
+cross-validation.
 
 The vector of scaled coefficients $\hat{\mathbf{m}}$ that minimizes the goal
 function can be found by solving the \emph{normal equation system}
