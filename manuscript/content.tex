@@ -110,7 +110,7 @@ Furthermore, many of the optimizations proposed are also complex to implement
 in a computer program, limiting their wider adoption.
 
 In the present study,
-we propose a two strategies for reducing the computational load of
+we propose two strategies for reducing the computational load of
 the equivalent sources technique:
 
 \begin{enumerate}
@@ -122,15 +122,16 @@ the equivalent sources technique:
 \end{enumerate}
 
 The first strategy consists in dividing the survey area into horizontal blocks
-and assign one source to each block, located at the median horizontal location
-of the data points. For airborne, shipborne, and satellite surveys, which are
-oversampled along tracks, this can greatly reduce the size of the inverse
-problem while retaining the same quality of interpolation.
+and assigning a single source to each block, located at the median horizontal
+location of the data points.
+For airborne, shipborne, and satellite surveys, which are oversampled along
+tracks, this can greatly reduce the size of the inverse problem while retaining
+the same quality of interpolation.
 
 The gradient boosting algorithm allows us to fit the equivalent source model
 iteratively by operating on individual overlapping windows.
-Thus, our method solves several much smaller least-squares problems instead of
-a large one.
+As a result, our method solves several much smaller least-squares problems
+instead of a large one.
 This has some similarities with the strategy used by \citet{leao1989} but
 without the requirement for sources and predictions to be on regular grids.
 
@@ -142,7 +143,7 @@ number of sources, and
 memory required to fit very large datasets without sacrificing prediction
 accuracy.
 Finally, a combination of both strategies is used to process a collection of
-around 1.7 million ground gravity data measurements from Australia.
+approximately 1.7 million ground gravity data measurements from Australia.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
