@@ -2,14 +2,15 @@
 
 Measurements of anomalies in potential fields, like gravity disturbances and
 total-field magnetic anomalies, are widely used in geophysical exploration for
-their relatively low cost of acquisition.
+their low cost of acquisition.
 These data can be surveyed using ground, airborne, shipborne, or satellite
 systems.
-In ground surveys, the data are often gathered following irregular paths or
+During ground surveys, the data are often gathered following irregular paths or
 networks along the surface of the terrain, leading to highly variable
 elevations in mountainous regions.
-On airborne surveys, the data are gathered along flight lines, producing a
-large number of measurements concentrated along almost straight lines.
+Airborne and satellite surveys gather data along flight lines, producing
+closely spaced measurements along almost straight lines but with larger spacing
+between adjacent lines.
 Measurement height can also change because of the vertical movement of the
 aircraft.
 Processing of the data often involves interpolation onto a regular grid at
@@ -20,9 +21,10 @@ deconvolution).
 
 Several methods exist in the literature for interpolation in two dimensions,
 for example continuous curvature splines in tension \citep{smith1990},
-bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
+bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging
+\citep{hansen1993}.
 These general-purpose methods have limitations when it comes to interpolating
-potential field data:
+potential field data, namely
 (i)~they are not able to take into account the variable height of the
 observation points and
 (ii)~the interpolating functions are not necessarily harmonic, which
@@ -31,10 +33,10 @@ is the underlying assumption behind many processing techniques
 
 A widely used method for interpolating gravity and magnetic data
 is the equivalent sources technique (also known as equivalent layer, radial
-basis functions, or Green's functions interpolation), first introduced by
-\citet{dampney1969}.
-It consists in fitting a model of finite elementary sources to the data and
-using this model to predict new data values.
+basis functions, or Green's functions interpolation).
+First introduced by \citet{dampney1969}, the method consists in fitting a model
+of finite elementary sources to the data and using this model to predict new
+data values.
 Besides interpolation, equivalent sources have been used for
 reduction-to-the-pole of magnetic data
 \citep{silva1986, nakatsuka2006, guspi2009}, upward
