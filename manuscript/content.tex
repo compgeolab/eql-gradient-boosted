@@ -235,19 +235,20 @@ fit the observed field values $\mathbf{d}^o$ by minimizing the goal function
 $\mathbf{W}$ is a $N \times N$ diagonal matrix of data weights and
 $\lambda_d$ is a positive \emph{damping} parameter with the same units as the
 Jacobian matrix elements.
-The second term on the right-hand side of the equation is a zeroth-order
-Tikhonov regularization \citep{tikhonov1977} (also known as a damping
-regularization or ridge regression) that is used to stabilize the solution.
-The damping parameter controls the amount of regularization that will be applied.
+The second term on the right-hand side of Eq.~\ref{eq:misfit-unscaled} is the
+zeroth-order Tikhonov regularization \citep{tikhonov1977}, also known as a
+damping regularization, that is used to stabilize the solution.
+
+The damping parameter controls the amount of regularization that will be
+applied.
 An overly large value would generate a smooth solution that fails to reproduce
 the high frequency components of the data, while an overly small value would
 result in over-fitting, thus failing to produce realistic interpolation results
 \citep{martinez2016}.
-
 The range of acceptable values for the damping parameter $\lambda_d$ will
 depend on the values of the Jacobian matrix $\mathbf{A}$ and the coefficients.
 Consequently, this range will vary (often dramatically) between datasets,
-making it difficult to choose an appropriate value for $\lambda_d$ in practice.
+making it difficult to choose an appropriate value in practice.
 
 To solve this issue, we first scale the Jacobian matrix so that its elements
 are dimensionless and each column has unit variance.
@@ -283,9 +284,10 @@ We then write the forward problem in Eq.~\ref{eq:linear-problem} as
     \mathbf{B} \mathbf{m}
 \end{equation}
 
-\noindent where $\mathbf{B}$ is the scaled and dimensionless Jacobian matrix
-and $\mathbf{m}$ is a vector containing scaled coefficients with the same units
-as the data.
+\noindent where $\mathbf{B} = \mathbf{A} \mathbf{S}\inv$ is the scaled and
+dimensionless Jacobian matrix
+and $\mathbf{m} = \mathbf{S} \mathbf{c}$ is a vector containing scaled
+coefficients with the same units as the data.
 
 The goal function defined in Eq.~\ref{eq:misfit-unscaled} can be
 rewritten as
@@ -308,7 +310,7 @@ of $\lambda$ that would generate the most accurate predictions, irrespective
 of the dataset and its units.
 From experience, we recommend searching for suitable $\lambda$ values between
 $10^{-6}$ and $10^{4}$ varying by order-of-magnitude.
-The choice of the damping and other hyper-parameters like the source depth
+The choice of the damping and other hyper-parameters, like the source depth,
 could be done through well-established statistical methods, such as
 cross-validation.
 
