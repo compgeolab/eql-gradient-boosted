@@ -1090,7 +1090,7 @@ residuals after each iteration.
 These results show how the gradient-boosted equivalent sources underperform by
 iterating over the overlapping windows in sequential order: they fail to
 produce realistic and accurate predictions while the speed in which the
-algorithm converges is considerable smaller.
+algorithm converges is smaller.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1301,12 +1301,10 @@ This corroborates our initial choice of 50\% overlap, which is good enough for
 producing accurate predictions in reasonable times.
 
 Finally, the results in Fig.~\ref{fig:eql-boost-airborne} highlight the
-importance of randomize the order in which the overlapping windows are
+importance of randomizing the order in which the overlapping windows are
 iterated.
-Running the gradient boosting process by sequentially iterating over the
-overlapping windows produce predictions of considerable lower quality with
-a much smaller convergence rate than the ones obtained by a previous random
-shuffling of the windows.
+Running the gradient boosting algorithm sequentially produces less accurate 
+predictions and decreases the convergence rate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1365,7 +1363,7 @@ compromise between accuracy and computation time.
 The size of the overlapping windows should be chosen as the maximum value
 possible that creates Jacobian matrices that still fit into computer memory.
 Moreover, randomizing the order in which the overlapping windows are iterated
-is highly recommended to improve the quality of the predictions and increasing
+is essential to improve the quality of the predictions and increase
 the convergence rate of the algorithm.
 
 The gradient-boosting method developed here can be used in conjunction with any
