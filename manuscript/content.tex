@@ -43,10 +43,22 @@ data \citep{barnes2011}, modelling the lithospheric magnetic field
 \citep{kother2015}, recovering the magnetic induction vector from
 total-field magnetic anomalies \citep{li2020}, and more.
 
+It is also worth mentioning the least-squares collocation method
+(LSC), which is widely used in geodesy
+\citep[][and references therein]{tscherning2015}.
+LCS is often applied to combine and interpolate different linear functionals of
+the disturbing gravity potential (gravity anomalies, gravity disturbances,
+deflections of the vertical, geoid height, et cetera).
+Like equivalent sources, collocation also requires the solution of a large
+linear system of the order of the number of observed data.
+As such, it's practical application suffers from the same computational
+challenges.
+
 Many variants of the equivalent sources technique have been proposed, often
 attempting to obtain faster or more accurate solutions.
 The key factors that vary between them are: (i) the type of source, (ii)
 the location of the sources, and (iii) the solution strategy.
+
 The type of source is most commonly a point mass for gravity or dipole for
 magnetics \citep[e.g.,~][]{vonfrese1981, silva1986, mendonca1994, siqueira2017}.
 However, right-rectangular prisms \citep[e.g.,][]{barnes2011, jirigalatu2019,
@@ -54,12 +66,19 @@ li2020} and tesseroids \citep{bouman2016} have also been used successfully.
 In fact, even point sources with a simple inverse distance function, instead of
 actual gravity or magnetic fields, can be used as
 equivalent sources \citep{cordell1992}.
-The sources are often distributed on a regular grid at a constant depth
-\citep[e.g.,~][]{leao1989, barnes2011, oliveira2013}
-or placed beneath each data point \citep[e.g.,~][]{cordell1992, siqueira2017}.
-The model is usually estimated through damped least-squares, which imposes a
-heavy computational load when the number of data points is large (e.g.,
-airborne and satellite surveys).
+
+The location of sources often follows one of two strategies.
+The most common approach is to distribute sources on a regular grid at a
+constant depth \citep[e.g.,~][]{leao1989, barnes2011, oliveira2013}.
+Alternatively, sources can be placed beneath each data point
+\citep[e.g.,~][]{cordell1992, siqueira2017}.
+Some recent work by \citet{li2020} places the sources in two overlapping layers
+at different depths.
+
+The coefficients of the equivalent source model are often estimated through
+damped least-squares.
+This imposes a heavy computational load when the number of data points is
+large (e.g., airborne and satellite surveys).
 To reduce the computational load, \citet{mendonca1994} built the solution
 iteratively by incorporating one data point at a time using the ``equivalent
 data concept''.
@@ -216,8 +235,8 @@ Tikhonov regularization \citep{tikhonov1977} (also known as a damping
 regularization or ridge regression) that is used to stabilize the solution.
 The damping parameter controls the amount of regularization that will be applied.
 An overly large value would generate a smooth solution that fails to reproduce
-the high frequency components of the data, while an overly small value would 
-result in over-fitting, thus failing to produce realistic interpolation results 
+the high frequency components of the data, while an overly small value would
+result in over-fitting, thus failing to produce realistic interpolation results
 \citep{martinez2016}.
 
 The range of acceptable values for the damping parameter $\lambda_d$ will
@@ -1304,7 +1323,7 @@ producing accurate predictions in reasonable times.
 Finally, the results in Fig.~\ref{fig:eql-boost-airborne} highlight the
 importance of randomizing the order in which the overlapping windows are
 iterated.
-Running the gradient boosting algorithm sequentially produces less accurate 
+Running the gradient boosting algorithm sequentially produces less accurate
 predictions and decreases the convergence rate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
