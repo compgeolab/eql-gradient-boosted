@@ -897,7 +897,7 @@ The parameter values used in these searches and the one producing the smallest
 RMS error are outlined in Tables~\ref{tab:parameters-ground-survey}
 and~\ref{tab:parameters-airborne-survey}.
 
-Fig~\ref{fig:ground-survey-differences}
+Fig.~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences} show the differences between the
 target grid and the best prediction achieved by each source distribution
 strategy for the ground and airborne synthetic surveys, respectively.
@@ -1051,9 +1051,9 @@ The most accurate predictions achieved a RMS error of
 \EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
 a damping of \EqlBoostAirborneDamping{}.
 
-Figure \ref{fig:eql-boost-airborne}a shows the differences between the target
+Figure~\ref{fig:eql-boost-airborne}a shows the differences between the target
 grid and the predictions made by the gradient-boosted equivalent sources.
-Figure \ref{fig:eql-boost-airborne}b shows the RMS error of the
+Figure~\ref{fig:eql-boost-airborne}b shows the RMS error of the
 residuals after each iteration, exposing how the gradient-boosting algorithm
 converges to a minimum fitting error.
 
@@ -1061,19 +1061,36 @@ Worth noting that the RMS error achieved by the gradient-boosted equivalent
 sources is comparable to the values obtained by the regular equivalent sources
 in Section \ref{sec:synthetic_distributions}.
 
-\begin{figure}
+\begin{figure*}
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
     \caption{
         Results of interpolating the airborne synthetic survey with
-        gradient-boosted equivalent sources.
-        a)~Pseudo-color maps of the differences between the target grid and the
-        interpolated synthetic airborne survey data produced gradient-boosted
-        equivalent sources.
-        b)~Root-mean squared error of the residuals after each iteration of the
-        gradient-boosting algorithm.
+        gradient-boosted equivalent sources with overlapping windows being
+        iterated in random order (a and b), and with overlapping windows being
+        iterated in sequential order (c and d).
+        (a and c)~Pseudo-color maps of the differences between the target grid
+        and the interpolated synthetic airborne survey data produced
+        gradient-boosted.
+        (b and d)~Root-mean squared error of the residuals after each iteration
+        of the gradient-boosting algorithm.
 }
 \label{fig:eql-boost-airborne}
-\end{figure}
+\end{figure*}
+
+With the goal of highlighting the importance of randomizing the order in which
+the overlapping windows are iterated, we interpolated the airborne synthetic
+survey using the same estimated values for the \emph{damping} and
+\emph{depth} but disabling the random shuffling of the windows, iterating over
+them in sequential order.
+Fig.~\ref{fig:eql-boost-airborne}c shows the differences between the target
+grid and the predictions made by the gradient-boosted equivalent sources
+without random shuffling the windows.
+Fig.~\ref{fig:eql-boost-airborne}d shows the RMS error of the
+residuals after each iteration.
+These results show how the gradient-boosted equivalent sources underperform by
+iterating over the overlapping windows in sequential order: they fail to
+produce realistic and accurate predictions while the speed in which the
+algorithm converges is smaller.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1227,7 +1244,7 @@ $\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
 \subsection{Location of sources}
 
 The results of our tests on synthetic data
-(Figs~\ref{fig:ground-survey-differences}
+(Figs.~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences}) show that there are no significant
 differences between source distribution strategies, both in terms of the
 interpolation RMS errors and from visual inspection of the difference maps.
@@ -1276,12 +1293,18 @@ Our results indicate that it is desirable to maximize the window size up to the
 point that the Jacobian matrices still fit within the available computer
 memory.
 
-The results shown in Figs~\ref{fig:gradient-boosted-comparison}b
+The results shown in Figs.~\ref{fig:gradient-boosted-comparison}b
 and~\ref{fig:gradient-boosted-comparison}d indicate that using
 window overlap values between 40\% and 70\% strike a balance between
 accuracy and computation time.
 This corroborates our initial choice of 50\% overlap, which is good enough for
 producing accurate predictions in reasonable times.
+
+Finally, the results in Fig.~\ref{fig:eql-boost-airborne} highlight the
+importance of randomizing the order in which the overlapping windows are
+iterated.
+Running the gradient boosting algorithm sequentially produces less accurate 
+predictions and decreases the convergence rate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1339,6 +1362,9 @@ We also show that an overlap of 50\% between adjacent windows achieves a good
 compromise between accuracy and computation time.
 The size of the overlapping windows should be chosen as the maximum value
 possible that creates Jacobian matrices that still fit into computer memory.
+Moreover, randomizing the order in which the overlapping windows are iterated
+is essential to improve the quality of the predictions and increase
+the convergence rate of the algorithm.
 
 The gradient-boosting method developed here can be used in conjunction with any
 horizontal source layout, depth strategy, or source type (e.g., point sources,
