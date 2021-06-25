@@ -151,9 +151,9 @@ approximately 1.7 million ground gravity data measurements from Australia.
 
 \subsection{The equivalent sources technique}
 
-Here, we will follow the ``generalized equivalent sources'' of
-\citet{cordell1992} and assume that any harmonic function $d(\mathbf{p})$ can
-be approximated by a sum of $M$ discrete point source effects
+We will follow the ``generalized equivalent sources'' of \citet{cordell1992}
+and assume that any harmonic function $d(\mathbf{p})$ can be approximated by a
+sum of $M$ discrete point source effects
 
 \begin{equation}
     d(\mathbf{p})
@@ -164,13 +164,15 @@ be approximated by a sum of $M$ discrete point source effects
 \end{equation}
 
 \noindent in which
-$\mathbf{p}$ and $\mathbf{q}_j$ are position vectors in a 3D Cartesian space,
+$\mathbf{p}$ and $\mathbf{q}_j$ are, respectively, the position vectors in a 3D
+Cartesian space of data and sources,
 $c_j$ is a scalar coefficient related to the point source located at
 $\mathbf{q}_j$,
 and $\lVert \cdot \rVert$ represents the $\text{L}_2$ norm.
-The horizontal and vertical distribution of sources is discussed in section~\ref{sec:source_distribution}.
+The horizontal and vertical distribution of sources is discussed in
+section~\ref{sec:source_distribution}.
 
-In case we have measured the value of the harmonic field on $N$ points
+In case we have values of the harmonic function at $N$ discrete points
 $\{\mathbf{p}_1\ \mathbf{p}_2\ \ldots\ \mathbf{p}_N\}$,
 we can write a set of $N$ equations of the form
 
@@ -184,8 +186,8 @@ we can write a set of $N$ equations of the form
     \label{eq:forward-sum}
 \end{equation}
 
-\noindent where $d_i$ is the value of the potential field at the observation point $\mathbf{p}_i$.
-These equations can also be expressed as
+\noindent where $d_i$ is the calculated value at point $\mathbf{p}_i$.
+These equations can also be expressed in matrix form as
 
 \begin{equation}
     \mathbf{d} = \mathbf{A} \mathbf{c} \ ,
@@ -193,7 +195,7 @@ These equations can also be expressed as
 \end{equation}
 
 \noindent where $\mathbf{d}$ is a column vector containing the $N$ predicted
-values of the observed field at the observation points,
+values at the observation points,
 $\mathbf{c}$ is a column vector containing the $M$ coefficients $c_j$,
 and $\mathbf{A}$ is the $N \times M$ Jacobian matrix,
 whose elements are
@@ -202,15 +204,15 @@ whose elements are
     a_{ij} = \frac{1}{\left\lVert\mathbf{p}_i - \mathbf{q}_j\right\rVert}
 \end{equation}
 
-For a given set of $N$ observed field values $\mathbf{d}^o$,
+For a given set of $N$ observed data $\mathbf{d}^o$,
 we can find a least-squares solution to
 Eq.~\ref{eq:linear-problem} and obtain the values of
 $\mathbf{c}$ that best fit the observations.
-These values can, in turn, be used to predict the value of the harmonic field
-at any other point outside of the sources by evaluating
+These coefficients can, in turn, be used to predict the value of the harmonic
+function at any other point outside of the sources by evaluating
 Eq.~\ref{eq:eql-forward}.
 Gridding and upward continuation can thus be achieved by predicting values on
-points that fall on a regular grid or at different heights.
+points that fall on a regular grid or at different heights, respectively.
 
 
 \subsection{Damped least-squares solution}
