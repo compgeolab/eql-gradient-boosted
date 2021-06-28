@@ -454,6 +454,8 @@ window.
 To improve the convergence of the algorithm, \citet{friedman2002} suggests
 introducing randomness into the fitting process. We achieve this by randomizing
 the order in which the $K$ windows are used in the gradient boosting algorithm.
+Section~\ref{sec:gb_interpolation} explores the effect of randomization in the
+convergence rate of the algorithm and the accuracy of the interpolation.
 
 The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
 (where $M_k$ is the number sources on the $k-$th window), which can be
@@ -1066,6 +1068,7 @@ sizes to compensate.
 \subsection{
     Interpolating synthetic survey with gradient boosting
 }
+\label{sec:gb_interpolation}
 
 Finally we used gradient-boosted equivalent sources to interpolate the
 synthetic airborne survey. We started by locating a set of block-averaged
