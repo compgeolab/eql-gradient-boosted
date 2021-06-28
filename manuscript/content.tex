@@ -444,6 +444,7 @@ summation
     \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
     \frac{{c_k}_j}{\left\lVert \mathbf{p} - {\mathbf{q}_k}_j \right\rVert}
     \ ,
+    \label{eq:eql-forward-gb}
 \end{equation}
 
 \noindent
@@ -467,37 +468,42 @@ Furthermore, we can increase or decrease the size of the overlapping windows as
 needed depending on the number of sources in the model and the available
 computer memory.
 
-We can improve the efficiency of the algorithm further by using only the $N_k$ data
-points that fall within the $k$-th window for fitting the sources
-(steps \ref{alg:scale} and \ref{alg:fit} of
-algorithm~\ref{alg:gradient_boosting}),
-while using all available data when calculating the step size and residuals
-(steps \ref{alg:predicted} and \ref{alg:residual}
-of algorithm~\ref{alg:gradient_boosting}).
-By doing so, we can reduce the size of the Jacobian matrix further to $N_k
-\times M_k$ elements.
-The forward modeling operation performed in step \ref{alg:predicted} can be
-done by a summation (Eq.~\ref{eq:forward-sum})
-instead of a matrix-vector product, which allows us to avoid computing and
-storing the larger $N \times M_k$ Jacobian at any point.
-Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
-the final \textit{gradient-boosted equivalent source algorithm}.
-Figure~\ref{fig:gradient-boosting-schematics} shows a sketch of the
-gradient-boosted equivalent source algorithm with a set of observation points
-that simulate a ground survey and locating one source below each data point.
+We can improve the efficiency of the algorithm further by:
+
+\begin{enumerate}
+  \item Using only the $N_k$ data points that fall within the $k$-th window for
+    fitting the sources (steps \ref{alg:scale} and \ref{alg:fit} of
+    algorithm~\ref{alg:gradient_boosting}).
+    By doing so, we can replace the $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
+    with the smaller $N_k \times M_k$ matrix $\tilde{\mathbf{A}}_k$.
+    We still use all $N$ data points when calculating the predicted data and
+    residuals (steps \ref{alg:predicted} and \ref{alg:residual} of
+    algorithm~\ref{alg:gradient_boosting}).
+  \item The forward modeling operation performed in step \ref{alg:predicted}
+    can be done by a summation (Eq.~\ref{eq:forward-sum}) instead of a
+    matrix-vector product, which allows us to avoid computing and storing the
+    larger $N \times M_k$ matrix $\mathbf{A}_k$ at any point.
+\end{enumerate}
+
+Algorithm~\ref{alg:gradient_boosting_window} is the final
+\textit{gradient-boosted equivalent sources algorithm} which incorporates these
+changes.
+Figure~\ref{fig:gradient-boosting-schematics} shows a sketch of the algorithm
+steps applied a set of observation points that simulate a ground survey and
+locating one source below each data point.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
   \setstretch{1.5}
-  define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
+  Define the residual vector $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
 
-    select weights $\tilde{\mathbf{W}}_k$ and residuals
-    $\tilde{\mathbf{r}}_{k - 1}$ for data points inside the $k$-th window only
+    Select weights $\tilde{\mathbf{W}}_k$ and residuals
+    $\tilde{\mathbf{r}}_{k - 1}$ for data points inside the $k$-th window
     \;
 
-    calculate $N_k \times M_k$ Jacobian matrix $\tilde{\mathbf{A}}_k$
-    with data points and sources inside the $k$-th window only
+    Calculate Jacobian matrix $\tilde{\mathbf{A}}_k$ with data points and
+    sources inside the $k$-th window
     \;
 
     $\mathbf{B}_k = \tilde{\mathbf{A}}_k \mathbf{S}_k\inv$
@@ -514,14 +520,14 @@ that simulate a ground survey and locating one source below each data point.
     $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
     \;
 
-    calculate $ \mathbf{d}_k $, where
+    Calculate $ \mathbf{d}_k $, where
     $
     {d_k}_i
     =
     \sum\limits_{j=1}^{M_k} \dfrac{{c_k}_j}{\left\lVert \mathbf{p}_i -
         {\mathbf{q}_k}_j
     \right\rVert}
-    \ \forall i=1\ \text{to}\ N
+    \quad \forall\ i=1\ \text{to}\ N
     $
     \;
 
@@ -530,7 +536,7 @@ that simulate a ground survey and locating one source below each data point.
   }
   \BlankLine
   \setstretch{1}
-  \caption{Gradient-boosted equivalent source algorithm.}
+  \caption{Gradient-boosted equivalent sources algorithm.}
   \label{alg:gradient_boosting_window}
 \end{algorithm}
 
@@ -563,17 +569,17 @@ locations, specifically the ones that fall on the intersection between the two
 windows.
 We can interpret this as the gradient-boosting algorithm fitting the source
 coefficients multiple times: one time for every window that covers each source.
-This fact can be exploited in order to save some computational memory.
-Instead of storing all of the multiple $\mathbf{c}_k$ vectors
+This fact can be exploited in order to save computer memory.
+Instead of storing all of the $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
 After each iteration of the gradient-boosting algorithm, we add the estimated
 coefficients $\hat{\mathbf{c}}_k$ to the corresponding elements of vector
 $\mathbf{c}$.
-Because the relation between the source coefficients and the effect they
-generate is linear, we can safely compute the resulting field through
-Equation~\ref{eq:eql-forward}.
+Because the forward modelling function is linear, we can safely compute the
+resulting field through Eq.~\ref{eq:eql-forward} instead of
+Eq.~\ref{eq:eql-forward-gb}.
 This way, the memory needed to store the entire set of estimated coefficients
 is limited to a single vector of $M$ elements.
 
@@ -586,6 +592,7 @@ once, allowing the algorithm to self-correct for poor solutions to any given
 window;
 (ii)~we use only data points within the window when fitting, what enables the
 use of larger datasets.
+
 
 
 \subsection{Location of sources}
