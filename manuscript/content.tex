@@ -351,16 +351,17 @@ a method for fitting additive parametric models of the form
 
 \noindent where $\alpha_k$ is a scalar coefficient called the \emph{step-size}
 and $f$ is a function of the parameter vector $\mathbf{c}_k$.
-For linear regression problems, these additive models can be written as the
-matrix equation
+For linear problems, these additive models can be written as the matrix
+equation
 
 \begin{equation}
     \mathbf{d} = \sum_{k=1}^K \mathbf{A}_k \mathbf{c}_k \ .
     \label{eq:gb-linear-model}
 \end{equation}
 
-\noindent Because of the linearity of the problem, the step-size parameters
-can be included into the parameter vector $\mathbf{c}_k$.
+\noindent Because of the linearity of the $f(\mathbf{c}_k)$ functions, the
+$\alpha_k$ step-size parameters can be incorporated into the parameter vector
+$\mathbf{c}_k$.
 
 We can transform our equivalent source problem in
 Eq.~\ref{eq:linear-problem} into an additive model by following these
@@ -376,11 +377,12 @@ steps:
     fall inside the respective window.
     Since the windows overlap, the total number of sources from all sets will
     be greater than $M$.
-  \item Define the vector $\mathbf{c}_k$ as the coefficients of the equivalent
-    sources of the $k$-th window and matrix $\mathbf{A}_k$ as the Jacobian
-    matrix between those sources and every data point of the survey.
+  \item Define vector $\mathbf{c}_k$ as the coefficients of the equivalent
+    sources of the $k$-th window.
+  \item Define matrix $\mathbf{A}_k$ as the Jacobian matrix between the sources
+    in the $k$-th window and all $N$ data points of the survey.
   \item Model the predicted data as a superposition of the effects of the $K$
-    separate sets of equivalent sources.
+    separate sets of equivalent sources (i.e., Eq.~\ref{eq:gb-linear-model}).
 \end{enumerate}
 
 The gradient boosting algorithm works by fitting each component of the
