@@ -2,14 +2,15 @@
 
 Measurements of anomalies in potential fields, like gravity disturbances and
 total-field magnetic anomalies, are widely used in geophysical exploration for
-their relatively low cost of acquisition.
+their low cost of acquisition.
 These data can be surveyed using ground, airborne, shipborne, or satellite
 systems.
-In ground surveys, the data are often gathered following irregular paths or
+During ground surveys, the data are often gathered following irregular paths or
 networks along the surface of the terrain, leading to highly variable
 elevations in mountainous regions.
-On airborne surveys, the data are gathered along flight lines, producing a
-large number of measurements concentrated along almost straight lines.
+Airborne and satellite surveys gather data along flight lines, producing
+closely spaced measurements along almost straight lines but with larger spacing
+between adjacent lines.
 Measurement height can also change because of the vertical movement of the
 aircraft.
 Processing of the data often involves interpolation onto a regular grid at
@@ -20,9 +21,10 @@ deconvolution).
 
 Several methods exist in the literature for interpolation in two dimensions,
 for example continuous curvature splines in tension \citep{smith1990},
-bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging \citep{hansen1993}.
+bi-harmonic (thin-plate) splines \citep{sandwell1987}, and kriging
+\citep{hansen1993}.
 These general-purpose methods have limitations when it comes to interpolating
-potential field data:
+potential field data, namely
 (i)~they are not able to take into account the variable height of the
 observation points and
 (ii)~the interpolating functions are not necessarily harmonic, which
@@ -31,10 +33,10 @@ is the underlying assumption behind many processing techniques
 
 A widely used method for interpolating gravity and magnetic data
 is the equivalent sources technique (also known as equivalent layer, radial
-basis functions, or Green's functions interpolation), first introduced by
-\citet{dampney1969}.
-It consists in fitting a model of finite elementary sources to the data and
-using this model to predict new data values.
+basis functions, or Green's functions interpolation).
+First introduced by \citet{dampney1969}, the method consists in fitting a model
+of finite elementary sources to the data and using this model to predict new
+data values.
 Besides interpolation, equivalent sources have been used for
 reduction-to-the-pole of magnetic data
 \citep{silva1986, nakatsuka2006, guspi2009}, upward
@@ -108,7 +110,7 @@ Furthermore, many of the optimizations proposed are also complex to implement
 in a computer program, limiting their wider adoption.
 
 In the present study,
-we propose a two strategies for reducing the computational load of
+we propose two strategies for reducing the computational load of
 the equivalent sources technique:
 
 \begin{enumerate}
@@ -120,15 +122,16 @@ the equivalent sources technique:
 \end{enumerate}
 
 The first strategy consists in dividing the survey area into horizontal blocks
-and assign one source to each block, located at the median horizontal location
-of the data points. For airborne, shipborne, and satellite surveys, which are
-oversampled along tracks, this can greatly reduce the size of the inverse
-problem while retaining the same quality of interpolation.
+and assigning a single source to each block, located at the median horizontal
+location of the data points.
+For airborne, shipborne, and satellite surveys, which are oversampled along
+tracks, this can greatly reduce the size of the inverse problem while retaining
+the same quality of interpolation.
 
 The gradient boosting algorithm allows us to fit the equivalent source model
 iteratively by operating on individual overlapping windows.
-Thus, our method solves several much smaller least-squares problems instead of
-a large one.
+As a result, our method solves several much smaller least-squares problems
+instead of a large one.
 This has some similarities with the strategy used by \citet{leao1989} but
 without the requirement for sources and predictions to be on regular grids.
 
@@ -140,7 +143,7 @@ number of sources, and
 memory required to fit very large datasets without sacrificing prediction
 accuracy.
 Finally, a combination of both strategies is used to process a collection of
-around 1.7 million ground gravity data measurements from Australia.
+approximately 1.7 million ground gravity data measurements from Australia.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -148,9 +151,9 @@ around 1.7 million ground gravity data measurements from Australia.
 
 \subsection{The equivalent sources technique}
 
-Here, we will follow the ``generalized equivalent sources'' of
-\citet{cordell1992} and assume that any harmonic function $d(\mathbf{p})$ can
-be approximated by a sum of $M$ discrete point source effects
+We will follow the ``generalized equivalent sources'' of \citet{cordell1992}
+and assume that any harmonic function $d(\mathbf{p})$ can be approximated by a
+sum of $M$ discrete point source effects
 
 \begin{equation}
     d(\mathbf{p})
@@ -161,13 +164,15 @@ be approximated by a sum of $M$ discrete point source effects
 \end{equation}
 
 \noindent in which
-$\mathbf{p}$ and $\mathbf{q}_j$ are position vectors in a 3D Cartesian space,
+$\mathbf{p}$ and $\mathbf{q}_j$ are, respectively, the position vectors in a 3D
+Cartesian space of data and sources,
 $c_j$ is a scalar coefficient related to the point source located at
 $\mathbf{q}_j$,
 and $\lVert \cdot \rVert$ represents the $\text{L}_2$ norm.
-The horizontal and vertical distribution of sources is discussed in section~\ref{sec:source_distribution}.
+The horizontal and vertical distribution of sources is discussed in
+section~\ref{sec:source_distribution}.
 
-In case we have measured the value of the harmonic field on $N$ points
+In case we have values of the harmonic function at $N$ discrete points
 $\{\mathbf{p}_1\ \mathbf{p}_2\ \ldots\ \mathbf{p}_N\}$,
 we can write a set of $N$ equations of the form
 
@@ -181,8 +186,8 @@ we can write a set of $N$ equations of the form
     \label{eq:forward-sum}
 \end{equation}
 
-\noindent where $d_i$ is the value of the potential field at the observation point $\mathbf{p}_i$.
-These equations can also be expressed as
+\noindent where $d_i$ is the calculated value at point $\mathbf{p}_i$.
+These equations can also be expressed in matrix form as
 
 \begin{equation}
     \mathbf{d} = \mathbf{A} \mathbf{c} \ ,
@@ -190,7 +195,7 @@ These equations can also be expressed as
 \end{equation}
 
 \noindent where $\mathbf{d}$ is a column vector containing the $N$ predicted
-values of the observed field at the observation points,
+values at the observation points,
 $\mathbf{c}$ is a column vector containing the $M$ coefficients $c_j$,
 and $\mathbf{A}$ is the $N \times M$ Jacobian matrix,
 whose elements are
@@ -199,15 +204,15 @@ whose elements are
     a_{ij} = \frac{1}{\left\lVert\mathbf{p}_i - \mathbf{q}_j\right\rVert}
 \end{equation}
 
-For a given set of $N$ observed field values $\mathbf{d}^o$,
+For a given set of $N$ observed data $\mathbf{d}^o$,
 we can find a least-squares solution to
 Eq.~\ref{eq:linear-problem} and obtain the values of
 $\mathbf{c}$ that best fit the observations.
-These values can, in turn, be used to predict the value of the harmonic field
-at any other point outside of the sources by evaluating
+These coefficients can, in turn, be used to predict the value of the harmonic
+function at any other point outside of the sources by evaluating
 Eq.~\ref{eq:eql-forward}.
 Gridding and upward continuation can thus be achieved by predicting values on
-points that fall on a regular grid or at different heights.
+points that fall on a regular grid or at different heights, respectively.
 
 
 \subsection{Damped least-squares solution}
@@ -230,19 +235,20 @@ fit the observed field values $\mathbf{d}^o$ by minimizing the goal function
 $\mathbf{W}$ is a $N \times N$ diagonal matrix of data weights and
 $\lambda_d$ is a positive \emph{damping} parameter with the same units as the
 Jacobian matrix elements.
-The second term on the right-hand side of the equation is a zeroth-order
-Tikhonov regularization \citep{tikhonov1977} (also known as a damping
-regularization or ridge regression) that is used to stabilize the solution.
-The damping parameter controls the amount of regularization that will be applied.
+The second term on the right-hand side of Eq.~\ref{eq:misfit-unscaled} is the
+zeroth-order Tikhonov regularization \citep{tikhonov1977}, also known as a
+damping regularization, that is used to stabilize the solution.
+
+The damping parameter controls the amount of regularization that will be
+applied.
 An overly large value would generate a smooth solution that fails to reproduce
 the high frequency components of the data, while an overly small value would
 result in over-fitting, thus failing to produce realistic interpolation results
 \citep{martinez2016}.
-
 The range of acceptable values for the damping parameter $\lambda_d$ will
 depend on the values of the Jacobian matrix $\mathbf{A}$ and the coefficients.
 Consequently, this range will vary (often dramatically) between datasets,
-making it difficult to choose an appropriate value for $\lambda_d$ in practice.
+making it difficult to choose an appropriate value in practice.
 
 To solve this issue, we first scale the Jacobian matrix so that its elements
 are dimensionless and each column has unit variance.
@@ -278,9 +284,10 @@ We then write the forward problem in Eq.~\ref{eq:linear-problem} as
     \mathbf{B} \mathbf{m}
 \end{equation}
 
-\noindent where $\mathbf{B}$ is the scaled and dimensionless Jacobian matrix
-and $\mathbf{m}$ is a vector containing scaled coefficients with the same units
-as the data.
+\noindent where $\mathbf{B} = \mathbf{A} \mathbf{S}\inv$ is the scaled and
+dimensionless Jacobian matrix
+and $\mathbf{m} = \mathbf{S} \mathbf{c}$ is a vector containing scaled
+coefficients with the same units as the data.
 
 The goal function defined in Eq.~\ref{eq:misfit-unscaled} can be
 rewritten as
@@ -303,7 +310,7 @@ of $\lambda$ that would generate the most accurate predictions, irrespective
 of the dataset and its units.
 From experience, we recommend searching for suitable $\lambda$ values between
 $10^{-6}$ and $10^{4}$ varying by order-of-magnitude.
-The choice of the damping and other hyper-parameters like the source depth
+The choice of the damping and other hyper-parameters, like the source depth,
 could be done through well-established statistical methods, such as
 cross-validation.
 
@@ -344,16 +351,17 @@ a method for fitting additive parametric models of the form
 
 \noindent where $\alpha_k$ is a scalar coefficient called the \emph{step-size}
 and $f$ is a function of the parameter vector $\mathbf{c}_k$.
-For linear regression problems, these additive models can be written as the
-matrix equation
+For linear problems, these additive models can be written as the matrix
+equation
 
 \begin{equation}
     \mathbf{d} = \sum_{k=1}^K \mathbf{A}_k \mathbf{c}_k \ .
     \label{eq:gb-linear-model}
 \end{equation}
 
-\noindent Because of the linearity of the problem, the step-size parameters
-can be included into the parameter vector $\mathbf{c}_k$.
+\noindent Because of the linearity of the $f(\mathbf{c}_k)$ functions, the
+$\alpha_k$ step-size parameters can be incorporated into the parameter vector
+$\mathbf{c}_k$.
 
 We can transform our equivalent source problem in
 Eq.~\ref{eq:linear-problem} into an additive model by following these
@@ -369,11 +377,13 @@ steps:
     fall inside the respective window.
     Since the windows overlap, the total number of sources from all sets will
     be greater than $M$.
-  \item Define the vector $\mathbf{c}_k$ as the coefficients of the equivalent
-    sources of the $k$-th window and matrix $\mathbf{A}_k$ as the Jacobian
-    matrix between those sources and every data point of the survey.
+  \item Define vector $\mathbf{c}_k$ as the $M_k$ coefficients of the
+    equivalent sources of the $k$-th window.
+  \item Define matrix $\mathbf{A}_k$ as the $N \times M_k$ Jacobian matrix
+    between the sources in the $k$-th window and all $N$ data points of the
+    survey.
   \item Model the predicted data as a superposition of the effects of the $K$
-    separate sets of equivalent sources.
+    separate sets of equivalent sources (i.e., Eq.~\ref{eq:gb-linear-model}).
 \end{enumerate}
 
 The gradient boosting algorithm works by fitting each component of the
@@ -381,18 +391,18 @@ additive model, one at a time, to the residuals of the previous component.
 \citet{friedman2001} demonstrates that this corresponds to a steepest-descent
 optimization in the so-called ``function space''.
 The adaptation of the gradient boosting method to find the damped least-squares
-solutions for the $K$ parameters vectors $\mathbf{c}_k$ in
+solutions for the $K$ parameter vectors $\mathbf{c}_k$ in
 Eq.~\ref{eq:gb-linear-model} is presented in
 Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
   \setstretch{1.5}
-  define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
+  Define the residual vector $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
 
 
-    calculate $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
+    Calculate the $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
     \;
 
     $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$
@@ -432,15 +442,21 @@ summation
 \begin{equation}
     d(\mathbf{p}) =
     \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
-    \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
+    \frac{{c_k}_j}{\left\lVert \mathbf{p} - {\mathbf{q}_k}_j \right\rVert}
     \ ,
+    \label{eq:eql-forward-gb}
 \end{equation}
 
-\noindent where ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector.
+\noindent
+in which ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector and the
+${\mathbf{q}_k}_j$ is the position vector of the $j$-th source of the $k$-th
+window.
 
 To improve the convergence of the algorithm, \citet{friedman2002} suggests
 introducing randomness into the fitting process. We achieve this by randomizing
 the order in which the $K$ windows are used in the gradient boosting algorithm.
+Section~\ref{sec:gb_interpolation} explores the effect of randomization in the
+convergence rate of the algorithm and the accuracy of the interpolation.
 
 The $\mathbf{A}_k$ matrices have only $N \times M_k$ elements
 (where $M_k$ is the number sources on the $k-$th window), which can be
@@ -452,37 +468,42 @@ Furthermore, we can increase or decrease the size of the overlapping windows as
 needed depending on the number of sources in the model and the available
 computer memory.
 
-We can improve the efficiency of the algorithm further by using only the $N_k$ data
-points that fall within the $k$-th window for fitting the sources
-(steps \ref{alg:scale} and \ref{alg:fit} of
-algorithm~\ref{alg:gradient_boosting}),
-while using all available data when calculating the step size and residuals
-(steps \ref{alg:predicted} and \ref{alg:residual}
-of algorithm~\ref{alg:gradient_boosting}).
-By doing so, we can reduce the size of the Jacobian matrix further to $N_k
-\times M_k$ elements.
-The forward modeling operation performed in step \ref{alg:predicted} can be
-done by a summation (Eq.~\ref{eq:forward-sum})
-instead of a matrix-vector product, which allows us to avoid computing and
-storing the larger $N \times M_k$ Jacobian at any point.
-Algorithm~\ref{alg:gradient_boosting_window} incorporates these changes and is
-the final \textit{gradient-boosted equivalent source algorithm}.
-Figure~\ref{fig:gradient-boosting-schematics} shows a sketch of the
-gradient-boosted equivalent source algorithm with a set of observation points
-that simulate a ground survey and locating one source below each data point.
+We can improve the efficiency of the algorithm further by:
+
+\begin{enumerate}
+  \item Using only the $N_k$ data points that fall within the $k$-th window for
+    fitting the sources (steps \ref{alg:scale} and \ref{alg:fit} of
+    algorithm~\ref{alg:gradient_boosting}).
+    By doing so, we can replace the $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
+    with the smaller $N_k \times M_k$ matrix $\tilde{\mathbf{A}}_k$.
+    We still use all $N$ data points when calculating the predicted data and
+    residuals (steps \ref{alg:predicted} and \ref{alg:residual} of
+    algorithm~\ref{alg:gradient_boosting}).
+  \item The forward modeling operation performed in step \ref{alg:predicted}
+    can be done by a summation (Eq.~\ref{eq:forward-sum}) instead of a
+    matrix-vector product, which allows us to avoid computing and storing the
+    larger $N \times M_k$ matrix $\mathbf{A}_k$ at any point.
+\end{enumerate}
+
+Algorithm~\ref{alg:gradient_boosting_window} is the final
+\textit{gradient-boosted equivalent sources algorithm} which incorporates these
+changes.
+Figure~\ref{fig:gradient-boosting-schematics} shows a sketch of the algorithm
+steps applied a set of observation points that simulate a ground survey and
+locating one source below each data point.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
   \setstretch{1.5}
-  define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
+  Define the residual vector $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
 
-    select weights $\tilde{\mathbf{W}}_k$ and residuals
-    $\tilde{\mathbf{r}}_{k - 1}$ for data points inside the $k$-th window only
+    Select weights $\tilde{\mathbf{W}}_k$ and residuals
+    $\tilde{\mathbf{r}}_{k - 1}$ for data points inside the $k$-th window
     \;
 
-    calculate $N_k \times M_k$ Jacobian matrix $\tilde{\mathbf{A}}_k$
-    with data points and sources inside the $k$-th window only
+    Calculate Jacobian matrix $\tilde{\mathbf{A}}_k$ with data points and
+    sources inside the $k$-th window
     \;
 
     $\mathbf{B}_k = \tilde{\mathbf{A}}_k \mathbf{S}_k\inv$
@@ -499,14 +520,14 @@ that simulate a ground survey and locating one source below each data point.
     $\hat{\mathbf{c}}_k = \mathbf{S}_k\inv \hat{\mathbf{m}}_k$
     \;
 
-    calculate $ \mathbf{d}_k $, where
+    Calculate $ \mathbf{d}_k $, where
     $
     {d_k}_i
     =
     \sum\limits_{j=1}^{M_k} \dfrac{{c_k}_j}{\left\lVert \mathbf{p}_i -
         {\mathbf{q}_k}_j
     \right\rVert}
-    \ \forall i=1\ \text{to}\ N
+    \quad \forall\ i=1\ \text{to}\ N
     $
     \;
 
@@ -515,7 +536,7 @@ that simulate a ground survey and locating one source below each data point.
   }
   \BlankLine
   \setstretch{1}
-  \caption{Gradient-boosted equivalent source algorithm.}
+  \caption{Gradient-boosted equivalent sources algorithm.}
   \label{alg:gradient_boosting_window}
 \end{algorithm}
 
@@ -548,17 +569,17 @@ locations, specifically the ones that fall on the intersection between the two
 windows.
 We can interpret this as the gradient-boosting algorithm fitting the source
 coefficients multiple times: one time for every window that covers each source.
-This fact can be exploited in order to save some computational memory.
-Instead of storing all of the multiple $\mathbf{c}_k$ vectors
+This fact can be exploited in order to save computer memory.
+Instead of storing all of the $\mathbf{c}_k$ vectors
 (Eq.~\ref{eq:gb-linear-model}), we can initialize a single $\mathbf{c}$ vector
 with zeros, where each element represents the coefficient of each one of the
 original $M$ sources.
 After each iteration of the gradient-boosting algorithm, we add the estimated
 coefficients $\hat{\mathbf{c}}_k$ to the corresponding elements of vector
 $\mathbf{c}$.
-Because the relation between the source coefficients and the effect they
-generate is linear, we can safely compute the resulting field through
-Equation~\ref{eq:eql-forward}.
+Because the forward modelling function is linear, we can safely compute the
+resulting field through Eq.~\ref{eq:eql-forward} instead of
+Eq.~\ref{eq:eql-forward-gb}.
 This way, the memory needed to store the entire set of estimated coefficients
 is limited to a single vector of $M$ elements.
 
@@ -571,6 +592,7 @@ once, allowing the algorithm to self-correct for poor solutions to any given
 window;
 (ii)~we use only data points within the window when fitting, what enables the
 use of larger datasets.
+
 
 
 \subsection{Location of sources}
@@ -639,14 +661,14 @@ are:
   \item
     \emph{Sources below data points}: one equivalent source is placed at the
     horizontal location of each data point (Fig.~\ref{fig:source_layouts}b).
-    Therefore, the number of sources is be equal to the number of observations
-    ($N=M$).
+    Therefore, the number of sources is equal to the number of observations
+    ($M=N$).
   \item
     \emph{Regular grid}: a homogeneous distribution of point sources below the
     survey region (Fig.~\ref{fig:source_layouts}c). A padding region is often
     added to help reduce edge effects. In practice, it often leads to
     underdetermined problems since a large number of sources is required
-    ($N<M$).
+    ($M>N$).
 \end{enumerate}
 
 For ground surveys, the \emph{regular grid} layout needs a sufficiently
@@ -678,8 +700,8 @@ This is done by:
     \item \label{item:median-position} Computing the median horizontal position
         of the observation points that fall inside each block. Blocks without
         any observation point are omitted.
-    \item Assign one point source to the median horizontal position calculated
-        in step \ref{item:median-position}.
+    \item Assign one point source to each of the median horizontal positions
+      calculated in step \ref{item:median-position}.
 \end{enumerate}
 
 The number of sources created by this new layout will be less than the number
@@ -690,10 +712,11 @@ computational load and is less prone to overfitting the data since the model
 complexity is lower.
 Moreover, the block averaging process can balance the spacing between sources
 along a flight line and between adjacent lines, helping to reduce aliasing
-effects in generated grids.
-We will demonstrate through tests on synthetic data that the block-averaged sources
-layout is able to interpolate with comparable accuracy to other layouts while
-using a fraction of the equivalent sources.
+effects in the generated grids.
+In Section~\ref{sec:synthetic_distributions}, we demonstrate through tests on
+synthetic data that the block-averaged sources layout is able to interpolate
+with comparable accuracy to other layouts while using a fraction of the
+equivalent sources.
 
 
 \subsubsection{Depth of sources}
@@ -708,7 +731,7 @@ using a fraction of the equivalent sources.
         data points.
         Source depths are
         (a)~a \emph{constant depth} at a chosen vertical coordinate,
-        (b)~a \emph{relative depth} determined by uniformly downward shifting
+        (b)~a \emph{relative depth} determined by uniformly shifting downward
         the vertical coordinate of data points,
         and
         (c)~a \emph{variable depth} determined by shifting the vertical
@@ -766,7 +789,8 @@ Our approach to the \emph{variable depth} strategy will be:
 \end{equation}
 
 \noindent
-in which $z$ is the depth of an equivalent source,
+in which $z$ is the vertical coordinate (positive downwards) of an equivalent
+source,
 $\Delta z$ is a relative depth shift that is the same for all sources,
 $\alpha$ is an adimensional depth factor,
 $h$ is the median horizontal distance to the $k$ nearest neighbouring sources,
@@ -777,11 +801,11 @@ For \emph{sources below data}, it is the vertical coordinate of the data point
 corresponding to the given source.
 For \emph{regular grid}, it can be interpolated from the vertical coordinates
 of all data points.
-Finally, for \emph{block-averaged sources} it will be the average vertical
-coordinate of data within the corresponding block.
+Finally, for \emph{block-averaged sources} it will be the median vertical
+coordinate of the data within the corresponding block.
 
-In the following sections, we will test the effectiveness and trade-offs of
-each of these strategies on synthetic data.
+In Section~\ref{sec:synthetic_distributions}, we test the effectiveness each of
+these strategies on synthetic data.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1053,6 +1077,7 @@ sizes to compensate.
 \subsection{
     Interpolating synthetic survey with gradient boosting
 }
+\label{sec:gb_interpolation}
 
 Finally we used gradient-boosted equivalent sources to interpolate the
 synthetic airborne survey. We started by locating a set of block-averaged
