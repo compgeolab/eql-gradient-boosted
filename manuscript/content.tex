@@ -377,10 +377,11 @@ steps:
     fall inside the respective window.
     Since the windows overlap, the total number of sources from all sets will
     be greater than $M$.
-  \item Define vector $\mathbf{c}_k$ as the coefficients of the equivalent
-    sources of the $k$-th window.
-  \item Define matrix $\mathbf{A}_k$ as the Jacobian matrix between the sources
-    in the $k$-th window and all $N$ data points of the survey.
+  \item Define vector $\mathbf{c}_k$ as the $M_k$ coefficients of the
+    equivalent sources of the $k$-th window.
+  \item Define matrix $\mathbf{A}_k$ as the $N \times M_k$ Jacobian matrix
+    between the sources in the $k$-th window and all $N$ data points of the
+    survey.
   \item Model the predicted data as a superposition of the effects of the $K$
     separate sets of equivalent sources (i.e., Eq.~\ref{eq:gb-linear-model}).
 \end{enumerate}
@@ -390,18 +391,18 @@ additive model, one at a time, to the residuals of the previous component.
 \citet{friedman2001} demonstrates that this corresponds to a steepest-descent
 optimization in the so-called ``function space''.
 The adaptation of the gradient boosting method to find the damped least-squares
-solutions for the $K$ parameters vectors $\mathbf{c}_k$ in
+solutions for the $K$ parameter vectors $\mathbf{c}_k$ in
 Eq.~\ref{eq:gb-linear-model} is presented in
 Algorithm~\ref{alg:gradient_boosting}.
 
 \begin{algorithm}[!h]
   \DontPrintSemicolon
   \setstretch{1.5}
-  define the residual vector: $\mathbf{r}_{0} = \mathbf{d}^o$ \;
+  Define the residual vector $\mathbf{r}_{0} = \mathbf{d}^o$ \;
   \For{ $k = 1$ \KwTo $K$ }{
 
 
-    calculate $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
+    Calculate the $N \times M_k$ Jacobian matrix $\mathbf{A}_k$
     \;
 
     $\mathbf{B}_k = \mathbf{A}_k \mathbf{S}_k\inv$
@@ -441,11 +442,14 @@ summation
 \begin{equation}
     d(\mathbf{p}) =
     \sum\limits_{k=1}^K \sum\limits_{j=1}^{M_k}
-    \frac{{c_k}_j}{\left\lVert \mathbf{p} - \mathbf{q}_j \right\rVert}
+    \frac{{c_k}_j}{\left\lVert \mathbf{p} - {\mathbf{q}_k}_j \right\rVert}
     \ ,
 \end{equation}
 
-\noindent where ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector.
+\noindent
+in which ${c_k}_j$ is the $j$-th element of the $\mathbf{c}_k$ vector and the
+${\mathbf{q}_k}_j$ is the position vector of the $j$-th source of the $k$-th
+window.
 
 To improve the convergence of the algorithm, \citet{friedman2002} suggests
 introducing randomness into the fitting process. We achieve this by randomizing
