@@ -840,11 +840,11 @@ these strategies on synthetic data.
 
 We have used synthetic gravity datasets to test the interpolation accuracy of
 the difference horizontal and vertical source distribution strategies as well
-as the gradient-boosted equivalent source method.
-To generate the data, we created a model that is made out of \NPrisms{}
-right-rectangular prisms, distributed on a region of
-\ModelEasting{}$\times$\ModelNorthing{} with depths varying between
-\ModelDepth{} and zero.
+as the gradient-boosted equivalent sources method.
+To generate the data, we created a model of \NPrisms{} right-rectangular
+prisms,
+distributed in a \ModelEasting{}$\times$\ModelNorthing{} area with depths
+varying between \ModelDepth{} and zero.
 The density contrast of prisms ranges from \ModelMinDensity{} to
 \ModelMaxDensity{}.
 The model includes prisms of different shapes, sizes, and depths to create
@@ -853,8 +853,8 @@ gravity disturbances with a variety of wavelengths.
 We created two synthetic datasets from the model, one simulating a ground
 survey and another an airborne acquisition (Fig.~\ref{fig:synthetic-layouts}).
 To create the synthetic ground survey, we selected measurement positions from a
-portion of a public domain dataset for Southern Africa, available through the
-NOAA National Centers for Environmental Information (NCEI).
+portion of a public domain gravity dataset for Southern Africa, available
+through the NOAA National Centers for Environmental Information (NCEI).
 For the synthetic airborne survey, we used a portion of the Great Britain
 Aeromagnetic Survey acquired by Hunting Geology and Geophysics Ltd and Canadian
 Aeroservices Ltd between 1955 and 1965 and made publicly available by the
@@ -913,8 +913,8 @@ deviation.
     \label{fig:airborne-survey-differences}
 \end{figure*}
 
-We investigated the effect of different strategies for distributing the
-equivalent sources horizontally and vertically on interpolation accuracy.
+We investigated the effect on interpolation accuracy of different strategies
+for distributing the equivalent sources horizontally and vertically.
 To do this, we used the damped least-squares solution described in
 Section~\ref{sec:eql_inversion} (without gradient boosting) to interpolate the
 synthetic datasets (Fig.~\ref{fig:synthetic-layouts}) and compared the results
