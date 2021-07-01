@@ -977,6 +977,7 @@ relative depth of
 \subsubsection{Window size}
 \label{sec:window_size}
 
+
 The size of the windows controls the size of the Jacobian matrices
 $\tilde{\mathbf{A}}_k$ by limiting the number of data points and equivalent
 sources used in each step of the gradient-boosting algorithm
@@ -1095,21 +1096,19 @@ Worth noting that the RMS error achieved by the gradient-boosted equivalent
 sources is comparable to the values obtained by the regular equivalent sources
 in Section \ref{sec:synthetic_distributions}.
 
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
     \caption{
-        Results of interpolating the airborne synthetic survey with
-        gradient-boosted equivalent sources with overlapping windows being
-        iterated in random order (a and b), and with overlapping windows being
-        iterated in sequential order (c and d).
-        (a and c)~Pseudo-color maps of the differences between the target grid
-        and the interpolated synthetic airborne survey data produced
-        gradient-boosted.
-        (b and d)~Root-mean squared error of the residuals after each iteration
-        of the gradient-boosting algorithm.
+        Interpolation error for gradient-boosted equivalent sources using
+        randomized (a) and sequential (b) window order.
+        (a and b)~Pseudo-color maps of the differences between the target grid
+        and the interpolated synthetic airborne survey data.
+        (c)~Root-mean squared error after each iteration of the
+        gradient-boosting algorithm.
 }
 \label{fig:eql-boost-airborne}
-\end{figure*}
+\end{figure}
+
 
 With the goal of highlighting the importance of randomizing the order in which
 the overlapping windows are iterated, we interpolated the airborne synthetic
