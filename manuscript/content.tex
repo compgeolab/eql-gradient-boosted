@@ -971,7 +971,7 @@ controlling factors: the window size and the amount of overlap between adjacent
 windows.
 The comparisons were performed against a regular least-squares solution
 (Eq.~\ref{eq:least_squares_solution}) using the synthetic airborne data
-(Fig.~\ref{fig:synthetic-layouts}c-d) .
+(Fig.~\ref{fig:synthetic-layouts}c-d).
 To avoid biasing the results, we used the same locations of equivalent sources
 for both the regular and gradient-boosted interpolations, namely
 block-averaged sources with a block size of
@@ -995,17 +995,18 @@ The window size might also impact the computation time in non-intuitive ways
 since smaller windows generate smaller least-squares problems but also require
 more gradient-boosting iterations.
 
-We calculated the interpolation RMS error and computation time for a fixed
-window overlap of 50\% and several window sizes.
+We calculated the interpolation RMS error (between the interpolated grid and
+the target grid in Fig.~\ref{fig:synthetic-target}) and computation time for a
+fixed window overlap of 50\% and several window sizes.
 To avoid any biases introduced by the shuffling of windows, the calculations
 were repeated using different seeds for the pseudo-random number generator used
 in the shuffling.
-Figs.~\ref{fig:gradient-boosted-comparison}a and
-\ref{fig:gradient-boosted-comparison}c show the RMS error and computation time
-required for estimating the source coefficients, respectively, as a function of
+Fig.~\ref{fig:gradient-boosted-comparison}a shows the RMS error and
+Fig.~\ref{fig:gradient-boosted-comparison}c shows the computation time
+required for estimating the source coefficients, both as functions of
 the window size.
 
-The results show that the interpolation error for gradient-boosting is
+These results show that the interpolation error for gradient-boosting is
 generally larger than the error for regular equivalent sources.
 The error decreases asymptotically to within $\sim 40\%$ of the regular
 equivalent sources for windows with an area greater than $\sim 10\%$ of the
