@@ -814,15 +814,11 @@ these strategies on synthetic data.
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/synthetic-survey-layouts.pdf}
     \caption{
-        Maps of the observation locations and gravity values for the synthetic
-        ground and airborne surveys.
-        (a)~Horizontal position and height of the ground survey points.
-        (b)~Synthetic gravity data calculated on the ground survey points with
-        added pseudo-random Gaussian noise.
-        (c)~Horizontal position and height of the airborne survey points.
-        (d)~Synthetic gravity data calculated on the airborne survey points
-        with added pseudo-random Gaussian noise.
+        Observation heights and gravity values for the synthetic ground (a-b)
+        and airborne (c-d) surveys.
         Heights are given in meters above the zero height plane.
+        The synthetic gravity data are contaminated with pseudo-random Gaussian
+        noise with zero mean and \SurveyNoise{} standard deviation.
     }
     \label{fig:synthetic-layouts}
 \end{figure*}
@@ -882,7 +878,6 @@ We then generated synthetic ground (Fig.~\ref{fig:synthetic-layouts}b) and
 airborne (Fig.~\ref{fig:synthetic-layouts}d) data to which we added
 pseudo-random Gaussian noise with zero mean and \SurveyNoise{} standard
 deviation.
-
 
 \subsection{Source distribution strategies}
 \label{sec:synthetic_distributions}
@@ -1071,6 +1066,7 @@ sizes to compensate.
     Interpolating synthetic survey with gradient boosting
 }
 \label{sec:gb_interpolation}
+
 
 Finally we used gradient-boosted equivalent sources to interpolate the
 synthetic airborne survey. We started by locating a set of block-averaged
