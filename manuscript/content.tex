@@ -1064,37 +1064,47 @@ sizes to compensate.
 
 
 \subsection{
-    Interpolating synthetic survey with gradient boosting
+    Interpolation with gradient boosting
 }
 \label{sec:gb_interpolation}
 
+Finally, we applied the gradient-boosted equivalent sources to interpolate the
+synthetic airborne survey (Fig.~\ref{fig:synthetic-layouts}).
+As previously, we used the block-averaged sources layout with a block size of
+\EqlBoostAirborneSpacing{}.
+Based on the results from section \ref{sec:window_size_and_overlap}, we adopted
+a window overlap of 50\% and a window size of \EqlBoostAirborneWindowSize{}.
 
-Finally we used gradient-boosted equivalent sources to interpolate the
-synthetic airborne survey. We started by locating a set of block-averaged
-equivalent sources using a block size of \EqlBoostAirborneSpacing{} and, based
-on the results presented on section \ref{sec:window_size_and_overlap}, we
-decided to use an overlap of 50\% and a window size of
-\EqlBoostAirborneWindowSize{} in order to define a considerable amount of
-windows.
-
-We estimated the \emph{depth} and \emph{damping} parameters by comparing the
-predictions against the values of the target grid, exploring \emph{depth}
-values between \EqlBoostAirborneMinDepth{} and \EqlBoostAirborneMaxDepth{} and
-\emph{damping} values between \EqlBoostAirborneMinDamping{} and
-\EqlBoostAirborneMaxDamping{} by steps of one order of magnitude.
+We estimated the relative depth of the sources and the damping parameter by
+comparing the predictions against the values of the target grid.
+The search explored \emph{depth} values between \EqlBoostAirborneMinDepth{} and
+\EqlBoostAirborneMaxDepth{} and \emph{damping} values between
+\EqlBoostAirborneMinDamping{} and \EqlBoostAirborneMaxDamping{} by steps of one
+order of magnitude.
 The most accurate predictions achieved a RMS error of
 \EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
 a damping of \EqlBoostAirborneDamping{}.
+It is worth noting that the RMS error achieved by the gradient-boosted
+equivalent sources is comparable to the ones obtained by the regular equivalent
+sources in Section \ref{sec:synthetic_distributions}.
+To highlight the importance of randomizing the order of windows in the
+gradient-boosting iterations, we preformed the interpolation once more using
+the same values of \emph{damping} and \emph{depth} but this time iterating over
+windows in sequential order (South to North, West to East).
 
-Figure~\ref{fig:eql-boost-airborne}a shows the differences between the target
-grid and the predictions made by the gradient-boosted equivalent sources.
-Figure~\ref{fig:eql-boost-airborne}b shows the RMS error of the
-residuals after each iteration, exposing how the gradient-boosting algorithm
-converges to a minimum fitting error.
-
-Worth noting that the RMS error achieved by the gradient-boosted equivalent
-sources is comparable to the values obtained by the regular equivalent sources
-in Section \ref{sec:synthetic_distributions}.
+Figs.~\ref{fig:eql-boost-airborne}a-b show the differences between the target
+grid and the interpolation results for windows in randomized and sequential
+order, respectively.
+The differences for randomized windows resemble those for regular least-squares
+equivalent sources seen in Figs.~\ref{fig:ground-survey-differences} and
+\ref{fig:airborne-survey-differences}.
+On the other hand, the differences for sequential windows show a clear
+trend of large negative differences in the South decreasing towards the North.
+This trend is correlated with the order in which windows are executed, with
+differences decreasing in absolute value towards the end of the algorithm.
+Fig.~\ref{fig:eql-boost-airborne}c shows the RMS error of the fitting process
+after each iteration for both window orders, clearly indicating that
+a randomized window order leads to faster convergence of the algorithm.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
@@ -1108,22 +1118,6 @@ in Section \ref{sec:synthetic_distributions}.
 }
 \label{fig:eql-boost-airborne}
 \end{figure}
-
-
-With the goal of highlighting the importance of randomizing the order in which
-the overlapping windows are iterated, we interpolated the airborne synthetic
-survey using the same estimated values for the \emph{damping} and
-\emph{depth} but disabling the random shuffling of the windows, iterating over
-them in sequential order.
-Fig.~\ref{fig:eql-boost-airborne}c shows the differences between the target
-grid and the predictions made by the gradient-boosted equivalent sources
-without random shuffling the windows.
-Fig.~\ref{fig:eql-boost-airborne}d shows the RMS error of the
-residuals after each iteration.
-These results show how the gradient-boosted equivalent sources underperform by
-iterating over the overlapping windows in sequential order: they fail to
-produce realistic and accurate predictions while the speed in which the
-algorithm converges is smaller.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
