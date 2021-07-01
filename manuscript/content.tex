@@ -1142,8 +1142,7 @@ a randomized window order leads to faster convergence of the algorithm.
 \end{figure*}
 
 This section will demonstrate how gradient-boosted equivalent sources can be
-used to interpolate large datasets of gravity data onto a regular grid at
-uniform height.
+used to interpolate large datasets onto regular grids at uniform height.
 For this purpose, we selected an open-access compilation of ground gravity
 surveys over Australia made by \citet{wynne2018} and filtered and referenced to
 the WGS84 ellipsoid by \citet{australia_compilation}.
@@ -1163,84 +1162,65 @@ applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
 using a block size of 1.8\km{}, resulting in a total of
-\AustraliaEqlNSources{}~point sources which depths remain unknown for now.
+\AustraliaEqlNSources{}~point sources.
 The block size was chosen to match the desired resolution of the final grid
- (1~arc-minute is approximately 1.8\km{} at the equator).
-Then we need to determine the size of the windows that will be used for
-estimating the coefficients of the gradient-boosted equivalent sources.
-We computed the amount of computer memory needed in order to store the largest
-Jacobian matrix for different values of window size
+(1~arc-minute is approximately 1.8\km{} at the equator).
+Based on the results obtained in Section~\ref{sec:synthetic_distributions}, we
+have chosen to use the \emph{relative depth} strategy.
+The window overlap was once again fixed at 50\%.
+To determine the size of the windows, we computed the amount of computer memory
+needed to store the largest Jacobian matrix for different values of window size
 (Fig.~\ref{fig:australia-memory-cv-error}a).
-We have chosen a window size of \AustraliaEqlWindowSize{} in order to limit the
+We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
 amount of memory needed to under 16~Gigabytes.
 
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
     \caption{
         (a) Amount of computer memory needed to store the largest Jacobian
-        matrix vs different window sizes. Each memory requirement corresponds
-        to the ammount of memory needed to store the elements of the largest
-        Jacobian matrix during the process of estimating the gradient-boosted
-        equivalent sources coefficients, using a double precision floating
-        point for each (64 bits).
-        (b) Root-mean square errors obtained after the K-Fold cross-validation
+        matrix for different window sizes. Our implementation uses double
+        precision floating point numbers (64 bits) for the Jacobian.
+        (b) K-Fold cross-validation root-mean square errors obtained after the
         for each pair of damping and depth parameters. The orange
-        square highlights the minimum RMS value.
-        (c) Root-mean square error of the residuals after each iteration of the
-        coefficients estimation process.
+        square highlights the minimum.
+        (c) Root-mean square error against the observed data after each
+        iteration of the gradient-boosting algorithm.
     }
     \label{fig:australia-memory-cv-error}
 \end{figure*}
 
-Secondly, we need to determine the depth of the sources and the value for the
-damping parameter. Based on the results obtained in
-Section~\ref{sec:synthetic_distributions}, we have chosen to locate them using
-the \emph{relative depth} strategy.
-In order to determine the values for the \emph{depth} and \emph{damping}
-parameters, we have applied a K-Fold cross-validation method through the
-scikit-learn implementation \citep{sklearn2011}.
-It consists in randomly dividing the original data into $k$ small sets (or
-folds), estimate the source coefficients using only $k - 1$ of the folds
-(training data) and validate the model by comparing its predictions with the
-remaining fold (testing data). This process is carried out once for each one of
-the $k$ folds.
-With the goal of speeding up the computations, we selected a portion of the
-Australia gravity disturbances to run the cross-validation: an area of
+We determined the depth of the sources and the damping parameter by applying
+K-Fold cross-validation through the scikit-learn library \citep{sklearn2011}.
+The method randomly divides the original data into $k$ sets (folds), fits the
+model using only data from $k - 1$ folds, and validates the model by comparing
+its predictions against the one remaining fold.
+This process is carried out once for each one of the $k$ folds, leading to
+an estimated mean cross-validation RMS error for the model.
+To speed up the computation, we only performed the cross-validation on a subset
+of the data corresponding to an area of
 \AustraliaSmallAreaEastingSize{}$\times$\AustraliaSmallAreaNorthingSize{}
 containing \AustraliaSmallAreaNPoints{} points.
-We run the cross-validation with a combination of \emph{depth} ranging from
-\AustraliaDepthMin{} to \AustraliaDepthMax{},
-and \emph{damping} from
-\AustraliaDampingMin{} to \AustraliaDampingMax{} in steps of one order of
-magnitude.
-We have used the root-mean square error as the validation function between the
-testing data and the predictions on each k-fold and computed the mean of all
-the RMS for each combination of the \emph{depth} and \emph{damping} parameters.
-Figure \ref{fig:australia-memory-cv-error}b shows the resulting scores of the
-cross-validation and highlights the minimum value achieved:
-\AustraliaEqlRmsScore{} corresponding to a relative depth of \AustraliaEqlDepth{} and
-a damping equal to \AustraliaEqlDamping{}.
+We ran the cross-validation repeatedly for combinations of \emph{depth},
+ranging from \AustraliaDepthMin{} to \AustraliaDepthMax{},
+and \emph{damping}, from \AustraliaDampingMin{} to \AustraliaDampingMax{} in
+steps of one order of magnitude.
+Figure \ref{fig:australia-memory-cv-error}b shows the resulting
+cross-validation RMS errors and highlights the minimum value of
+\AustraliaEqlRmsScore{}, which corresponds to a relative depth of
+\AustraliaEqlDepth{} and a damping equal to \AustraliaEqlDamping{}.
 
-Finally, we proceed to estimate the coefficients of the whole set of
-gradient-boosted equivalent sources using the parameters previously determined.
-Fig.~\ref{fig:australia-memory-cv-error}c shows the root-mean square of the
-residuals after each iteration of the gradient-boosting algorithm, exposing how
-the algorithm converges at a minimum difference between the gravity disturbance
-data and the predicted values by the equivalent sources.
-We then used the estimated source coefficients to predict the values of the
+Finally, we proceeded to estimate the source coefficients using the entire
+dataset and the parameters previously determined.
+Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
+observed data after each iteration of the algorithm.
+The estimated source coefficients were then used to predict the values of the
 gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid.
 Fig.~\ref{fig:australia} shows the original data distribution and the
-interpolated regular grid.
-Grid points that are further than 50\km{} from the nearest data
-point are masked to avoid unrealistic extrapolations.
-
-Fig.~\ref{fig:australia-residuals} shows the residuals on each observation
-point: the difference between the gravity disturbance data and the predicted
-values by the equivalent sources on the same points.
-The inset figure shows a histogram of the residual values, depicting that the
-residuals are normally distributed around zero.
+interpolated grid.
+Grid points that are further than 50\km{} from the nearest data point are
+masked to avoid unrealistic extrapolations.
 
 The resulting grid preserves the high resolution of the original data while
 avoiding aliasing artifacts due to the block averaging.
@@ -1250,6 +1230,13 @@ performed to have the grid at a constant height.
 On a modest workstation with 16 cores and 16~Gigabytes of RAM,
 estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
 $\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
+
+Fig.~\ref{fig:australia-residuals} shows the difference between the observed
+and predicted gravity disturbances.
+The inset figure shows a histogram of these residuals, which are approximately
+normally distributed around zero.
+The largest residuals are located in regions with high-amplitude
+short-wavelength features in the observed data.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-residuals.png}
