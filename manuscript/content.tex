@@ -1113,6 +1113,8 @@ a randomized window order leads to faster convergence of the algorithm.
         randomized (a) and sequential (b) window order.
         (a and b)~Pseudo-color maps of the differences between the target grid
         and the interpolated synthetic airborne survey data.
+        The color scale has been cropped to the same range as
+        Fig.~\ref{fig:airborne-survey-differences}.
         (c)~Root-mean squared error after each iteration of the
         gradient-boosting algorithm.
 }
@@ -1174,20 +1176,20 @@ needed to store the largest Jacobian matrix for different values of window size
 We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
 amount of memory needed to under 16~Gigabytes.
 
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
     \caption{
         (a) Amount of computer memory needed to store the largest Jacobian
         matrix for different window sizes. Our implementation uses double
         precision floating point numbers (64 bits) for the Jacobian.
-        (b) K-Fold cross-validation root-mean square errors obtained after the
-        for each pair of damping and depth parameters. The orange
-        square highlights the minimum.
-        (c) Root-mean square error against the observed data after each
+        (b) Root-mean square error against the observed data after each
         iteration of the gradient-boosting algorithm.
+        (c) K-Fold cross-validation root-mean square errors obtained for each
+        pair of damping and depth parameters. The orange star highlights the
+        minimum.
     }
     \label{fig:australia-memory-cv-error}
-\end{figure*}
+\end{figure}
 
 We determined the depth of the sources and the damping parameter by applying
 K-Fold cross-validation through the scikit-learn library \citep{sklearn2011}.
