@@ -1262,11 +1262,12 @@ short-wavelength features in the observed data.
 The results of our tests on synthetic data
 (Figs.~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences}) show that there are no significant
-differences between source distribution strategies, both in terms of the
-interpolation RMS errors and from visual inspection of the difference maps.
-Therefore, we argue that all source distribution strategies are able to produce
-comparably accurate interpolations.
-Nevertheless, the \emph{block-averaged sources} strategy make use of fewer
+differences in interpolation accuracy between source distribution strategies,
+both in terms of the interpolation RMS errors and from visual inspection of the
+difference maps.
+Therefore, we conclude that all source distribution strategies are able to
+produce comparable interpolations.
+Nevertheless, the \emph{block-averaged sources} strategy makes use of fewer
 sources when compared with other strategies, which reduces the computational
 load of estimating the sources coefficients and forward modelling.
 To ensure that the interpolation is able to reproduce the high frequencies in
@@ -1305,9 +1306,9 @@ As the windows increase in size, interpolation error decreases because more data
 points are included into the least-squares fitting of the source coefficients.
 At the same time, the fitting process becomes faster because of a reduction in
 the number of iterations.
-Our results indicate that it is desirable to maximize the window size up to the
-point that the Jacobian matrices still fit within the available computer
-memory.
+Our results indicate that it is desirable to maximize the window size,
+which can be done up to the point that the Jacobian matrices still fit within
+the available computer memory.
 
 The results shown in Figs.~\ref{fig:gradient-boosted-comparison}b
 and~\ref{fig:gradient-boosted-comparison}d indicate that using
@@ -1320,7 +1321,7 @@ Finally, the results in Fig.~\ref{fig:eql-boost-airborne} highlight the
 importance of randomizing the order in which the overlapping windows are
 iterated.
 Running the gradient boosting algorithm sequentially produces less accurate
-predictions and decreases the convergence rate.
+predictions and decreases the convergence rate of the method.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
