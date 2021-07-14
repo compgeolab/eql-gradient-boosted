@@ -1213,32 +1213,24 @@ cross-validation RMS errors and highlights the minimum value of
 
 Finally, we proceeded to estimate the source coefficients using the entire
 dataset and the parameters previously determined.
-Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
-observed data after each iteration of the algorithm.
 The estimated source coefficients were then used to predict the values of the
 gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid.
+On a modest workstation with 16 cores and 16~Gigabytes of RAM,
+estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
+$\sim 1.3$~hours and the prediction step took $\sim 18$~minutes.
+
 Fig.~\ref{fig:australia} shows the original data distribution and the
 interpolated grid.
 Grid points that are further than 50\km{} from the nearest data point are
 masked to avoid unrealistic extrapolations.
-
-The resulting grid preserves the high resolution of the original data while
-avoiding aliasing artifacts due to the block averaging.
-Some parts of the grid are smoother and with reduced amplitude (e.g., some
-southwestern parts), which is expected from the upward continuation that was
-performed to have the grid at a constant height.
-On a modest workstation with 16 cores and 16~Gigabytes of RAM,
-estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
-$\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
-
+Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
+observed data after each iteration of the algorithm.
 Fig.~\ref{fig:australia-residuals} shows the difference between the observed
 and predicted gravity disturbances.
 The inset figure shows a histogram of these residuals, which are approximately
 normally distributed around zero.
-The largest residuals are located in regions with high-amplitude
-short-wavelength features in the observed data.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-residuals.png}
@@ -1322,6 +1314,30 @@ importance of randomizing the order in which the overlapping windows are
 iterated.
 Running the gradient boosting algorithm sequentially produces less accurate
 predictions and decreases the convergence rate of the method.
+
+\subsection{Australia gravity data}
+
+The application of the gradient-boosted equivalent sources to the Australian
+gravity dataset demonstrates that the method is able to interpolate and
+upward-continue large datasets in a reasonable amount of time using only modest
+computational resources.
+The resulting grid (Fig.~\ref{fig:australia}) preserves the high resolution of
+the original data while avoiding aliasing artifacts due to the block averaging
+of the source locations.
+Some parts of the grid are smoother and have lower amplitudes than the original
+data (e.g., some southwestern parts), which is expected from the upward
+continuation that was performed to have the grid at a constant height.
+
+The largest residuals in Fig.~\ref{fig:australia-residuals} are located in
+regions with high-amplitude short-wavelength features in the observed data.
+This is expected since the method involves some degree of smoothing because of
+the use of damping and the source depths.
+There are also low-amplitude long-wavelength residual signals that seem to
+coincide with some of the windows of the gradient-boosting method.
+A possible cause of these features is inability of the equivalent-sources
+within a window to adequately fit the long-wavelength components of the data.
+We note, however, that all of these long-wavelength residuals are smaller than
+1 mGal in amplitude and do not represent a significant source of errors.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
