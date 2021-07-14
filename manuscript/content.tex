@@ -814,15 +814,11 @@ these strategies on synthetic data.
 \begin{figure*}
     \includegraphics[width=\linewidth]{figs/synthetic-survey-layouts.pdf}
     \caption{
-        Maps of the observation locations and gravity values for the synthetic
-        ground and airborne surveys.
-        (a)~Horizontal position and height of the ground survey points.
-        (b)~Synthetic gravity data calculated on the ground survey points with
-        added pseudo-random Gaussian noise.
-        (c)~Horizontal position and height of the airborne survey points.
-        (d)~Synthetic gravity data calculated on the airborne survey points
-        with added pseudo-random Gaussian noise.
+        Observation heights and gravity values for the synthetic ground (a-b)
+        and airborne (c-d) surveys.
         Heights are given in meters above the zero height plane.
+        The synthetic gravity data are contaminated with pseudo-random Gaussian
+        noise with zero mean and \SurveyNoise{} standard deviation.
     }
     \label{fig:synthetic-layouts}
 \end{figure*}
@@ -840,11 +836,11 @@ these strategies on synthetic data.
 
 We have used synthetic gravity datasets to test the interpolation accuracy of
 the difference horizontal and vertical source distribution strategies as well
-as the gradient-boosted equivalent source method.
-To generate the data, we created a model that is made out of \NPrisms{}
-right-rectangular prisms, distributed on a region of
-\ModelEasting{}$\times$\ModelNorthing{} with depths varying between
-\ModelDepth{} and zero.
+as the gradient-boosted equivalent sources method.
+To generate the data, we created a model of \NPrisms{} right-rectangular
+prisms,
+distributed in a \ModelEasting{}$\times$\ModelNorthing{} area with depths
+varying between \ModelDepth{} and zero.
 The density contrast of prisms ranges from \ModelMinDensity{} to
 \ModelMaxDensity{}.
 The model includes prisms of different shapes, sizes, and depths to create
@@ -853,8 +849,8 @@ gravity disturbances with a variety of wavelengths.
 We created two synthetic datasets from the model, one simulating a ground
 survey and another an airborne acquisition (Fig.~\ref{fig:synthetic-layouts}).
 To create the synthetic ground survey, we selected measurement positions from a
-portion of a public domain dataset for Southern Africa, available through the
-NOAA National Centers for Environmental Information (NCEI).
+portion of a public domain gravity dataset for Southern Africa, available
+through the NOAA National Centers for Environmental Information (NCEI).
 For the synthetic airborne survey, we used a portion of the Great Britain
 Aeromagnetic Survey acquired by Hunting Geology and Geophysics Ltd and Canadian
 Aeroservices Ltd between 1955 and 1965 and made publicly available by the
@@ -882,7 +878,6 @@ We then generated synthetic ground (Fig.~\ref{fig:synthetic-layouts}b) and
 airborne (Fig.~\ref{fig:synthetic-layouts}d) data to which we added
 pseudo-random Gaussian noise with zero mean and \SurveyNoise{} standard
 deviation.
-
 
 \subsection{Source distribution strategies}
 \label{sec:synthetic_distributions}
@@ -913,8 +908,8 @@ deviation.
     \label{fig:airborne-survey-differences}
 \end{figure*}
 
-We investigated the effect of different strategies for distributing the
-equivalent sources horizontally and vertically on interpolation accuracy.
+We investigated the effect on interpolation accuracy of different strategies
+for distributing the equivalent sources horizontally and vertically.
 To do this, we used the damped least-squares solution described in
 Section~\ref{sec:eql_inversion} (without gradient boosting) to interpolate the
 synthetic datasets (Fig.~\ref{fig:synthetic-layouts}) and compared the results
@@ -971,7 +966,7 @@ controlling factors: the window size and the amount of overlap between adjacent
 windows.
 The comparisons were performed against a regular least-squares solution
 (Eq.~\ref{eq:least_squares_solution}) using the synthetic airborne data
-(Fig.~\ref{fig:synthetic-layouts}c-d) .
+(Fig.~\ref{fig:synthetic-layouts}c-d).
 To avoid biasing the results, we used the same locations of equivalent sources
 for both the regular and gradient-boosted interpolations, namely
 block-averaged sources with a block size of
@@ -981,6 +976,7 @@ relative depth of
 
 \subsubsection{Window size}
 \label{sec:window_size}
+
 
 The size of the windows controls the size of the Jacobian matrices
 $\tilde{\mathbf{A}}_k$ by limiting the number of data points and equivalent
@@ -995,17 +991,37 @@ The window size might also impact the computation time in non-intuitive ways
 since smaller windows generate smaller least-squares problems but also require
 more gradient-boosting iterations.
 
-We calculated the interpolation RMS error and computation time for a fixed
-window overlap of 50\% and several window sizes.
+We calculated the interpolation RMS error (between the interpolated grid and
+the target grid in Fig.~\ref{fig:synthetic-target}) and computation time for a
+fixed window overlap of 50\% and several window sizes.
 To avoid any biases introduced by the shuffling of windows, the calculations
 were repeated using different seeds for the pseudo-random number generator used
 in the shuffling.
-Figs.~\ref{fig:gradient-boosted-comparison}a and
-\ref{fig:gradient-boosted-comparison}c show the RMS error and computation time
-required for estimating the source coefficients, respectively, as a function of
+Fig.~\ref{fig:gradient-boosted-comparison}a shows the RMS error and
+Fig.~\ref{fig:gradient-boosted-comparison}c shows the computation time
+required for estimating the source coefficients, both as functions of
 the window size.
 
-The results show that the interpolation error for gradient-boosting is
+\begin{figure*}
+    \includegraphics[width=\linewidth]{figs/gradient-boosted-comparisons.pdf}
+    \caption{
+        Interpolation RMS error (a-b) and relative computation time (c-d) for
+        regular least-squares equivalent sources (orange dashed lines) and
+        gradient-boosted equivalent sources (blue dots and error bars).
+        Window overlap is given as a percentage of the window size (an overlap
+        of 50\% means that two adjacent windows share an area half of the size
+        of the entire window).
+        For gradient-boosting, the RMS errors and computation times are the
+        means (error bars are 1 standard deviation) of results using different
+        seeds for the pseudo-random number generator.
+        Computation time is the ratio between the time required to estimate the
+        source coefficients for the gradient-boosted and the regular equivalent
+        sources.
+}
+    \label{fig:gradient-boosted-comparison}
+\end{figure*}
+
+These results show that the interpolation error for gradient-boosting is
 generally larger than the error for regular equivalent sources.
 The error decreases asymptotically to within $\sim 40\%$ of the regular
 equivalent sources for windows with an area greater than $\sim 10\%$ of the
@@ -1020,20 +1036,20 @@ stabilize to nearly constant levels.
 
 The amount of overlap between adjacent windows plays an important role in the
 performance of the gradient-boosted equivalent sources.
-It controls the number of iterations and how often a particular source is used
-in the least-squares fitting process.
-While the experiments in the previous section showed that 50\% overlap was
-sufficient to achieve acceptable interpolation accuracy, we separately studied
-the impacts of the amount of window overlap on both accuracy and computation
-time.
+It controls the number of iterations and how many times a particular source is
+used in the least-squares fitting process.
+The experiments in the previous section showed that 50\% overlap was
+sufficient to achieve acceptable interpolation accuracy.
+However, we studied separately the impacts of the amount of window overlap on
+both accuracy and computation time.
 
 We performed a similar experiment to one in section~\ref{sec:window_size} but
 this time kept the window size fixed to \BoostOverlappingWindowSize{} and
 varied the amount of overlap from 0\% to 95\% with a step size of 5\%.
 All other experimental procedures remained unchanged.
-Figs.~\ref{fig:gradient-boosted-comparison}b and
-\ref{fig:gradient-boosted-comparison}d show the RMS error and computation time
-required for estimating the source coefficients, respectively, as a function of
+Fig.~\ref{fig:gradient-boosted-comparison}b shows the RMS error and
+Fig.~\ref{fig:gradient-boosted-comparison}d shows the computation time
+required for estimating the source coefficients, both as functions of
 the window overlap.
 
 Our results show that the interpolation RMS error decreases with the amount of
@@ -1046,96 +1062,64 @@ This is expected since increasing the overlap adds iterations to the gradient
 boosting algorithm without decreasing the individual least-squares problem
 sizes to compensate.
 
-\begin{figure*}
-    \includegraphics[width=\linewidth]{figs/gradient-boosted-comparisons.pdf}
-    \caption{
-        Comparison of the interpolation RMS error and computation time for
-        regular least-squares equivalent sources (orange dashed lines) and
-        gradient-boosted equivalent sources (blue dots and error bars).
-        Both methods used the same source positions (block-averaged sources
-        with a relative depth).
-        Window sizes are given as a percentage of the survey area (e.g., 100\%
-        represents a window with the same area as the survey) and window
-        overlap is given as a percentage of the window size
-        (an overlap of 50\% means that two adjacent windows
-        share an area half of the size of the entire window).
-        Computation time refers to the time required to estimate the source
-        coefficients and is reported as a ratio between the gradient-boosted
-        and the regular equivalent sources.
-        For gradient-boosting, the RMS errors and computation times are the
-        means (error bars represent 1 standard deviation) of results using
-        different seeds for the pseudo-random number generator.
-        (a)~RMS error between the target grid and interpolation results and
-        (b)~RMS error between the target grid and interpolation results and
-        (c)~computation time as a function of window size.
-        (d)~computation time as a function of window overlap.
-}
-    \label{fig:gradient-boosted-comparison}
-\end{figure*}
-
 
 \subsection{
-    Interpolating synthetic survey with gradient boosting
+    Interpolation with gradient boosting
 }
 \label{sec:gb_interpolation}
 
-Finally we used gradient-boosted equivalent sources to interpolate the
-synthetic airborne survey. We started by locating a set of block-averaged
-equivalent sources using a block size of \EqlBoostAirborneSpacing{} and, based
-on the results presented on section \ref{sec:window_size_and_overlap}, we
-decided to use an overlap of 50\% and a window size of
-\EqlBoostAirborneWindowSize{} in order to define a considerable amount of
-windows.
+Finally, we applied the gradient-boosted equivalent sources to interpolate the
+synthetic airborne survey (Fig.~\ref{fig:synthetic-layouts}).
+As previously, we used the block-averaged sources layout with a block size of
+\EqlBoostAirborneSpacing{}.
+Based on the results from section \ref{sec:window_size_and_overlap}, we adopted
+a window overlap of 50\% and a window size of \EqlBoostAirborneWindowSize{}.
 
-We estimated the \emph{depth} and \emph{damping} parameters by comparing the
-predictions against the values of the target grid, exploring \emph{depth}
-values between \EqlBoostAirborneMinDepth{} and \EqlBoostAirborneMaxDepth{} and
-\emph{damping} values between \EqlBoostAirborneMinDamping{} and
-\EqlBoostAirborneMaxDamping{} by steps of one order of magnitude.
+We estimated the relative depth of the sources and the damping parameter by
+comparing the predictions against the values of the target grid.
+The search explored \emph{depth} values between \EqlBoostAirborneMinDepth{} and
+\EqlBoostAirborneMaxDepth{} and \emph{damping} values between
+\EqlBoostAirborneMinDamping{} and \EqlBoostAirborneMaxDamping{} by steps of one
+order of magnitude.
 The most accurate predictions achieved a RMS error of
 \EqlBoostAirborneRmsScore{} with a depth of \EqlBoostAirborneDepth{} and
 a damping of \EqlBoostAirborneDamping{}.
+It is worth noting that the RMS error achieved by the gradient-boosted
+equivalent sources is comparable to the ones obtained by the regular equivalent
+sources in Section \ref{sec:synthetic_distributions}.
+To highlight the importance of randomizing the order of windows in the
+gradient-boosting iterations, we preformed the interpolation once more using
+the same values of \emph{damping} and \emph{depth} but this time iterating over
+windows in sequential order (South to North, West to East).
 
-Figure~\ref{fig:eql-boost-airborne}a shows the differences between the target
-grid and the predictions made by the gradient-boosted equivalent sources.
-Figure~\ref{fig:eql-boost-airborne}b shows the RMS error of the
-residuals after each iteration, exposing how the gradient-boosting algorithm
-converges to a minimum fitting error.
+Figs.~\ref{fig:eql-boost-airborne}a-b show the differences between the target
+grid and the interpolation results for windows in randomized and sequential
+order, respectively.
+The differences for randomized windows resemble those for regular least-squares
+equivalent sources seen in Figs.~\ref{fig:ground-survey-differences} and
+\ref{fig:airborne-survey-differences}.
+On the other hand, the differences for sequential windows show a clear
+trend of large negative differences in the South decreasing towards the North.
+This trend is correlated with the order in which windows are executed, with
+differences decreasing in absolute value towards the end of the algorithm.
+Fig.~\ref{fig:eql-boost-airborne}c shows the RMS error of the fitting process
+after each iteration for both window orders, clearly indicating that
+a randomized window order leads to faster convergence of the algorithm.
 
-Worth noting that the RMS error achieved by the gradient-boosted equivalent
-sources is comparable to the values obtained by the regular equivalent sources
-in Section \ref{sec:synthetic_distributions}.
-
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
     \caption{
-        Results of interpolating the airborne synthetic survey with
-        gradient-boosted equivalent sources with overlapping windows being
-        iterated in random order (a and b), and with overlapping windows being
-        iterated in sequential order (c and d).
-        (a and c)~Pseudo-color maps of the differences between the target grid
-        and the interpolated synthetic airborne survey data produced
-        gradient-boosted.
-        (b and d)~Root-mean squared error of the residuals after each iteration
-        of the gradient-boosting algorithm.
+        Interpolation error for gradient-boosted equivalent sources using
+        randomized (a) and sequential (b) window order.
+        (a and b)~Pseudo-color maps of the differences between the target grid
+        and the interpolated synthetic airborne survey data.
+        The color scale has been cropped to the same range as
+        Fig.~\ref{fig:airborne-survey-differences}.
+        (c)~Root-mean squared error after each iteration of the
+        gradient-boosting algorithm.
 }
 \label{fig:eql-boost-airborne}
-\end{figure*}
-
-With the goal of highlighting the importance of randomizing the order in which
-the overlapping windows are iterated, we interpolated the airborne synthetic
-survey using the same estimated values for the \emph{damping} and
-\emph{depth} but disabling the random shuffling of the windows, iterating over
-them in sequential order.
-Fig.~\ref{fig:eql-boost-airborne}c shows the differences between the target
-grid and the predictions made by the gradient-boosted equivalent sources
-without random shuffling the windows.
-Fig.~\ref{fig:eql-boost-airborne}d shows the RMS error of the
-residuals after each iteration.
-These results show how the gradient-boosted equivalent sources underperform by
-iterating over the overlapping windows in sequential order: they fail to
-produce realistic and accurate predictions while the speed in which the
-algorithm converges is smaller.
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1160,8 +1144,7 @@ algorithm converges is smaller.
 \end{figure*}
 
 This section will demonstrate how gradient-boosted equivalent sources can be
-used to interpolate large datasets of gravity data onto a regular grid at
-uniform height.
+used to interpolate large datasets onto regular grids at uniform height.
 For this purpose, we selected an open-access compilation of ground gravity
 surveys over Australia made by \citet{wynne2018} and filtered and referenced to
 the WGS84 ellipsoid by \citet{australia_compilation}.
@@ -1181,84 +1164,65 @@ applying a Mercator projection.
 
 We start the interpolation process by defining a set of block-averaged sources
 using a block size of 1.8\km{}, resulting in a total of
-\AustraliaEqlNSources{}~point sources which depths remain unknown for now.
+\AustraliaEqlNSources{}~point sources.
 The block size was chosen to match the desired resolution of the final grid
- (1~arc-minute is approximately 1.8\km{} at the equator).
-Then we need to determine the size of the windows that will be used for
-estimating the coefficients of the gradient-boosted equivalent sources.
-We computed the amount of computer memory needed in order to store the largest
-Jacobian matrix for different values of window size
+(1~arc-minute is approximately 1.8\km{} at the equator).
+Based on the results obtained in Section~\ref{sec:synthetic_distributions}, we
+have chosen to use the \emph{relative depth} strategy.
+The window overlap was once again fixed at 50\%.
+To determine the size of the windows, we computed the amount of computer memory
+needed to store the largest Jacobian matrix for different values of window size
 (Fig.~\ref{fig:australia-memory-cv-error}a).
-We have chosen a window size of \AustraliaEqlWindowSize{} in order to limit the
+We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
 amount of memory needed to under 16~Gigabytes.
 
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
     \caption{
         (a) Amount of computer memory needed to store the largest Jacobian
-        matrix vs different window sizes. Each memory requirement corresponds
-        to the ammount of memory needed to store the elements of the largest
-        Jacobian matrix during the process of estimating the gradient-boosted
-        equivalent sources coefficients, using a double precision floating
-        point for each (64 bits).
-        (b) Root-mean square errors obtained after the K-Fold cross-validation
-        for each pair of damping and depth parameters. The orange
-        square highlights the minimum RMS value.
-        (c) Root-mean square error of the residuals after each iteration of the
-        coefficients estimation process.
+        matrix for different window sizes. Our implementation uses double
+        precision floating point numbers (64 bits) for the Jacobian.
+        (b) Root-mean square error against the observed data after each
+        iteration of the gradient-boosting algorithm.
+        (c) K-Fold cross-validation root-mean square errors obtained for each
+        pair of damping and depth parameters. The orange star highlights the
+        minimum.
     }
     \label{fig:australia-memory-cv-error}
-\end{figure*}
+\end{figure}
 
-Secondly, we need to determine the depth of the sources and the value for the
-damping parameter. Based on the results obtained in
-Section~\ref{sec:synthetic_distributions}, we have chosen to locate them using
-the \emph{relative depth} strategy.
-In order to determine the values for the \emph{depth} and \emph{damping}
-parameters, we have applied a K-Fold cross-validation method through the
-scikit-learn implementation \citep{sklearn2011}.
-It consists in randomly dividing the original data into $k$ small sets (or
-folds), estimate the source coefficients using only $k - 1$ of the folds
-(training data) and validate the model by comparing its predictions with the
-remaining fold (testing data). This process is carried out once for each one of
-the $k$ folds.
-With the goal of speeding up the computations, we selected a portion of the
-Australia gravity disturbances to run the cross-validation: an area of
+We determined the depth of the sources and the damping parameter by applying
+K-Fold cross-validation through the scikit-learn library \citep{sklearn2011}.
+The method randomly divides the original data into $k$ sets (folds), fits the
+model using only data from $k - 1$ folds, and validates the model by comparing
+its predictions against the one remaining fold.
+This process is carried out once for each one of the $k$ folds, leading to
+an estimated mean cross-validation RMS error for the model.
+To speed up the computation, we only performed the cross-validation on a subset
+of the data corresponding to an area of
 \AustraliaSmallAreaEastingSize{}$\times$\AustraliaSmallAreaNorthingSize{}
 containing \AustraliaSmallAreaNPoints{} points.
-We run the cross-validation with a combination of \emph{depth} ranging from
-\AustraliaDepthMin{} to \AustraliaDepthMax{},
-and \emph{damping} from
-\AustraliaDampingMin{} to \AustraliaDampingMax{} in steps of one order of
-magnitude.
-We have used the root-mean square error as the validation function between the
-testing data and the predictions on each k-fold and computed the mean of all
-the RMS for each combination of the \emph{depth} and \emph{damping} parameters.
-Figure \ref{fig:australia-memory-cv-error}b shows the resulting scores of the
-cross-validation and highlights the minimum value achieved:
-\AustraliaEqlRmsScore{} corresponding to a relative depth of \AustraliaEqlDepth{} and
-a damping equal to \AustraliaEqlDamping{}.
+We ran the cross-validation repeatedly for combinations of \emph{depth},
+ranging from \AustraliaDepthMin{} to \AustraliaDepthMax{},
+and \emph{damping}, from \AustraliaDampingMin{} to \AustraliaDampingMax{} in
+steps of one order of magnitude.
+Figure \ref{fig:australia-memory-cv-error}b shows the resulting
+cross-validation RMS errors and highlights the minimum value of
+\AustraliaEqlRmsScore{}, which corresponds to a relative depth of
+\AustraliaEqlDepth{} and a damping equal to \AustraliaEqlDamping{}.
 
-Finally, we proceed to estimate the coefficients of the whole set of
-gradient-boosted equivalent sources using the parameters previously determined.
-Fig.~\ref{fig:australia-memory-cv-error}c shows the root-mean square of the
-residuals after each iteration of the gradient-boosting algorithm, exposing how
-the algorithm converges at a minimum difference between the gravity disturbance
-data and the predicted values by the equivalent sources.
-We then used the estimated source coefficients to predict the values of the
+Finally, we proceeded to estimate the source coefficients using the entire
+dataset and the parameters previously determined.
+Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
+observed data after each iteration of the algorithm.
+The estimated source coefficients were then used to predict the values of the
 gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid.
 Fig.~\ref{fig:australia} shows the original data distribution and the
-interpolated regular grid.
-Grid points that are further than 50\km{} from the nearest data
-point are masked to avoid unrealistic extrapolations.
-
-Fig.~\ref{fig:australia-residuals} shows the residuals on each observation
-point: the difference between the gravity disturbance data and the predicted
-values by the equivalent sources on the same points.
-The inset figure shows a histogram of the residual values, depicting that the
-residuals are normally distributed around zero.
+interpolated grid.
+Grid points that are further than 50\km{} from the nearest data point are
+masked to avoid unrealistic extrapolations.
 
 The resulting grid preserves the high resolution of the original data while
 avoiding aliasing artifacts due to the block averaging.
@@ -1268,6 +1232,13 @@ performed to have the grid at a constant height.
 On a modest workstation with 16 cores and 16~Gigabytes of RAM,
 estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
 $\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
+
+Fig.~\ref{fig:australia-residuals} shows the difference between the observed
+and predicted gravity disturbances.
+The inset figure shows a histogram of these residuals, which are approximately
+normally distributed around zero.
+The largest residuals are located in regions with high-amplitude
+short-wavelength features in the observed data.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-residuals.png}
