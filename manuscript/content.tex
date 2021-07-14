@@ -1206,7 +1206,7 @@ We ran the cross-validation repeatedly for combinations of \emph{depth},
 ranging from \AustraliaDepthMin{} to \AustraliaDepthMax{},
 and \emph{damping}, from \AustraliaDampingMin{} to \AustraliaDampingMax{} in
 steps of one order of magnitude.
-Figure \ref{fig:australia-memory-cv-error}b shows the resulting
+Figure \ref{fig:australia-memory-cv-error}c shows the resulting
 cross-validation RMS errors and highlights the minimum value of
 \AustraliaEqlRmsScore{}, which corresponds to a relative depth of
 \AustraliaEqlDepth{} and a damping equal to \AustraliaEqlDamping{}.
@@ -1225,7 +1225,7 @@ Fig.~\ref{fig:australia} shows the original data distribution and the
 interpolated grid.
 Grid points that are further than 50\km{} from the nearest data point are
 masked to avoid unrealistic extrapolations.
-Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
+Fig.~\ref{fig:australia-memory-cv-error}b shows the RMS error against the
 observed data after each iteration of the algorithm.
 Fig.~\ref{fig:australia-residuals} shows the difference between the observed
 and predicted gravity disturbances.
@@ -1338,6 +1338,14 @@ A possible cause of these features is inability of the equivalent-sources
 within a window to adequately fit the long-wavelength components of the data.
 We note, however, that all of these long-wavelength residuals are smaller than
 1 mGal in amplitude and do not represent a significant source of errors.
+
+The elongated valley around the minimum of the cross-validation RMS errors
+(Fig.~\ref{fig:australia-memory-cv-error}c) shows that there is ambiguity in
+the choice of damping and source depths.
+One could choose a large damping with a small depth or a small damping with a
+large depth to achieve roughly the same interpolation result.
+This is expected since both parameters control the smoothness of the
+interpolation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
