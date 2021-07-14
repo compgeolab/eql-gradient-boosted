@@ -1359,28 +1359,29 @@ the observations and that the interpolated values will always be harmonic
 functions.
 The main challenge of using equivalent sources in practice is the high
 computational load of estimating the coefficients of the equivalent sources,
-specially on the computer memory needed to store the Jacobian matrix.
-In this work we present two strategies that could be simultaneously applied in
-order to interpolate very large datasets (millions of points) in reasonable
-computation times on modest hardware:
-block-averaging source locations, which reduce the number of equivalent sources
-needed for the interpolation,
+specially the computer memory needed to store the Jacobian matrix.
+
+We present two strategies that could be simultaneously applied to interpolate
+datasets with millions of points on modest hardware:
+block-averaging source locations, which reduces the number of equivalent
+sources needed for the interpolation,
 and the gradient-boosted equivalent source algorithm, which breaks down the
 inverse problem into smaller sets of equivalent sources defined by overlapping
 windows.
 Both methods were tested against synthetic datasets in order to compare their
-accuracy and how they perform in terms of computational resources.
+accuracy and how they perform in terms of computational efficiency.
 
 Our results show that the block-averaged sources reduce the computational
-load needed to estimate source coefficients in comparison to the two traditional
-strategies of placing sources below data points or on regular grids.
-We also showed that this reduction of the number of sources does not affect
+load needed to estimate source coefficients in comparison to two traditional
+strategies (placing sources below data points or on regular grids).
+We also show that this reduction of the number of sources does not affect
 the accuracy of the predictions.
 The use of block-averaged sources may also prevent aliasing of the interpolated
 values, specially when the observations are unevenly sampled (e.g., airborne
 and shipborne surveys).
 Special attention must be payed when choosing the size of the blocks for
-averaging: as a thumb rule, we recommend choosing a size approximately equal to
+averaging.
+As a thumb rule, we recommend choosing a size approximately equal to
 the resolution of the regular grid where the values will be interpolated.
 
 Tests that compared strategies for the vertical location of the
@@ -1398,18 +1399,18 @@ interpolate large datasets with millions of points that would otherwise produce
 Jacobian matrices larger than the available memory.
 The interpolations obtained though this new method achieve close to the same
 accuracy than the regular equivalent sources, while reducing the computation
-time needed to estimate the source coefficients by approximately three times.
+time by approximately a factor of three.
 We also show that an overlap of 50\% between adjacent windows achieves a good
 compromise between accuracy and computation time.
 The size of the overlapping windows should be chosen as the maximum value
 possible that creates Jacobian matrices that still fit into computer memory.
-Moreover, randomizing the order in which the overlapping windows are iterated
-is essential to improve the quality of the predictions and increase
-the convergence rate of the algorithm.
+Moreover, randomizing the order in which the windows are iterated increases the
+convergence rate of the algorithm and is essential to producing accurate
+predictions.
 
-The gradient-boosting method developed here can be used in conjunction with any
-horizontal source layout, depth strategy, or source type (e.g., point sources,
-prisms, tesseroids) because it does not rely on assumptions about the sources.
+The gradient-boosting method can be used in conjunction with any horizontal
+source layout, depth strategy, or source type (e.g., point sources, prisms,
+tesseroids) because it does not rely on assumptions about the sources.
 Future research should investigate the application of gradient boosting to
 other equivalent source methods.
 
