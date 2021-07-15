@@ -879,6 +879,7 @@ airborne (Fig.~\ref{fig:synthetic-layouts}d) data to which we added
 pseudo-random Gaussian noise with zero mean and \SurveyNoise{} standard
 deviation.
 
+
 \subsection{Source distribution strategies}
 \label{sec:synthetic_distributions}
 
@@ -976,7 +977,6 @@ relative depth of
 
 \subsubsection{Window size}
 \label{sec:window_size}
-
 
 The size of the windows controls the size of the Jacobian matrices
 $\tilde{\mathbf{A}}_k$ by limiting the number of data points and equivalent
@@ -1206,39 +1206,31 @@ We ran the cross-validation repeatedly for combinations of \emph{depth},
 ranging from \AustraliaDepthMin{} to \AustraliaDepthMax{},
 and \emph{damping}, from \AustraliaDampingMin{} to \AustraliaDampingMax{} in
 steps of one order of magnitude.
-Figure \ref{fig:australia-memory-cv-error}b shows the resulting
+Figure \ref{fig:australia-memory-cv-error}c shows the resulting
 cross-validation RMS errors and highlights the minimum value of
 \AustraliaEqlRmsScore{}, which corresponds to a relative depth of
 \AustraliaEqlDepth{} and a damping equal to \AustraliaEqlDamping{}.
 
 Finally, we proceeded to estimate the source coefficients using the entire
 dataset and the parameters previously determined.
-Fig.~\ref{fig:australia-memory-cv-error}c shows the RMS error against the
-observed data after each iteration of the algorithm.
 The estimated source coefficients were then used to predict the values of the
 gravity disturbance on a regular grid of
 \AustraliaEqlGridNLongitude{}$\times$\AustraliaEqlGridNLatitude{} points at
 \AustraliaEqlGridHeight{} above the ellipsoid.
+On a modest workstation with 16 cores and 16~Gigabytes of RAM,
+estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
+$\sim 1.3$~hours and the prediction step took $\sim 18$~minutes.
+
 Fig.~\ref{fig:australia} shows the original data distribution and the
 interpolated grid.
 Grid points that are further than 50\km{} from the nearest data point are
 masked to avoid unrealistic extrapolations.
-
-The resulting grid preserves the high resolution of the original data while
-avoiding aliasing artifacts due to the block averaging.
-Some parts of the grid are smoother and with reduced amplitude (e.g., some
-southwestern parts), which is expected from the upward continuation that was
-performed to have the grid at a constant height.
-On a modest workstation with 16 cores and 16~Gigabytes of RAM,
-estimating the \AustraliaEqlNSources{} coefficients with gradient-boosting took
-$\sim 1.3$~hours and the forward modelling step took $\sim 18$~minutes.
-
+Fig.~\ref{fig:australia-memory-cv-error}b shows the RMS error against the
+observed data after each iteration of the algorithm.
 Fig.~\ref{fig:australia-residuals} shows the difference between the observed
 and predicted gravity disturbances.
 The inset figure shows a histogram of these residuals, which are approximately
 normally distributed around zero.
-The largest residuals are located in regions with high-amplitude
-short-wavelength features in the observed data.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figs/australia-residuals.png}
@@ -1262,11 +1254,12 @@ short-wavelength features in the observed data.
 The results of our tests on synthetic data
 (Figs.~\ref{fig:ground-survey-differences}
 and~\ref{fig:airborne-survey-differences}) show that there are no significant
-differences between source distribution strategies, both in terms of the
-interpolation RMS errors and from visual inspection of the difference maps.
-Therefore, we argue that all source distribution strategies are able to produce
-comparably accurate interpolations.
-Nevertheless, the \emph{block-averaged sources} strategy make use of fewer
+differences in interpolation accuracy between source distribution strategies,
+both in terms of the interpolation RMS errors and from visual inspection of the
+difference maps.
+Therefore, we conclude that all source distribution strategies are able to
+produce comparable interpolations.
+Nevertheless, the \emph{block-averaged sources} strategy makes use of fewer
 sources when compared with other strategies, which reduces the computational
 load of estimating the sources coefficients and forward modelling.
 To ensure that the interpolation is able to reproduce the high frequencies in
@@ -1305,9 +1298,9 @@ As the windows increase in size, interpolation error decreases because more data
 points are included into the least-squares fitting of the source coefficients.
 At the same time, the fitting process becomes faster because of a reduction in
 the number of iterations.
-Our results indicate that it is desirable to maximize the window size up to the
-point that the Jacobian matrices still fit within the available computer
-memory.
+Our results indicate that it is desirable to maximize the window size,
+which can be done up to the point that the Jacobian matrices still fit within
+the available computer memory.
 
 The results shown in Figs.~\ref{fig:gradient-boosted-comparison}b
 and~\ref{fig:gradient-boosted-comparison}d indicate that using
@@ -1320,7 +1313,41 @@ Finally, the results in Fig.~\ref{fig:eql-boost-airborne} highlight the
 importance of randomizing the order in which the overlapping windows are
 iterated.
 Running the gradient boosting algorithm sequentially produces less accurate
-predictions and decreases the convergence rate.
+predictions and decreases the convergence rate of the method.
+
+\subsection{Australia gravity data}
+
+The application of the gradient-boosted equivalent sources to the Australian
+gravity dataset demonstrates that the method is able to interpolate and
+upward-continue large datasets in a reasonable amount of time using only modest
+computational resources.
+The resulting grid (Fig.~\ref{fig:australia}) preserves the high resolution of
+the original data while avoiding aliasing artifacts due to the block averaging
+of the source locations.
+Some parts of the grid are smoother and have lower amplitudes than the original
+data (e.g., some southwestern parts), which is expected from the upward
+continuation that was performed to have the grid at a constant height.
+From the cross-validation analysis on a subset of the data, we estimate that
+the interpolation error is approximately \AustraliaEqlRmsScore{}.
+
+The largest residuals in Fig.~\ref{fig:australia-residuals} are located in
+regions with high-amplitude short-wavelength features in the observed data.
+This is expected since the method involves some degree of smoothing because of
+the use of damping and the source depths.
+There are also low-amplitude long-wavelength residual signals that seem to
+coincide with some of the windows of the gradient-boosting method.
+A possible cause of these features is inability of the equivalent-sources
+within a window to adequately fit the long-wavelength components of the data.
+We note, however, that all of these long-wavelength residuals are smaller than
+1 mGal in amplitude and do not represent a significant source of errors.
+
+The elongated valley around the minimum of the cross-validation RMS errors
+(Fig.~\ref{fig:australia-memory-cv-error}c) shows that there is ambiguity in
+the choice of damping and source depths.
+One could choose a large damping with a small depth or a small damping with a
+large depth to achieve roughly the same interpolation result.
+This is expected since both parameters control the smoothness of the
+interpolation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1334,28 +1361,29 @@ the observations and that the interpolated values will always be harmonic
 functions.
 The main challenge of using equivalent sources in practice is the high
 computational load of estimating the coefficients of the equivalent sources,
-specially on the computer memory needed to store the Jacobian matrix.
-In this work we present two strategies that could be simultaneously applied in
-order to interpolate very large datasets (millions of points) in reasonable
-computation times on modest hardware:
-block-averaging source locations, which reduce the number of equivalent sources
-needed for the interpolation,
+specially the computer memory needed to store the Jacobian matrix.
+
+We present two strategies that could be simultaneously applied to interpolate
+datasets with millions of points on modest hardware:
+block-averaging source locations, which reduces the number of equivalent
+sources needed for the interpolation,
 and the gradient-boosted equivalent source algorithm, which breaks down the
 inverse problem into smaller sets of equivalent sources defined by overlapping
 windows.
 Both methods were tested against synthetic datasets in order to compare their
-accuracy and how they perform in terms of computational resources.
+accuracy and how they perform in terms of computational efficiency.
 
 Our results show that the block-averaged sources reduce the computational
-load needed to estimate source coefficients in comparison to the two traditional
-strategies of placing sources below data points or on regular grids.
-We also showed that this reduction of the number of sources does not affect
+load needed to estimate source coefficients in comparison to two traditional
+strategies (placing sources below data points or on regular grids).
+We also show that this reduction of the number of sources does not affect
 the accuracy of the predictions.
 The use of block-averaged sources may also prevent aliasing of the interpolated
 values, specially when the observations are unevenly sampled (e.g., airborne
 and shipborne surveys).
 Special attention must be payed when choosing the size of the blocks for
-averaging: as a thumb rule, we recommend choosing a size approximately equal to
+averaging.
+As a thumb rule, we recommend choosing a size approximately equal to
 the resolution of the regular grid where the values will be interpolated.
 
 Tests that compared strategies for the vertical location of the
@@ -1373,18 +1401,18 @@ interpolate large datasets with millions of points that would otherwise produce
 Jacobian matrices larger than the available memory.
 The interpolations obtained though this new method achieve close to the same
 accuracy than the regular equivalent sources, while reducing the computation
-time needed to estimate the source coefficients by approximately three times.
+time by approximately a factor of three.
 We also show that an overlap of 50\% between adjacent windows achieves a good
 compromise between accuracy and computation time.
 The size of the overlapping windows should be chosen as the maximum value
 possible that creates Jacobian matrices that still fit into computer memory.
-Moreover, randomizing the order in which the overlapping windows are iterated
-is essential to improve the quality of the predictions and increase
-the convergence rate of the algorithm.
+Moreover, randomizing the order in which the windows are iterated increases the
+convergence rate of the algorithm and is essential to producing accurate
+predictions.
 
-The gradient-boosting method developed here can be used in conjunction with any
-horizontal source layout, depth strategy, or source type (e.g., point sources,
-prisms, tesseroids) because it does not rely on assumptions about the sources.
+The gradient-boosting method can be used in conjunction with any horizontal
+source layout, depth strategy, or source type (e.g., point sources, prisms,
+tesseroids) because it does not rely on assumptions about the sources.
 Future research should investigate the application of gradient boosting to
 other equivalent source methods.
 
@@ -1438,9 +1466,10 @@ was filtered and referenced to the WGS84 ellipsoid by
 
 We are indebted to the developers and maintainers of the open-source software
 without which this work would not have been possible.
+We would also like to thank Editor Frederik Simons, Assistant Editor Fern
+Storey, and two anonymous reviewers for their constructive comments.
 S.R. Soler is supported by a scholarship from CONICET, Argentina.
 This work contains British Geological Survey materials ©~UKRI.
-
 S.R. Soler and L. Uieda jointly developed the initial idea, analysed the
 results, and wrote the paper. S.R. Soler produced all results and developed the
-software implementation with minor revisions by L. Uieda.
+software implementation with the assistance of L. Uieda.
