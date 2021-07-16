@@ -61,8 +61,9 @@ attempting to obtain faster or more accurate solutions.
 The key factors that vary between them are: (i) the type of source, (ii)
 the location of the sources, and (iii) the solution strategy.
 
-The type of source is most commonly a point mass for gravity or dipole for
-magnetics \citep[e.g.,~][]{vonfrese1981, silva1986, mendonca1994, siqueira2017}.
+The most commonly used type of source is a point mass for gravity or dipole for
+magnetics \citep[e.g.,~][]{vonfrese1981, silva1986, mendonca1994,
+siqueira2017}.
 However, right-rectangular prisms \citep[e.g.,][]{barnes2011, jirigalatu2019,
 li2020} and tesseroids \citep{bouman2016} have also been used successfully.
 In fact, even point sources with a simple inverse distance function, instead of
@@ -1043,8 +1044,8 @@ sufficient to achieve acceptable interpolation accuracy.
 However, we studied separately the impacts of the amount of window overlap on
 both accuracy and computation time.
 
-We performed a similar experiment to one in section~\ref{sec:window_size} but
-this time kept the window size fixed to \BoostOverlappingWindowSize{} and
+We performed a similar experiment to the one in section~\ref{sec:window_size}
+but this time kept the window size fixed to \BoostOverlappingWindowSize{} and
 varied the amount of overlap from 0\% to 95\% with a step size of 5\%.
 All other experimental procedures remained unchanged.
 Fig.~\ref{fig:gradient-boosted-comparison}b shows the RMS error and
@@ -1170,7 +1171,7 @@ The block size was chosen to match the desired resolution of the final grid
 Based on the results obtained in Section~\ref{sec:synthetic_distributions}, we
 have chosen to use the \emph{relative depth} strategy.
 The window overlap was once again fixed at 50\%.
-To determine the size of the windows, we computed the amount of computer memory
+To determine the size of the windows, we calculated the amount of computer memory
 needed to store the largest Jacobian matrix for different values of window size
 (Fig.~\ref{fig:australia-memory-cv-error}a).
 We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
