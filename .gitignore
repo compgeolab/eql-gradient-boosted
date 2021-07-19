@@ -16,3 +16,4 @@ MANIFEST
 *.bak
 *.sav
 _output
+manuscript/*diff*.tex
