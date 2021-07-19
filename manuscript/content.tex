@@ -1178,7 +1178,14 @@ We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
 amount of memory needed to under 16~Gigabytes.
 
 \begin{figure}
-    \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
+    \makeatletter%
+    \if@twocolumn%
+        \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
+    \else% \@twocolumnfalse
+        \centering
+        \includegraphics[width=0.6\linewidth]{figs/australia-memory-cv-error.pdf}
+    \fi
+    \makeatother
     \caption{
         (a) Amount of computer memory needed to store the largest Jacobian
         matrix for different window sizes. Our implementation uses double
