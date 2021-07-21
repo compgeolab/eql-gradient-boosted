@@ -10,9 +10,17 @@ OUTDIR = _output
 PREPRINT_PDF = $(OUTDIR)/$(PREPRINT).pdf
 GJI_PDF = $(OUTDIR)/$(GJI).pdf
 
+# Latex compiler and pdfviewer
 LATEX_COMPILER = latexmk
 LATEX_FLAGS = -pdf -outdir=$(OUTDIR)
 PDFVIEWER = xdg-open
+
+# Variables for generating the diffs against older versions
+SUBMITTED_V1 = submitted-v1
+DIFFS_SUBMITTED_V1 = gji-diffsubmitted-v1
+DIFFS_SUBMITTED_V1_PDF = $(OUTDIR)/$(DIFFS_SUBMITTED_V1).pdf
+LATEXDIFF_VC = latexdiff-vc
+LATEXDIFF_VC_FLAGS = --git --flatten --disable-citation-markup
 
 
 all: preprint gji
@@ -22,7 +30,7 @@ preprint: $(PREPRINT_PDF)
 gji: $(GJI_PDF)
 
 clean:
-	rm -rf $(OUTDIR)
+	rm -rf $(OUTDIR) *diffs*.tex
 
 word-count:
 	texcount -merge $(PREPRINT).tex
@@ -39,3 +47,18 @@ $(PREPRINT_PDF): $(PREPRINT).tex $(TEX_FILES) $(RESULTS)
 
 $(GJI_PDF): $(GJI).tex $(TEX_FILES) $(RESULTS)
 	$(LATEX_COMPILER) $(LATEX_FLAGS) $<
+
+
+# diffs
+# -----
+
+show-diffs-submitted-v1: diffs-submitted-v1
+	@( $(PDFVIEWER) $(DIFFS_SUBMITTED_V1_PDF) 2> /dev/null; )
+
+diffs-submitted-v1: $(DIFFS_SUBMITTED_V1_PDF)
+
+$(DIFFS_SUBMITTED_V1_PDF): $(DIFFS_SUBMITTED_V1).tex
+	$(LATEX_COMPILER) $(LATEX_FLAGS) $<
+
+$(DIFFS_SUBMITTED_V1).tex: $(GJI).tex
+	$(LATEXDIFF_VC) $(LATEXDIFF_VC_FLAGS) -r $(SUBMITTED_V1) $<
