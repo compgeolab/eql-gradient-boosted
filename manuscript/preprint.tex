@@ -1,10 +1,14 @@
+% Template for an EarthArXiv preprint of the manuscript.
+% Includes the standard disclaimers and formatting that is required.
+%
 \documentclass[twocolumn,10pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{amssymb}
+\usepackage[english]{babel}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[longend,linesnumbered,ruled]{algorithm2e}
-\usepackage[pdftex,colorlinks=true]{hyperref}
+\usepackage[colorlinks=true]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{orcidlink}
 
@@ -16,12 +20,14 @@
 % Import natbib and doi packages
 \usepackage[round,authoryear,sort]{natbib}
 \usepackage{doi} % show dois as links on references
+\usepackage{natbibspacing} % Remove extra space between references
 
 % Define style for urls
 \urlstyle{same}
 
 % Configure column separation and page geometry
-\usepackage[hmargin=2cm,vmargin=2.9cm]{geometry}
+\usepackage[a4paper,margin=1cm,includeheadfoot,footskip=0mm,headheight=3mm,headsep=7.5mm]{geometry}
+\setlength{\columnsep}{0.5cm}
 
 % Import variables
 \input{variables.tex}
@@ -49,26 +55,20 @@
 
 % Configure header and footer
 % ===========================
-\newcommand{\Footer}{%
+\newcommand{\Header}{%
   \Author{} (\the\year{}). \Title{}. EarthArXiv.
   doi:\href{https://doi.org/\PreprintDOI}{\PreprintDOI}
-}
-\newcommand{\Header}{%
-    This is a non-peer reviewed preprint submitted to EarthArXiv
 }
 
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{\Header{}}
-\rfoot{\thepage}
-\lfoot{\Footer{}}
-\renewcommand{\footrulewidth}{0.1pt}
+\rhead{\small \thepage}
 \renewcommand{\headrulewidth}{0.1pt}
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \rfoot{\thepage}
-  \lfoot{\Footer{}}
-  \renewcommand{\footrulewidth}{0.1pt}
+  \rfoot{}
+  \lfoot{}
   \renewcommand{\headrulewidth}{0pt}
 }
 
