@@ -4,24 +4,19 @@ by
 [Santiago Soler](https://santisoler.github.io)
 and [Leonardo Uieda](https://leouieda.com)
 
-This paper has been submitted for publication in *Geophysical Journal
-International*.
 
-<!-- After publication -->
-
-<!--
 This paper has been published in *Geophysical Journal International*.
 The version of record
 
 > Soler, S. R. and Uieda, L. (2021).
 > Gradient-boosted equivalent sources,
 > _Geophysical Journal International_.
-> doi: [xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
+> doi: [10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
-is available online at: [doi.org/xx.xxxx/xxxxxx](https://doi.org/xx.xxxx/xxxxxx)
--->
+is available online at: [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
-A preprint version is available on EarthArXiv at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
+A pre-copyedited, author-produced PDF of an article is available on EarthArXiv
+at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
 
 **This repository contains the data and code used to produce all results and figures shown
 in the paper.**
@@ -37,7 +32,6 @@ modest personal computers, without the high computer memory needs of the
 classical equivalent sources technique.
 This new method is inspired by the gradient-boosting technique, mainly used in machine learning solutions.
 
-<!-- Include an abstract figure with caption -->
 ![](presentations/visual-abstract/visual-abstract.jpg)
 
 ## Abstract
