@@ -541,7 +541,7 @@ locating one source below each data point.
   \label{alg:gradient_boosting_window}
 \end{algorithm}
 
-\begin{figure*}
+\begin{figure*}[tb]
     \centering
     \includegraphics[width=\linewidth]{figs/gradient-boosting-schematics.pdf}
     \caption{
@@ -634,7 +634,7 @@ gridded products.
 
 \subsubsection{Horizontal source layouts}
 
-\begin{figure*}
+\begin{figure*}[tb]
     \includegraphics[width=\linewidth]{figs/source-layouts-schematics.pdf}
     \caption{
         Sketch of different horizontal layouts for equivalent source models.
@@ -722,7 +722,7 @@ equivalent sources.
 
 \subsubsection{Depth of sources}
 
-\begin{figure*}
+\begin{figure*}[tb]
     \includegraphics[width=\linewidth]{figs/depth_types.pdf}
     \caption{
         Examples of different strategies for assigning depths to equivalent
@@ -812,7 +812,7 @@ these strategies on synthetic data.
 
 \section{Tests on synthetic data}
 
-\begin{figure*}
+\begin{figure*}[tb]
     \includegraphics[width=\linewidth]{figs/synthetic-survey-layouts.pdf}
     \caption{
         Observation heights and gravity values for the synthetic ground (a-b)
@@ -824,7 +824,7 @@ these strategies on synthetic data.
     \label{fig:synthetic-layouts}
 \end{figure*}
 
-\begin{figure}
+\begin{figure}[tb]
     \includegraphics[width=\linewidth]{figs/target-grid.pdf}
     \caption{
         Pseudo-color map of the target grid of synthetic gravity data. The grid
@@ -884,7 +884,7 @@ deviation.
 \subsection{Source distribution strategies}
 \label{sec:synthetic_distributions}
 
-\begin{figure*}
+\begin{figure*}[p]
     \includegraphics[width=\linewidth]{figs/ground_survey_differences.pdf}
     \caption{
         Pseudo-color maps of the differences between the target grid and the
@@ -897,7 +897,7 @@ deviation.
     \label{fig:ground-survey-differences}
 \end{figure*}
 
-\begin{figure*}
+\begin{figure*}[p]
     \includegraphics[width=\linewidth]{figs/airborne_survey_differences.pdf}
     \caption{
         Pseudo-color maps of the differences between the target grid and the
@@ -1003,7 +1003,7 @@ Fig.~\ref{fig:gradient-boosted-comparison}c shows the computation time
 required for estimating the source coefficients, both as functions of
 the window size.
 
-\begin{figure*}
+\begin{figure*}[tb]
     \includegraphics[width=\linewidth]{figs/gradient-boosted-comparisons.pdf}
     \caption{
         Interpolation RMS error (a-b) and relative computation time (c-d) for
@@ -1093,21 +1093,7 @@ gradient-boosting iterations, we preformed the interpolation once more using
 the same values of \emph{damping} and \emph{depth} but this time iterating over
 windows in sequential order (South to North, West to East).
 
-Figs.~\ref{fig:eql-boost-airborne}a-b show the differences between the target
-grid and the interpolation results for windows in randomized and sequential
-order, respectively.
-The differences for randomized windows resemble those for regular least-squares
-equivalent sources seen in Figs.~\ref{fig:ground-survey-differences} and
-\ref{fig:airborne-survey-differences}.
-On the other hand, the differences for sequential windows show a clear
-trend of large negative differences in the South decreasing towards the North.
-This trend is correlated with the order in which windows are executed, with
-differences decreasing in absolute value towards the end of the algorithm.
-Fig.~\ref{fig:eql-boost-airborne}c shows the RMS error of the fitting process
-after each iteration for both window orders, clearly indicating that
-a randomized window order leads to faster convergence of the algorithm.
-
-\begin{figure}
+\begin{figure}[tb]
     \includegraphics[width=\linewidth]{figs/eql-boost-airborne.pdf}
     \caption{
         Interpolation error for gradient-boosted equivalent sources using
@@ -1122,12 +1108,26 @@ a randomized window order leads to faster convergence of the algorithm.
 \label{fig:eql-boost-airborne}
 \end{figure}
 
+Figs.~\ref{fig:eql-boost-airborne}a-b show the differences between the target
+grid and the interpolation results for windows in randomized and sequential
+order, respectively.
+The differences for randomized windows resemble those for regular least-squares
+equivalent sources seen in Figs.~\ref{fig:ground-survey-differences} and
+\ref{fig:airborne-survey-differences}.
+On the other hand, the differences for sequential windows show a clear
+trend of large negative differences in the South decreasing towards the North.
+This trend is correlated with the order in which windows are executed, with
+differences decreasing in absolute value towards the end of the algorithm.
+Fig.~\ref{fig:eql-boost-airborne}c shows the RMS error of the fitting process
+after each iteration for both window orders, clearly indicating that
+a randomized window order leads to faster convergence of the algorithm.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Gridding gravity data from Australia}
 
-\begin{figure*}
+\begin{figure*}[p]
     \includegraphics[width=\linewidth]{figs/australia.png}
     \caption{
       Pseudo-color maps of observed (a and c) and
@@ -1177,7 +1177,7 @@ needed to store the largest Jacobian matrix for different values of window size
 We have chosen a size of \AustraliaEqlWindowSize{} in order to limit the
 amount of memory needed to under 16~Gigabytes.
 
-\begin{figure}
+\begin{figure}[tbh!]
     \makeatletter%
     \if@twocolumn%
         \includegraphics[width=\linewidth]{figs/australia-memory-cv-error.pdf}
@@ -1240,7 +1240,7 @@ and predicted gravity disturbances.
 The inset figure shows a histogram of these residuals, which are approximately
 normally distributed around zero.
 
-\begin{figure}
+\begin{figure}[tb]
     \includegraphics[width=\linewidth]{figs/australia-residuals.png}
     \caption{
         Residuals. Differences between the gravity disturbance data from
