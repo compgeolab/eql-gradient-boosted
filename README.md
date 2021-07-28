@@ -13,7 +13,7 @@ The version of record
 > _Geophysical Journal International_.
 > doi: [10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
-is available online at: [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
+is available online at [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
 A pre-copyedited, author-produced PDF of an article is available on EarthArXiv
 at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
