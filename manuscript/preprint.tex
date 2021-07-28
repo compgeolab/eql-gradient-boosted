@@ -56,7 +56,7 @@
 % Configure header and footer
 % ===========================
 \newcommand{\Header}{%
-  \Author{} (\the\year{}). \Title{}. EarthArXiv.
+  \Author{} (\Year{}). \Title{}. EarthArXiv.
   doi:\href{https://doi.org/\PreprintDOI}{\PreprintDOI}
 }
 
@@ -90,28 +90,29 @@
 \author{\AuthorAffil}
 \date{
     \normalsize
-    \today
+    \Year
 }
 \maketitle
 
 \noindent
+Accepted 2021 July 27. Received in original form 2021 February 21.
+\\[0.5cm]
+\noindent
 \textbf{Disclaimer:}
-This is a non-peer reviewed preprint submitted to EarthArXiv.
-It is currently under review at \textit{Geophysical Journal International}.
+This is a pre-copyedited, author-produced PDF of an article
+published in \Journal{} following peer review.
+It is available from EarthArXiv at
+\href{https://doi.org/\PreprintDOI}{doi.org/\PreprintDOI}.
+The version of record
+``\Author{} (\Year{}). \Title{}. \Journal{}. doi:\DOI{}''
+is available online at \DOILink{}.
 \\[0.5cm]
 \noindent
 \textbf{License:}
-\textcopyright{} \the\year{} \AuthorLong{}.
+\textcopyright{} \Year{} \AuthorLong{}.
 Available under a Creative Commons Attribution 4.0 International license
 (\href{https://creativecommons.org/licenses/by/4.0/}{CC-BY}).
 
-%Accepted 2016 October 13. Received in original form 2016 March 24.
-%\\[0.4cm]
-%This is a pre-copyedited, author-produced PDF of an article
-%published in \textit{Geophysical Journal International} following peer review.
-%The version of record
-%``\textit{\Author{} (\Year{}). \Title{}. \Journal{}. doi:\DOI{}}''
-%is available online at: \DOILink{}.
 
 \begin{abstract}
     \input{abstract}
