@@ -51,12 +51,13 @@
     {\small $^{2}$\IGSV} \\
     {\small $^{3}$\Liverpool} \\
 }
+\newcommand{\Year}{2021}
 
 
 % Configure header and footer
 % ===========================
 \newcommand{\Header}{%
-  \Author{} (\the\year{}). \Title{}. EarthArXiv.
+  \Author{} (\Year{}). \Title{}. EarthArXiv.
   doi:\href{https://doi.org/\PreprintDOI}{\PreprintDOI}
 }
 
@@ -90,23 +91,22 @@
 \author{\AuthorAffil}
 \date{
     \normalsize
-    \today
+    \Year
 }
 \maketitle
 
+\noindent
 Accepted 2021 July 27. Received in original form 2021 February 21.
-
-\vspace{0.4cm}
-
+\\[0.5cm]
 \noindent
 \textbf{Disclaimer:}
-
 This is a pre-copyedited, author-produced PDF of an article
-published in \textit{\Journal{}} following peer review.
-This PDF has been submitted to EarthArXiv.
+published in \Journal{} following peer review.
+It is available from EarthArXiv at
+\href{https://doi.org/\PreprintDOI}{doi.org/\PreprintDOI}.
 The version of record
-``\textit{\Author{} (2021). \Title{}. \Journal{}. doi:\DOI{}}''
-is available online at: \DOILink{}.
+``\Author{} (\Year{}). \Title{}. \Journal{}. doi:\DOI{}''
+is available online at \DOILink{}.
 \\[0.5cm]
 \noindent
 \textbf{License:}
