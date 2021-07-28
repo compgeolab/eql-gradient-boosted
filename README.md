@@ -15,7 +15,7 @@ The version of record
 
 is available online at [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
-A pre-copyedited, author-produced PDF of an article is available on EarthArXiv
+An open-access, pre-copyedited, author-produced PDF of is available on EarthArXiv
 at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
 
 **This repository contains the data and code used to produce all results and figures shown
