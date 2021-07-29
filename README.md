@@ -4,24 +4,19 @@ by
 [Santiago Soler](https://santisoler.github.io)
 and [Leonardo Uieda](https://leouieda.com)
 
-
-This paper has been published in *Geophysical Journal International*.
-The version of record
+The data and Python code used to produce all results and figures
+in the paper:
 
 > Soler, S. R. and Uieda, L. (2021).
 > Gradient-boosted equivalent sources,
 > _Geophysical Journal International_.
-> doi: [10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
+> doi:[10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
 
-is available online at [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297)
-
-An open-access, pre-copyedited, author-produced PDF of is available on EarthArXiv
-at [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C)
-
-**This repository contains the data and code used to produce all results and figures shown
-in the paper.**
-An archived version of this repository is available at
-[doi.org/10.6084/m9.figshare.13604360](https://doi.org/10.6084/m9.figshare.13604360)
+|  | Info |
+|-:|:-----|
+| Version of record | [doi.org/10.1093/gji/ggab297](https://doi.org/10.1093/gji/ggab297) |
+| PDF on EarthArXiv (pre-copyedited) | [doi.org/10.31223/X58G7C](https://doi.org/10.31223/X58G7C) |
+| Archive of this repository | [doi.org/10.6084/m9.figshare.13604360](https://doi.org/10.6084/m9.figshare.13604360) |
 
 
 ## About
@@ -30,7 +25,7 @@ We present the gradient-boosted equivalent sources: a new methodology for
 interpolating very large datasets of gravity and magnetic observations even on
 modest personal computers, without the high computer memory needs of the
 classical equivalent sources technique.
-This new method is inspired by the gradient-boosting technique, mainly used in machine learning solutions.
+This new method is inspired by the gradient-boosting technique, mainly used in machine learning.
 
 ![](presentations/visual-abstract/visual-abstract.jpg)
 
