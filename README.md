@@ -105,6 +105,34 @@ installed using a conda environment.
 For more information about managing conda environments visit this
 [User Guide](https://conda.io/docs/user-guide/tasks/manage-environments.html)
 
+#### Alternative way
+
+In case the previous method doesn't work by the time you are trying to create
+the environment, you could use one of the `conda-lock` files.
+
+1. Install `conda-lock` on the `base` environment or on any environment you
+   want:
+   ```
+   conda install -c conda-forge conda-lock
+   ```
+1. Create the `eql-gradient-boosted` environment out of the `conda-*.lock`
+   file.
+   If you are using a GNU/Linux distribution, run the following:
+   ```
+   conda-lock install -n eql-gradient-boosted --file conda-linux-64.lock
+   ```
+   If you are a MacOS user, run the following instead:
+   ```
+   conda-lock install -n eql-gradient-boosted --file conda-osx-64.lock
+   ```
+1. Activate the new environment:
+   ```
+   conda activate eql-gradient-boosted
+   ```
+
+This alternative method works only for x86 (64 bits) processors under GNU/Linux
+or MacOS.
+
 ### Reproducing the results
 
 We have a `Makefile` that provides commands that automatically run the
