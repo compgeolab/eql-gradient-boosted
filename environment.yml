@@ -3,28 +3,27 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7
-  - pip
-  - numpy
+  - numpy=1.21.1
   - boule=0.2.0
   - pooch=1.2.0
   - pygmt=0.3.1
   - harmonica=0.2.1
   - verde=1.6.1
-  - pyproj
-  - netcdf4
+  - pyproj=3.1.0
+  - netcdf4=1.5.6
   - matplotlib
-  - cartopy
-  - dask
-  - tqdm
-  - numba
+  - cartopy=0.19.0.post1
+  - dask=2021.5.0
+  - tqdm=4.62.2
+  - numba=0.53.1
   # Jupyter related dependencies
-  - ipython
-  - jupyter
+  - ipython=7.27.0
+  - jupyter=1.0.0
   # Development dependencies
-  - pytest
-  - pytest-cov
-  - coverage
-  - black>=20.8b1
-  - pylint
-  - flake8
-  - flake8-bugbear
+  - pytest=6.2.5
+  - pytest-cov=2.12.1
+  - coverage=5.5
+  - black=21.7b0
+  - pylint=2.8.3
+  - flake8=3.9.2
+  - flake8-bugbear=21.4.3
