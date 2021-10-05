@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    height="3.0432134in"
    version="1.1"
    viewBox="0 0 479.51999 219.11135"
    width="6.6599998in"
    id="svg2959"
    sodipodi:docname="gradient-boosting-schematics.svg"
-   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -24,14 +24,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1366"
-     inkscape:window-height="715"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
      id="namedview2961"
      showgrid="false"
      units="in"
-     inkscape:zoom="1.0528612"
-     inkscape:cx="533.29706"
-     inkscape:cy="221.08058"
+     inkscape:zoom="1.4889706"
+     inkscape:cx="355.27901"
+     inkscape:cy="188.38519"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
@@ -40,7 +40,9 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:document-rotation="0" />
+     inkscape:document-rotation="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="in" />
   <metadata
      id="metadata2">
     <rdf:RDF>
@@ -54,7 +56,6 @@
             <dc:title>Matplotlib v3.3.4, https://matplotlib.org/</dc:title>
           </cc:Agent>
         </dc:creator>
-        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -679,71 +680,91 @@
   <text
      xml:space="preserve"
      id="text5925"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5927);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5927);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,-54.235651,76.942884)"><tspan
        x="75.654297"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';stroke-linecap:butt;stroke-linejoin:round">Data points</tspan></tspan></text>
+       y="-71.576719"
+       id="tspan30361"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
+         id="tspan30359">Datos</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text5933"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5935);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5935);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,27.603408,77.788054)"><tspan
        x="75.654297"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';stroke-linecap:butt;stroke-linejoin:round">Sources</tspan></tspan></text>
+       y="-71.576719"
+       id="tspan30365"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
+         id="tspan30363">Fuentes</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text5939"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5941);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect5941);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,108.62844,68.508207)"
      x="75.999809"
      y="0"><tspan
-       x="81.313744"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Select data and sources in window </tspan></tspan><tspan
-       x="91.18372"
-       y="-58.614377"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">and estimate their coefficients</tspan></tspan></text>
+       x="77.288761"
+       y="-71.576719"
+       id="tspan30369"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30367">Selecciona datos y fuentes dentro de </tspan></tspan><tspan
+       x="85.583744"
+       y="-58.614377"
+       id="tspan30373"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30371">ventana y ajusta sus coeficientes</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text6383"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6385);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6385);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,277.18593,68.460285)"
      x="75.999809"
      y="0"><tspan
-       x="80.818748"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Predict on every observation point </tspan></tspan><tspan
-       x="107.00367"
-       y="-58.614377"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">and calculate residuals</tspan></tspan></text>
+       x="83.258743"
+       y="-71.576719"
+       id="tspan30377"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30375">Predice sobre todos los puntos de </tspan></tspan><tspan
+       x="91.133728"
+       y="-58.614377"
+       id="tspan30381"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30379">observación y calcula residuos</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text6389"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6391);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6391);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,104.73647,171.72469)"
      x="75.999809"
      y="0"><tspan
-       x="76.545559"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Select residuals and sources in window </tspan></tspan><tspan
-       x="95.650517"
-       y="-58.614377"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">and estimate their coefficients</tspan></tspan></text>
+       x="75.880571"
+       y="-71.576719"
+       id="tspan30385"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30383">Selecciona residuos y fuentes dentro de </tspan></tspan><tspan
+       x="90.050541"
+       y="-58.614377"
+       id="tspan30389"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30387">ventana y ajusta sus coeficientes</tspan></tspan></text>
   <text
      xml:space="preserve"
      id="text6395"
-     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6397);fill:#000000;fill-opacity:1;stroke:none;"
+     style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6397);fill:#000000;fill-opacity:1;stroke:none"
      transform="matrix(0.8713095,0,0,0.8713095,277.18588,171.7877)"
      x="75.999809"
      y="0"><tspan
-       x="80.818748"
-       y="-71.576719"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Predict on every observation point </tspan></tspan><tspan
-       x="111.02365"
-       y="-58.614377"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">and update residuals</tspan></tspan></text>
+       x="83.258743"
+       y="-71.576719"
+       id="tspan30393"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30391">Predice sobre todos los puntos de </tspan></tspan><tspan
+       x="86.688738"
+       y="-58.614377"
+       id="tspan30397"><tspan
+         style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+         id="tspan30395">observación y actualiza resiudos</tspan></tspan></text>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.653482px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker10104)"
      d="m 411.19416,83.077774 v 5.466143 H 242.639 v 8.604094"
@@ -775,13 +796,15 @@
     <text
        xml:space="preserve"
        id="text21612"
-       style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect21614);fill:#000000;fill-opacity:1;stroke:none;"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect21614);fill:#000000;fill-opacity:1;stroke:none"
        transform="translate(127.26819,340.01878)"
        x="75.999809"
        y="0"><tspan
-         x="110.73549"
-         y="-71.576719"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;stroke-linecap:butt;stroke-linejoin:round">Repeat for all windows</tspan></tspan></text>
+         x="93.600536"
+         y="-71.576719"
+         id="tspan30401"><tspan
+           style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle"
+           id="tspan30399">Repite para todas las ventanas</tspan></tspan></text>
     <rect
        style="fill:none;stroke:#000000;stroke-width:0.731901;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect21616"
@@ -801,11 +824,13 @@
         <text
            xml:space="preserve"
            id="text23118"
-           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23120);fill:#000000;fill-opacity:1;stroke:none;"
+           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23120);fill:#000000;fill-opacity:1;stroke:none"
            transform="translate(-43.12016,223.47455)"><tspan
              x="75.654297"
-             y="-71.576719"><tspan
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';stroke-linecap:butt;stroke-linejoin:round">Sources</tspan></tspan></text>
+             y="-71.576719"
+             id="tspan30405"><tspan
+               style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
+               id="tspan30403">Fuentes</tspan></tspan></text>
         <path
            d="m 20.68363,150.21488 c 0.459346,0 0.899938,-0.1825 1.224744,-0.50731 0.324808,-0.3248 0.507306,-0.7654 0.507306,-1.22474 0,-0.45935 -0.182498,-0.89994 -0.507306,-1.22475 -0.324806,-0.3248 -0.765398,-0.5073 -1.224744,-0.5073 -0.459346,0 -0.899938,0.1825 -1.224744,0.5073 -0.324808,0.32481 -0.507306,0.7654 -0.507306,1.22475 0,0.45934 0.182498,0.89994 0.507306,1.22474 0.324806,0.32481 0.765398,0.50731 1.224744,0.50731 z"
            id="use359-3"
@@ -821,11 +846,13 @@
         <text
            xml:space="preserve"
            id="text23824"
-           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23826);fill:#000000;fill-opacity:1;stroke:none;"
+           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23826);fill:#000000;fill-opacity:1;stroke:none"
            transform="translate(-42.91016,241.46643)"><tspan
              x="75.654297"
-             y="-71.576719"><tspan
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';stroke-linecap:butt;stroke-linejoin:round">Data points</tspan></tspan></text>
+             y="-71.576719"
+             id="tspan30409"><tspan
+               style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
+               id="tspan30407">Datos</tspan></tspan></text>
       </g>
       <g
          id="g23847"
@@ -837,11 +864,13 @@
         <text
            xml:space="preserve"
            id="text23830"
-           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23832);fill:#000000;fill-opacity:1;stroke:none;"
+           style="font-style:normal;font-weight:normal;font-size:10px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect23832);fill:#000000;fill-opacity:1;stroke:none"
            transform="translate(-42.91016,266.48096)"><tspan
              x="75.654297"
-             y="-71.576719"><tspan
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';stroke-linecap:butt;stroke-linejoin:round">Residuals</tspan></tspan></text>
+             y="-71.576719"
+             id="tspan30413"><tspan
+               style="font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
+               id="tspan30411">Residuos</tspan></tspan></text>
       </g>
     </g>
     <rect
